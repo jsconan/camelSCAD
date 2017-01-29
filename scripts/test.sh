@@ -32,23 +32,26 @@
 # @author jsconan
 #
 
-name=test/suite
+name=suite
+if [ "$1" != "" ]; then
+    name=$1
+fi
 
 scriptPath=$(dirname $0)
-project=${scriptPath}/..
-finename=${project}/${name}
-src=${finename}.scad
-dst=${finename}.csg
-output=${finename}.log
-result=${finename}.csv
+project=$(dirname ${scriptPath})
+dstpath=${project}//${name/\//_}
+src=${project}/test/${name}.scad
+dst=${dstpath}.csg
+output=${dstpath}.log
+result=${dstpath}.csv
 
 echo -e "\033[0m"
 
-echo "Checking directories..."
+echo "Checking path..."
 if [ ! -f "${src}" ]; then
     echo -e "\033[31m"
     echo "There is nothing to test!"
-    echo "Are you at the root of the project?"
+    echo "${src} was not found!"
     echo -e "\033[0m"
     exit 1
 fi
@@ -57,14 +60,16 @@ echo "Detecting OpenSCAD..."
 openscad -v >/dev/null 2>&1
 if [ "$?" != "0" ]; then
     echo -e "\033[31m"
-    echo "It seems that OpenSCAD has not been installed on your system."
+    echo "It seems OpenSCAD has not been installed on your system."
     echo "Or perhaps is it just not reachable..."
     echo "Have you placed it in your environment PATH variable?"
     echo -e "\033[0m"
     exit 3
 fi
 
-echo "OpenSCAD has been detected. Processing the files..."
+echo "OpenSCAD has been detected."
+echo "Processing Unit Tests from ${src}..."
+
 openscad -o "${dst}" "${src}" -D CSV=true >"${output}" 2>&1
 
 if [ "$?" != "0" ]; then
