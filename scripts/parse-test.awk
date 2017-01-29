@@ -62,6 +62,11 @@ BEGIN {
     RESET    = "\033[0m"
 }
 
+# detect compiler warnings
+$0~/^WARNING:/ {
+    printf("\n%s%s\n", LRED, $0)
+}
+
 # detect package declarations
 $1~/package/ {
     packageCount = packageCount + 1
