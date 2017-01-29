@@ -2,6 +2,7 @@
 *.log
 
 # Results
+scripts/output
 *.csg
 *.csv
 

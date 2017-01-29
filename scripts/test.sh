@@ -39,11 +39,12 @@ fi
 
 scriptPath=$(dirname $0)
 project=$(dirname ${scriptPath})
-dstpath=${project}//${name/\//_}
+dstpath=${project}/scripts/output
+dstname=${dstpath}/${name//\//_}
 src=${project}/test/${name}.scad
-dst=${dstpath}.csg
-output=${dstpath}.log
-result=${dstpath}.csv
+dst=${dstname}.csg
+output=${dstname}.log
+result=${dstname}.csv
 
 echo -e "\033[0m"
 
@@ -54,6 +55,18 @@ if [ ! -f "${src}" ]; then
     echo "${src} was not found!"
     echo -e "\033[0m"
     exit 1
+fi
+
+if [ ! -d "${dstpath}" ]; then
+    echo -e "\033[32mCreate output folder.\033[0m"
+    mkdir -p "${dstpath}" >/dev/null
+
+    if [ ! -d "${dstpath}" ]; then
+        echo -e "\033[31m"
+        echo "Cannot create output folder!"
+        echo -e "\033[0m"
+        exit 1
+    fi
 fi
 
 echo "Detecting OpenSCAD..."
