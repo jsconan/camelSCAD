@@ -1,6 +1,10 @@
 # Logs
 *.log
 
+# Results
+*.csg
+*.csv
+
 # Runtime data
 *.pid
 *.seed
