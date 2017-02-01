@@ -61,8 +61,8 @@ function apply2D(v, x, y, r, d) =
  * @param Number [x] - The X-coordinate to apply.
  * @param Number [y] - The Y-coordinate to apply.
  * @param Number [z] - The Z-coordinate to apply.
- * @param Number [r] - A radius, if the vector is intended to define a circle.
- * @param Number [d] - A diameter, if the vector is intended to define a circle.
+ * @param Number [r] - A radius, if the vector is intended to define a sphere.
+ * @param Number [d] - A diameter, if the vector is intended to define a sphere.
  * @returns Vector
  */
 function apply3D(v, x, y, z, r, d) =
@@ -80,9 +80,9 @@ function apply3D(v, x, y, z, r, d) =
 ;
 
 /**
- * Project a 2D vector with the provided angle.
+ * Projects a 2D vector with the provided angle.
  *
- * @param Vector v - The vector to project.
+ * @param Vector [v] - The vector to project.
  * @param Number a - The projection angle.
  * @param Number [x] - The X-coordinate, will overide the X in the vector.
  * @param Number [y] - The Y-coordinate, will overide the Y in the vector.
@@ -231,12 +231,12 @@ function rotate3DZ(v, a) =
  *
  * @param Vector a - The first point.
  * @param Vector b - The second point.
- * @returns Vector - The point at middle.
+ * @returns Vector - The point at the middle.
  */
 function middle(a, b) = (vector3D(a) + vector3D(b)) / 2;
 
 /**
- * Move a point in the wanted direction by a particular distance.
+ * Moves a point in the wanted direction by a particular distance.
  *
  * @param Vector p - The point to move.
  * @param Vector v - The direction (will be normalized).

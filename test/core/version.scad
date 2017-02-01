@@ -23,51 +23,35 @@
  * SOFTWARE.
  */
 
+use <../../full.scad>
+
 /**
  * Part of the camelSCAD library.
  *
- * Rendering mode.
+ * Unit test: Version.
  *
+ * @package test/core/version
  * @author jsconan
  */
+module testCoreVersion() {
+    validateRequirements();
+    testPackage("core/version.scad", 2) {
+        // test checkOpenSCAD()
+        testModule("checkOpenSCAD()", 1) {
+            testUnit("must satisfy", 1) {
+                assertEqual(checkOpenSCAD(), true, "The installed version of OpenSCAD must be up to date enough");
+            }
+        }
+        // test camelSCAD()
+        testModule("camelSCAD()", 2) {
+            testUnit("as vector", 1) {
+                assertEqual(camelSCAD(), [0, 0, 0], "The current version of the library is 0.0.0");
+            }
+            testUnit("as string", 1) {
+                assertEqual(camelSCAD(true), "0.0.0", "The current version of the library is 0.0.0");
+            }
+        }
+    }
+}
 
-/**
- * Specifications for each rendering modes.
- * Each mode is defined this way: ["name", value for $fa, value for $fs]
- * @type Vector
- */
-MODES = [
-    ["dirty", 6, 2],
-    ["dev", 1, 1.5],
-    ["prod", .5, .5]
-];
-
-/**
- * The name of the default rendering mode.
- * @type String
- */
-DEFAULT_MODE = "dev";
-
-/**
- * Gets the specifications of a particular rendering mode.
- *
- * @param String [mode] - The mode for which get the specifications.
- * @returns Vector
- */
-function renderMode(mode) = fetch(MODES, or(mode, DEFAULT_MODE));
-
-/**
- * Gets the minimum facet angle for a particular rendering mode.
- *
- * @param String [mode] - The mode for which get the specification.
- * @returns Number
- */
-function facetAngle(mode) = renderMode(mode)[1];
-
-/**
- * Gets the minimum facet size for a particular rendering mode.
- *
- * @param String [mode] - The mode for which get the specification.
- * @returns Number
- */
-function facetSize(mode) = renderMode(mode)[2];
+testCoreVersion();

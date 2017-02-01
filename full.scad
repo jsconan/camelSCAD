@@ -31,9 +31,8 @@
  * @author jsconan
  */
 
-include <version.scad>
-include <mode.scad>
-
+/* CORE */
+include <core/version.scad>
 include <core/type.scad>
 include <core/logic.scad>
 include <core/list.scad>
@@ -43,12 +42,15 @@ include <core/line.scad>
 include <core/vector.scad>
 include <core/string.scad>
 include <core/util.scad>
+include <core/mode.scad>
 
+/* UNIT TEST & ADDITIONAL FEATURES */
 include <util/ansi.scad>
 include <util/html.scad>
 include <util/test-utils.scad>
 include <util/test.scad>
 
+/* OPERATORS */
 include <operator/distribute/grid.scad>
 include <operator/distribute/mirror.scad>
 include <operator/distribute/rotate.scad>

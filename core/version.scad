@@ -28,6 +28,7 @@
  *
  * All about the version.
  *
+ * @package core/version
  * @author jsconan
  */
 

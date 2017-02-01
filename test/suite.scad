@@ -32,9 +32,7 @@
  * @author jsconan
  */
 
-use <version.scad>
-use <mode.scad>
-
+use <core/version.scad>
 use <core/type.scad>
 use <core/logic.scad>
 use <core/list.scad>
@@ -44,14 +42,13 @@ use <core/line.scad>
 use <core/vector.scad>
 use <core/string.scad>
 use <core/util.scad>
+use <core/mode.scad>
 
 use <util/ansi.scad>
 use <util/html.scad>
 use <util/test-utils.scad>
 
-testVersion();
-testMode();
-
+testCoreVersion();
 testCoreType();
 testCoreLogic();
 testCoreList();
@@ -61,6 +58,7 @@ testCoreLine();
 testCoreVector();
 testCoreString();
 testCoreUtil();
+testCoreMode();
 
 testUtilAnsi();
 testUtilHtml();

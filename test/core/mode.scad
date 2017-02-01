@@ -23,23 +23,23 @@
  * SOFTWARE.
  */
 
-use <../full.scad>
+use <../../full.scad>
 
 /**
  * Part of the camelSCAD library.
  *
  * Unit test: Rendering mode.
  *
- * @package test/version
+ * @package test/core/mode
  * @author jsconan
  */
-module testMode() {
+module testCoreMode() {
     expectedModes = [
         ["dirty", 6, 2],
         ["dev", 1, 1.5],
         ["prod", .5, .5]
     ];
-    testPackage("mode.scad", 3) {
+    testPackage("core/mode.scad", 3) {
         // test renderMode()
         testModule("renderMode()", 2) {
             testUnit("no parameter", 1) {
@@ -76,4 +76,4 @@ module testMode() {
     }
 }
 
-testMode();
+testCoreMode();

@@ -57,7 +57,7 @@ module testCorePoint() {
                 assertEqual(apply2D(["1", 1], 1), [1, 1], "Should produce a corrected 2D vector if input is wrong");
                 assertEqual(apply2D(["1", 1], 1, 2), [1, 2], "Should produce a corrected 2D vector if input is wrong");
             }
-            testUnit("vector", 7) {
+            testUnit("vector", 10) {
                 assertEqual(apply2D([1]), [1, 0], "Should complete incomplete 2D vector");
                 assertEqual(apply2D([1], y=2), [1, 2], "Should complete incomplete 2D vector");
                 assertEqual(apply2D([1], 2, 3), [2, 3], "Should complete incomplete 2D vector");
@@ -65,12 +65,17 @@ module testCorePoint() {
                 assertEqual(apply2D([1, 2], 3, 4), [3, 4], "Should keep correct and complete 2D vector");
                 assertEqual(apply2D([1, 2, 3]), [1, 2], "Should truncate too big vector");
                 assertEqual(apply2D([1, 2, 3], 5, 6), [5, 6], "Should truncate too big vector");
+                assertEqual(apply2D(x=5), [5, 0], "Should create the vector from the provided X coordinate");
+                assertEqual(apply2D(y=6), [0, 6], "Should create the vector from the provided Y coordinate)");
+                assertEqual(apply2D(x=5, y=6), [5, 6], "Should create the vector from the provided coordinates");
             }
-            testUnit("circle", 4) {
+            testUnit("circle", 6) {
                 assertEqual(apply2D([1, 2], r=3), [6, 6], "Should apply the radius as coordinates of the 2D vector");
                 assertEqual(apply2D([1, 2], d=3), [3, 3], "Should apply the diameter as coordinates of the 2D vector");
                 assertEqual(apply2D([1, 2], x=4, r=3), [4, 6], "Should apply the radius as coordinates of the 2D vector, but the X");
                 assertEqual(apply2D([1, 2], y=5, d=3), [3, 5], "Should apply the diameter as coordinates of the 2D vector, but the Y");
+                assertEqual(apply2D(r=5), [10, 10], "Should create the vector from the provided radius");
+                assertEqual(apply2D(d=6), [6, 6], "Should create the vector from the provided diameter");
             }
         }
         // test core/point/apply3D()
@@ -96,7 +101,7 @@ module testCorePoint() {
                 assertEqual(apply3D(["1", 1], 1), [1, 1, 0], "Should produce a corrected 3D vector if input is wrong");
                 assertEqual(apply3D(["1", 1], 1, 2), [1, 2, 0], "Should produce a corrected 3D vector if input is wrong");
             }
-            testUnit("vector", 12) {
+            testUnit("vector", 16) {
                 assertEqual(apply3D([1]), [1, 0, 0], "Should complete incomplete 3D vector");
                 assertEqual(apply3D([1], y=2), [1, 2, 0], "Should complete incomplete 3D vector");
                 assertEqual(apply3D([1], z=2), [1, 0, 2], "Should complete incomplete 3D vector");
@@ -109,13 +114,19 @@ module testCorePoint() {
                 assertEqual(apply3D([1, 2, 3, 4]), [1, 2, 3], "Should truncate too big vector");
                 assertEqual(apply3D([1, 2, 3, 4], 5, 6), [5, 6, 3], "Should truncate too big vector");
                 assertEqual(apply3D([1, 2, 3, 4], 5, 6, 7), [5, 6, 7], "Should truncate too big vector");
+                assertEqual(apply3D(x=5), [5, 0, 0], "Should create the vector from the provided X coordinate");
+                assertEqual(apply3D(y=6), [0, 6, 0], "Should create the vector from the provided Y coordinate)");
+                assertEqual(apply3D(z=7), [0, 0, 7], "Should create the vector from the provided Z coordinate)");
+                assertEqual(apply3D(x=5, y=6, z=7), [5, 6, 7], "Should create the vector from the provided coordinates");
             }
-            testUnit("circle", 5) {
+            testUnit("sphere", 7) {
                 assertEqual(apply3D([1, 2, 3], r=3), [6, 6, 6], "Should apply the radius as coordinates of the 3D vector");
                 assertEqual(apply3D([1, 2, 3], d=7), [7, 7, 7], "Should apply the diameter as coordinates of the 3D vector");
                 assertEqual(apply3D([1, 2, 3], x=4, r=3), [4, 6, 6], "Should apply the radius as coordinates of the 3D vector, but the X");
                 assertEqual(apply3D([1, 2, 3], y=8, d=3), [3, 8,3], "Should apply the diameter as coordinates of the 3D vector, but the Y");
                 assertEqual(apply3D([1, 2, 3], z=-2, d=3), [3, 3, -2], "Should apply the diameter as coordinates of the 3D vector, but the Z");
+                assertEqual(apply3D(r=5), [10, 10, 10], "Should create the vector from the provided radius");
+                assertEqual(apply3D(d=6), [6, 6, 6], "Should create the vector from the provided diameter)");
             }
         }
         // test core/point/project()
