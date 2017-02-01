@@ -41,6 +41,7 @@ BEGIN {
     assertCount  = 0
     successCount = 0
     failedCount  = 0
+    warningCount = 0
 
     # define ANSI colors
     BLACK    = "\033[0;30m"
@@ -64,6 +65,7 @@ BEGIN {
 
 # detect compiler warnings
 $0~/^WARNING:/ {
+    warningCount = warningCount + 1
     printf("\n%s%s\n", LRED, $0)
 }
 
@@ -183,6 +185,10 @@ END {
     printf("%s%d modules\n", GREEN, moduleCount)
     printf("%s%d/%d asserts\n", GREEN, successCount, assertCount)
     printf(separator, GREY)
+
+    if (warningCount > 0) {
+        printf("%s%d warnings!\n", RED, warningCount)
+    }
 
     if (failedCount == 0) {
         printf("%sAll successful!\n", GREEN)
