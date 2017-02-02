@@ -26,7 +26,7 @@
 /**
  * Entry point of the camelSCAD library.
  *
- * Includes all components.
+ * Features set: Includes all components.
  *
  * @author jsconan
  */
@@ -65,3 +65,8 @@ include <operator/rotate/origin.scad>
 
 include <operator/operation.scad>
 include <operator/transform.scad>
+
+/* SHAPES */
+include <shape/2D/ellipse.scad>
+
+include <shape/3D/ellipsoid.scad>

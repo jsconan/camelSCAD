@@ -48,6 +48,10 @@ use <util/ansi.scad>
 use <util/html.scad>
 use <util/test-utils.scad>
 
+use <shape/2D/ellipse.scad>
+
+use <shape/3D/ellipsoid.scad>
+
 testCoreVersion();
 testCoreType();
 testCoreLogic();
@@ -63,3 +67,7 @@ testCoreMode();
 testUtilAnsi();
 testUtilHtml();
 testUtilTestUtils();
+
+testShape2dEllipse();
+
+testShape3dEllipsoid();
