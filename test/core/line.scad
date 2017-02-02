@@ -57,13 +57,13 @@ module testCoreLine() {
                 assertEqual(arc(1, $fn=3), [ for (a = [360/3 : 360/3 : 360]) 1 * [cos(a), sin(a)] ], "Should return a list of points to draw a circle with a radius of 1 and 3 facets (triangle)");
                 assertEqual(arc(1, $fn=4), [ for (a = [360/4 : 360/4 : 360]) 1 * [cos(a), sin(a)] ], "Should return a list of points to draw a circle with a radius of 1 and 4 facets (square)");
                 assertEqual(arc(1, $fn=6), [ for (a = [360/6 : 360/6 : 360]) 1 * [cos(a), sin(a)] ], "Should return a list of points to draw a circle with a radius of 1 and 6 facets (hexagon)");
-                assertEqual(arc(5, $fa=12, $fs=2), [ for (a = [astep(5) : astep(5) : 360]) 5 * [cos(a), sin(a)] ], "Should return a list of points to draw a circle with a radius of 1 and 16 facets");
+                assertEqual(arc(5, $fa=12, $fs=2), [ for (a = [astep(5, $fa=12, $fs=2) : astep(5, $fa=12, $fs=2) : 360]) 5 * [cos(a), sin(a)] ], "Should return a list of points to draw a circle with a radius of 1 and 16 facets");
             }
             testUnit("ellipse", 4) {
                 assertEqual(arc([1, 2], $fn=3), [ for (a = [360/3 : 360/3 : 360]) [cos(a)*1, sin(a)*2] ], "Should return a list of points to draw an ellipse with a radius of [1, 2] and 3 facets (triangle)");
                 assertEqual(arc([1, 2], $fn=4), [ for (a = [360/4 : 360/4 : 360]) [cos(a)*1, sin(a)*2] ], "Should return a list of points to draw an ellipse with a radius of [1, 2] and 4 facets (square)");
                 assertEqual(arc([1, 2], $fn=6), [ for (a = [360/6 : 360/6 : 360]) [cos(a)*1, sin(a)*2] ], "Should return a list of points to draw an ellipse with a radius of [1, 2] and 6 facets (hexagon)");
-                assertEqual(arc([5, 6], $fa=12, $fs=2), [ for (a = [0 : astep(6) : 360]) [cos(a)*5, sin(a)*6] ], "Should return a list of points to draw an ellipse with a radius of [5, 6] and 20 facets");
+                assertEqual(arc([5, 6], $fa=12, $fs=2), [ for (a = [0 : astep(6, $fa=12, $fs=2) : 360]) [cos(a)*5, sin(a)*6] ], "Should return a list of points to draw an ellipse with a radius of [5, 6] and 20 facets");
             }
             testUnit("circle arc", 8) {
                 assertEqual(arc(1, a=30, $fn=3), [ for (a = [0 : 30 : 30]) [cos(a), sin(a)] ], "Should return a list of points to draw a 30° arc with a radius of 1 and 3 facets (triangle)");
@@ -72,8 +72,8 @@ module testCoreLine() {
                 assertEqual(arc(1, a=200, $fn=4), concat([ for (a = [0 : 90 : 200]) [cos(a), sin(a)] ], [[cos(200), sin(200)]]), "Should return a list of points to draw a 200° arc with a radius of 1 and 4 facets (square)");
                 assertEqual(arc(1, a=140, $fn=6), concat([ for (a = [0 : 60 : 140]) [cos(a), sin(a)] ], [[cos(140), sin(140)]]), "Should return a list of points to draw a 140° arc with a radius of 1 and 6 facets (hexagon)");
                 assertEqual(arc(1, a=200, $fn=6), concat([ for (a = [0 : 60 : 200]) [cos(a), sin(a)] ], [[cos(200), sin(200)]]), "Should return a list of points to draw a 200° arc with a radius of 1 and 6 facets (hexagon)");
-                assertEqual(arc(5, a=80, $fa=12, $fs=2), concat([ for (a = [0 : astep(5) : 80]) 5 * [cos(a), sin(a)] ], [5 * [cos(80), sin(80)]]), "Should return a list of points to draw a 30° arc with a radius of 1 and 16 facets");
-                assertEqual(arc(5, a=160, $fa=12, $fs=2), concat([ for (a = [0 : astep(5) : 160]) 5 * [cos(a), sin(a)] ], [5 * [cos(160), sin(160)]]), "Should return a list of points to draw a 30° arc with a radius of 1 and 16 facets");
+                assertEqual(arc(5, a=80, $fa=12, $fs=2), concat([ for (a = [0 : astep(5, $fa=12, $fs=2) : 80]) 5 * [cos(a), sin(a)] ], [5 * [cos(80), sin(80)]]), "Should return a list of points to draw a 30° arc with a radius of 1 and 16 facets");
+                assertEqual(arc(5, a=160, $fa=12, $fs=2), concat([ for (a = [0 : astep(5, $fa=12, $fs=2) : 160]) 5 * [cos(a), sin(a)] ], [5 * [cos(160), sin(160)]]), "Should return a list of points to draw a 30° arc with a radius of 1 and 16 facets");
             }
             testUnit("ellipse arc", 8) {
                 assertEqual(arc([1, 2], a=30, $fn=3), [ for (a = [0 : 30 : 30]) [cos(a), 2 * sin(a)] ], "Should return a list of points to draw a 30° arc with a radius of [1, 2] and 3 facets (triangle)");
@@ -82,8 +82,8 @@ module testCoreLine() {
                 assertEqual(arc([1, 2], a=200, $fn=4), concat([ for (a = [0 : 90 : 200]) [cos(a), 2 * sin(a)] ], [[cos(200), 2 * sin(200)]]), "Should return a list of points to draw a 200° arc with a radius of [1, 2] and 4 facets (square)");
                 assertEqual(arc([1, 2], a=140, $fn=6), concat([ for (a = [0 : 60 : 140]) [cos(a), 2 * sin(a)] ], [[cos(140), 2 * sin(140)]]), "Should return a list of points to draw a 140° arc with a radius of [1, 2] and 6 facets (hexagon)");
                 assertEqual(arc([1, 2], a=200, $fn=6), concat([ for (a = [0 : 60 : 200]) [cos(a), 2 * sin(a)] ], [[cos(200), 2 * sin(200)]]), "Should return a list of points to draw a 200° arc with a radius of [1, 2] and 6 facets (hexagon)");
-                assertEqual(arc([5, 6], a=80, $fa=12, $fs=2), concat([ for (a = [0 : astep(6) : 80]) [cos(a) * 5, sin(a) * 6] ], [[cos(80) * 5, sin(80) * 6]]), "Should return a list of points to draw a 30° arc with a radius of [5, 6] and 16 facets");
-                assertEqual(arc([5, 6], a=160, $fa=12, $fs=2), concat([ for (a = [0 : astep(6) : 160]) [cos(a) * 5, sin(a) * 6] ], [[cos(160) * 5, sin(160) * 6]]), "Should return a list of points to draw a 30° arc with a radius of [5, 6] and 16 facets");
+                assertEqual(arc([5, 6], a=80, $fa=12, $fs=2), concat([ for (a = [0 : astep(6, $fa=12, $fs=2) : 80]) [cos(a) * 5, sin(a) * 6] ], [[cos(80) * 5, sin(80) * 6]]), "Should return a list of points to draw a 30° arc with a radius of [5, 6] and 16 facets");
+                assertEqual(arc([5, 6], a=160, $fa=12, $fs=2), concat([ for (a = [0 : astep(6, $fa=12, $fs=2) : 160]) [cos(a) * 5, sin(a) * 6] ], [[cos(160) * 5, sin(160) * 6]]), "Should return a list of points to draw a 30° arc with a radius of [5, 6] and 16 facets");
             }
         }
         // test core/line/sinusoid()
