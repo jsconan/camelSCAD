@@ -183,11 +183,25 @@ function vabs(v) =
  * @param Vector v - The vector to sum.
  * @returns Number
  */
-//todo: check if the following performs better
-//function vsum(v) = [ for (p=v) 1 ] * v;
-function vsum(v, i=0) =
-    len(v) > i ? float(v[i]) + vsum(v, i + 1)
-               : 0
+function vsum(v,
+               // internal
+               p, l) =
+    let(
+        p = float(p),
+        l = numberOr(l, float(len(v)))
+    )
+    l <= 4 ? (
+        l <= 1 ? float(v[p])
+       :float(v[p]) + float(v[p + 1]) + (
+            l > 2 ? float(v[p + 2]) + (
+                l > 3 ? float(v[p + 3]) : 0
+            ) : 0
+        )
+    )
+   :let(
+        half = floor(l / 2)
+    )
+    vsum(v, p, half) + vsum(v, p + half, l - half)
 ;
 
 /**

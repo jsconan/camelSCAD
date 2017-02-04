@@ -305,10 +305,14 @@ module testCoreVector() {
             testUnit("not vector", 1) {
                 assertEqual(vsum([-1, "2", 3]), 2, "Gets the sum from an array");
             }
-            testUnit("vector", 3) {
+            testUnit("vector", 7) {
                 assertEqual(vsum([]), 0, "Gets the sum of an empty vector");
-                assertEqual(vsum([3, 2, 1]), 6, "Gets the sum of a vector");
+                assertEqual(vsum([3]), 3, "Gets the sum of a vector[1]");
+                assertEqual(vsum([3, 2]), 5, "Gets the sum of a vector[2]");
+                assertEqual(vsum([3, 2, 1]), 6, "Gets the sum of a vector[3]");
                 assertEqual(vsum([-3, 2, -1]), -2, "Gets the sum of a vector");
+                assertEqual(vsum([-3, 2, -1, 4, -3, 6]), 5, "Gets the sum of a vector[6]");
+                assertEqual(vsum(range(50)), (50 * 51) / 2, "Gets the sum of a range");
             }
         }
         // test core/vector/average()

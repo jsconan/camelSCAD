@@ -232,8 +232,8 @@ function vector3D(value) =
  *
  * @param Vector|Number value - The value to cast.
  * @returns Vector - Returns a 2D vector. Vectors remain unchanged, unless they don't have the required length,
- *                   additional elements are removed while missing ones are replaced by 0.
- *                   Arrays are casted, not numbers are replaced by 0. Other values are replaced by a vector of two 0.
+ *                   additional elements are removed while missing ones are replaced by 1.
+ *                   Arrays are casted, not numbers are replaced by 1. Other values are replaced by a vector of two 1.
  */
 function divisor2D(value) =
     isNumber(value) ? [ divisor(value), divisor(value) ]
@@ -246,8 +246,8 @@ function divisor2D(value) =
  *
  * @param Vector|Number value - The value to cast.
  * @returns Vector - Returns a 3D vector. Vectors remain unchanged, unless they don't have the required length,
- *                   additional elements are removed while missing ones are replaced by 0.
- *                   Arrays are casted, not numbers are replaced by 0. Other values are replaced by a vector of three 0.
+ *                   additional elements are removed while missing ones are replaced by 1.
+ *                   Arrays are casted, not numbers are replaced by 1. Other values are replaced by a vector of three 1.
  */
 function divisor3D(value) =
     isNumber(value) ? [ divisor(value), divisor(value), divisor(value) ]
