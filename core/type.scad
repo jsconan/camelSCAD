@@ -225,3 +225,31 @@ function vector3D(value) =
     isNumber(value) ? [ value, value, value ]
    :[ float(value[0]), float(value[1]), float(value[2]) ]
 ;
+
+/**
+ * Typecasts the value to a 2D vector where elements cannot be 0.
+ * If a number is provided instead of a vector, a vector will all elements filled with the provided number will be returned.
+ *
+ * @param Vector|Number value - The value to cast.
+ * @returns Vector - Returns a 2D vector. Vectors remain unchanged, unless they don't have the required length,
+ *                   additional elements are removed while missing ones are replaced by 0.
+ *                   Arrays are casted, not numbers are replaced by 0. Other values are replaced by a vector of two 0.
+ */
+function divisor2D(value) =
+    isNumber(value) ? [ divisor(value), divisor(value) ]
+   :[ divisor(value[0]), divisor(value[1]) ]
+;
+
+/**
+ * Typecasts the value to a 3D vector where elements cannot be 0.
+ * If a number is provided instead of a vector, a vector will all elements filled with the provided number will be returned.
+ *
+ * @param Vector|Number value - The value to cast.
+ * @returns Vector - Returns a 3D vector. Vectors remain unchanged, unless they don't have the required length,
+ *                   additional elements are removed while missing ones are replaced by 0.
+ *                   Arrays are casted, not numbers are replaced by 0. Other values are replaced by a vector of three 0.
+ */
+function divisor3D(value) =
+    isNumber(value) ? [ divisor(value), divisor(value), divisor(value) ]
+   :[ divisor(value[0]), divisor(value[1]), divisor(value[2]) ]
+;
