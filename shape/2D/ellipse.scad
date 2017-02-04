@@ -136,6 +136,26 @@ module pie(r=1, a=90, d, a1, a2, rx, ry, dx, dy) {
 }
 
 /**
+ * Creates a chord at the origin.
+ *
+ * @param Number|Vector [r] - The radius or a vector that contains horizontal and vertical radius.
+ * @param Number|Vector [d] - The diameter or a vector that contains horizontal and vertical diameters.
+ * @param Number [a] - The angle of the chord
+ * @param Number [a1] - The start angle of the chord
+ * @param Number [a2] - The end angle of the chord
+ * @param Number [rx] - The horizontal radius.
+ * @param Number [ry] - The vertical radius.
+ * @param Number [dx] - The horizontal diameter.
+ * @param Number [dy] - The vertical diameter.
+ */
+module chord(r=1, a=90, d, a1, a2, rx, ry, dx, dy) {
+    polygon(
+        points = arc(v=sizeEllipse(r=r, d=d, rx=rx, ry=ry, dx=dx, dy=dy), a=a, a1=a1, a2=a2),
+        convexity = 10
+    );
+}
+
+/**
  * Creates a ring at the origin.
  *
  * @param Number|Vector [r] - The radius of the ring or a vector that contains horizontal and vertical radius.
