@@ -34,7 +34,7 @@ use <../../full.scad>
  * @author jsconan
  */
 module testCorePoint() {
-    testPackage("core/point.scad", 11) {
+    testPackage("core/point.scad", 16) {
         // test core/point/apply2D()
         testModule("apply2D()", 4) {
             testUnit("no parameter", 1) {
@@ -187,6 +187,114 @@ module testCorePoint() {
                 assertEqual(cosp(0.2, 2, 6), [6 * cos(36), 0.2], "Should return [6 * cos(36), 0.2]");
                 assertEqual(cosp(0.5, 2, 6, 10), [6 * cos(100), 0.5], "Should return [6 * cos(100), 0.5]");
                 assertEqual(cosp(0.8, 2, 6, 10, 15), [15 + 6 * cos(154), 0.8], "Should return [15 + 6 * cos(100), 0.8]");
+            }
+        }
+        // test core/point/boundaries()
+        testModule("boundaries()", 3) {
+            testUnit("no parameter", 1) {
+                assertEqual(boundaries(), [[0, 0, 0], [0, 0, 0]], "Cannot get boundaries if the list is missing, should return 0");
+            }
+            testUnit("wrong types", 3) {
+                assertEqual(boundaries("2"), [[0, 0, 0], [0, 0, 0]], "Cannot get boundaries from string, should return 0");
+                assertEqual(boundaries(2), [[0, 0, 0], [0, 0, 0]], "Cannot get boundaries from single number, should return 0");
+                assertEqual(boundaries(true), [[0, 0, 0], [0, 0, 0]], "Cannot get boundaries from boolean, should return 0");
+            }
+            testUnit("vectors", 9) {
+                assertEqual(boundaries([[1, 2]]), [[1, 2, 0], [1, 2, 0]], "A single point is its own boundaries, 2D vectors are upscaled to 3D");
+                assertEqual(boundaries([[1, 2, 3]]), [[1, 2, 3], [1, 2, 3]], "A single point is its own boundaries, 3D vectors are supported");
+                assertEqual(boundaries([[1, 2, 3, 4]]), [[1, 2, 3], [1, 2, 3]], "A single point is its own boundaries, 4D vectors and more are truncated");
+
+                assertEqual(boundaries([[1, 2], [5, 9]]), [[1, 2, 0], [5, 9, 0]], "Boundaries of 2 points, 2D vectors are upscaled to 3D");
+                assertEqual(boundaries([[1, 2, 3], [5, 9, -2]]), [[1, 2, -2], [5, 9, 3]], "Boundaries of 2 points, 3D vectors are supported");
+                assertEqual(boundaries([[1, 2, 3, 4], [5, 9, -2, 8]]), [[1, 2, -2], [5, 9, 3]], "Boundaries of 2 points, 4D vectors and more are truncated");
+
+                assertEqual(boundaries([[1, 2], [5, 9], [3, 2], [-2, -6]]), [[-2, -6, 0], [5, 9, 0]], "Boundaries of several points, 2D vectors are upscaled to 3D");
+                assertEqual(boundaries([[1, 2, 3], [5, 9, -2], [3, 2, 7], [-2, -6, 0]]), [[-2, -6, -2], [5, 9, 7]], "Boundaries of several points, 3D vectors are supported");
+                assertEqual(boundaries([[1, 2, 3, 4], [5, 9, -2, 8], [3, 2, 7, 5], [-2, -6, 0, 1]]), [[-2, -6, -2], [5, 9, 7]], "Boundaries of several points, 4D vectors and more are truncated");
+            }
+        }
+        // test core/point/dimensions()
+        testModule("dimensions()", 3) {
+            testUnit("no parameter", 1) {
+                assertEqual(dimensions(), [0, 0, 0], "Cannot get dimensions if the list is missing, should return 0");
+            }
+            testUnit("wrong types", 3) {
+                assertEqual(dimensions("2"), [0, 0, 0], "Cannot get dimensions from string, should return 0");
+                assertEqual(dimensions(2), [0, 0, 0], "Cannot get dimensions from single number, should return 0");
+                assertEqual(dimensions(true), [0, 0, 0], "Cannot get dimensions from boolean, should return 0");
+            }
+            testUnit("vectors", 9) {
+                assertEqual(dimensions([[1, 2]]), [0, 0, 0], "A single point has no dimensions, 2D vectors are upscaled to 3D");
+                assertEqual(dimensions([[1, 2, 3]]), [0, 0, 0], "A single point has no dimensions, 3D vectors are supported");
+                assertEqual(dimensions([[1, 2, 3, 4]]), [0, 0, 0], "A single point has no dimensions, 4D vectors and more are truncated");
+
+                assertEqual(dimensions([[1, 2], [5, 9]]), [4, 7, 0], "Should return a the dimensions if at least 2 points are provided, 2D vectors are upscaled to 3D");
+                assertEqual(dimensions([[1, 2, 3], [5, 9, -2]]), [4, 7, 5], "Should return a the dimensions if at least 2 points are provided, 3D vectors are supported");
+                assertEqual(dimensions([[1, 2, 3], [5, 9, -2]]), [4, 7, 5], "Should return a the dimensions if at least 2 points are provided, 4D vectors and more are truncated");
+
+                assertEqual(dimensions([[1, 2], [5, 9], [3, 2], [-2, -6]]), [7, 15, 0], "Should return a the dimensions with respect to all points, 2D vectors are upscaled to 3D");
+                assertEqual(dimensions([[1, 2, 3], [5, 9, -2], [3, 2, 7], [-2, -6, 0]]), [7, 15, 9], "Should return a the dimensions with respect to all points, 3D vectors are supported");
+                assertEqual(dimensions([[1, 2, 3, 4], [5, 9, -2, -5], [3, 2, 7, 8], [-2, -6, 0, 3]]), [7, 15, 9], "Should return a the dimensions with respect to all points, 4D vectors and more are truncated");
+            }
+        }
+        // test core/point/scaleFactor()
+        testModule("scaleFactor()", 3) {
+            testUnit("no parameter", 1) {
+                assertEqual(scaleFactor(), [1, 1, 1], "If no list nor size are provided, should return a neutral scale factor");
+            }
+            testUnit("wrong types", 3) {
+                assertEqual(scaleFactor("1", "2"), [1, 1, 1], "Cannot resize strings, should return a neutral scale factor");
+                assertEqual(scaleFactor([1], [2]), [2, 1, 1], "Incomplete vectors should be adjusted, should return a neutral scale factor");
+                assertEqual(scaleFactor(true, true), [1, 1, 1], "Cannot resize booleans, should return a neutral scale factor");
+            }
+            testUnit("vectors", 10) {
+                assertEqual(scaleFactor([[1, 2], [5, 9]]), [1, 1, 1], "Should return a default scale factor if no size is provided, 2D vectors are upscaled to 3D");
+                assertEqual(scaleFactor([[1, 2, 3], [5, 9, 2]]), [1, 1, 1], "Should return a default scale factor if no size is provided, 3D vectors are supported");
+                assertEqual(scaleFactor([[1, 2, 3, 4], [5, 9, 2, -3]]), [1, 1, 1], "Should return a default scale factor if no size is provided, 4D vectors and more are truncated");
+
+                assertEqual(scaleFactor([[1, 2], [5, 9]], 2), [2/4, 2/7, 2], "When the size is a single number it should be applied to all elements, 2D vectors are upscaled to 3D");
+                assertEqual(scaleFactor([[1, 2, 3], [5, 9, 2]], 2), [2/4, 2/7, 2], "When the size is a single number it should be applied to all elements, 3D vectors are supported");
+                assertEqual(scaleFactor([[1, 2, 3, 4], [5, 9, 2, 7]], 2), [2/4, 2/7, 2], "When the size is a single number it should be applied to all elements, 4D vectors and more are truncated");
+
+                assertEqual(scaleFactor([[1, 2], [5, 9]], [2, 3]), [2/4, 3/7, 1], "When the size is a vector its elements are applied respectively to each elements of the listed points, 2D vectors are upscaled to 3D");
+                assertEqual(scaleFactor([[1, 2, 3], [5, 9, 2]], [2, 3, 4]), [2/4, 3/7, 4], "When the size is a vector its elements are applied respectively to each elements of the listed points, 3D vectors are supported");
+                assertEqual(scaleFactor([[1, 2, 3, 4], [5, 9, 2, 7]], [2, 3, 4]), [2/4, 3/7, 4], "When the size is a vector its elements are applied respectively to each elements of the listed points, 4D vectors and more are truncated");
+
+                assertEqual(scaleFactor([[1], [8]], 3), [3/7, 3, 3], "Incomplete vectors should be adjusted");
+            }
+        }
+        // test core/point/scale2D()
+        testModule("scale2D()", 3) {
+            testUnit("no parameter", 1) {
+                assertEmptyArray(scale2D(), "Should return an empty list of points");
+            }
+            testUnit("wrong types", 3) {
+                assertEqual(scale2D("1", "2"), [], "Cannot scale strings");
+                assertEqual(scale2D([1], [2]), [[0, 0]], "Incomplete vectors should be adjusted");
+                assertEqual(scale2D(true, true), [], "Cannot scale booleans");
+            }
+            testUnit("vectors", 4) {
+                assertEqual(scale2D([[1, 1], [2, 2]]), [[1, 1], [2, 2]], "A default scale factor should be utilized if none is provided");
+                assertEqual(scale2D([[1, 2], [5, 9]], 2), [[2, 4], [10, 18]], "When the scale factor is a single number it should be applied to all elements");
+                assertEqual(scale2D([[3, 1.5], [2.3, 7]], [0.6, 1.5]), [[3*0.6, 1.5*1.5], [2.3*0.6, 7*1.5]], "When the scale factor is a vector its elements are applied respectively to each elements of the listed points");
+                assertEqual(scale2D([[1], [8]], 3), [[3, 0], [24, 0]], "Incomplete vectors should be adjusted");
+            }
+        }
+        // test core/point/resize2D()
+        testModule("resize2D()", 3) {
+            testUnit("no parameter", 1) {
+                assertEmptyArray(resize2D(), "Should return an empty list of points");
+            }
+            testUnit("wrong types", 3) {
+                assertEqual(resize2D("1", "2"), [], "Cannot resize strings");
+                assertEqual(resize2D([1], [2]), [[0, 0]], "Incomplete vectors should be adjusted");
+                assertEqual(resize2D(true, true), [], "Cannot resize booleans");
+            }
+            testUnit("vectors", 4) {
+                assertEqual(resize2D([[1, 3], [5, 9]]), [[1, 3], [5, 9]], "No change will be made if no size is provided");
+                assertEqual(resize2D([[1, 3], [5, 9]], 2), [[1*2/4, 3*2/6], [5*2/4, 9*2/6]], "When the size is a single number it should be applied to all elements");
+                assertEqual(resize2D([[1, 3], [5, 9]], [2, 3]), [[1*2/4, 3*3/6], [5*2/4, 9*3/6]], "When the size is a vector its elements are applied respectively to each elements of the listed points");
+                assertEqual(resize2D([[1], [8]], 3), [[1*3/7, 0], [8*3/7, 0]], "Incomplete vectors should be adjusted");
             }
         }
         // test core/point/rotate2D()

@@ -148,6 +148,142 @@ function cosp(y, w, h, p, o) =
 ;
 
 /**
+ * Computes the boundaries of the space occupied by a list of points.
+ *
+ * @param Vector[] points - The points from which get the boundaries.
+ * @returns Vector[]
+ */
+function boundaries(v,
+               // internal
+               p, l) =
+    let(
+        p = float(p),
+        l = numberOr(l, float(len(v)))
+    )
+    l <= 4 ? (
+        let(
+            pt1 = vector3D(v[p])
+        )
+        l > 1 ? (
+            let(
+                pt2 = vector3D(v[p + 1])
+            )
+            l > 2 ? (
+                let(
+                    pt3 = vector3D(v[p + 2])
+                )
+                l > 3 ? (
+                    let(
+                        pt4 = vector3D(v[p + 3])
+                    )
+                    [
+                        [ min(pt1[0], pt2[0], pt3[0], pt4[0]),
+                          min(pt1[1], pt2[1], pt3[1], pt4[1]),
+                          min(pt1[2], pt2[2], pt3[2], pt4[2]) ],
+                        [ max(pt1[0], pt2[0], pt3[0], pt4[0]),
+                          max(pt1[1], pt2[1], pt3[1], pt4[1]),
+                          max(pt1[2], pt2[2], pt3[2], pt4[2]) ]
+                    ]
+                )
+               :[
+                    [ min(pt1[0], pt2[0], pt3[0]),
+                      min(pt1[1], pt2[1], pt3[1]),
+                      min(pt1[2], pt2[2], pt3[2]) ],
+                    [ max(pt1[0], pt2[0], pt3[0]),
+                      max(pt1[1], pt2[1], pt3[1]),
+                      max(pt1[2], pt2[2], pt3[2]) ]
+                ]
+            )
+           :[
+                [ min(pt1[0], pt2[0]),
+                  min(pt1[1], pt2[1]),
+                  min(pt1[2], pt2[2]) ],
+                [ max(pt1[0], pt2[0]),
+                  max(pt1[1], pt2[1]),
+                  max(pt1[2], pt2[2]) ]
+            ]
+        )
+       :[pt1, pt1]
+    )
+   :let(
+        half = floor(l / 2),
+        left = boundaries(v, p, half),
+        right = boundaries(v, p + half, l - half)
+    )
+    [
+        [ min(left[0][0], right[0][0]),
+          min(left[0][1], right[0][1]),
+          min(left[0][2], right[0][2]) ],
+        [ max(left[1][0], right[1][0]),
+          max(left[1][1], right[1][1]),
+          max(left[1][2], right[1][2]) ]
+    ]
+;
+
+/**
+ * Computes the dimensions of the space occupied by a list of points.
+ *
+ * @param Vector[] points - The points to dimension.
+ * @returns Vector
+ */
+function dimensions(points) =
+    let(
+        b = boundaries(points)
+    )
+    b[1] - b[0]
+;
+
+/**
+ * Computes the scale factor needed to resize a list of 3D points to fit in the requested size.
+ *
+ * @param Vector[] points - The points to scale.
+ * @param Vector|Number size - The size in which the points should fit.
+ *                             Can be a number or a vector that contains dimensions.
+ * @returns Vector
+ */
+function scaleFactor(points, size) =
+    !size ? divisor3D()
+   :let(
+        size = divisor3D(size),
+        dim = dimensions(points)
+    )
+    [
+        size[0] / divisor(dim[0]),
+        size[1] / divisor(dim[1]),
+        size[2] / divisor(dim[2])
+    ]
+;
+
+/**
+ * Scales a list of 2D points.
+ *
+ * @param Vector[] points - The points to scale.
+ * @param Vector|Number factor - A scale factor.
+ *                               Can be a number or a vector that contains scale factors for each axis.
+ * @returns Vector[]
+ */
+function scale2D(points, factor) =
+    !isArray(points) ? []
+   :let(
+        factor = divisor2D(factor)
+    )
+    [ for (p = points) [
+        float(p[0]) * factor[0],
+        float(p[1]) * factor[1]
+    ] ]
+;
+
+/**
+ * Resizes a list of 2D points to fit in the requested size.
+ *
+ * @param Vector[] points - The points to scale.
+ * @param Vector|Number size - The size in which the points should fit.
+ *                             Can be a number or a vector that contains dimensions.
+ * @returns Vector[]
+ */
+function resize2D(points, size) = scale2D(points, scaleFactor(points, size));
+
+/**
  * Rotates a 2D vector.
  *
  * @param Vector v - The vector to rotate.
