@@ -49,6 +49,7 @@ use <util/html.scad>
 use <util/test-utils.scad>
 
 use <shape/2D/ellipse.scad>
+use <shape/2D/rounded.scad>
 
 use <shape/3D/ellipsoid.scad>
 
@@ -69,5 +70,6 @@ testUtilHtml();
 testUtilTestUtils();
 
 testShape2dEllipse();
+testShape2dRounded();
 
 testShape3dEllipsoid();

@@ -68,5 +68,6 @@ include <operator/transform.scad>
 
 /* SHAPES */
 include <shape/2D/ellipse.scad>
+include <shape/2D/rounded.scad>
 
 include <shape/3D/ellipsoid.scad>

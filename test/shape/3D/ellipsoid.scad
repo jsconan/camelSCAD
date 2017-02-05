@@ -35,6 +35,7 @@ use <../../../full.scad>
  */
 module testShape3dEllipsoid() {
     testPackage("shape/3D/ellipsoid.scad", 1) {
+        // test shape/3D/ellipsoid/sizeEllipsoid()
         testModule("sizeEllipsoid", 3) {
             testUnit("no parameter", 1) {
                 assertEqual(sizeEllipsoid(), [1, 1, 1], "Should always return a size even if not parameter has been provided");
