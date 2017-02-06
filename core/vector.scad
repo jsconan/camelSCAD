@@ -85,9 +85,10 @@ function normalize(v) =
  * @returns Vector
  */
 function vadd(v, value) =
+    len(v) ?
     let( value = float(value) )
-    isArray(v) ? [ for (i = v) float(i) + value ]
-               : []
+    [ for (i = v) float(i) + value ]
+   :[]
 ;
 
 /**
@@ -98,9 +99,10 @@ function vadd(v, value) =
  * @returns Vector
  */
 function vsub(v, value) =
+    len(v) ?
     let( value = float(value) )
-    isArray(v) ? [ for (i = v) float(i) - value ]
-               : []
+    [ for (i = v) float(i) - value ]
+   :[]
 ;
 
 /**
@@ -110,10 +112,17 @@ function vsub(v, value) =
  * @param Vector b - The second vector to multiply.
  * @returns Vector
  */
-function vmul(a, b) = isArray(a) && isArray(b) ? [
-    for (i = [0 : max(len(a), len(b)) - 1])
-        float(a[i]) * float(b[i])
-] : [];
+function vmul(a, b) =
+    let(
+        lenA = len(a),
+        lenB = len(b)
+    )
+    lenA && lenB ? [
+        for (i = [0 : max(lenA, lenB) - 1])
+            float(a[i]) * float(b[i])
+    ]
+   :[]
+;
 
 /**
  * Divides two vectors, elements by elements.
@@ -122,10 +131,17 @@ function vmul(a, b) = isArray(a) && isArray(b) ? [
  * @param Vector b - The vector that will divide.
  * @returns Vector
  */
-function vdiv(a, b) = isArray(a) && isArray(b) ? [
-    for (i = [0 : max(len(a), len(b)) - 1])
-        float(a[i]) / divisor(b[i])
-] : [];
+function vdiv(a, b) =
+    let(
+        lenA = len(a),
+        lenB = len(b)
+    )
+    lenA && lenB ? [
+        for (i = [0 : max(lenA, lenB) - 1])
+            float(a[i]) / divisor(b[i])
+    ]
+   :[]
+;
 
 /**
  * Compares each elements of a vector with a value and keep the smallest.
@@ -135,9 +151,9 @@ function vdiv(a, b) = isArray(a) && isArray(b) ? [
  * @returns Vector
  */
 function vmin(v, value) =
-    let( value = float(value) )
-    isArray(v) ? [ for (i = v) min(float(i), value) ]
-               : []
+    len(v) ? let( value = float(value) )
+    [ for (i = v) min(float(i), value) ]
+   :[]
 ;
 
 /**
@@ -148,9 +164,9 @@ function vmin(v, value) =
  * @returns Vector
  */
 function vmax(v, value) =
-    let( value = float(value) )
-    isArray(v) ? [ for (i = v) max(float(i), value) ]
-               : []
+    len(v) ? let( value = float(value) )
+    [ for (i = v) max(float(i), value) ]
+   :[]
 ;
 
 /**
@@ -161,9 +177,9 @@ function vmax(v, value) =
  * @returns Vector
  */
 function vpow(v, power=2) =
-    let( power = float(power) )
-    isArray(v) ? [ for (i = v) pow(float(i), power) ]
-               : []
+    len(v) ? let( power = float(power) )
+    [ for (i = v) pow(float(i), power) ]
+   :[]
 ;
 
 /**
@@ -173,8 +189,8 @@ function vpow(v, power=2) =
  * @returns Vector
  */
 function vabs(v) =
-    isArray(v) ? [ for (i = v) abs(float(i)) ]
-               : []
+    len(v) ? [ for (i = v) abs(float(i)) ]
+           : []
 ;
 
 /**

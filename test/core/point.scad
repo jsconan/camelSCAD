@@ -269,7 +269,7 @@ module testCorePoint() {
                 assertEmptyArray(scale2D(), "Should return an empty list of points");
             }
             testUnit("wrong types", 3) {
-                assertEqual(scale2D("1", "2"), [], "Cannot scale strings");
+                assertEqual(scale2D("1", "2"), [[0, 0]], "Cannot scale strings");
                 assertEqual(scale2D([1], [2]), [[0, 0]], "Incomplete vectors should be adjusted");
                 assertEqual(scale2D(true, true), [], "Cannot scale booleans");
             }
@@ -286,7 +286,7 @@ module testCorePoint() {
                 assertEmptyArray(resize2D(), "Should return an empty list of points");
             }
             testUnit("wrong types", 3) {
-                assertEqual(resize2D("1", "2"), [], "Cannot resize strings");
+                assertEqual(resize2D("1", "2"), [[0, 0]], "Cannot resize strings");
                 assertEqual(resize2D([1], [2]), [[0, 0]], "Incomplete vectors should be adjusted");
                 assertEqual(resize2D(true, true), [], "Cannot resize booleans");
             }

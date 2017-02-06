@@ -40,7 +40,7 @@
  * @returns Array
  */
 function fill(value, length) =
-    let( length = integer(length) )
+    let( length = float(length) )
     length > 0 ? [ for (i = [0 : length - 1]) value ]
                : []
 ;
@@ -55,10 +55,10 @@ function fill(value, length) =
  */
 function range(start, end, step) =
     let(
-        s = integer(start),
+        s = float(start),
         simple = s && isUndef(end),
         start = simple ? 0 : s,
-        end = simple ? s : integer(end),
+        end = simple ? s : float(end),
         step = or(number(step), start > end ? -1 : 1)
     )
     start || end ? [ for (i = [start : step : end]) i ]

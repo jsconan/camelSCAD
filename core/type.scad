@@ -194,7 +194,7 @@ function vector(value, length) =
         length = float(isUndef(length) ? l : length)
     )
     !array ? fill(float(value), length)
-    :length ? [ for (i = [0 : length - 1]) uor(value[i] * 1, 0) ]
+    :length ? [ for (i = [0 : length - 1]) float(value[i]) ]
     :[]
 ;
 
@@ -236,7 +236,7 @@ function vector3D(value) =
  *                   Arrays are casted, not numbers are replaced by 1. Other values are replaced by a vector of two 1.
  */
 function divisor2D(value) =
-    isNumber(value) ? [ divisor(value), divisor(value) ]
+    isNumber(value) ? let( value = divisor(value) ) [ value, value ]
    :[ divisor(value[0]), divisor(value[1]) ]
 ;
 
@@ -250,6 +250,6 @@ function divisor2D(value) =
  *                   Arrays are casted, not numbers are replaced by 1. Other values are replaced by a vector of three 1.
  */
 function divisor3D(value) =
-    isNumber(value) ? [ divisor(value), divisor(value), divisor(value) ]
+    isNumber(value) ? let( value = divisor(value) ) [ value, value, value ]
    :[ divisor(value[0]), divisor(value[1]), divisor(value[2]) ]
 ;

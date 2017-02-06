@@ -263,7 +263,7 @@ function scaleFactor(points, size) =
  * @returns Vector[]
  */
 function scale2D(points, factor) =
-    !isArray(points) ? []
+    !len(points) ? []
    :let(
         factor = divisor2D(factor)
     )
