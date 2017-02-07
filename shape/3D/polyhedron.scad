@@ -24,52 +24,47 @@
  */
 
 /**
- * Entry point of the camelSCAD library.
+ * Part of the camelSCAD library.
  *
- * Features set: Includes all components.
+ * Polyhedron shapes.
  *
+ * @package shape/3D
  * @author jsconan
  */
 
-/* CORE */
-include <core/version.scad>
-include <core/type.scad>
-include <core/logic.scad>
-include <core/list.scad>
-include <core/maths.scad>
-include <core/point.scad>
-include <core/line.scad>
-include <core/vector.scad>
-include <core/string.scad>
-include <core/util.scad>
-include <core/mode.scad>
+/**
+ * Computes the size of a box.
+ *
+ * @param Number|Vector [size] - The size of the box.
+ * @param Number [l] - The overall length.
+ * @param Number [w] - The overall width.
+ * @param Number [h] - The overall height.
+ * @returns Vector - Returns the size vector.
+ */
+function sizeBox(size, l, w, h) =
+    let(
+        size = apply3D(size, l, w, h)
+    )
+    [
+        divisor(size[0]),
+        divisor(size[1]),
+        divisor(size[2])
+    ]
+;
 
-/* UNIT TEST & ADDITIONAL FEATURES */
-include <util/ansi.scad>
-include <util/html.scad>
-include <util/test-utils.scad>
-include <util/test.scad>
+/**
+ * Creates a box at the origin.
+ *
+ * @param Number|Vector [size] - The size of the box.
+ * @param Number [l] - The overall length.
+ * @param Number [w] - The overall width.
+ * @param Number [h] - The overall height.
+ * @param Boolean [center] - Whether or not center the box on the vertical axis.
+ */
 
-/* OPERATORS */
-include <operator/distribute/grid.scad>
-include <operator/distribute/mirror.scad>
-include <operator/distribute/rotate.scad>
-include <operator/distribute/translate.scad>
-
-include <operator/repeat/mirror.scad>
-include <operator/repeat/rotate.scad>
-include <operator/repeat/translate.scad>
-
-include <operator/rotate/axis.scad>
-include <operator/rotate/origin.scad>
-
-include <operator/operation.scad>
-include <operator/transform.scad>
-
-/* SHAPES */
-include <shape/2D/ellipse.scad>
-include <shape/2D/rounded.scad>
-include <shape/2D/polygon.scad>
-
-include <shape/3D/ellipsoid.scad>
-include <shape/3D/polyhedron.scad>
+module box(size, l, w, h, center) {
+    size = sizeBox(size=size, l=l, w=w, h=h);
+    linear_extrude(height=size[2], center=center, convexity=10) {
+        rectangle(size);
+    }
+}

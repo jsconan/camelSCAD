@@ -50,8 +50,10 @@ use <util/test-utils.scad>
 
 use <shape/2D/ellipse.scad>
 use <shape/2D/rounded.scad>
+use <shape/2D/polygon.scad>
 
 use <shape/3D/ellipsoid.scad>
+use <shape/3D/polyhedron.scad>
 
 testCoreVersion();
 testCoreType();
@@ -71,5 +73,7 @@ testUtilTestUtils();
 
 testShape2dEllipse();
 testShape2dRounded();
+testShape2dPolygon();
 
 testShape3dEllipsoid();
+testShape3dPolyhedron();
