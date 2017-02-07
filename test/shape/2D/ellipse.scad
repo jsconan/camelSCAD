@@ -34,23 +34,23 @@ use <../../../full.scad>
  * @author jsconan
  */
 module testShape2dEllipse() {
-    testPackage("shape/2D/ellipse.scad", 3) {
+    testPackage("shape/2D/ellipse.scad", 4) {
         // test shape/2D/ellipse/sizeEllipse()
-        testModule("sizeEllipse", 3) {
-            testUnit("no parameter", 1) {
+        testModule("sizeEllipse()", 5) {
+            testUnit("default values", 3) {
                 assertEqual(sizeEllipse(), [1, 1], "Should always return a size even if not parameter has been provided");
-            }
-            testUnit("wrong types", 2) {
                 assertEqual(sizeEllipse("12", "12", "12", "12", "12", "12"), [1, 1], "Should always return a size even if wrong parameter has been provided (string)");
                 assertEqual(sizeEllipse(true, true, true, true, true, true), [1, 1], "Should always return a size even if wrong parameter has been provided (boolean)");
             }
-            testUnit("correct types", 20) {
+            testUnit("number instead of vector", 2) {
                 assertEqual(sizeEllipse(3), [3, 3], "Should produce a radius vector from a single number radius");
                 assertEqual(sizeEllipse(d=3), [1.5, 1.5], "Should produce a radius vector from a single number diameter");
-
+            }
+            testUnit("vector", 2) {
                 assertEqual(sizeEllipse([3, 4]), [3, 4], "Should keep the provided radius vector");
                 assertEqual(sizeEllipse(d=[3, 4]), [1.5, 2], "Should translate the provided diameter vector to a radius vector");
-
+            }
+            testUnit("vector and override", 8) {
                 assertEqual(sizeEllipse([3, 4], rx=5), [5, 4], "Should set the X radius with the provided radius in the provided radius vector");
                 assertEqual(sizeEllipse([3, 4], ry=5), [3, 5], "Should set the Y radius with the provided radius in the provided radius vector");
 
@@ -62,7 +62,8 @@ module testShape2dEllipse() {
 
                 assertEqual(sizeEllipse(d=[3, 4], dx=5), [2.5, 2], "Should replace the X radius with the provided diameter in the provided provided vector");
                 assertEqual(sizeEllipse(d=[3, 4], dy=5), [1.5, 2.5], "Should replace the Y radius with the provided diameter in the provided provided vector");
-
+            }
+            testUnit("separated parameters", 8) {
                 assertEqual(sizeEllipse(rx=3), [3, 1], "Should compose a radius vector from the provided X radius");
                 assertEqual(sizeEllipse(ry=3), [1, 3], "Should compose a radius vector from the provided Y radius");
                 assertEqual(sizeEllipse(rx=7, ry=3), [7, 3], "Should compose a radius vector from the provided X and Y radius");
@@ -75,9 +76,86 @@ module testShape2dEllipse() {
                 assertEqual(sizeEllipse(dx=7, ry=3), [3.5, 3], "Should compose a radius vector from the provided X diameter and the Y radius");
             }
         }
+        // test shape/2D/ellipse/sizeRing()
+        testModule("sizeRing()", 3) {
+            testUnit("default values", 3) {
+                assertEqual(sizeRing(), [[1, 1], [1, 1]], "Should always return a size even if not parameter has been provided");
+                assertEqual(sizeRing("12", "12", "12", "12", "12", "12"), [[1, 1], [1, 1]], "Should always return a size even if wrong parameter has been provided (string)");
+                assertEqual(sizeRing(true, true, true, true, true, true), [[1, 1], [1, 1]], "Should always return a size even if wrong parameter has been provided (boolean)");
+            }
+            testUnit("only the outer radius is provided", 20) {
+                assertEqual(sizeRing(3), [[3, 3], [3, 3]], "Should produce a radius vector from a single number radius");
+                assertEqual(sizeRing(d=3), [[1.5, 1.5], [1.5, 1.5]], "Should produce a radius vector from a single number diameter");
+
+                assertEqual(sizeRing([3, 4]), [[3, 4], [3, 4]], "Should keep the provided radius vector");
+                assertEqual(sizeRing(d=[3, 4]), [[1.5, 2], [1.5, 2]], "Should translate the provided diameter vector to a radius vector");
+
+                assertEqual(sizeRing([3, 4], rx=5), [[5, 4], [5, 4]], "Should set the X radius with the provided radius in the provided radius vector");
+                assertEqual(sizeRing([3, 4], ry=5), [[3, 5], [3, 5]], "Should set the Y radius with the provided radius in the provided radius vector");
+
+                assertEqual(sizeRing([3, 4], dx=5), [[2.5, 4], [2.5, 4]], "Should replace the X radius with the provided diameter in the provided radius vector");
+                assertEqual(sizeRing([3, 4], dy=5), [[3, 2.5], [3, 2.5]], "Should replace the Y radius with the provided diameter in the provided radius vector");
+
+                assertEqual(sizeRing(d=[3, 4], rx=5), [[5, 2], [5, 2]], "Should set the X radius with the provided radius in the provided provided vector");
+                assertEqual(sizeRing(d=[3, 4], ry=5), [[1.5, 5], [1.5, 5]], "Should set the Y radius with the provided radius in the provided provided vector");
+
+                assertEqual(sizeRing(d=[3, 4], dx=5), [[2.5, 2], [2.5, 2]], "Should replace the X radius with the provided diameter in the provided provided vector");
+                assertEqual(sizeRing(d=[3, 4], dy=5), [[1.5, 2.5], [1.5, 2.5]], "Should replace the Y radius with the provided diameter in the provided provided vector");
+
+                assertEqual(sizeRing(rx=3), [[3, 1], [3, 1]], "Should compose a radius vector from the provided X radius");
+                assertEqual(sizeRing(ry=3), [[1, 3], [1, 3]], "Should compose a radius vector from the provided Y radius");
+                assertEqual(sizeRing(rx=7, ry=3), [[7, 3], [7, 3]], "Should compose a radius vector from the provided X and Y radius");
+
+                assertEqual(sizeRing(dx=3), [[1.5, 1], [1.5, 1]], "Should compose a radius vector from the provided X diameter");
+                assertEqual(sizeRing(dy=3), [[1, 1.5], [1, 1.5]], "Should compose a radius vector from the provided Y diameter");
+                assertEqual(sizeRing(dx=7, dy=3), [[3.5, 1.5], [3.5, 1.5]], "Should compose a radius vector from the provided X and Y diameter");
+
+                assertEqual(sizeRing(rx=7, dy=3), [[7, 1.5], [7, 1.5]], "Should compose a radius vector from the provided X radius and the Y diameter");
+                assertEqual(sizeRing(dx=7, ry=3), [[3.5, 3], [3.5, 3]], "Should compose a radius vector from the provided X diameter and the Y radius");
+            }
+            testUnit("outer radius and ring width are provided", 26) {
+                assertEqual(sizeRing(3, 2), [[3, 3], [1, 1]], "Should produce a radius vector from a single number radius");
+                assertEqual(sizeRing(d=3, w=2), [[1.5, 1.5], [0, 0]], "Should produce a radius vector from a single number diameter");
+
+                assertEqual(sizeRing(3, [2, 1]), [[3, 3], [1, 2]], "Should produce a radius vector from a single number radius and the width as vector");
+                assertEqual(sizeRing(d=3, w=[2, 1]), [[1.5, 1.5], [0, 0.5]], "Should produce a radius vector from a single number diameter and the width as vector");
+
+                assertEqual(sizeRing([3, 4], 2), [[3, 4], [1, 2]], "Should keep the provided radius vector");
+                assertEqual(sizeRing(d=[3, 4], w=1), [[1.5, 2], [0.5, 1]], "Should translate the provided diameter vector to a radius vector");
+
+                assertEqual(sizeRing([3, 4], [2, 1]), [[3, 4], [1, 3]], "Should keep the provided radius vector");
+                assertEqual(sizeRing(d=[3, 4], w=[1, 0.5]), [[1.5, 2], [0.5, 1.5]], "Should translate the provided diameter vector to a radius vector");
+
+                assertEqual(sizeRing([3, 4], 2, rx=5), [[5, 4], [3, 2]], "Should set the X radius with the provided radius in the provided radius vector");
+                assertEqual(sizeRing([3, 4], 2, ry=5), [[3, 5], [1, 3]], "Should set the Y radius with the provided radius in the provided radius vector");
+
+                assertEqual(sizeRing([3, 4], 2, rx=5, wx=1), [[5, 4], [4, 2]], "Should set the X radius with the provided radius in the provided radius vector");
+                assertEqual(sizeRing([3, 4], 2, ry=5, wy=1), [[3, 5], [1, 4]], "Should set the Y radius with the provided radius in the provided radius vector");
+
+                assertEqual(sizeRing([3, 4], 2, dx=5), [[2.5, 4], [0.5, 2]], "Should replace the X radius with the provided diameter in the provided radius vector");
+                assertEqual(sizeRing([3, 4], 2, dy=5), [[3, 2.5], [1, 0.5]], "Should replace the Y radius with the provided diameter in the provided radius vector");
+
+                assertEqual(sizeRing(d=[3, 4], w=2, rx=5), [[5, 2], [3, 0]], "Should set the X radius with the provided radius in the provided provided vector");
+                assertEqual(sizeRing(d=[3, 4], w=2, ry=5), [[1.5, 5], [0, 3]], "Should set the Y radius with the provided radius in the provided provided vector");
+
+                assertEqual(sizeRing(d=[3, 4], w=2, dx=5), [[2.5, 2], [0.5, 0]], "Should replace the X radius with the provided diameter in the provided provided vector");
+                assertEqual(sizeRing(d=[3, 4], w=2, dy=5), [[1.5, 2.5], [0, 0.5]], "Should replace the Y radius with the provided diameter in the provided provided vector");
+
+                assertEqual(sizeRing(w=0.5, rx=3), [[3, 1], [2.5, 0.5]], "Should compose a radius vector from the provided X radius");
+                assertEqual(sizeRing(w=0.5, ry=3), [[1, 3], [0.5, 2.5]], "Should compose a radius vector from the provided Y radius");
+                assertEqual(sizeRing(w=2, rx=7, ry=3), [[7, 3], [5, 1]], "Should compose a radius vector from the provided X and Y radius");
+
+                assertEqual(sizeRing(w=0.5, dx=3), [[1.5, 1], [1, 0.5]], "Should compose a radius vector from the provided X diameter");
+                assertEqual(sizeRing(w=0.5, dy=3), [[1, 1.5], [0.5, 1]], "Should compose a radius vector from the provided Y diameter");
+                assertEqual(sizeRing(w=1, dx=7, dy=3), [[3.5, 1.5], [2.5, 0.5]], "Should compose a radius vector from the provided X and Y diameter");
+
+                assertEqual(sizeRing(w=1, rx=7, dy=3), [[7, 1.5], [6, 0.5]], "Should compose a radius vector from the provided X radius and the Y diameter");
+                assertEqual(sizeRing(w=1, dx=7, ry=3), [[3.5, 3], [2.5, 2]], "Should compose a radius vector from the provided X diameter and the Y radius");
+            }
+        }
         // test shape/2D/ellipse/drawEllipse()
-        testModule("drawEllipse", 3) {
-            testUnit("no parameter", 3) {
+        testModule("drawEllipse()", 3) {
+            testUnit("default values", 3) {
                 assertEqual(drawEllipse($fn=3), [ for (a = [360/3 : 360/3 : 360]) _rotP(a, 1, 1) ], "Should return a list of points to draw a circle with a radius of 1 and 3 facets (triangle)");
                 assertEqual(drawEllipse($fn=4), [ for (a = [360/4 : 360/4 : 360]) _rotP(a, 1, 1) ], "Should return a list of points to draw a circle with a radius of 1 and 4 facets (square)");
                 assertEqual(drawEllipse($fn=6), [ for (a = [360/6 : 360/6 : 360]) _rotP(a, 1, 1) ], "Should return a list of points to draw a circle with a radius of 1 and 6 facets (hexagon)");
@@ -116,8 +194,8 @@ module testShape2dEllipse() {
             }
         }
         // test shape/2D/ellipse/drawPie()
-        testModule("drawPie", 5) {
-            testUnit("no parameter", 4) {
+        testModule("drawPie()", 5) {
+            testUnit("default values", 4) {
                 assertEqual(drawPie($fn=3), [ [0, 0], _rotP(0, 1, 1), _rotP(90, 1, 1) ], "Should return a list of points to draw a 90° pie with a radius of 1 and 3 facets");
                 assertEqual(drawPie($fn=4), [ [0, 0], _rotP(0, 1, 1), _rotP(90, 1, 1) ], "Should return a list of points to draw a 90° pie with a radius of 1 and 4 facets");
                 assertEqual(drawPie($fn=6), [ [0, 0], _rotP(0, 1, 1), _rotP(60, 1, 1), _rotP(90, 1, 1) ], "Should return a list of points to draw a 90° pie with a radius of 1 and 6 facets");

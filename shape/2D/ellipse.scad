@@ -56,6 +56,32 @@ function sizeEllipse(r, d, rx, ry, dx, dy) =
 ;
 
 /**
+ * Computes the size of a ring.
+ *
+ * @param Number|Vector [r] - The radius of the ring or a vector that contains horizontal and vertical radius.
+ * @param Number|Vector [w] - The thickness of the ring.
+ * @param Number|Vector [d] - The diameter of the ring or a vector that contains horizontal and vertical diameters.
+ * @param Number [rx] - The horizontal radius.
+ * @param Number [ry] - The vertical radius.
+ * @param Number [dx] - The horizontal diameter.
+ * @param Number [dy] - The vertical diameter.
+ * @param Number [wx] - The horizontal thickness of the ring hole.
+ * @param Number [wy] - The vertical thickness of the ring hole.
+ * @returns Vector[] - Returns two vectors containing the horizontal and vertical radius of the outer and the inner circles.
+ */
+function sizeRing(r, w, d, rx, ry, dx, dy, wx, wy) =
+    let(
+        out = sizeEllipse(r=r, d=d, rx=rx, ry=ry, dx=dx, dy=dy),
+        w = apply2D(w, wx, wy),
+        in = [
+            max(min(out[0], out[0] - w[0]), 0),
+            max(min(out[1], out[1] - w[1]), 0)
+        ]
+    )
+    [ out, in ]
+;
+
+/**
  * Computes the points that draw an ellipse.
  *
  * @param Number|Vector [r] - The radius or a vector that contains horizontal and vertical radius.
@@ -108,7 +134,7 @@ function drawPie(r, a=90, d, a1, a2, rx, ry, dx, dy) =
  * @param Number [dx] - The horizontal diameter.
  * @param Number [dy] - The vertical diameter.
  */
-module ellipse(r=1, d, rx, ry, dx, dy) {
+module ellipse(r, d, rx, ry, dx, dy) {
     polygon(
         points = drawEllipse(r=r, d=d, rx=rx, ry=ry, dx=dx, dy=dy),
         convexity = 10
@@ -128,7 +154,7 @@ module ellipse(r=1, d, rx, ry, dx, dy) {
  * @param Number [dx] - The horizontal diameter.
  * @param Number [dy] - The vertical diameter.
  */
-module pie(r=1, a=90, d, a1, a2, rx, ry, dx, dy) {
+module pie(r, a=90, d, a1, a2, rx, ry, dx, dy) {
     polygon(
         points = drawPie(r=r, a=a, d=d, a1=a1, a2=a2, rx=rx, ry=ry, dx=dx, dy=dy),
         convexity = 10
@@ -148,7 +174,7 @@ module pie(r=1, a=90, d, a1, a2, rx, ry, dx, dy) {
  * @param Number [dx] - The horizontal diameter.
  * @param Number [dy] - The vertical diameter.
  */
-module chord(r=1, a=90, d, a1, a2, rx, ry, dx, dy) {
+module chord(r, a=90, d, a1, a2, rx, ry, dx, dy) {
     polygon(
         points = arc(v=sizeEllipse(r=r, d=d, rx=rx, ry=ry, dx=dx, dy=dy), a=a, a1=a1, a2=a2),
         convexity = 10
@@ -159,26 +185,20 @@ module chord(r=1, a=90, d, a1, a2, rx, ry, dx, dy) {
  * Creates a ring at the origin.
  *
  * @param Number|Vector [r] - The radius of the ring or a vector that contains horizontal and vertical radius.
+ * @param Number|Vector [w] - The thickness of the ring.
  * @param Number|Vector [d] - The diameter of the ring or a vector that contains horizontal and vertical diameters.
- * @param Number [w] - The thickness of the ring.
  * @param Number [rx] - The horizontal radius.
  * @param Number [ry] - The vertical radius.
  * @param Number [dx] - The horizontal diameter.
  * @param Number [dy] - The vertical diameter.
- * @param Number|Vector [ir] - The radius of the ring hole or a vector that contains horizontal and vertical radius.
- * @param Number|Vector [id] - The diameter of the ring hole or a vector that contains horizontal and vertical diameters.
- * @param Number [irx] - The horizontal radius of the ring hole.
- * @param Number [iry] - The vertical radius of the ring hole.
- * @param Number [idx] - The horizontal diameter of the ring hole.
- * @param Number [idy] - The vertical diameter of the ring hole.
+ * @param Number [wx] - The horizontal thickness of the ring hole.
+ * @param Number [wy] - The vertical thickness of the ring hole.
+ * @returns Vector[] - Returns two vectors containing the horizontal and vertical radius of the outer and the inner circles.
  */
-module ring(r=1, w, ir, d, id, rx, ry, dx, dy, irx, iry, idx, idy) {
-    out = sizeEllipse(r=r, d=d, rx=rx, ry=ry, dx=dx, dy=dy);
-    in = float(w) ? vsub(out, w)
-       : sizeEllipse(r=ir, d=id, rx=irx, ry=iry, dx=idx, dy=idy);
-
+module ring(r, w, d, rx, ry, dx, dy, wx, wy) {
+    size = sizeRing(r=r, w=w, d=d, rx=rx, ry=ry, dx=dx, dy=dy, wx=wx, wy=wy);
     difference() {
-        ellipse(r=out);
-        ellipse(r=in);
+        ellipse(r=size[0]);
+        ellipse(r=size[1]);
     }
 }

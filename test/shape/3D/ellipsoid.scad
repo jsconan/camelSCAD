@@ -36,15 +36,13 @@ use <../../../full.scad>
 module testShape3dEllipsoid() {
     testPackage("shape/3D/ellipsoid.scad", 1) {
         // test shape/3D/ellipsoid/sizeEllipsoid()
-        testModule("sizeEllipsoid", 3) {
-            testUnit("no parameter", 1) {
+        testModule("sizeEllipsoid()", 2) {
+            testUnit("default values", 3) {
                 assertEqual(sizeEllipsoid(), [1, 1, 1], "Should always return a size even if not parameter has been provided");
-            }
-            testUnit("wrong types", 2) {
                 assertEqual(sizeEllipsoid("12", "12", "12", "12", "12", "12"), [1, 1, 1], "Should always return a size even if wrong parameter has been provided (string)");
                 assertEqual(sizeEllipsoid(true, true, true, true, true, true), [1, 1, 1], "Should always return a size even if wrong parameter has been provided (boolean)");
             }
-            testUnit("correct types", 26) {
+            testUnit("compute size", 26) {
                 assertEqual(sizeEllipsoid(3), [3, 3, 3], "Should produce a radius vector from a single number radius");
                 assertEqual(sizeEllipsoid(d=3), [1.5, 1.5, 1.5], "Should produce a radius vector from a single number diameter");
 

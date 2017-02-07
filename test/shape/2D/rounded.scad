@@ -36,15 +36,13 @@ use <../../../full.scad>
 module testShape2dRounded() {
     testPackage("shape/2D/rounded.scad", 6) {
         // test shape/2D/rounded/sizeArch()
-        testModule("sizeArch", 3) {
-            testUnit("no parameter", 1) {
+        testModule("sizeArch()", 2) {
+            testUnit("default values", 3) {
                 assertEqual(sizeArch(), [[1, 1], [0.5, 1]], "Should always return a size even if not parameter has been provided");
-            }
-            testUnit("wrong types", 2) {
                 assertEqual(sizeArch("12", "12", "12", "12", "12", "12"), [[1, 1], [0.5, 1]], "Should always return a size even if wrong parameter has been provided (string)");
                 assertEqual(sizeArch(true, true, true, true, true, true), [[1, 1], [0.5, 1]], "Should always return a size even if wrong parameter has been provided (boolean)");
             }
-            testUnit("correct types", 29) {
+            testUnit("compute size", 29) {
                 assertEqual(sizeArch(3), [[3, 3], [1.5, 3]], "Should produce a size from a single size number in order to draw a half-circle");
                 assertEqual(sizeArch(r=3), [[6, 3], [3, 3]], "Should produce a size from a single radius number in order to draw a half-circle");
                 assertEqual(sizeArch(d=3), [[3, 1.5], [1.5, 1.5]], "Should produce a size from a single diameter number in order to draw a half-circle");
@@ -88,15 +86,13 @@ module testShape2dRounded() {
             }
         }
         // test shape/2D/rounded/sizeStadium()
-        testModule("sizeStadium", 3) {
-            testUnit("no parameter", 1) {
+        testModule("sizeStadium()", 2) {
+            testUnit("default values", 3) {
                 assertEqual(sizeStadium(), [[1, 1], [0.5, 0.5]], "Should always return a size even if not parameter has been provided");
-            }
-            testUnit("wrong types", 2) {
                 assertEqual(sizeStadium("12", "12", "12", "12", "12", "12"), [[1, 1], [0.5, 0.5]], "Should always return a size even if wrong parameter has been provided (string)");
                 assertEqual(sizeStadium(true, true, true, true, true, true), [[1, 1], [0.5, 0.5]], "Should always return a size even if wrong parameter has been provided (boolean)");
             }
-            testUnit("correct types", 29) {
+            testUnit("compute size", 29) {
                 assertEqual(sizeStadium(3), [[3, 3], [1.5, 1.5]], "Should produce a size from a single size number in order to draw a circle");
                 assertEqual(sizeStadium(r=3), [[6, 6], [3, 3]], "Should produce a size from a single radius number in order to draw a circle");
                 assertEqual(sizeStadium(d=3), [[3, 3], [1.5, 1.5]], "Should produce a size from a single diameter number in order to draw a circle");
@@ -140,15 +136,13 @@ module testShape2dRounded() {
             }
         }
         // test shape/2D/rounded/sizeRoundedRectangle()
-        testModule("sizeRoundedRectangle", 3) {
-            testUnit("no parameter", 1) {
+        testModule("sizeRoundedRectangle()", 2) {
+            testUnit("default values", 3) {
                 assertEqual(sizeRoundedRectangle(), [[1, 1], [0, 0]], "Should always return a size even if not parameter has been provided");
-            }
-            testUnit("wrong types", 2) {
                 assertEqual(sizeRoundedRectangle("12", "12", "12", "12", "12", "12"), [[1, 1], [0, 0]], "Should always return a size even if wrong parameter has been provided (string)");
                 assertEqual(sizeRoundedRectangle(true, true, true, true, true, true), [[1, 1], [0, 0]], "Should always return a size even if wrong parameter has been provided (boolean)");
             }
-            testUnit("correct types", 29) {
+            testUnit("compute size", 29) {
                 assertEqual(sizeRoundedRectangle(3), [[3, 3], [0, 0]], "Should produce a size from a single size number in order to draw a rectangle");
                 assertEqual(sizeRoundedRectangle(r=3), [[6, 6], [3, 3]], "Should produce a size from a single radius number in order to draw a circle");
                 assertEqual(sizeRoundedRectangle(d=3), [[3, 3], [1.5, 1.5]], "Should produce a size from a single diameter number in order to draw a circle");
@@ -192,8 +186,8 @@ module testShape2dRounded() {
             }
         }
         // test shape/2D/rounded/drawArch()
-        testModule("drawArch", 5) {
-            testUnit("no parameter", 3) {
+        testModule("drawArch()", 5) {
+            testUnit("default values", 3) {
                 assertEqual(drawArch($fn=3), [ _rotP(0, 0.5, 1), _rotP(120, 0.5, 1), _rotP(180, 0.5, 1) ], "Should return a list of points to draw an arch with a radius of 1 and 3 facets and without straight walls");
                 assertEqual(drawArch($fn=4), [ for (a = [0 : 360/4 : 180]) _rotP(a, 0.5, 1) ], "Should return a list of points to draw a 90° arch with a radius of 1 and 4 facets and without straight walls");
                 assertEqual(drawArch($fn=6), [ for (a = [0 : 360/6 : 180]) _rotP(a, 0.5, 1) ], "Should return a list of points to draw a 90° arch with a radius of 1 and 6 facets and without straight walls");
@@ -259,8 +253,8 @@ module testShape2dRounded() {
             }
         }
         // test shape/2D/rounded/drawStadium()
-        testModule("drawStadium", 5) {
-            testUnit("no parameter", 3) {
+        testModule("drawStadium()", 5) {
+            testUnit("default values", 3) {
                 assertEqual(drawStadium($fn=3), [ for (a = [360/3 : 360/3 : 360]) _rotP(a, 0.5, 0.5) ], "Should return a list of points to draw a circle with a radius of 1 and 3 facets (triangle)");
                 assertEqual(drawStadium($fn=4), [ for (a = [360/4 : 360/4 : 360]) _rotP(a, 0.5, 0.5) ], "Should return a list of points to draw a circle with a radius of 1 and 4 facets (square)");
                 assertEqual(drawStadium($fn=6), [ for (a = [360/6 : 360/6 : 360]) _rotP(a, 0.5, 0.5) ], "Should return a list of points to draw a circle with a radius of 1 and 6 facets (hexagon)");
@@ -331,8 +325,8 @@ module testShape2dRounded() {
             }
         }
         // test shape/2D/rounded/drawRoundedRectangle()
-        testModule("drawRoundedRectangle", 4) {
-            testUnit("no parameter", 1) {
+        testModule("drawRoundedRectangle()", 4) {
+            testUnit("default values", 1) {
                 assertEqual(drawRoundedRectangle(), [ [0.5, 0.5], [-0.5, 0.5], [-0.5, -0.5], [0.5, -0.5] ], "Should return a simple rectangle without rounder corners if no parameter is provided");
             }
             testUnit("size, but radius", 6) {

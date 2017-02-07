@@ -70,7 +70,7 @@ function sizeEllipsoid(r, d, rx, ry, rz, dx, dy, dz) =
  * @param Number [dy] - The width of the shaft.
  * @param Boolean [center] - Whether or not center the shaft on the vertical axis.
  */
-module shaft(r=1, h, d, rx, ry, dx, dy, center) {
+module shaft(r, h, d, rx, ry, dx, dy, center) {
     size = sizeEllipsoid(r=r, d=d, rx=rx, ry=ry, rz=h, dx=dx, dy=dy);
     linear_extrude(height=size[2], center=center, convexity=10) {
         ellipse(size);
@@ -92,7 +92,7 @@ module shaft(r=1, h, d, rx, ry, dx, dy, center) {
  * @param Number [dy] - The width of the wedge.
  * @param Boolean [center] - Whether or not center the wedge on the vertical axis.
  */
-module wedge(r=1, h, a=90, d, a1, a2, rx, ry, dx, dy, center) {
+module wedge(r, h, a=90, d, a1, a2, rx, ry, dx, dy, center) {
     size = sizeEllipsoid(r=r, d=d, rx=rx, ry=ry, rz=h, dx=dx, dy=dy);
     linear_extrude(height=size[2], center=center, convexity=10) {
         pie(size, a=a, a1=a1, a2=a2);
@@ -111,7 +111,7 @@ module wedge(r=1, h, a=90, d, a1, a2, rx, ry, dx, dy, center) {
  * @param Number [dy] - The width diameter.
  * @param Number [dz] - The height diameter.
  */
-module ellipsoid(r=1, d, rx, ry, rz, dx, dy, dz) {
+module ellipsoid(r, d, rx, ry, rz, dx, dy, dz) {
     size = sizeEllipsoid(r=r, d=d, rx=rx, ry=ry, rz=rz, dx=dx, dy=dy, dz=dz);
     r = max(size);
     scale(size / r) {
@@ -122,26 +122,22 @@ module ellipsoid(r=1, d, rx, ry, rz, dx, dy, dz) {
 /**
  * Creates a pipe at the origin.
  *
- * @param Number|Vector [r] - The radius of the pipe or a vector that contains 3D radius.
- * @param Number|Vector [d] - The diameter of the pipe or a vector that contains 3D diameters.
+ * @param Number|Vector [r] - The radius of the pipe or a vector that contains horizontal and vertical radius.
+ * @param Number|Vector [w] - The thickness of the pipe.
  * @param Number [h] - The height of the pipe.
- * @param Number [w] - The thickness of the pipe.
- * @param Number [rx] - The length radius of the pipe.
- * @param Number [ry] - The width radius of the pipe.
- * @param Number [dx] - The length diameter of the pipe.
- * @param Number [dy] - The width diameter of the pipe.
- * @param Number|Vector [ir] - The radius of the pipe hole or a vector that contains 3D radius.
- * @param Number|Vector [id] - The diameter of the pipe hole or a vector that contains 3D diameters.
- * @param Number [irx] - The length radius of the pipe hole.
- * @param Number [iry] - The width radius of the pipe hole.
- * @param Number [idx] - The length diameter of the pipe hole.
- * @param Number [idy] - The width diameter of the pipe hole.
+ * @param Number|Vector [d] - The diameter of the pipe or a vector that contains horizontal and vertical diameters.
+ * @param Number [rx] - The horizontal radius.
+ * @param Number [ry] - The vertical radius.
+ * @param Number [dx] - The horizontal diameter.
+ * @param Number [dy] - The vertical diameter.
+ * @param Number [wx] - The horizontal thickness of the pipe hole.
+ * @param Number [wy] - The vertical thickness of the pipe hole.
  * @param Boolean [center] - Whether or not center the pipe on the vertical axis.
  */
-module pipe(r=1, h, w, ir, d, id, rx, ry, dx, dy, irx, iry, idx, idy, center) {
+module pipe(r, h, w=0.1, d, rx, ry, dx, dy, wx, wy, center) {
     size = sizeEllipsoid(r=r, d=d, rx=rx, ry=ry, rz=h, dx=dx, dy=dy);
     linear_extrude(height=size[2], center=center, convexity=10) {
-        ring(r=size, w=w, ir=ir, id=id, irx=irx, iry=iry, idx=idx, idy=idy);
+        ring(r=size, w=w, wx=wx, wy=wy);
     }
 }
 
@@ -163,7 +159,7 @@ module pipe(r=1, h, w, ir, d, id, rx, ry, dx, dy, irx, iry, idx, idy, center) {
  * @param Number [Wy] - The width diameter of the torus pipe.
  * @param Boolean [center] - Whether or not center the torus on the vertical axis.
  */
-module torus(r=1, w=0.1, d, W, rx, ry, dx, dy, wx, wy, Wx, Wy, center) {
+module torus(r, w=0.1, d, W, rx, ry, dx, dy, wx, wy, Wx, Wy, center) {
     sizeRing = sizeEllipse(r=r, d=d, rx=rx, ry=ry, dx=dx, dy=dy);
     sizePipe = sizeEllipse(r=w, d=W, rx=wx, ry=wy, dx=Wx, dy=Wy);
 
