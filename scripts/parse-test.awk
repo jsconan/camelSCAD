@@ -42,6 +42,7 @@ BEGIN {
     successCount = 0
     failedCount  = 0
     warningCount = 0
+    errorCount   = 0
 
     # define ANSI colors
     BLACK    = "\033[0;30m"
@@ -63,6 +64,11 @@ BEGIN {
     RESET    = "\033[0m"
 }
 
+# detect compiler errors
+$0~/^ERROR:/ {
+    errorCount = errorCount + 1
+    printf("\n%s%s\n", LRED, $0)
+}
 # detect compiler warnings
 $0~/^WARNING:/ {
     warningCount = warningCount + 1
@@ -186,6 +192,9 @@ END {
     printf("%s%d/%d asserts\n", GREEN, successCount, assertCount)
     printf(separator, GREY)
 
+    if (errorCount > 0) {
+        printf("%s%d errors!\n", RED, errorCount)
+    }
     if (warningCount > 0) {
         printf("%s%d warnings!\n", RED, warningCount)
     }
