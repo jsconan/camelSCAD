@@ -201,3 +201,66 @@ function between(value, low, high) =
  * @returns Boolean
  */
 function contains(a, value) = len([ for (i = a) if (i == value) i ]) > 0;
+
+/**
+ * Checks if the provided values are approximately equal. Number will be rounded to the wanted precision.
+ * Strings and booleans will be strictly compared. Arrays and vectors will be recursively compared.
+ *
+ * @param * a - The first value.
+ * @param * b - The second value.
+ * @param Number [precision] - The wanted precision for numbers (default: 1000000).
+ * @returns Boolean
+ */
+function approx(a, b, precision=1000000,
+                // internal
+                p, l) =
+    let(
+        sa = sign(a),
+        sb = sign(b)
+    )
+    sa != sb ? false
+   :!sa ? (
+       sa == 0 ? a == b
+       :(
+            let(
+                la = len(a),
+                lb = len(b)
+            )
+            la != lb ? false
+           :!l && (!la || concat(a) != a) ? a == b
+           :let(
+                p = float(p),
+                l = numberOr(l, la)
+            )
+            l <= 4 ? (
+                let(
+                    r1 = approx(a[p], b[p], precision)
+                )
+                r1 && l > 1 ? (
+                    let(
+                        r2 = approx(a[p + 1], b[p + 1], precision)
+                    )
+                    r2 && l > 2 ? (
+                        let(
+                            r3 = approx(a[p + 2], b[p + 2], precision)
+                        )
+                        r3 && l > 3 ? approx(a[p + 3], b[p + 3], precision)
+                       :r3
+                    )
+                   :r2
+                )
+               :r1
+            )
+           :let(
+                half = floor(l / 2)
+            )
+            approx(a, b, precision, p, half) && approx(a, b, precision, p + half, l - half)
+        )
+    )
+   :let(
+        precision = divisor(precision),
+        a = round(a * precision) / precision,
+        b = round(b * precision) / precision
+    )
+    a == b
+;

@@ -104,6 +104,36 @@ module assertNotEqual(actual, expected, message) {
 }
 
 /**
+ * Asserts the actual value is approximately equal to the expected value.
+ *
+ * @param * actual
+ * @param * expected
+ * @param String [message]
+ */
+module assertApproxEqual(actual, expected, message) {
+    result = approx(actual, expected);
+    message = or(message, "Should be approximately equal ");
+    details = [actual, expected];
+
+    displayAssertResult(result, message, details);
+}
+
+/**
+ * Asserts the actual value is not approximately equal to the expected value.
+ *
+ * @param * actual
+ * @param * expected
+ * @param String [message]
+ */
+module assertNotApproxEqual(actual, expected, message) {
+    result = !approx(actual, expected);
+    message = or(message, "Should not be approximately equal ");
+    details = [actual, expected];
+
+    displayAssertResult(result, message, details);
+}
+
+/**
  * Asserts the value is equivalent to true.
  *
  * @param * value

@@ -34,7 +34,7 @@ use <../../full.scad>
  * @author jsconan
  */
 module testCoreLogic() {
-    testPackage("core/logic.scad", 18) {
+    testPackage("core/logic.scad", 19) {
         // validate OpenSCAD native behaviour
         testModule("true/false", 4) {
             testUnit("undefined", 2) {
@@ -458,6 +458,39 @@ module testCoreLogic() {
                 assertTrue(contains([true, true], true), "The boolean is contained");
                 assertFalse(contains([[1], [2], []], [1, 2]), "The array is not contained");
                 assertTrue(contains([[1, 2], [2, 3], []], [1, 2]), "The array is contained");
+            }
+        }
+        // test core/logic/approx()
+        testModule("approx()", 3) {
+            testUnit("no parameters", 1) {
+                assertTrue(approx(), "Nothing to check");
+            }
+            testUnit("different", 6) {
+                assertFalse(approx(1, 2), "1 is not approximately equal to 2");
+                assertFalse(approx(1, -1), "1 is not approximately equal to -1");
+                assertFalse(approx(true, false), "true is not approximately equal to false");
+                assertFalse(approx("foo", "bar"), "foo is not approximately equal to bar");
+                assertFalse(approx([1], [2]), "[1] is not approximately equal to [2]");
+                assertFalse(approx([[1, 1, 2, 2, 3, 3]], [[1, 2, 3, 4, 5, 6]]), "Different arrays are not approximately equal");
+            }
+            testUnit("equal", 13) {
+                assertTrue(approx(1, 1), "1 is equal to 1");
+                assertTrue(approx(true, true), "true is equal to true");
+                assertTrue(approx(false, false), "false is equal to false");
+                assertTrue(approx("foo", "foo"), "foo is equal to foo");
+                assertTrue(approx(1, 1.0000000000001), "1 is approximately equal to 1.0000000000001");
+                assertTrue(approx(1, 0.9999999999999), "1 is approximately equal to 0.9999999999999");
+                assertTrue(approx([1], [1]), "[1] is equal to [1]");
+                assertTrue(approx([1], [1]), "[1] is approximately equal to [1]");
+                assertTrue(approx([1], [1.0000000000001]), "[1] is approximately equal to [1.0000000000001]");
+                assertTrue(approx([[1]], [[1.0000000000001]]), "[[1]] is approximately equal to [[1.0000000000001]]");
+                assertTrue(approx([1, 2], [1.0000000000001, 1.9999999999999999]), "[1, 2] is approximately equal to [1.0000000000001, 1.9999999999999999]");
+                assertTrue(approx([[1, 2], [3, 4]], [[1.0000000000001, 1.9999999999999999], [3.00000000000000000000002, 4.000000000000001]]), "[[1, 2], [3, 4]] is approximately equal to [[1.0000000000001, 1.9999999999999999], [3.00000000000000000000002, 4.000000000000001]]");
+                assertTrue(approx(
+                    [[1, 2], [3, 4], [5, 6], [7, 8], [9, 10]],
+                    [[1.0000000000001, 1.9999999999999999], [3.00000000000000000000002, 4.000000000000001],[5.0000000000001, 5.9999999999999999],[7.00000000000000000000002, 8.000000000000001],[9.0000000000001, 9.9999999999999999]]),
+                    "Arrays that contains similar values are approximately equal"
+                );
             }
         }
     }
