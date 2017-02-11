@@ -35,34 +35,34 @@
 /**
  * Computes the coordinates of a 2D arc by rotating a vector along the provided angle.
  *
- * @param Number|Vector v - The number or the vector that defines the radius of the arc (can be ellipse).
+ * @param Number|Vector r - The number or the vector that defines the radius of the arc (can be ellipse).
  * @param Number [a] - The angle to cover.
  * @param Vector [o] - The coordinates of the center of the arc.
  * @param Number [a1] - The start angle of the arc.
  * @param Number [a2] - The end angle of the arc.
  * @returns Vector[]
  */
-function arc(v, a=DEGREES, o, a1, a2) =
+function arc(r, a=DEGREES, o, a1, a2) =
     let(
-        v = vector2D(v),
+        r = vector2D(r),
         o = vector2D(o),
         a1 = deg(a1),
         a2 = a2 != undef ? deg(a2) : a1 + deg(a)
     )
-    !v[0] || !v[1] || (!a1 && !a2) ? []
+    !r[0] || !r[1] || (!a1 && !a2) ? []
    :let(
         start = min(a1, a2),
         end = max(a1, a2),
-        step = astep(max(v), absdeg(end - start))
+        step = astep(max(r), absdeg(end - start))
     )
     complete(
         // intermediate points
         end - start <= step ? []
-       :[ for (a = [start + step : step : end]) project(a=a, v=v) + o ],
+       :[ for (a = [start + step : step : end]) arcp(r, a) + o ],
         // the start point
-        project(a=start, v=v) + o,
+        arcp(r, start) + o,
         // the final point
-        project(a=end, v=v) + o
+        arcp(r, end) + o
     )
 ;
 
@@ -80,12 +80,14 @@ function arc(v, a=DEGREES, o, a1, a2) =
  */
 function sinusoid(l, w, h, p, o, a) =
     let(
+        a = deg(a),
         l = float(l),
         step = l / fragments(l)
     )
     [
         for (x = [0 : step : l])
-            rotate2D(v=sinp(x=x, w=w, h=h, p=p, o=o), a=a)
+            let( p = sinp(x=x, w=w, h=h, p=p, o=o) )
+            a ? rotp(p, a) : p
     ]
 ;
 
@@ -103,11 +105,13 @@ function sinusoid(l, w, h, p, o, a) =
  */
 function cosinusoid(l, w, h, p, o, a) =
     let(
+        a = deg(a),
         l = float(l),
         step = l / fragments(l)
     )
     [
         for (y = [0 : step : l])
-            rotate2D(v=cosp(y=y, w=w, h=h, p=p, o=o), a=a)
+            let( p = cosp(y=y, w=w, h=h, p=p, o=o) )
+            a ? rotp(p, a) : p
     ]
 ;

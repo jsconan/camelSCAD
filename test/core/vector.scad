@@ -34,83 +34,7 @@ use <../../full.scad>
  * @author jsconan
  */
 module testCoreVector() {
-    testPackage("core/vector.scad", 17) {
-        // test core/vector/normal()
-        testModule("normal()", 3) {
-            testUnit("no parameter", 1) {
-                assertEqual(normal(), [0, 0], "Should always produce a 2D vector, even if input is wrong");
-            }
-            testUnit("not vector", 5) {
-                assertEqual(normal(1), [1, -1], "Should produce a 2D vector with the input number as a coordinate");
-                assertEqual(normal(true), [0, 0], "Should produce a 2D vector filled with 0 if input is wrong");
-                assertEqual(normal("1"), [0, 0], "Should produce a 2D vector filled with 0 if input is wrong");
-                assertEqual(normal(["1"]), [0, 0], "Should produce a 2D vector filled with 0 if input is wrong");
-                assertEqual(normal(["1", 1]), [1, 0], "Should produce a corrected 2D vector if input is wrong");
-            }
-            testUnit("vector", 3) {
-                assertEqual(normal([1]), [0, -1], "Should complete incomplete 2D vector");
-                assertEqual(normal([1, 2]), [2, -1], "Should return an orthogonal 2D vector");
-                assertEqual(normal([1, 2, 3]), [2, -1], "Should truncate too big vector");
-            }
-        }
-        // test core/vector/flip()
-        testModule("flip()", 3) {
-            testUnit("no parameter", 1) {
-                assertEqual(flip(), [0, 0], "Should always produce a 2D vector, even if input is wrong");
-            }
-            testUnit("not vector", 5) {
-                assertEqual(flip(1), [1, 1], "Should produce a 2D vector with the input number as a coordinate");
-                assertEqual(flip(true), [0, 0], "Should produce a 2D vector filled with 0 if input is wrong");
-                assertEqual(flip("1"), [0, 0], "Should produce a 2D vector filled with 0 if input is wrong");
-                assertEqual(flip(["1"]), [0, 0], "Should produce a 2D vector filled with 0 if input is wrong");
-                assertEqual(flip(["1", 1]), [1, 0], "Should produce a corrected 2D vector if input is wrong");
-            }
-            testUnit("vector", 3) {
-                assertEqual(flip([1]), [0, 1], "Should complete incomplete 2D vector");
-                assertEqual(flip([1, 2]), [2, 1], "Should return an orthogonal 2D vector");
-                assertEqual(flip([1, 2, 3]), [2, 1], "Should truncate too big vector");
-            }
-        }
-        // test core/vector/norm2()
-        testModule("norm2()", 3) {
-            testUnit("no parameter", 1) {
-                assertEqual(norm2(), 0, "Should always produce the norm2 of a 3D vector, even if input is wrong");
-            }
-            testUnit("not vector", 6) {
-                assertEqual(norm2(1), 3, "Should produce the norm2 of a 3D vector with the input number as a coordinate");
-                assertEqual(norm2(true), 0, "Should produce the norm2 of a 3D vector filled with 0 if input is wrong");
-                assertEqual(norm2("1"), 0, "Should produce the norm2 of a 3D vector filled with 0 if input is wrong");
-                assertEqual(norm2(["1"]), 0, "Should produce the norm2 of a 3D vector filled with 0 if input is wrong");
-                assertEqual(norm2(["1", 1]), 1, "Should produce the norm2 of a corrected 3D vector if input is wrong");
-                assertEqual(norm2(["1", 1, 1]), 2, "Should produce the norm2 of a corrected 3D vector if input is wrong");
-            }
-            testUnit("vector", 4) {
-                assertEqual(norm2([1]), 1, "Should complete incomplete 3D vector and returns its norm2");
-                assertEqual(norm2([1, 2]), 5, "Should complete incomplete 3D vector and returns its norm2");
-                assertEqual(norm2([1, 2, 3]), 14, "Should return the norm2 of a 3D vector");
-                assertEqual(norm2([1, 2, 3, 4]), 14, "Should truncate too big vector and returns its norm2");
-            }
-        }
-        // test core/vector/normalize()
-        testModule("normalize()", 3) {
-            testUnit("no parameter", 1) {
-                assertEqual(normalize(), [0, 0, 0], "Should always produce a normalized 3D vector, even if input is wrong");
-            }
-            testUnit("not vector", 6) {
-                assertEqual(normalize(1), [1, 1, 1] / norm([1, 1, 1]), "Should produce a normalized 3D vector with the input number as a coordinate");
-                assertEqual(normalize(true), [0, 0, 0], "Should produce a normalized 3D vector filled with 0 if input is wrong");
-                assertEqual(normalize("1"), [0, 0, 0], "Should produce a normalized 3D vector filled with 0 if input is wrong");
-                assertEqual(normalize(["1"]), [0, 0, 0], "Should produce a normalized 3D vector filled with 0 if input is wrong");
-                assertEqual(normalize(["1", 1]), [0, 1, 0] / norm([0, 1, 0]), "Should produce a normalized corrected 3D vector if input is wrong");
-                assertEqual(normalize(["1", 1, 1]), [0, 1, 1] / norm([0, 1, 1]), "Should produce a normalized corrected 3D vector if input is wrong");
-            }
-            testUnit("vector", 4) {
-                assertEqual(normalize([1]), [1, 0, 0] / norm([1, 0, 0]), "Should complete incomplete 3D vector and returns a normalized 3D vector");
-                assertEqual(normalize([1, 2]), [1, 2, 0] / norm([1, 2, 0]), "Should complete incomplete 3D vector and returns a normalized 3D vector");
-                assertEqual(normalize([1, 2, 3]), [1, 2, 3] / norm([1, 2, 3]), "Should return a normalized 3D vector");
-                assertEqual(normalize([1, 2, 3, 4]), [1, 2, 3] / norm([1, 2, 3]), "Should truncate too big vector and returns a normalized 3D vector");
-            }
-        }
+    testPackage("core/vector.scad", 13) {
         // test core/vector/vadd()
         testModule("vadd()", 5) {
             testUnit("no parameter", 1) {
@@ -315,23 +239,23 @@ module testCoreVector() {
                 assertEqual(vsum(range(50)), (50 * 51) / 2, "Gets the sum of a range");
             }
         }
-        // test core/vector/average()
-        testModule("average()", 4) {
+        // test core/vector/vaverage()
+        testModule("vaverage()", 4) {
             testUnit("no parameter", 1) {
-                assertEqual(average(), 0, "The sum of a missing array");
+                assertEqual(vaverage(), 0, "The sum of a missing array");
             }
             testUnit("not array", 3) {
-                assertEqual(average(0), 0, "A number is not an array");
-                assertEqual(average(true), 0, "A boolean is not an array");
-                assertEqual(average("foo"), 0, "A string is not an array");
+                assertEqual(vaverage(0), 0, "A number is not an array");
+                assertEqual(vaverage(true), 0, "A boolean is not an array");
+                assertEqual(vaverage("foo"), 0, "A string is not an array");
             }
             testUnit("not vector", 1) {
-                assertEqual(average([-1, "2", 3]), 2/3, "Gets the average from an array");
+                assertEqual(vaverage([-1, "2", 3]), 2/3, "Gets the average from an array");
             }
             testUnit("vector", 3) {
-                assertEqual(average([]), 0, "Gets the average of an empty vector");
-                assertEqual(average([3, 2, 1]), 2, "Gets the average of a vector");
-                assertEqual(average([-4, 3, -2]), -1, "Gets the average of a vector");
+                assertEqual(vaverage([]), 0, "Gets the average of an empty vector");
+                assertEqual(vaverage([3, 2, 1]), 2, "Gets the average of a vector");
+                assertEqual(vaverage([-4, 3, -2]), -1, "Gets the average of a vector");
             }
         }
         // test core/vector/vfactorial()

@@ -33,51 +33,6 @@
  */
 
 /**
- * Gets an orthogonal vector of `v` in the plan of X and Y.
- * The input vector will be adjusted using `vector2D()`.
- *
- * @param Vector v - The vector from which get an orthogonal vector.
- * @returns Vector
- */
-function normal(v) =
-    let( v = vector2D(v) )
-    [ v[1], -v[0] ]
-;
-
-/**
- * Flips the coordinates of a 2D vector.
- * The input vector will be adjusted using `vector2D()`.
- *
- * @param Vector v - The vector to flip.
- * @returns Vector
- */
-function flip(v) =
-    let( v = vector2D(v) )
-    [ v[1], v[0] ]
-;
-
-/**
- * Computes the power norm of a vector: it's like `norm()`, but without computing the square root.
- * The input vector will be adjusted using `vector3D()`.
- *
- * @param Vector v - The vector to norm.
- * @returns Number
- */
-function norm2(v) = vsum(vpow(vector3D(v), 2));
-
-/**
- * Normalizes a vector as `norm(v) = 1`.
- * The input vector will be adjusted using `vector3D()`.
- *
- * @param Vector v - The vector to normalize.
- * @returns Vector
- */
-function normalize(v) =
-    let( v = vector3D(v) )
-    v / divisor(norm(v))
-;
-
-/**
  * Adds a value on each elements of a vector.
  *
  * @param Vector v - The vector to add.
@@ -226,7 +181,7 @@ function vsum(v,
  * @param Vector v - The vector to average.
  * @returns Number
  */
-function average(v) =
+function vaverage(v) =
     let( count = len(v) )
     count ? vsum(v) / count
           : 0

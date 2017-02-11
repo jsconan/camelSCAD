@@ -94,7 +94,7 @@ function sizeRing(r, w, d, rx, ry, dx, dy, wx, wy) =
  */
 function drawEllipse(r, d, rx, ry, dx, dy) =
     arc(
-        v=sizeEllipse(r=r, d=d, rx=rx, ry=ry, dx=dx, dy=dy),
+        r=sizeEllipse(r=r, d=d, rx=rx, ry=ry, dx=dx, dy=dy),
         a=360
     )
 ;
@@ -118,7 +118,7 @@ function drawPie(r, a=90, d, a1, a2, rx, ry, dx, dy) =
         a1 = deg(a1),
         a2 = a2 != undef ? deg(a2) : a1 + deg(a),
         angle = absdeg(a2 - a1),
-        points = arc(v=sizeEllipse(r=r, d=d, rx=rx, ry=ry, dx=dx, dy=dy), a1=a1, a2=a2)
+        points = arc(r=sizeEllipse(r=r, d=d, rx=rx, ry=ry, dx=dx, dy=dy), a1=a1, a2=a2)
     )
     // add the origin to the list of points, unless it is a complete circle
     !angle || angle == 360 ? points : complete(points, [0, 0])

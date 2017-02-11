@@ -95,7 +95,7 @@ function isVector(value) = (len(value) != undef && value * 1 == value);
  * @param Number length - The required length of the vector.
  * @returns Boolean - Returns `true` whether the value is a vector and has the required length.
  */
-function isVectorN(value, length) = (len(value) == integer(length) && value * 1 == value);
+function isVectorN(value, length) = (len(value) == float(length) && value * 1 == value);
 
 /**
  * Checks if the value is a 2D vector.
@@ -103,7 +103,7 @@ function isVectorN(value, length) = (len(value) == integer(length) && value * 1 
  * @param * value - The value to check.
  * @returns Boolean - Returns `true` whether the value is a 2D vector.
  */
-function isVector2D(value) = isVectorN(value, 2);
+function isVector2D(value) = (len(value) == 2 && value * 1 == value);
 
 /**
  * Checks if the value is a 3D vector.
@@ -111,7 +111,7 @@ function isVector2D(value) = isVectorN(value, 2);
  * @param * value - The value to check.
  * @returns Boolean - Returns `true` whether the value is a 3D vector.
  */
-function isVector3D(value) = isVectorN(value, 3);
+function isVector3D(value) = (len(value) == 3 && value * 1 == value);
 
 /**
  * Typecasts the value to a number.
@@ -196,60 +196,4 @@ function vector(value, length) =
     !array ? fill(float(value), length)
     :length ? [ for (i = [0 : length - 1]) float(value[i]) ]
     :[]
-;
-
-/**
- * Typecasts the value to a 2D vector.
- * If a number is provided instead of a vector, a vector will all elements filled with the provided number will be returned.
- *
- * @param Vector|Number value - The value to cast.
- * @returns Vector - Returns a 2D vector. Vectors remain unchanged, unless they don't have the required length,
- *                   additional elements are removed while missing ones are replaced by 0.
- *                   Arrays are casted, not numbers are replaced by 0. Other values are replaced by a vector of two 0.
- */
-function vector2D(value) =
-    isNumber(value) ? [ value, value ]
-   :[ float(value[0]), float(value[1]) ]
-;
-
-/**
- * Typecasts the value to a 3D vector.
- * If a number is provided instead of a vector, a vector will all elements filled with the provided number will be returned.
- *
- * @param Vector|Number value - The value to cast.
- * @returns Vector - Returns a 3D vector. Vectors remain unchanged, unless they don't have the required length,
- *                   additional elements are removed while missing ones are replaced by 0.
- *                   Arrays are casted, not numbers are replaced by 0. Other values are replaced by a vector of three 0.
- */
-function vector3D(value) =
-    isNumber(value) ? [ value, value, value ]
-   :[ float(value[0]), float(value[1]), float(value[2]) ]
-;
-
-/**
- * Typecasts the value to a 2D vector where elements cannot be 0.
- * If a number is provided instead of a vector, a vector will all elements filled with the provided number will be returned.
- *
- * @param Vector|Number value - The value to cast.
- * @returns Vector - Returns a 2D vector. Vectors remain unchanged, unless they don't have the required length,
- *                   additional elements are removed while missing ones are replaced by 1.
- *                   Arrays are casted, not numbers are replaced by 1. Other values are replaced by a vector of two 1.
- */
-function divisor2D(value) =
-    isNumber(value) ? let( value = divisor(value) ) [ value, value ]
-   :[ divisor(value[0]), divisor(value[1]) ]
-;
-
-/**
- * Typecasts the value to a 3D vector where elements cannot be 0.
- * If a number is provided instead of a vector, a vector will all elements filled with the provided number will be returned.
- *
- * @param Vector|Number value - The value to cast.
- * @returns Vector - Returns a 3D vector. Vectors remain unchanged, unless they don't have the required length,
- *                   additional elements are removed while missing ones are replaced by 1.
- *                   Arrays are casted, not numbers are replaced by 1. Other values are replaced by a vector of three 1.
- */
-function divisor3D(value) =
-    isNumber(value) ? let( value = divisor(value) ) [ value, value, value ]
-   :[ divisor(value[0]), divisor(value[1]), divisor(value[2]) ]
 ;

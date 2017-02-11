@@ -37,9 +37,10 @@ use <core/type.scad>
 use <core/logic.scad>
 use <core/list.scad>
 use <core/maths.scad>
-use <core/point.scad>
 use <core/line.scad>
 use <core/vector.scad>
+use <core/vector-2d.scad>
+use <core/vector-3d.scad>
 use <core/string.scad>
 use <core/util.scad>
 use <core/mode.scad>
@@ -60,9 +61,10 @@ testCoreType();
 testCoreLogic();
 testCoreList();
 testCoreMaths();
-testCorePoint();
 testCoreLine();
 testCoreVector();
+testCoreVector2D();
+testCoreVector3D();
 testCoreString();
 testCoreUtil();
 testCoreMode();

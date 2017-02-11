@@ -159,7 +159,7 @@ function drawArch(size, r, d, w, h, rx, ry, dx, dy) =
         center = [
             0, size[1] - radius[1]
         ],
-        points = arc(v=radius, o=center, a=180)
+        points = arc(r=radius, o=center, a=180)
     )
     center == [0, 0] ? points
    :complete(points, [radius[0], 0], -[radius[0], 0])
@@ -188,8 +188,8 @@ function drawStadium(size, r, d, w, h, rx, ry, dx, dy) =
             0, size[1] / 2 - radius[1]
         ]
     )
-    center == [0, 0] ? arc(v=radius)
-   :concat(arc(v=radius, o=center, a=180), arc(v=radius, o=-center, a=-180))
+    center == [0, 0] ? arc(r=radius)
+   :concat(arc(r=radius, o=center, a=180), arc(r=radius, o=-center, a=-180))
 ;
 
 /**
@@ -219,12 +219,12 @@ function drawRoundedRectangle(size, r, d, w, h, rx, ry, dx, dy) =
         ]
     )
     radius == [0, 0] ? [ [right, top], [-right, top], [-right, -top], [right, -top] ]
-   :center == [0, 0] ? arc(v=radius)
+   :center == [0, 0] ? arc(r=radius)
    :concat(
-       arc(v=radius, o=center, a1=0, a2=90),
-       arc(v=radius, o=[-center[0], center[1]], a1=90, a2=180),
-       arc(v=radius, o=[-center[0], -center[1]], a1=180, a2=270),
-       arc(v=radius, o=[center[0], -center[1]], a1=270, a2=360)
+       arc(r=radius, o=center, a1=0, a2=90),
+       arc(r=radius, o=[-center[0], center[1]], a1=90, a2=180),
+       arc(r=radius, o=[-center[0], -center[1]], a1=180, a2=270),
+       arc(r=radius, o=[center[0], -center[1]], a1=270, a2=360)
    )
 ;
 

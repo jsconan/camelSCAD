@@ -180,7 +180,7 @@ function drawRegularPolygon(size, n, l, w, s) =
     )
     [
         for(i = [0 : n - 1])
-            project(radius, i * step + 90)
+            arcp(radius, i * step + 90)
     ]
 ;
 
@@ -203,12 +203,12 @@ function drawHexagon(size, adjust, l, w, s) =
         radius = size / 2
     )
     [
-        project(v=radius, a=0) + o,
-        project(v=radius, a=60) + o,
-        project(v=radius, a=120) - o,
-        project(v=radius, a=180) - o,
-        project(v=radius, a=240) - o,
-        project(v=radius, a=300) + o
+        arcp(radius, 0) + o,
+        arcp(radius, 60) + o,
+        arcp(radius, 120) - o,
+        arcp(radius, 180) - o,
+        arcp(radius, 240) - o,
+        arcp(radius, 300) + o
     ]
 ;
 

@@ -34,7 +34,7 @@ use <../../full.scad>
  * @author jsconan
  */
 module testCoreType() {
-    testPackage("core/type.scad", 22) {
+    testPackage("core/type.scad", 18) {
         // test core/type/isUndef()
         testModule("isUndef()", 2) {
             testUnit("no parameter", 1) {
@@ -434,84 +434,6 @@ module testCoreType() {
                 assertEqual(vector([1], 2), [1, 0], "A vector and a longer length");
                 assertEqual(vector([1, 2], 2), [1, 2], "A vector and the exact length");
                 assertEqual(vector([1, 2, 3], 2), [1, 2], "A vector and a shorter length");
-            }
-        }
-        // test core/type/vector2D()
-        testModule("vector2D()", 3) {
-            testUnit("no parameter", 1) {
-                assertEqual(vector2D(), [0, 0], "Should always produce a 2D vector, even if input is wrong");
-            }
-            testUnit("not vector", 5) {
-                assertEqual(vector2D(1), [1, 1], "Should produce a 2D vector with the input number as a coordinate");
-                assertEqual(vector2D(true), [0, 0], "Should produce a 2D vector filled with 0 if input is wrong");
-                assertEqual(vector2D("1"), [0, 0], "Should produce a 2D vector filled with 0 if input is wrong");
-                assertEqual(vector2D(["1"]), [0, 0], "Should produce a 2D vector filled with 0 if input is wrong");
-                assertEqual(vector2D(["1", 1]), [0, 1], "Should produce a corrected 2D vector if input is wrong");
-            }
-            testUnit("vector", 3) {
-                assertEqual(vector2D([1]), [1, 0], "Should complete incomplete 2D vector");
-                assertEqual(vector2D([1, 2]), [1, 2], "Should keep correct and complete 2D vector");
-                assertEqual(vector2D([1, 2, 3]), [1, 2], "Should truncate too big vector");
-            }
-        }
-        // test core/type/vector3D()
-        testModule("vector3D()", 3) {
-            testUnit("no parameter", 1) {
-                assertEqual(vector3D(), [0, 0, 0], "Should always produce a 3D vector, even if input is wrong");
-            }
-            testUnit("not vector", 5) {
-                assertEqual(vector3D(1), [1, 1, 1], "Should produce a 23D vector with the input number as a coordinate");
-                assertEqual(vector3D(true), [0, 0, 0], "Should produce a 3D vector filled with 0 if input is wrong");
-                assertEqual(vector3D("1"), [0, 0, 0], "Should produce a 3D vector filled with 0 if input is wrong");
-                assertEqual(vector3D(["1"]), [0, 0, 0], "Should produce a 3D vector filled with 0 if input is wrong");
-                assertEqual(vector3D(["1", 1]), [0, 1, 0], "Should produce a corrected 3D vector if input is wrong");
-            }
-            testUnit("vector", 4) {
-                assertEqual(vector3D([1]), [1, 0, 0], "Should complete incomplete 3D vector");
-                assertEqual(vector3D([1, 2]), [1, 2, 0], "Should complete incomplete 3D vector");
-                assertEqual(vector3D([1, 2, 3]), [1, 2, 3], "Should keep correct and complete 3D vector");
-                assertEqual(vector3D([1, 2, 3, 4]), [1, 2, 3], "Should truncate too big vector");
-            }
-        }
-        // test core/type/divisor2D()
-        testModule("divisor2D()", 3) {
-            testUnit("no parameter", 1) {
-                assertEqual(divisor2D(), [1, 1], "Should always produce a 2D vector, even if input is wrong");
-            }
-            testUnit("not vector", 6) {
-                assertEqual(divisor2D(1), [1, 1], "Should produce a 2D vector with the input number as a coordinate");
-                assertEqual(divisor2D(true), [1, 1], "Should produce a 2D vector filled with 1 if input is wrong");
-                assertEqual(divisor2D(false), [1, 1], "Should produce a 2D vector filled with 1 if input is wrong");
-                assertEqual(divisor2D("2"), [1, 1], "Should produce a 2D vector filled with 1 if input is wrong");
-                assertEqual(divisor2D(["3"]), [1, 1], "Should produce a 2D vector filled with 1 if input is wrong");
-                assertEqual(divisor2D(["4", 3]), [1, 3], "Should produce a corrected 2D vector if input is wrong");
-            }
-            testUnit("vector", 4) {
-                assertEqual(divisor2D([2]), [2, 1], "Should complete incomplete 2D vector");
-                assertEqual(divisor2D([0, 0]), [1, 1], "Should correct 0 2D vector");
-                assertEqual(divisor2D([1, 2]), [1, 2], "Should keep correct and complete 2D vector");
-                assertEqual(divisor2D([1, 2, 3]), [1, 2], "Should truncate too big vector");
-            }
-        }
-        // test core/type/divisor3D()
-        testModule("divisor3D()", 3) {
-            testUnit("no parameter", 1) {
-                assertEqual(divisor3D(), [1, 1, 1], "Should always produce a 3D vector, even if input is wrong");
-            }
-            testUnit("not vector", 6) {
-                assertEqual(divisor3D(1), [1, 1, 1], "Should produce a 23D vector with the input number as a coordinate");
-                assertEqual(divisor3D(true), [1, 1, 1], "Should produce a 3D vector filled with 1 if input is wrong");
-                assertEqual(divisor3D(false), [1, 1, 1], "Should produce a 3D vector filled with 1 if input is wrong");
-                assertEqual(divisor3D("2"), [1, 1, 1], "Should produce a 3D vector filled with 1 if input is wrong");
-                assertEqual(divisor3D(["3"]), [1, 1, 1], "Should produce a 3D vector filled with 1 if input is wrong");
-                assertEqual(divisor3D(["4", 3]), [1, 3, 1], "Should produce a corrected 3D vector if input is wrong");
-            }
-            testUnit("vector", 5) {
-                assertEqual(divisor3D([2]), [2, 1, 1], "Should complete incomplete 3D vector");
-                assertEqual(divisor3D([0, 0, 0]), [1, 1, 1], "Should correct 0 3D vector");
-                assertEqual(divisor3D([3, 2]), [3, 2, 1], "Should complete incomplete 3D vector");
-                assertEqual(divisor3D([1, 2, 3]), [1, 2, 3], "Should keep correct and complete 3D vector");
-                assertEqual(divisor3D([1, 2, 3, 4]), [1, 2, 3], "Should truncate too big vector");
             }
         }
     }
