@@ -360,4 +360,9 @@ module displayExpectedAsserts(actual, expected, type) {
  */
 module displayAssertResult(result, message, details) {
     echo(formatAssertResult(result, message, details));
+    if (!result) {
+        color([1, 0, 0]) {
+            sphere(10);
+        }
+    }
 }
