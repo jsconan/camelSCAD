@@ -233,16 +233,14 @@ function rotp(v, a) = [
  */
 function mirp(v, a) =
     let(
-        ua = unit2D(a),
-        uv = unit2D(v),
-        cost = uv * ua,
-        sint = uv[0] * ua[1] - uv[1] * ua[0],
-        cos2t = cost * cost - sint * sint,
-        sin2t = 2 * sint * cost
+        ax2 = a[0] * a[0],
+        ay2 = a[1] * a[1],
+        a2xy = 2 * a[0] * a[1],
+        a2 = divisor(ax2 + ay2)
     )
     [
-        cos2t * v[0] - sin2t * v[1],
-        sin2t * v[0] + cos2t * v[1],
+        (ax2 * v[0] - ay2 * v[0] + a2xy * v[1]) / a2,
+        (ay2 * v[1] - ax2 * v[1] + a2xy * v[0]) / a2
     ]
 ;
 
@@ -322,9 +320,16 @@ function resize2D(points, size) = scale2D(points, scaleFactor2D(points, size));
 function mirror2D(points, axis) =
     !len(points) ? []
    :let(
-        axis = undef == axis ? [0, 1] : vector2D(axis)
+        a = undef == axis ? [0, 1] : vector2D(axis),
+        ax2 = a[0] * a[0],
+        ay2 = a[1] * a[1],
+        a2xy = 2 * a[0] * a[1],
+        a2 = divisor(ax2 + ay2)
     )
-    [ for(p = points) mirp(vector2D(p), axis) ]
+    [ for(p = points) let( v = vector2D(p) ) [
+        (ax2 * v[0] - ay2 * v[0] + a2xy * v[1]) / a2,
+        (ay2 * v[1] - ax2 * v[1] + a2xy * v[0]) / a2
+    ] ]
 ;
 
 /**

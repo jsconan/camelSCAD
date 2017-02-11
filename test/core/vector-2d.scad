@@ -322,8 +322,7 @@ module testCoreVector2D() {
                 assertEqual(mirp([1], 90), [undef, undef], "Cannot compute mirror from incomplete vector");
                 assertEqual(mirp(true, true), [undef, undef], "Cannot compute mirror from booleans");
             }
-            testUnit("vector and axis", 4) {
-                assertApproxEqual(mirp([23, 67], 1), [67, 23], "Should return [67, 23]");
+            testUnit("vector and axis", 3) {
                 assertApproxEqual(mirp([23, 67], [1, 0]), [23, -67], "Should return [23, 67] mirrored around X");
                 assertApproxEqual(mirp([23, 67], [0, 1]), [-23, 67], "Should return [23, 67] mirrored around Y");
                 assertApproxEqual(mirp([23, 67], [1, 1]), [67, 23], "Should return [23, 67] mirrored around XY");
