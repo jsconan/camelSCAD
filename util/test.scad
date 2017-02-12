@@ -348,6 +348,11 @@ module displayTestTitle(title, type, big) {
  */
 module displayExpectedAsserts(actual, expected, type) {
     echo(formatExpectedAsserts(actual, expected, type));
+    if (!checkExpectedAsserts(actual, expected)) {
+        color([1, 0.4, 0.2]) {
+            cube(15, center=true);
+        }
+    }
 }
 
 /**
