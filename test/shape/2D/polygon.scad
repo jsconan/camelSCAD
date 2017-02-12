@@ -64,9 +64,9 @@ module testShape2dPolygon() {
                 assertEqual(sizeTrapezium([3, 4]), [3, 4, 1], "Should complete incomplete size vector");
                 assertEqual(sizeTrapezium([3, 4, 2]), [3, 4, 2], "Should keep the provided size vector");
                 assertEqual(sizeTrapezium([3, 4, 2, 5]), [3, 4, 2], "Should truncate too big size vector");
-                assertEqual(sizeTrapezium([3, 4, 2], a=5), [5, 4, 2], "Should set the bottom length with the provided length in the provided size vector");
-                assertEqual(sizeTrapezium([3, 4, 2], b=5), [3, 5, 2], "Should set the top length with the provided length in the provided size vector");
-                assertEqual(sizeTrapezium([3, 4, 2], w=5), [3, 4, 5], "Should set the height with the provided width in the provided size vector");
+                assertEqual(sizeTrapezium([3, 4, 2], a=5), [5, 4, 2], "Should set the bottom length with the provided valueh in the provided size vector");
+                assertEqual(sizeTrapezium([3, 4, 2], b=5), [3, 5, 2], "Should set the top length with the provided value in the provided size vector");
+                assertEqual(sizeTrapezium([3, 4, 2], w=5), [3, 4, 5], "Should set the width with the provided value in the provided size vector");
             }
         }
         // test shape/2D/polygon/sizeRegularPolygon()
@@ -82,8 +82,8 @@ module testShape2dPolygon() {
                 assertEqual(sizeRegularPolygon([3, 4]), [3, 4, 3], "Should complete incomplete size vector");
                 assertEqual(sizeRegularPolygon([3, 4, 2]), [3, 4, 3], "Should truncate too big size vector");
                 assertEqual(sizeRegularPolygon([3, 4], n=5), [3, 4, 5], "Should set the number of facets");
-                assertEqual(sizeRegularPolygon([3, 4], l=5), [5, 4, 3], "Should set the length with the provided length in the provided size vector");
-                assertEqual(sizeRegularPolygon([3, 4], w=5), [3, 5, 3], "Should set the width with the provided width in the provided size vector");
+                assertEqual(sizeRegularPolygon([3, 4], l=5), [5, 4, 3], "Should set the length with the provided value in the provided size vector");
+                assertEqual(sizeRegularPolygon([3, 4], w=5), [3, 5, 3], "Should set the width with the provided value in the provided size vector");
                 assertEqual(sizeRegularPolygon(s=2, n=3), [4/(2 * sin(180/3)), 4/(2 * sin(180/3)), 3], "Should set the size of the triangle based on the length of a facet");
                 assertEqual(sizeRegularPolygon(s=2, n=4), [4/(2 * sin(180/4)), 4/(2 * sin(180/4)), 4], "Should set the size of the diamond based on the length of a facet");
                 assertEqual(sizeRegularPolygon(s=2, n=5), [4/(2 * sin(180/5)), 4/(2 * sin(180/5)), 5], "Should set the size of the pentagon based on the length of a facet");

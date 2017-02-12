@@ -78,12 +78,12 @@ function sizeTrapezium(size, a, b, w) =
  * @param Number [l] - The overall length.
  * @param Number [w] - The overall width.
  * @param Number [s] - The length of a side.
- * @returns Vector - Returns the size vector.
+ * @returns Vector - Returns the size vector, as [l, w, n].
  */
 function sizeRegularPolygon(size, n, l, w, s) =
     let(
         n = max(3, float(n)),
-        size = (s && !size && !l && !w) ? vector3D(2 * divisor(s) / (2 * sin(180 / n)))
+        size = (s && !size && !l && !w) ? vector2D(2 * divisor(s) / (2 * sin(180 / n)))
                                         : apply2D(size, l, w)
     )
     [
@@ -319,7 +319,7 @@ module hexagon(size, adjust, l, w, s) {
  * @param Number [cl] - The core length.
  * @param Number [cw] - The core width.
  */
-module star(size, core, edges, w, l, cl, cw) {
+module star(size, core, edges, l, w, cl, cw) {
     polygon(
         points = drawStar(size=size, core=core, edges=edges, l=l, w=w, cl=cl, cw=cw),
         convexity = 10
