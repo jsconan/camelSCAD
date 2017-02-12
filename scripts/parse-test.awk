@@ -43,6 +43,7 @@ BEGIN {
     failedCount  = 0
     warningCount = 0
     errorCount   = 0
+    indexCount   = 0
 
     # define ANSI colors
     BLACK    = "\033[0;30m"
@@ -93,6 +94,11 @@ $1~/module/ {
 
 # detect assertion results
 $1~/assert/ {
+    if (lastContext != $3) {
+        indexCount = 0
+    }
+    lastContext = $3
+    indexCount = indexCount + 1
     assertCount = assertCount + 1
     lastType = "assert"
 
@@ -103,6 +109,7 @@ $1~/assert/ {
     } else {
         # failed assertion
         failedAsserts[failedCount] = $0
+        failedAssertsIndex[failedCount] = indexCount
         failedAssertsPackage[failedCount] = package
         failedAssertsModule[failedCount] = module
         failedAssertsContext[failedCount] = $3
@@ -153,6 +160,7 @@ $1~/expect/ {
 
         # notify the missing assertions
         printf("%sM", LRED)
+        indexCount = 0
     }
 }
 
@@ -178,7 +186,11 @@ END {
             if (failedAssertsContext[i]) {
                 printf("  ")
             }
-            printf("%s- %s\n", RED, failedAssertsMessage[i])
+            if (failedAssertsIndex[i]) {
+                printf("%s- #%d: %s\n", RED, failedAssertsIndex[i], failedAssertsMessage[i])
+            } else {
+                printf("%s- %s\n", RED, failedAssertsMessage[i])
+            }
             if (failedAssertsDetails[i]) {
                 printf("    %s\n", failedAssertsDetails[i])
             }
