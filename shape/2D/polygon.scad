@@ -119,7 +119,7 @@ function sizeStar(size, core, edges, l, w, cl, cw) =
 ;
 
 /**
- * Computes the points that draw a rectangle shape.
+ * Computes the points that draw the sketch of a rectangle shape.
  *
  * @param Number|Vector [size] - The size of the rectangle.
  * @param Number [l] - The overall length.
@@ -140,7 +140,7 @@ function drawRectangle(size, l, w) =
 ;
 
 /**
- * Computes the points that draw a trapezium shape.
+ * Computes the points that draw the sketch of a trapezium shape.
  *
  * @param Number|Vector [size] - The size of the trapezium.
  * @param Number [a] - The length of the bottom base.
@@ -162,7 +162,7 @@ function drawTrapezium(size, a, b, w) =
 ;
 
 /**
- * Computes the points that draw a regular polygon.
+ * Computes the points that draw the sketch of a regular polygon.
  *
  * @param Number|Vector [size] - The size of the polygon.
  * @param Number [n] - The number of facets (min. 3).
@@ -185,7 +185,7 @@ function drawRegularPolygon(size, n, l, w, s) =
 ;
 
 /**
- * Computes the points that draw an hexagon.
+ * Computes the points that draw the sketch of an hexagon.
  *
  * @param Number|Vector [size] - The size of the hexagon.
  * @param Number [adjust] - An adjust length added on the horizontal side
@@ -213,7 +213,7 @@ function drawHexagon(size, adjust, l, w, s) =
 ;
 
 /**
- * Computes the points that draw a star shape.
+ * Computes the points that draw the sketch of a star shape.
  *
  * @param Number|Vector [size] - The outer size of the star.
  * @param Number|Vector [core] - The size of the core.

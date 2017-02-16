@@ -54,6 +54,7 @@ use <shape/2D/rounded.scad>
 use <shape/2D/polygon.scad>
 
 use <shape/3D/ellipsoid.scad>
+use <shape/3D/rounded.scad>
 use <shape/3D/polyhedron.scad>
 
 testCoreVersion();
@@ -78,4 +79,5 @@ testShape2dRounded();
 testShape2dPolygon();
 
 testShape3dEllipsoid();
+testShape3dRounded();
 testShape3dPolyhedron();

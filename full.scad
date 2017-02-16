@@ -73,4 +73,5 @@ include <shape/2D/rounded.scad>
 include <shape/2D/polygon.scad>
 
 include <shape/3D/ellipsoid.scad>
+include <shape/3D/rounded.scad>
 include <shape/3D/polyhedron.scad>

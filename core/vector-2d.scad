@@ -95,10 +95,7 @@ function apply2D(v, x, y, r, d) =
  * @param Vector v - The vector from which gets the length.
  * @returns Number
  */
-function norm2D(v) =
-    let( v = vector2D(v) )
-    sqrt(v[0] * v[0] + v[1] * v[1])
-;
+function norm2D(v) = norm(vector2D(v));
 
 /**
  * Normalizes a vector as `norm(v) = 1`.
@@ -112,7 +109,7 @@ function norm2D(v) =
  */
 function unit2D(v) =
     let( v = vector2D(v) )
-    v / divisor(sqrt(v[0] * v[0] + v[1] * v[1]))
+    v / divisor(norm(v))
 ;
 
 /**

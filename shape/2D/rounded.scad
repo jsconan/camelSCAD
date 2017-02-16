@@ -33,6 +33,28 @@
  */
 
 /**
+ * Computes the size of a 2D rounded shape.
+ *
+ * @param Number|Vector [r] - The radius of the rounded part or a vector that contains horizontal and vertical radius.
+ * @param Number|Vector [d] - The diameter of the rounded part or a vector that contains horizontal and vertical diameters.
+ * @param Number [rx] - The horizontal radius.
+ * @param Number [ry] - The vertical radius.
+ * @param Number [dx] - The horizontal diameter.
+ * @param Number [dy] - The vertical diameter.
+ * @returns Vector - Returns the radius vector.
+ */
+function sizeRounded2D(r, d, rx, ry, dx, dy) =
+    let(
+        r = apply2D(r, rx, ry),
+        d = apply2D(d, dx, dy)
+    )
+    [
+        d[0] && !rx ? d[0] / 2 : r[0],
+        d[1] && !ry ? d[1] / 2 : r[1]
+    ]
+;
+
+/**
  * Computes the size of an arch shape.
  *
  * @param Number|Vector [size] - The size of the arch.
@@ -49,19 +71,15 @@
 function sizeArch(size, r, d, w, h, rx, ry, dx, dy) =
     let(
         s = apply2D(size, w, h),
-        r = apply2D(r, rx, ry),
-        d = apply2D(d, dx, dy),
-        c = [
-            d[0] && !rx ? d[0] / 2 : r[0],
-            d[1] && !ry ? d[1] / 2 : r[1]
-        ],
+        c = sizeRounded2D(r=r, d=d, rx=rx, ry=ry, dx=dx, dy=dy),
         size = [
             divisor(s[0] ? s[0] : c[0] * 2),
             divisor(s[1] ? s[1] : c[1])
         ],
+        horRadius = size[0] / 2,
         radius = [
-            size[0] / 2,
-            c[1] ? min(size[1], c[1]) : size[1]
+            horRadius,
+            min(size[1], or(c[1], horRadius))
         ]
     )
     [ size, radius ]
@@ -84,19 +102,15 @@ function sizeArch(size, r, d, w, h, rx, ry, dx, dy) =
 function sizeStadium(size, r, d, w, h, rx, ry, dx, dy) =
     let(
         s = apply2D(size, w, h),
-        r = apply2D(r, rx, ry),
-        d = apply2D(d, dx, dy),
-        c = [
-            d[0] && !rx ? d[0] / 2 : r[0],
-            d[1] && !ry ? d[1] / 2 : r[1]
-        ],
+        c = sizeRounded2D(r=r, d=d, rx=rx, ry=ry, dx=dx, dy=dy),
         size = [
             divisor(s[0] ? s[0] : c[0] * 2),
             divisor(s[1] ? s[1] : c[1] * 2)
         ],
+        horRadius = size[0] / 2,
         radius = [
-            size[0] / 2,
-            c[1] ? min(size[1] / 2, c[1]) : size[1] / 2
+            horRadius,
+            min(size[1] / 2, or(c[1], horRadius))
         ]
     )
     [ size, radius ]
@@ -119,12 +133,7 @@ function sizeStadium(size, r, d, w, h, rx, ry, dx, dy) =
 function sizeRoundedRectangle(size, r, d, w, h, rx, ry, dx, dy) =
     let(
         s = apply2D(size, w, h),
-        r = apply2D(r, rx, ry),
-        d = apply2D(d, dx, dy),
-        c = [
-            d[0] && !rx ? d[0] / 2 : r[0],
-            d[1] && !ry ? d[1] / 2 : r[1]
-        ],
+        c = sizeRounded2D(r=r, d=d, rx=rx, ry=ry, dx=dx, dy=dy),
         size = [
             divisor(s[0] ? s[0] : c[0] * 2),
             divisor(s[1] ? s[1] : c[1] * 2)
@@ -138,7 +147,7 @@ function sizeRoundedRectangle(size, r, d, w, h, rx, ry, dx, dy) =
 ;
 
 /**
- * Computes the points that draw an arch shape.
+ * Computes the points that draw the sketch of an arch shape.
  *
  * @param Number|Vector [size] - The size of the arch.
  * @param Number|Vector [r] - The radius or a vector that contains horizontal and vertical radius.
@@ -166,7 +175,7 @@ function drawArch(size, r, d, w, h, rx, ry, dx, dy) =
 ;
 
 /**
- * Computes the points that draw a stadium shape.
+ * Computes the points that draw the sketch of a stadium shape.
  *
  * @param Number|Vector [size] - The size of the stadium.
  * @param Number|Vector [r] - The radius or a vector that contains horizontal and vertical radius.
@@ -193,7 +202,7 @@ function drawStadium(size, r, d, w, h, rx, ry, dx, dy) =
 ;
 
 /**
- * Computes the points that draw a rounded rectangle shape.
+ * Computes the points that draw the sketch of a rounded rectangle shape.
  *
  * @param Number|Vector [size] - The size of the rounded rectangle.
  * @param Number|Vector [r] - The radius of the corners or a vector that contains horizontal and vertical radius.

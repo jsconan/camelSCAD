@@ -82,7 +82,7 @@ function sizeRing(r, w, d, rx, ry, dx, dy, wx, wy) =
 ;
 
 /**
- * Computes the points that draw an ellipse.
+ * Computes the points that draw the sketch of an ellipse.
  *
  * @param Number|Vector [r] - The radius or a vector that contains horizontal and vertical radius.
  * @param Number|Vector [d] - The diameter or a vector that contains horizontal and vertical diameters.
@@ -100,7 +100,7 @@ function drawEllipse(r, d, rx, ry, dx, dy) =
 ;
 
 /**
- * Computes the points that draw a pie slice.
+ * Computes the points that draw the sketch of a pie slice.
  *
  * @param Number|Vector [r] - The radius or a vector that contains horizontal and vertical radius.
  * @param Number|Vector [d] - The diameter or a vector that contains horizontal and vertical diameters.

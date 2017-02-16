@@ -34,16 +34,47 @@ use <../../../full.scad>
  * @author jsconan
  */
 module testShape2dRounded() {
-    testPackage("shape/2D/rounded.scad", 6) {
+    testPackage("shape/2D/rounded.scad", 7) {
+        // test shape/2D/rounded/sizeRounded2D()
+        testModule("sizeRounded2D()", 2) {
+            testUnit("default values", 3) {
+                assertEqual(sizeRounded2D(), [0, 0], "Should always return a valid vector even if not parameter has been provided");
+                assertEqual(sizeRounded2D("12", "12", "12", "12", "12", "12"), [0, 0], "Should always return a valid vector even if wrong parameter has been provided (string)");
+                assertEqual(sizeRounded2D(true, true, true, true, true, true), [0, 0], "Should always return a valid vector even if wrong parameter has been provided (boolean)");
+            }
+            testUnit("compute size", 15) {
+                assertEqual(sizeRounded2D(3), [3, 3], "Should produce a radius from a single radius number");
+                assertEqual(sizeRounded2D(d=3), [1.5, 1.5], "Should produce a radius from a single diameter number");
+
+                assertEqual(sizeRounded2D([2, 3]), [2, 3], "Should keep the the radius if a vector is provided");
+                assertEqual(sizeRounded2D(d=[2, 3]), [1, 1.5], "Should adjust the diameter if a vector is provided");
+
+                assertEqual(sizeRounded2D(r=[3, 4], rx=5), [5, 4], "Should set the provided X radius in the provided radius vector");
+                assertEqual(sizeRounded2D(r=[3, 4], ry=5), [3, 5], "Should set the provided Y radius in the provided radius vector");
+
+                assertEqual(sizeRounded2D(r=[3, 4], dx=5), [2.5, 4], "Should set the provided X diameter in the provided radius vector");
+                assertEqual(sizeRounded2D(r=[3, 4], dy=5), [3, 2.5], "Should set the provided Y diameter in the provided radius vector");
+
+                assertEqual(sizeRounded2D(d=[3, 4], rx=5), [5, 2], "Should set the provided X radius in the provided diameter vector");
+                assertEqual(sizeRounded2D(d=[3, 4], ry=5), [1.5, 5], "Should set the provided Y radius in the provided diameter vector");
+
+                assertEqual(sizeRounded2D(d=[3, 4], dx=5), [2.5, 2], "Should set the provided X diameter in the provided diameter vector");
+                assertEqual(sizeRounded2D(d=[3, 4], dy=5), [1.5, 2.5], "Should set the provided Y diameter in the provided diameter vector");
+
+                assertEqual(sizeRounded2D(rx=3), [3, 0], "Should set the provided X radius in the radius vector and use the default for the Y radius");
+                assertEqual(sizeRounded2D(ry=4), [0, 4], "Should set the provided Y radius in the radius vector and use the default for the X radius");
+                assertEqual(sizeRounded2D(rx=3, ry=4), [3, 4], "Should set the provided radius in the radius vector");
+            }
+        }
         // test shape/2D/rounded/sizeArch()
         testModule("sizeArch()", 2) {
             testUnit("default values", 3) {
-                assertEqual(sizeArch(), [[1, 1], [0.5, 1]], "Should always return a size even if not parameter has been provided");
-                assertEqual(sizeArch("12", "12", "12", "12", "12", "12"), [[1, 1], [0.5, 1]], "Should always return a size even if wrong parameter has been provided (string)");
-                assertEqual(sizeArch(true, true, true, true, true, true), [[1, 1], [0.5, 1]], "Should always return a size even if wrong parameter has been provided (boolean)");
+                assertEqual(sizeArch(), [[1, 1], [0.5, 0.5]], "Should always return a size even if not parameter has been provided");
+                assertEqual(sizeArch("12", "12", "12", "12", "12", "12"), [[1, 1], [0.5, 0.5]], "Should always return a size even if wrong parameter has been provided (string)");
+                assertEqual(sizeArch(true, true, true, true, true, true), [[1, 1], [0.5, 0.5]], "Should always return a size even if wrong parameter has been provided (boolean)");
             }
             testUnit("compute size", 29) {
-                assertEqual(sizeArch(3), [[3, 3], [1.5, 3]], "Should produce a size from a single size number in order to draw a half-circle");
+                assertEqual(sizeArch(3), [[3, 3], [1.5, 1.5]], "Should produce a size from a single size number in order to draw a half-circle");
                 assertEqual(sizeArch(r=3), [[6, 3], [3, 3]], "Should produce a size from a single radius number in order to draw a half-circle");
                 assertEqual(sizeArch(d=3), [[3, 1.5], [1.5, 1.5]], "Should produce a size from a single diameter number in order to draw a half-circle");
 
@@ -54,12 +85,12 @@ module testShape2dRounded() {
                 assertEqual(sizeArch([3, 4], d=[2, 2]), [[3, 4], [1.5, 1]], "Should keep the size and adjust the diameter if vectors are provided");
                 assertEqual(sizeArch([3, 4], d=[6, 8]), [[3, 4], [1.5, 4]], "Should keep the size and adjust the diameter if vectors are provided");
 
-                assertEqual(sizeArch([3, 4]), [[3, 4], [1.5, 4]], "Should keep the provided size vector and should produce the radius accordingly");
+                assertEqual(sizeArch([3, 4]), [[3, 4], [1.5, 1.5]], "Should keep the provided size vector and should produce the radius accordingly");
                 assertEqual(sizeArch(r=[3, 4]), [[6, 4], [3, 4]], "Should keep the provided radius vector and should produce the size accordingly");
                 assertEqual(sizeArch(d=[3, 4]), [[3, 2], [1.5, 2]], "Should translate the provided diameter vector to a radius vector and should produce the size accordingly");
 
-                assertEqual(sizeArch([3, 4], w=5), [[5, 4], [2.5, 4]], "Should set the provided width in the provided size vector");
-                assertEqual(sizeArch([3, 4], h=5), [[3, 5], [1.5, 5]], "Should set the provided height in the provided size vector");
+                assertEqual(sizeArch([3, 4], w=5), [[5, 4], [2.5, 2.5]], "Should set the provided width in the provided size vector");
+                assertEqual(sizeArch([3, 4], h=5), [[3, 5], [1.5, 1.5]], "Should set the provided height in the provided size vector");
 
                 assertEqual(sizeArch(r=[3, 4], rx=5), [[10, 4], [5, 4]], "Should set the provided X radius in the provided radius vector and should produce the size accordingly");
                 assertEqual(sizeArch(r=[3, 4], ry=5), [[6, 5], [3, 5]], "Should set the provided Y radius in the provided radius vector and should produce the size accordingly");
@@ -74,14 +105,14 @@ module testShape2dRounded() {
                 assertEqual(sizeArch(d=[3, 4], dy=5), [[3, 2.5], [1.5, 2.5]], "Should set the provided Y diameter in the provided diameter vector and should produce the size accordingly");
 
                 assertEqual(sizeArch(w=3), [[3, 1], [1.5, 1]], "Should set the provided width in the size vector and use the default for the height");
-                assertEqual(sizeArch(h=4), [[1, 4], [0.5, 4]], "Should set the provided height in the size vector and use the default for the width");
-                assertEqual(sizeArch(w=3, h=4), [[3, 4], [1.5, 4]], "Should set the provided width and height in the size vector");
+                assertEqual(sizeArch(h=4), [[1, 4], [0.5, 0.5]], "Should set the provided height in the size vector and use the default for the width");
+                assertEqual(sizeArch(w=3, h=4), [[3, 4], [1.5, 1.5]], "Should set the provided width and height in the size vector");
 
                 assertEqual(sizeArch(rx=3), [[6, 1], [3, 1]], "Should set the provided X radius in the radius vector and use the default for the Y radius");
                 assertEqual(sizeArch(ry=4), [[1, 4], [0.5, 4]], "Should set the provided Y radius in the radius vector and use the default for the X radius");
                 assertEqual(sizeArch(rx=3, ry=4), [[6, 4], [3, 4]], "Should set the provided radius in the radius vector");
 
-                assertEqual(sizeArch(h=4, rx=3), [[6, 4], [3, 4]], "Should set the provided height in the size vector and set the provide X radius in the radius vector");
+                assertEqual(sizeArch(h=4, rx=3), [[6, 4], [3, 3]], "Should set the provided height in the size vector and set the provide X radius in the radius vector");
                 assertEqual(sizeArch(w=4, ry=3), [[4, 3], [2, 3]], "Should set the provided width in the size vector and set the provide Y radius in the radius vector");
             }
         }
@@ -104,12 +135,12 @@ module testShape2dRounded() {
                 assertEqual(sizeStadium([3, 4], d=[2, 2]), [[3, 4], [1.5, 1]], "Should keep the size and adjust the diameter if vectors are provided");
                 assertEqual(sizeStadium([3, 4], d=[8, 10]), [[3, 4], [1.5, 2]], "Should keep the size and adjust the diameter if vectors are provided");
 
-                assertEqual(sizeStadium([3, 4]), [[3, 4], [1.5, 2]], "Should keep the provided size vector and should produce the radius accordingly");
+                assertEqual(sizeStadium([3, 4]), [[3, 4], [1.5, 1.5]], "Should keep the provided size vector and should produce the radius accordingly");
                 assertEqual(sizeStadium(r=[3, 4]), [[6, 8], [3, 4]], "Should keep the provided radius vector and should produce the size accordingly");
                 assertEqual(sizeStadium(d=[3, 4]), [[3, 4], [1.5, 2]], "Should translate the provided diameter vector to a radius vector and should produce the size accordingly");
 
                 assertEqual(sizeStadium([3, 4], w=5), [[5, 4], [2.5, 2]], "Should set the provided width in the provided size vector");
-                assertEqual(sizeStadium([3, 4], h=5), [[3, 5], [1.5, 2.5]], "Should set the provided height in the provided size vector");
+                assertEqual(sizeStadium([3, 4], h=5), [[3, 5], [1.5, 1.5]], "Should set the provided height in the provided size vector");
 
                 assertEqual(sizeStadium(r=[3, 4], rx=5), [[10, 8], [5, 4]], "Should set the provided X radius in the provided radius vector and should produce the size accordingly");
                 assertEqual(sizeStadium(r=[3, 4], ry=5), [[6, 10], [3, 5]], "Should set the provided Y radius in the provided radius vector and should produce the size accordingly");
@@ -124,8 +155,8 @@ module testShape2dRounded() {
                 assertEqual(sizeStadium(d=[3, 4], dy=5), [[3, 5], [1.5, 2.5]], "Should set the provided Y diameter in the provided diameter vector and should produce the size accordingly");
 
                 assertEqual(sizeStadium(w=3), [[3, 1], [1.5, 0.5]], "Should set the provided width in the size vector and use the default for the height");
-                assertEqual(sizeStadium(h=4), [[1, 4], [0.5, 2]], "Should set the provided height in the size vector and use the default for the width");
-                assertEqual(sizeStadium(w=3, h=4), [[3, 4], [1.5, 2]], "Should set the provided width and height in the size vector");
+                assertEqual(sizeStadium(h=4), [[1, 4], [0.5, 0.5]], "Should set the provided height in the size vector and use the default for the width");
+                assertEqual(sizeStadium(w=3, h=4), [[3, 4], [1.5, 1.5]], "Should set the provided width and height in the size vector");
 
                 assertEqual(sizeStadium(rx=3), [[6, 1], [3, 0.5]], "Should set the provided X radius in the radius vector and use the default for the Y radius");
                 assertEqual(sizeStadium(ry=4), [[1, 8], [0.5, 4]], "Should set the provided Y radius in the radius vector and use the default for the X radius");
@@ -188,9 +219,9 @@ module testShape2dRounded() {
         // test shape/2D/rounded/drawArch()
         testModule("drawArch()", 5) {
             testUnit("default values", 3) {
-                assertEqual(drawArch($fn=3), [ _rotP(0, 0.5, 1), _rotP(120, 0.5, 1), _rotP(180, 0.5, 1) ], "Should return a list of points to draw an arch with a radius of 1 and 3 facets and without straight walls");
-                assertEqual(drawArch($fn=4), [ for (a = [0 : 360/4 : 180]) _rotP(a, 0.5, 1) ], "Should return a list of points to draw a 90° arch with a radius of 1 and 4 facets and without straight walls");
-                assertEqual(drawArch($fn=6), [ for (a = [0 : 360/6 : 180]) _rotP(a, 0.5, 1) ], "Should return a list of points to draw a 90° arch with a radius of 1 and 6 facets and without straight walls");
+                assertEqual(drawArch($fn=3), [ [0.5, 0], _rotP(0, 0.5, 0.5) + [0, 0.5], _rotP(120, 0.5, 0.5) + [0, 0.5], _rotP(180, 0.5, 0.5) + [0, 0.5], [-0.5, 0]], "Should return a list of points to draw an arch with a radius of 1 and 3 facets");
+                assertEqual(drawArch($fn=4), concat([[0.5, 0]], [ for (a = [0 : 360/4 : 180]) _rotP(a, 0.5, 0.5) + [0, 0.5] ], [[-0.5, 0]]), "Should return a list of points to draw a 90° arch with a radius of 1 and 4 facets");
+                assertEqual(drawArch($fn=6), concat([[0.5, 0]], [ for (a = [0 : 360/6 : 180]) _rotP(a, 0.5, 0.5) + [0, 0.5] ], [[-0.5, 0]]), "Should return a list of points to draw a 90° arch with a radius of 1 and 6 facets");
             }
             testUnit("circle arch, no straight walls", 12) {
                 assertEqual(drawArch([2, 1], $fn=3), [ _rotP(0, 1, 1), _rotP(120, 1, 1), _rotP(180, 1, 1) ], "Should return a list of points to draw a half-circle with a radius of 1 and 3 facets (triangle)");
@@ -209,10 +240,10 @@ module testShape2dRounded() {
                 assertEqual(drawArch(d=5, $fa=12, $fs=2), [ for (a = [0 : astep(2.5, $fa=12, $fs=2) : 180]) _rotP(a, 2.5, 2.5) ], "Should return a list of points to draw a half-circle with a diameter of 5 and 16 facets");
             }
             testUnit("ellipse arch, no straight walls", 16) {
-                assertEqual(drawArch(2, $fn=3), [ _rotP(0, 1, 2), _rotP(120, 1, 2), _rotP(180, 1, 2) ], "Should return a list of points to draw a half-ellipse with a radius of [1, 2] and 3 facets (triangle)");
-                assertEqual(drawArch(3, $fn=4), [ for (a = [0 : 360/4 : 180]) _rotP(a, 1.5, 3) ], "Should return a list of points to draw a half-ellipse with a radius of [1.5, 3] and 4 facets (square)");
-                assertEqual(drawArch(4, $fn=6), [ for (a = [0 : 360/6 : 180]) _rotP(a, 2, 4) ], "Should return a list of points to draw a half-ellipse with a radius of [2, 4] and 6 facets (hexagon)");
-                assertEqual(drawArch(5, $fa=12, $fs=2), [ for (a = [0 : astep(5, $fa=12, $fs=2) : 180]) _rotP(a, 2.5, 5) ], "Should return a list of points to draw a half-ellipse with a radius of [2.5, 5] and 16 facets");
+                assertEqual(drawArch([2, 1], $fn=3), [ _rotP(0, 1, 1), _rotP(120, 1, 1), _rotP(180, 1, 1) ], "Should return a list of points to draw a half-ellipse with a radius of [1, 2] and 3 facets (triangle)");
+                assertEqual(drawArch([3, 1], $fn=4), [ for (a = [0 : 360/4 : 180]) _rotP(a, 1.5, 1) ], "Should return a list of points to draw a half-ellipse with a radius of [1.5, 3] and 4 facets (square)");
+                assertEqual(drawArch([4, 1], $fn=6), [ for (a = [0 : 360/6 : 180]) _rotP(a, 2, 1) ], "Should return a list of points to draw a half-ellipse with a radius of [2, 4] and 6 facets (hexagon)");
+                assertEqual(drawArch([5, 2], $fa=12, $fs=2), [ for (a = [0 : astep(2.5, $fa=12, $fs=2) : 180]) _rotP(a, 2.5, 2) ], "Should return a list of points to draw a half-ellipse with a radius of [2.5, 5] and 16 facets");
 
                 assertEqual(drawArch(d=[1, 2], $fn=3), [ _rotP(0, 0.5, 1), _rotP(120, 0.5, 1), _rotP(180, 0.5, 1) ], "Should return a list of points to draw a half-ellipse with a diameter of [1, 2] and 3 facets (triangle)");
                 assertEqual(drawArch(d=[1, 2], $fn=4), [ for (a = [0 : 360/4 : 180]) _rotP(a, 0.5, 1) ], "Should return a list of points to draw a half-ellipse with a diameter of [1, 2] and 4 facets (square)");
@@ -276,10 +307,10 @@ module testShape2dRounded() {
                 assertEqual(drawStadium(d=10, $fa=12, $fs=2), [ for (a = [astep(5, $fa=12, $fs=2) : astep(5, $fa=12, $fs=2) : 360]) _rotP(a, 5, 5) ], "Should return a list of points to draw a circle with a diameter of 5 and 16 facets");
             }
             testUnit("ellipse stadium, no straight walls", 20) {
-                assertEqual(drawStadium([2, 4], $fn=3), [ for (a = [360/3 : 360/3 : 360]) _rotP(a, 1, 2) ], "Should return a list of points to draw an ellipse with a radius of [1, 2] and 3 facets (triangle)");
-                assertEqual(drawStadium([2, 4], $fn=4), [ for (a = [360/4 : 360/4 : 360]) _rotP(a, 1, 2) ], "Should return a list of points to draw an ellipse with a radius of [1, 2] and 4 facets (square)");
-                assertEqual(drawStadium([2, 4], $fn=6), [ for (a = [360/6 : 360/6 : 360]) _rotP(a, 1, 2) ], "Should return a list of points to draw an ellipse with a radius of [1, 2] and 6 facets (hexagon)");
-                assertEqual(drawStadium([10, 12], $fa=12, $fs=2), [ for (a = [0 : astep(6, $fa=12, $fs=2) : 360]) _rotP(a, 5, 6) ], "Should return a list of points to draw an ellipse with a radius of [5, 6] and 20 facets");
+                assertEqual(drawStadium([2, 1], $fn=3), [ for (a = [360/3 : 360/3 : 360]) _rotP(a, 1, 0.5) ], "Should return a list of points to draw an ellipse with a radius of [1, 2] and 3 facets (triangle)");
+                assertEqual(drawStadium([2, 1], $fn=4), [ for (a = [360/4 : 360/4 : 360]) _rotP(a, 1, 0.5) ], "Should return a list of points to draw an ellipse with a radius of [1, 2] and 4 facets (square)");
+                assertEqual(drawStadium([2, 1], $fn=6), [ for (a = [360/6 : 360/6 : 360]) _rotP(a, 1, 0.5) ], "Should return a list of points to draw an ellipse with a radius of [1, 2] and 6 facets (hexagon)");
+                assertEqual(drawStadium([12, 10], $fa=12, $fs=2), [ for (a = [0 : astep(6, $fa=12, $fs=2) : 360]) _rotP(a, 6, 5) ], "Should return a list of points to draw an ellipse with a radius of [5, 6] and 20 facets");
 
                 assertEqual(drawStadium(r=[1, 2], $fn=3), [ for (a = [360/3 : 360/3 : 360]) _rotP(a, 1, 2) ], "Should return a list of points to draw an ellipse with a radius of [1, 2] and 3 facets (triangle)");
                 assertEqual(drawStadium(r=[1, 2], $fn=4), [ for (a = [360/4 : 360/4 : 360]) _rotP(a, 1, 2) ], "Should return a list of points to draw an ellipse with a radius of [1, 2] and 4 facets (square)");
