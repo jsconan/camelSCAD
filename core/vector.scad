@@ -149,6 +149,17 @@ function vabs(v) =
 ;
 
 /**
+ * Computes the sign of each vector elements.
+ *
+ * @param Vector v - The vector to sign.
+ * @returns Vector
+ */
+function vsign(v) =
+    len(v) ? [ for (i = v) float(sign(i)) ]
+           : []
+;
+
+/**
  * Computes the sum of all elements from a vector.
  *
  * @param Vector v - The vector to sum.

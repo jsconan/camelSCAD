@@ -34,7 +34,7 @@ use <../../full.scad>
  * @author jsconan
  */
 module testCoreVector() {
-    testPackage("core/vector.scad", 13) {
+    testPackage("core/vector.scad", 14) {
         // test core/vector/vadd()
         testModule("vadd()", 5) {
             testUnit("no parameter", 1) {
@@ -214,6 +214,24 @@ module testCoreVector() {
             testUnit("vector", 2) {
                 assertEqual(vabs([]), [], "Gets positive values from an empty vector");
                 assertEqual(vabs([-3, 2, -1]), [3, 2, 1], "Gets positive values from a vector");
+            }
+        }
+        // test core/vector/vsign()
+        testModule("vsign()", 4) {
+            testUnit("no parameter", 1) {
+                assertEmptyArray(vsign());
+            }
+            testUnit("not array", 3) {
+                assertEmptyArray(vsign(0), "A number is not an array");
+                assertEmptyArray(vsign(true), "A boolean is not an array");
+                assertEqual(vsign("foo"), [0], "A string is not an array, but Should be casted");
+            }
+            testUnit("not vector", 1) {
+                assertEqual(vsign([-1, "2", 3]), [-1, 0, 1], "Gets sign from an array");
+            }
+            testUnit("vector", 2) {
+                assertEqual(vsign([]), [], "Gets sign from an empty vector");
+                assertEqual(vsign([-3, 2, -1, 0]), [-1, 1, -1, 0], "Gets sign from a vector");
             }
         }
         // test core/vector/vsum()
