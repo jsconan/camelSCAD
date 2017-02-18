@@ -34,7 +34,7 @@ use <../../full.scad>
  * @author jsconan
  */
 module testCoreMaths() {
-    testPackage("core/maths.scad", 8) {
+    testPackage("core/maths.scad", 9) {
         // test core/maths/deg()
         testModule("deg()", 3) {
             testUnit("no parameter", 1) {
@@ -456,6 +456,25 @@ module testCoreMaths() {
                 assertEqual(limit(-3.14, -2.5, 10), -2.5, "A negative float value should be replaced by the lowest");
                 assertEqual(limit(-3.14, -10, -5.6), -5.6, "A negative float value should be replaced by the highest");
                 assertEqual(limit(-3.14, -10, 10), -3.14, "A negative float value should be kept if within the domain");
+            }
+        }
+        // test core/maths/fixed()
+        testModule("fixed()", 2) {
+            testUnit("default value", 4) {
+                assertEqual(fixed(), 0, "Should return a 0");
+                assertEqual(fixed("8"), 0, "Cannot round a string");
+                assertEqual(fixed(true), 0, "Cannot round a boolean");
+                assertEqual(fixed([10]), 0, "Cannot round a vector");
+            }
+            testUnit("round value", 8) {
+                assertEqual(fixed(18), 18, "Should return the provided integer");
+                assertEqual(fixed(18, 5), 18, "Should return the provided integer, even if a decimal precision have been provided");
+                assertEqual(fixed(3.14), 3, "Should truncate the number if no precision is provided");
+                assertEqual(fixed(-3.14), -3, "Should truncate the number if no precision is provided");
+                assertEqual(fixed(1.12345678, 3), 1.123, "Should round the number with the provided precision");
+                assertEqual(fixed(1.12345678, 5), 1.12346, "Should round the number with the provided precision");
+                assertEqual(fixed(-1.12345678, 3), -1.123, "Should round the number with the provided precision");
+                assertEqual(fixed(-1.12345678, 5), -1.12346, "Should round the number with the provided precision");
             }
         }
     }

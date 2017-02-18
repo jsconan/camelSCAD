@@ -156,3 +156,17 @@ function limit(value, low, high) =
     )
     min(max(min(low, high), value), max(low, high))
 ;
+
+/**
+ * Round a value with the requested precision
+ *
+ * @param Number value - The value to round.
+ * @param Number precision - The number of decimal digits
+ * @returns Number
+ */
+function fixed(value, precision) =
+    let(
+        precision = pow(10, float(precision))
+    )
+    round(float(value) * precision) / precision
+;
