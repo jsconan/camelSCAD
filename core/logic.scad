@@ -51,6 +51,15 @@ function or(a, b) = a ? a : b;
 function and(a, b) = a ? b : a;
 
 /**
+ * Returns `true` when the paramaters do not have the same boolean meaning, otherwise return `false`.
+ *
+ * @param * a - The first value.
+ * @param * b - The second value.
+ * @returns *
+ */
+function xor(a, b) = (!a && b) || (a && !b);
+
+/**
  * Returns the first value if it is defined, otherwise returns the second value.
  *
  * @param * a - The first value.

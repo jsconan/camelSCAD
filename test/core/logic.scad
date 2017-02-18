@@ -34,7 +34,7 @@ use <../../full.scad>
  * @author jsconan
  */
 module testCoreLogic() {
-    testPackage("core/logic.scad", 19) {
+    testPackage("core/logic.scad", 20) {
         // validate OpenSCAD native behaviour
         testModule("true/false", 4) {
             testUnit("undefined", 2) {
@@ -87,6 +87,34 @@ module testCoreLogic() {
             testUnit("both parameters", 2) {
                 assertEqual(and("1st", "2nd"), "2nd", "Should return the second parameter as the first is true");
                 assertEqual(and("", "2nd"), "", "Should return the first parameter as it is false");
+            }
+        }
+        // test core/logic/xor()
+        testModule("xor()", 3) {
+            testUnit("no parameters", 1) {
+                assertFalse(xor());
+            }
+            testUnit("only the first parameter", 7) {
+                assertFalse(xor(undef), "Should return `false` if the first parameter is undef and the second is missing");
+                assertTrue(xor("1st"), "Should return `true` if the first parameter is provided and the second is missing, if the first is equivalent to `true`");
+                assertFalse(xor(""), "Should return `false` if the first parameter is provided and the second is missing, if the first is equivalent to `false`");
+                assertTrue(xor(1), "Should return `true` if the first parameter is provided and the second is missing, if the first is equivalent to `true`");
+                assertFalse(xor(0), "Should return `false` if the first parameter is provided and the second is missing, if the first is equivalent to `false`");
+                assertTrue(xor([1]), "Should return `true` if the first parameter is provided and the second is missing, if the first is equivalent to `true`");
+                assertFalse(xor([]), "Should return `false` if the first parameter is provided and the second is missing, if the first is equivalent to `false`");
+            }
+            testUnit("both parameters", 9) {
+                assertFalse(xor("1st", "2nd"), "Should return `false` when the paramaters have the same boolean meaning");
+                assertFalse(xor("foo", "foo"), "Should return `false` when the paramaters have the same boolean meaning");
+                assertTrue(xor("1st", ""), "Should return `true` when the paramaters do not have the same boolean meaning");
+
+                assertFalse(xor(1, 2), "Should return `false` when the paramaters have the same boolean meaning");
+                assertFalse(xor(3, 3), "Should return `false` when the paramaters have the same boolean meaning");
+                assertTrue(xor(3, 0), "Should return `true` when the paramaters do not have the same boolean meaning");
+
+                assertFalse(xor([1], [2]), "Should return `false` when the paramaters have the same boolean meaning");
+                assertFalse(xor([3], [3]), "Should return `false` when the paramaters have the same boolean meaning");
+                assertTrue(xor([0], []), "Should return `true` when the paramaters do not have the same boolean meaning");
             }
         }
         // test core/logic/uor()
