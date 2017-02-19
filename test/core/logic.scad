@@ -493,15 +493,16 @@ module testCoreLogic() {
             testUnit("no parameters", 1) {
                 assertTrue(approx(), "Nothing to check");
             }
-            testUnit("different", 6) {
+            testUnit("different", 7) {
                 assertFalse(approx(1, 2), "1 is not approximately equal to 2");
                 assertFalse(approx(1, -1), "1 is not approximately equal to -1");
                 assertFalse(approx(true, false), "true is not approximately equal to false");
                 assertFalse(approx("foo", "bar"), "foo is not approximately equal to bar");
                 assertFalse(approx([1], [2]), "[1] is not approximately equal to [2]");
                 assertFalse(approx([[1, 1, 2, 2, 3, 3]], [[1, 2, 3, 4, 5, 6]]), "Different arrays are not approximately equal");
+                assertFalse(approx(1.23456, 1.2345, 5), "Similar numbers with different amount of decimal digits should be different if precision is bigger than the similar part");
             }
-            testUnit("equal", 13) {
+            testUnit("equal", 14) {
                 assertTrue(approx(1, 1), "1 is equal to 1");
                 assertTrue(approx(true, true), "true is equal to true");
                 assertTrue(approx(false, false), "false is equal to false");
@@ -519,6 +520,7 @@ module testCoreLogic() {
                     [[1.0000000000001, 1.9999999999999999], [3.00000000000000000000002, 4.000000000000001],[5.0000000000001, 5.9999999999999999],[7.00000000000000000000002, 8.000000000000001],[9.0000000000001, 9.9999999999999999]]),
                     "Arrays that contains similar values are approximately equal"
                 );
+                assertFalse(approx(1.23456, 1.2345, 4), "Similar numbers with different amount of decimal digits should be equal if precision is smaller than the similar part");
             }
         }
     }

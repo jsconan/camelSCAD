@@ -212,15 +212,15 @@ function between(value, low, high) =
 function contains(a, value) = len([ for (i = a) if (i == value) i ]) > 0;
 
 /**
- * Checks if the provided values are approximately equal. Number will be rounded to the wanted precision.
+ * Checks if the provided values are approximately equal. Number will be rounded with the wanted decimal precision.
  * Strings and booleans will be strictly compared. Arrays and vectors will be recursively compared.
  *
  * @param * a - The first value.
  * @param * b - The second value.
- * @param Number [precision] - The wanted precision for numbers (default: 1000000).
+ * @param Number [precision] - The wanted decimal precision (default: 5).
  * @returns Boolean
  */
-function approx(a, b, precision=1000000,
+function approx(a, b, precision=5,
                 // internal
                 p, l) =
     let(
@@ -267,7 +267,7 @@ function approx(a, b, precision=1000000,
         )
     )
    :let(
-        precision = divisor(precision),
+        precision = pow(10, float(precision)),
         a = round(a * precision) / precision,
         b = round(b * precision) / precision
     )
