@@ -34,7 +34,7 @@ use <../../full.scad>
  * @author jsconan
  */
 module testCoreVector2D() {
-    testPackage("core/vector-2d.scad", 23) {
+    testPackage("core/vector-2d.scad", 24) {
         // test core/vector-2d/vector2D()
         testModule("vector2D()", 3) {
             testUnit("no parameter", 1) {
@@ -280,6 +280,21 @@ module testCoreVector2D() {
                 assertEqual(center2D([10], [8], 10, true), [9, 0] + ([0, -2] / norm([0, -2])) * sqrt(100 - pow(norm([-2, 0]) / 2, 2)), "Should accept vector smaller than 2D, then upscale them and compute the center of the circle using 2D");
                 assertEqual(center2D([10, 20, 30], [8, 16, 32], 10, true), [9, 18] + ([4, -2] / norm([4, -2])) * sqrt(100 - pow(norm([2, 4]) / 2, 2)), "Should accept vector bigger than 2D, but should only compute the center of the circle using 2D");
                 assertEqual(center2D([10, 20], [8, 16], 1, true), [9, 18], "Cannot compute the center if the radius is smaller than the distance between the points, should return the point at the middle");
+            }
+        }
+        // test core/vector-2d/angle2D()
+        testModule("angle2D()", 2) {
+            testUnit("default value", 3) {
+                assertEqual(angle2D(), 0, "Should return 0 if no vector was provided");
+                assertEqual(angle2D("1", "2"), 0, "Cannot compute angle of strings");
+                assertEqual(angle2D(true, true), 0, "Cannot compute angle of booleans");
+            }
+            testUnit("compute angle", 5) {
+                assertEqual(round(angle2D(1, 2)), 0, "When single numbers are provided, they should be translated to vector. Vectors with same direction does not have angle.");
+                assertEqual(angle2D([1, 0], [0, 1]), 90, "Orthogonal vectors have an angle of 90°");
+                assertEqual(angle2D([1, 0], [0, -1]), 90, "Orthogonal vectors have an angle of 90°, whatever their direction");
+                assertEqual(angle2D([1, 0], [-1, 0]), 180, "Vectors with opposite direction have an angle of 180°");
+                assertEqual(round(angle2D([1, 2], rotp([1, 2], 75))), 75, "Should have an angle of 75°");
             }
         }
         // test core/vector-2d/sinp()

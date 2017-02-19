@@ -184,6 +184,21 @@ function center2D(a, b, r, negative) =
 ;
 
 /**
+ * Computes the angle between two 2D vectors.
+ *
+ * @param Vector [a] - The first vector
+ * @param Vector [b] - The second vector
+ * @returns Number
+ */
+function angle2D(a, b) =
+    let(
+        a = vector2D(a),
+        b = vector2D(b)
+    )
+    float(acos((a * b) / (norm(a) * norm(b))))
+;
+
+/**
  * Computes the coordinates of a 2D point on a sinusoid wave.
  *
  * @param Number x - The X-coordinate of the point.

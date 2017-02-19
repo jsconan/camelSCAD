@@ -34,7 +34,7 @@ use <../../full.scad>
  * @author jsconan
  */
 module testCoreVector3D() {
-    testPackage("core/vector-3d.scad", 12) {
+    testPackage("core/vector-3d.scad", 13) {
         // test core/vector-3d/vector3D()
         testModule("vector3D()", 3) {
             testUnit("no parameter", 1) {
@@ -223,6 +223,21 @@ module testCoreVector3D() {
                 assertEqual(move3D([1, 2, 3, 4]), [1, 2, 3], "Should truncate too big vector and returns a 3D vector (no direction vector)");
                 assertEqual(move3D([1, 2, 3, 4], [1, 2, 3, 4]), [1, 2, 3], "Should truncate too big vector and returns a 3D vector (direction vector but not distance)");
                 assertEqual(move3D([1, 2, 3, 4], [1, 2, 3, 4], 1), [1, 2, 3] + [1, 2, 3] / norm([1, 2, 3]), "Should truncate too big vector and returns a 3D vector (direction vector and distance)");
+            }
+        }
+        // test core/vector-3d/angle3D()
+        testModule("angle3D()", 2) {
+            testUnit("default value", 3) {
+                assertEqual(angle3D(), 0, "Should return 0 if no vector was provided");
+                assertEqual(angle3D("1", "2"), 0, "Cannot compute angle of strings");
+                assertEqual(angle3D(true, true), 0, "Cannot compute angle of booleans");
+            }
+            testUnit("compute angle", 5) {
+                assertEqual(round(angle3D(1, 2)), 0, "When single numbers are provided, they should be translated to vector. Vectors with same direction does not have angle.");
+                assertEqual(angle3D([1, 0, 0], [0, 1, 0]), 90, "Orthogonal vectors have an angle of 90°");
+                assertEqual(angle3D([1, 0, 0], [0, -1, 0]), 90, "Orthogonal vectors have an angle of 90°, whatever their direction");
+                assertEqual(angle3D([1, 1, 1], [-1, -1, -1]), 0, "Vectors with opposite direction have an angle of 0°");
+                assertEqual(round(angle3D([1, 2, 3], rotate3DX([1, 2, 3], 10))), 10, "Should have an angle of 10");
             }
         }
         // test core/vector-3d/rotate3DX()

@@ -102,28 +102,13 @@ function fragments(r, d) =
 function astep(r, a=DEGREES, d) = min(DEGREES / fragments(r=r, d=d), float(a));
 
 /**
- * Computes the angle between two vectors.
- *
- * @param Vector [a] - The first vector
- * @param Vector [b] - The second vector
- * @returns Number
- */
-function angle(a, b) =
-    let(
-        a = vector3D(a),
-        b = vector3D(b)
-    )
-    float(acos((a * b) / (norm(a) * norm(b))))
-;
-
-/**
  * Computes a length based on the Pythagore's theorem.
  *
  * @param Number a - The A side of the rectangle (0 or undef to compute this value).
  * @param Number b - The B side of the rectangle (0 or undef to compute this value).
  * @param Number c - The hypotenuse of the rectangle (0 or undef to compute this value).
  * @returns Number
-  */
+ */
 function pythagore(a, b, c) =
     sqrt(c ? pow(float(c), 2) - pow(a ? float(a) : float(b), 2)
            : pow(float(a), 2) + pow(float(b), 2))

@@ -123,6 +123,21 @@ function middle3D(a, b) = (vector3D(a) + vector3D(b)) / 2;
 function move3D(p, v, d) = vector3D(p) + unit3D(v) * float(d);
 
 /**
+ * Computes the angle between two 3D vectors.
+ *
+ * @param Vector [a] - The first vector
+ * @param Vector [b] - The second vector
+ * @returns Number
+ */
+function angle3D(a, b) =
+    let(
+        a = vector3D(a),
+        b = vector3D(b)
+    )
+    float(acos((a * b) / (norm(a) * norm(b))))
+;
+
+/**
  * Rotates a 3D vector around the X axis.
  *
  * @param Vector v - The vector to rotate.

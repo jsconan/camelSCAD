@@ -34,7 +34,7 @@ use <../../full.scad>
  * @author jsconan
  */
 module testCoreMaths() {
-    testPackage("core/maths.scad", 9) {
+    testPackage("core/maths.scad", 8) {
         // test core/maths/deg()
         testModule("deg()", 3) {
             testUnit("no parameter", 1) {
@@ -269,20 +269,6 @@ module testCoreMaths() {
                 assertEqual(astep(d=200, a=0.1, $fn=0, $fa=1, $fs=1), 0.1, "When the $fn value is not set, the number of fragments should be computed using $fa and $fs. A circle with a diameter of 100 should be fragmented in 63 facets with $fa=1 $fs=1, but the returned angle should be the provided one if lesser");
                 assertEqual(astep(d=200, a=0.1, $fn=0, $fa=1, $fs=1.5), 0.1, "When the $fn value is not set, the number of fragments should be computed using $fa and $fs. A circle with a diameter of 100 should be fragmented in 42 facets with $fa=1 $fs=1.5, but the returned angle should be the provided one if lesser");
                 assertEqual(astep(d=200, a=0.1, $fn=0, $fa=0.5, $fs=0.5), 0.1, "When the $fn value is not set, the number of fragments should be computed using $fa and $fs. A circle with a diameter of 100 should be fragmented in 63 facets with $fa=1 $fs=1, but the returned angle should be the provided one if lesser");
-            }
-        }
-        // test core/maths/angle()
-        testModule("angle()", 2) {
-            testUnit("default value", 3) {
-                assertEqual(angle(), 0, "Should return 0 if no vector was provided");
-                assertEqual(angle("1", "2"), 0, "Cannot compute angle of strings");
-                assertEqual(angle(true, true), 0, "Cannot compute angle of booleans");
-            }
-            testUnit("compute angle", 4) {
-                assertEqual(angle(1, 2), 0, "When single numbers are provided, they should be translated to vector. Vectors with same direction does not have angle.");
-                assertEqual(angle([1, 0], [0, 1]), 90, "Orthogonal vectors have an angle of 90°");
-                assertEqual(angle([1, 0], [0, -1]), 90, "Orthogonal vectors have an angle of 90°, whatever their direction");
-                assertEqual(angle([1, 0], [-1, 0]), 180, "Vectors with opposite direction have an angle of 180°");
             }
         }
         // test core/maths/pythagore()
