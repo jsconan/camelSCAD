@@ -162,6 +162,27 @@ function middle2D(a, b) = (vector2D(a) + vector2D(b)) / 2;
 function move2D(p, v, d) = vector2D(p) + unit2D(v) * float(d);
 
 /**
+ * Computes the center of a cicle that pass through two points.
+ *
+ * @param Number a - The first point.
+ * @param Number b - The second point.
+ * @param Number r - The radius of the circle. It must be larger than, or equal, the distance between the two points.
+ * @returns Number
+ */
+function center2D(a, b, r) =
+    let(
+        a = vector2D(a),
+        b = vector2D(b),
+        ab = b - a
+    )
+    move2D(
+        middle2D(a, b),
+        normal(ab),
+        pythagore(0, norm(ab) / 2, float(r))
+    )
+;
+
+/**
  * Computes the coordinates of a 2D point on a sinusoid wave.
  *
  * @param Number x - The X-coordinate of the point.
