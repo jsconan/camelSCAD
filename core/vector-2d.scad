@@ -167,13 +167,14 @@ function move2D(p, v, d) = vector2D(p) + unit2D(v) * float(d);
  * @param Number a - The first point.
  * @param Number b - The second point.
  * @param Number r - The radius of the circle. It must be larger than, or equal, the distance between the two points.
+ * @param Boolean [negative] - Select whether the center should be in the positive (`false`, default) or the negative (`true`) side.
  * @returns Number
  */
-function center2D(a, b, r) =
+function center2D(a, b, r, negative) =
     let(
         a = vector2D(a),
         b = vector2D(b),
-        ab = b - a
+        ab = negative ? a - b : b - a
     )
     move2D(
         middle2D(a, b),
