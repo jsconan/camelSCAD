@@ -34,7 +34,7 @@ use <../../../full.scad>
  * @author jsconan
  */
 module testShape2dRounded() {
-    testPackage("shape/2D/rounded.scad", 7) {
+    testPackage("shape/2D/rounded.scad", 9) {
         // test shape/2D/rounded/sizeRounded2D()
         testModule("sizeRounded2D()", 2) {
             testUnit("default values", 3) {
@@ -214,6 +214,155 @@ module testShape2dRounded() {
 
                 assertEqual(sizeRoundedRectangle(h=4, rx=3), [[6, 4], [0, 0]], "Should set the provided height in the size vector and set the provide X radius in the radius vector");
                 assertEqual(sizeRoundedRectangle(w=4, ry=3), [[4, 6], [0, 0]], "Should set the provided width in the size vector and set the provide Y radius in the radius vector");
+            }
+        }
+        // test shape/2D/rounded/sizeRoundedCorner()
+        testModule("sizeRoundedCorner()", 8) {
+            s = 20;
+            r = 40;
+            S = [s, s];
+            R = [r, r];
+            A = [0, s];
+            B = [s, 0];
+
+            testUnit("default values", 3) {
+                assertEqual(sizeRoundedCorner(), [[1, 1], [1, 1], [1, 1], 0, 180, 90], "Should always return a size even if not parameter has been provided");
+                assertEqual(sizeRoundedCorner("12", "12"), [[1, 1], [1, 1], [1, 1], 0, 180, 90], "Should always return a size even if wrong parameter has been provided (string)");
+                assertEqual(sizeRoundedCorner(true, true), [[1, 1], [1, 1], [1, 1], 0, 180, 90], "Should always return a size even if wrong parameter has been provided (boolean)");
+            }
+            testUnit("compute size of a concave corner with default position", 7) {
+                assertEqual(sizeRoundedCorner(s), [S, S, S, 0, 180, 90], "Should produce a size in order to draw an upper right rounded concave corner");
+                assertEqual(sizeRoundedCorner(r=s), [S, S, S, 0, 180, 90], "Should produce a size from radius in order to draw an upper right rounded concave corner");
+                assertEqual(sizeRoundedCorner(d=s), [S/2, S/2, S/2, 0, 180, 90], "Should produce a size from diameter in order to draw an upper right rounded concave corner");
+                assertEqual(sizeRoundedCorner(s, s-1), [S, S, S, 0, 180, 90], "Should produce a size in order to draw an upper right rounded concave corner, when the radius is too small it should be adjusted");
+
+                C = center2D(A, B, r, true);
+                angle = angle2D(C - A, C - B);
+                start = 180 + (90 - angle) / 2;
+                assertTrue(angle >= 0 && angle <= 90, "The arc angle should be between O° and 90°");
+                assertTrue(start >= 180 && start <= 270, "The start angle should be between 18O° and 270°");
+                assertEqual(sizeRoundedCorner(s, r), [S, R, C, 0, start, angle], "Should produce a size in order to draw an upper right rounded concave corner, when the radius is bigger than the size, the center should be computed");
+            }
+            testUnit("compute size of a convex corner with default position", 7) {
+                assertEqual(sizeRoundedCorner(s, convex=1), [S, S, [0, 0], 0, 0, 90], "Should produce a size in order to draw an upper right rounded convex corner");
+                assertEqual(sizeRoundedCorner(r=s, convex=1), [S, S, [0, 0], 0, 0, 90], "Should produce a size from radius in order to draw an upper right rounded convex corner");
+                assertEqual(sizeRoundedCorner(d=s, convex=1), [S/2, S/2, [0, 0], 0, 0, 90], "Should produce a size from diameter in order to draw an upper right rounded convex corner");
+                assertEqual(sizeRoundedCorner(s, s-1, convex=1), [S, S, [0, 0], 0, 0, 90], "Should produce a size in order to draw an upper right rounded convex corner, when the radius is too small it should be adjusted");
+
+                C = center2D(A, B, r, false);
+                angle = angle2D(C - A, C - B);
+                start = (90 - angle) / 2;
+                assertTrue(angle >= 0 && angle <= 90, "The arc angle should be between O° and 90°");
+                assertTrue(start >= 0 && start <= 90, "The start angle should be between O° and 90°");
+                assertEqual(sizeRoundedCorner(s, r, convex=1), [S, R, C, 0, start, angle], "Should produce a size in order to draw an upper right rounded convex corner, when the radius is bigger than the size, the center should be computed");
+            }
+            testUnit("compute size for each position", 8) {
+                assertEqual(sizeRoundedCorner(size=s, r=s, p="ne"), [S, S, [s, s], 0, 180, 90], "Should produce a size in order to draw an upper right rounded concave corner");
+                assertEqual(sizeRoundedCorner(size=s, r=s, p="nw"), [S, S, [-s, s], 90, 270, 90], "Should produce a size in order to draw an upper left rounded concave corner");
+                assertEqual(sizeRoundedCorner(size=s, r=s, p="sw"), [S, S, [-s, -s], 180, 360, 90], "Should produce a size in order to draw a lower left rounded concave corner");
+                assertEqual(sizeRoundedCorner(size=s, r=s, p="se"), [S, S, [s, -s], 270, 90, 90], "Should produce a size in order to draw a lower right rounded concave corner");
+
+                assertEqual(sizeRoundedCorner(size=s, r=s, p="ne", convex=1), [S, S, [0, 0], 0, 0, 90], "Should produce a size in order to draw an upper right rounded convex corner");
+                assertEqual(sizeRoundedCorner(size=s, r=s, p="nw", convex=1), [S, S, [0, 0], 90, 90, 90], "Should produce a size in order to draw an upper left rounded convex corner");
+                assertEqual(sizeRoundedCorner(size=s, r=s, p="sw", convex=1), [S, S, [0, 0], 180, 180, 90], "Should produce a size in order to draw a lower left rounded convex corner");
+                assertEqual(sizeRoundedCorner(size=s, r=s, p="se", convex=1), [S, S, [0, 0], 270, 270, 90], "Should produce a size in order to draw a lower right rounded convex corner");
+            }
+            testUnit("compute size of corner with bigger radius and position Nort East", 6) {
+                C1 = center2D(A, B, r, true);
+                angle1 = angle2D(C1 - A, C1 - B);
+                start1 = 180 + (90 - angle1) / 2;
+                assertTrue(angle1 >= 0 && angle1 <= 90, "The arc angle should be between O° and 90° (concave)");
+                assertTrue(start1 >= 180 && start1 <= 270, "The start angle should be between 18O° and 270° (concave)");
+                assertEqual(
+                    sizeRoundedCorner(size=s, r=r, p="ne"),
+                    [S, R, C1, 0, start1, angle1],
+                    "Should produce a size in order to draw an upper right rounded concave corner, when the radius is bigger than the size, the center should be computed"
+                );
+
+                C2 = center2D(A, B, r, false);
+                angle2 = angle2D(C2 - A, C2 - B);
+                start2 = (90 - angle2) / 2;
+                assertTrue(angle2 >= 0 && angle2 <= 90, "The arc angle should be between O° and 90° (convex)");
+                assertTrue(start2 >= 0 && start2 <= 90, "The start angle should be between O° and 90° (convex)");
+                assertEqual(
+                    sizeRoundedCorner(size=s, r=r, p="ne", convex=1),
+                    [S, R, C2, 0, start2, angle2],
+                    "Should produce a size in order to draw an upper right rounded convex corner, when the radius is bigger than the size, the center should be computed");
+            }
+            testUnit("compute size of corner with bigger radius and position Nort West", 6) {
+                A = [0, s];
+                B = [-s, 0];
+
+                C1 = center2D(A, B, r, false);
+                angle1 = angle2D(C1 - A, C1 - B);
+                start1 = 270 + (90 - angle1) / 2;
+                assertTrue(angle1 >= 0 && angle1 <= 90, "The arc angle should be between O° and 90° (concave)");
+                assertTrue(start1 >= 270 && start1 <= 360, "The start angle should be between 27O° and 360° (concave)");
+                assertEqual(
+                    sizeRoundedCorner(size=s, r=r, p="nw"),
+                    [S, R, C1, 90, start1, angle1],
+                    "Should produce a size in order to draw an upper right rounded concave corner, when the radius is bigger than the size, the center should be computed"
+                );
+
+                C2 = center2D(A, B, r, true);
+                angle2 = angle2D(C2 - A, C2 - B);
+                start2 = 90 + (90 - angle2) / 2;
+                assertTrue(angle2 >= 0 && angle2 <= 90, "The arc angle should be between O° and 90° (convex)");
+                assertTrue(start2 >= 90 && start2 <= 180, "The start angle should be between 9O° and 180° (convex)");
+                assertEqual(
+                    sizeRoundedCorner(size=s, r=r, p="nw", convex=1),
+                    [S, R, C2, 90, start2, angle2],
+                    "Should produce a size in order to draw an upper right rounded convex corner, when the radius is bigger than the size, the center should be computed");
+            }
+            testUnit("compute size of corner with bigger radius and position South West", 6) {
+                A = [0, -s];
+                B = [-s, 0];
+
+                C1 = center2D(A, B, r, true);
+                angle1 = angle2D(C1 - A, C1 - B);
+                start1 = (90 - angle1) / 2;
+                assertTrue(angle1 >= 0 && angle1 <= 90, "The arc angle should be between O° and 90° (concave)");
+                assertTrue(start1 >= 0 && start1 <= 90, "The start angle should be between O° and 90° (concave)");
+                assertApproxEqual(
+                    sizeRoundedCorner(size=s, r=r, p="sw"),
+                    [S, R, C1, 180, start1, angle1],
+                    "Should produce a size in order to draw an upper right rounded concave corner, when the radius is bigger than the size, the center should be computed"
+                );
+
+                C2 = center2D(A, B, r, false);
+                angle2 = angle2D(C2 - A, C2 - B);
+                start2 = 180 + (90 - angle2) / 2;
+                assertTrue(angle2 >= 0 && angle2 <= 90, "The arc angle should be between O° and 90° (convex)");
+                assertTrue(start2 >= 180 && start2 <= 270, "The start angle should be between 18O° and 270° (convex)");
+                assertEqual(
+                    sizeRoundedCorner(size=s, r=r, p="sw", convex=1),
+                    [S, R, C2, 180, start2, angle2],
+                    "Should produce a size in order to draw an upper right rounded convex corner, when the radius is bigger than the size, the center should be computed");
+            }
+            testUnit("compute size of corner with bigger radius and position South East", 6) {
+                A = [0, -s];
+                B = [s, 0];
+
+                C1 = center2D(A, B, r, false);
+                angle1 = angle2D(C1 - A, C1 - B);
+                start1 = 90 + (90 - angle1) / 2;
+                assertTrue(angle1 >= 0 && angle1 <= 90, "The arc angle should be between O° and 90° (concave)");
+                assertTrue(start1 >= 90 && start1 <= 180, "The start angle should be between 9O° and 180° (concave)");
+                assertApproxEqual(
+                    sizeRoundedCorner(size=s, r=r, p="se"),
+                    [S, R, C1, 270, start1, angle1],
+                    "Should produce a size in order to draw an upper right rounded concave corner, when the radius is bigger than the size, the center should be computed"
+                );
+
+                C2 = center2D(A, B, r, true);
+                angle2 = angle2D(C2 - A, C2 - B);
+                start2 = 270 + (90 - angle2) / 2;
+                assertTrue(angle2 >= 0 && angle2 <= 90, "The arc angle should be between O° and 90° (convex)");
+                assertTrue(start2 >= 270 && start2 <= 360, "The start angle should be between 27O° and 360° (convex)");
+                assertEqual(
+                    sizeRoundedCorner(size=s, r=r, p="se", convex=1),
+                    [S, R, C2, 270, start2, angle2],
+                    "Should produce a size in order to draw an upper right rounded convex corner, when the radius is bigger than the size, the center should be computed");
             }
         }
         // test shape/2D/rounded/drawArch()
@@ -522,6 +671,99 @@ module testShape2dRounded() {
                     ),
                     "Should return a list of points to draw a rounded rectangle with size of w=20, h=20 and a radius of rx=3, ry=5 and 16 facets"
                 );
+            }
+        }
+        // test shape/2D/rounded/drawRoundedCorner()
+        testModule("drawRoundedCorner()", 7) {
+            s = 20;
+            r = 40;
+            A = [0, s];
+            B = [s, 0];
+
+            testUnit("default values", 3) {
+                assertEqual(drawRoundedCorner($fn=3), [ [0, 0], [0, 1], [1, 0] ], "Should return a list of points to draw a rounded corner with a size of 1 and 3 facets (triangle)");
+                assertEqual(drawRoundedCorner($fn=4), [ [0, 0], [0, 1], [1, 0] ], "Should return a list of points to draw a rounded corner with a size of 1 and 4 facets (square)");
+                assertApproxEqual(drawRoundedCorner($fn=6), [ [0, 0], [0, 1], [0.5, 0.13397], [1, 0] ], "Should return a list of points to draw a rounded corner with a size of 1 and 6 facets (hexagon)");
+            }
+            testUnit("compute points of a concave corner with default position", 4) {
+                assertEqual(drawRoundedCorner(s, $fa=12, $fs=2), concat([[0, 0]], [ for (a = [180 : astep(s, $fa=12, $fs=2) : 270]) _rotP(a, s, s) + [s, s] ], [[s, 0]]), "Should produce a list of points to draw an upper right rounded concave corner");
+
+                C = center2D(A, B, r, true);
+                angle = angle2D(C - A, C - B);
+                start = 180 + (90 - angle) / 2;
+                assertTrue(angle >= 0 && angle <= 90, "The arc angle should be between O° and 90°");
+                assertTrue(start >= 180 && start <= 270, "The start angle should be between 18O° and 270°");
+                assertEqual(drawRoundedCorner(s, r, $fa=12, $fs=2), concat([[0, 0]], [ for (a = [start : astep(r, $fa=12, $fs=2) : start + angle]) _rotP(a, r, r) + C ], [[s, 0]]), "Should produce a list of points in order to draw an upper right rounded concave corner, when the radius is bigger than the size, the center should be computed");
+            }
+            testUnit("compute points of a convex corner with default position", 4) {
+                assertEqual(drawRoundedCorner(s, convex=1, $fa=12, $fs=2), concat([[0, 0]], [ for (a = [0 : astep(s, $fa=12, $fs=2) : 90]) _rotP(a, s, s) ], [[0, s]]), "Should produce a list of points to draw an upper right rounded convex corner");
+
+                C = center2D(A, B, r, false);
+                angle = angle2D(C - A, C - B);
+                start = (90 - angle) / 2;
+                assertTrue(angle >= 0 && angle <= 90, "The arc angle should be between O° and 90°");
+                assertTrue(start >= 0 && start <= 90, "The start angle should be between O° and 90°");
+                assertEqual(drawRoundedCorner(s, r, convex=1, $fa=12, $fs=2), concat([[0, 0]], [ for (a = [start : astep(r, $fa=12, $fs=2) : start + angle]) _rotP(a, r, r) + C ], [[0, s]]), "Should produce a list of points in order to draw an upper right rounded convex corner, when the radius is bigger than the size, the center should be computed");
+            }
+            testUnit("compute points for each position", 8) {
+                assertEqual(drawRoundedCorner(s, p="ne", $fa=12, $fs=2), concat([[0, 0]], [ for (a = [180 : astep(s, $fa=12, $fs=2) : 270]) _rotP(a, s, s) + [s, s] ], [[s, 0]]), "Should produce a list of points in order to draw an upper right rounded concave corner");
+                assertEqual(drawRoundedCorner(s, p="nw", $fa=12, $fs=2), concat([[0, 0]], [ for (a = [270 : astep(s, $fa=12, $fs=2) : 360]) _rotP(a, s, s) + [-s, s] ], [[0, s]]), "Should produce a list of points in order to draw an upper left rounded concave corner");
+                assertEqual(drawRoundedCorner(s, p="sw", $fa=12, $fs=2), concat([[0, 0]], [ for (a = [0 : astep(s, $fa=12, $fs=2) : 90]) _rotP(a, s, s) + [-s, -s] ], [[-s, 0]]), "Should produce a list of points in order to draw a lower left rounded concave corner");
+                assertEqual(drawRoundedCorner(s, p="se", $fa=12, $fs=2), concat([[0, 0]], [ for (a = [90 : astep(s, $fa=12, $fs=2) : 180]) _rotP(a, s, s) + [s, -s] ], [[0, -s]]), "Should produce a list of points in order to draw a lower right rounded concave corner");
+
+                assertEqual(drawRoundedCorner(s, p="ne", convex=1, $fa=12, $fs=2), concat([[0, 0]], [ for (a = [0 : astep(s, $fa=12, $fs=2) : 90]) _rotP(a, s, s) ], [[0, s]]), "Should produce a list of points in order to draw an upper right rounded convex corner");
+                assertEqual(drawRoundedCorner(s, p="nw", convex=1, $fa=12, $fs=2), concat([[0, 0]], [ for (a = [90 : astep(s, $fa=12, $fs=2) : 180]) _rotP(a, s, s) ], [[-s, 0]]), "Should produce a list of points in order to draw an upper left rounded convex corner");
+                assertEqual(drawRoundedCorner(s, p="sw", convex=1, $fa=12, $fs=2), concat([[0, 0]], [ for (a = [180 : astep(s, $fa=12, $fs=2) : 270]) _rotP(a, s, s) ], [[0, -s]]), "Should produce a list of points in order to draw a lower left rounded convex corner");
+                assertEqual(drawRoundedCorner(s, p="se", convex=1, $fa=12, $fs=2), concat([[0, 0]], [ for (a = [270 : astep(s, $fa=12, $fs=2) : 360]) _rotP(a, s, s) ], [[s, 0]]), "Should produce a list of points in order to draw a lower right rounded convex corner");
+            }
+            testUnit("compute points for each position and adjust value", 8) {
+                assertEqual(drawRoundedCorner(s, p="ne", adjust=1, $fa=12, $fs=2), concat([[s, -1], [-1, -1], [-1, s]], [ for (a = [180 : astep(s, $fa=12, $fs=2) : 270]) _rotP(a, s, s) + [s, s] ], [[s, 0]]), "Should produce a list of points in order to draw an upper right rounded concave corner");
+                assertEqual(drawRoundedCorner(s, p="nw", adjust=1, $fa=12, $fs=2), concat([[1, s], [1, -1], [-s, -1]], [ for (a = [270 : astep(s, $fa=12, $fs=2) : 360]) _rotP(a, s, s) + [-s, s] ], [[0, s]]), "Should produce a list of points in order to draw an upper left rounded concave corner");
+                assertEqual(drawRoundedCorner(s, p="sw", adjust=1, $fa=12, $fs=2), concat([[-s, 1], [1, 1], [1, -s]], [ for (a = [0 : astep(s, $fa=12, $fs=2) : 90]) _rotP(a, s, s) + [-s, -s] ], [[-s, 0]]), "Should produce a list of points in order to draw a lower left rounded concave corner");
+                assertEqual(drawRoundedCorner(s, p="se", adjust=1, $fa=12, $fs=2), concat([[-1, -s], [-1, 1], [s, 1]], [ for (a = [90 : astep(s, $fa=12, $fs=2) : 180]) _rotP(a, s, s) + [s, -s] ], [[0, -s]]), "Should produce a list of points in order to draw a lower right rounded concave corner");
+
+                assertEqual(drawRoundedCorner(s, p="ne", convex=1, adjust=1, $fa=12, $fs=2), concat([[-1, s], [-1, -1], [s, -1]], [ for (a = [0 : astep(s, $fa=12, $fs=2) : 90]) _rotP(a, s, s) ], [[0, s]]), "Should produce a list of points in order to draw an upper right rounded convex corner");
+                assertEqual(drawRoundedCorner(s, p="nw", convex=1, adjust=1, $fa=12, $fs=2), concat([[-s, -1], [1, -1], [1, s]], [ for (a = [90 : astep(s, $fa=12, $fs=2) : 180]) _rotP(a, s, s) ], [[-s, 0]]), "Should produce a list of points in order to draw an upper left rounded convex corner");
+                assertEqual(drawRoundedCorner(s, p="sw", convex=1, adjust=1, $fa=12, $fs=2), concat([[1, -s], [1, 1], [-s, 1]], [ for (a = [180 : astep(s, $fa=12, $fs=2) : 270]) _rotP(a, s, s) ], [[0, -s]]), "Should produce a list of points in order to draw a lower left rounded convex corner");
+                assertEqual(drawRoundedCorner(s, p="se", convex=1, adjust=1, $fa=12, $fs=2), concat([[s, 1], [-1, 1], [-1, -s]], [ for (a = [270 : astep(s, $fa=12, $fs=2) : 360]) _rotP(a, s, s) ], [[s, 0]]), "Should produce a list of points in order to draw a lower right rounded convex corner");
+            }
+            testUnit("compute points of corner with bigger radius for each position", 10) {
+                C = center2D(A, B, r, true);
+                C2 = center2D(A, B, r, false);
+                angle = angle2D(C - A, C - B);
+                start = (90 - angle) / 2;
+                start2 = absdeg(absdeg(round(atan2(-1, -1) - 45)) + 180 + (90 - angle) / 2);
+                assertTrue(angle >= 0 && angle <= 90, "The arc angle should be between O° and 90°");
+                assertTrue(start2 >= 0 && start2 <= 90, "The start angle should be between O° and 90°");
+
+                assertEqual(drawRoundedCorner(s, r, p="ne", $fa=12, $fs=2), concat([[0, 0]], arc(r=r, o=rotp(C, 0), a1=start + 180, a=angle)), "Should produce a list of points in order to draw an upper right rounded concave corner");
+                assertEqual(drawRoundedCorner(s, r, p="nw", $fa=12, $fs=2), concat([[0, 0]], arc(r=r, o=rotp(C, 90), a1=start + 270, a=angle)), "Should produce a list of points in order to draw an upper left rounded concave corner");
+                assertEqual(drawRoundedCorner(s, r, p="sw", $fa=12, $fs=2), concat([[0, 0]], arc(r=r, o=rotp(C, 180), a1=start2, a=angle)), "Should produce a list of points in order to draw a lower left rounded concave corner");
+                assertEqual(drawRoundedCorner(s, r, p="se", $fa=12, $fs=2), concat([[0, 0]], arc(r=r, o=rotp(C, 270), a1=start2 + 90, a=angle)), "Should produce a list of points in order to draw a lower right rounded concave corner");
+
+                assertEqual(drawRoundedCorner(s, r, p="ne", convex=1, $fa=12, $fs=2), concat([[0, 0]], arc(r=r, o=rotp(C2, 0), a1=start, a=angle)), "Should produce a list of points in order to draw an upper right rounded convex corner");
+                assertEqual(drawRoundedCorner(s, r, p="nw", convex=1, $fa=12, $fs=2), concat([[0, 0]], arc(r=r, o=rotp(C2, 90), a1=start + 90, a=angle)), "Should produce a list of points in order to draw an upper left rounded convex corner");
+                assertEqual(drawRoundedCorner(s, r, p="sw", convex=1, $fa=12, $fs=2), concat([[0, 0]], arc(r=r, o=rotp(C2, 180), a1=start + 180, a=angle)), "Should produce a list of points in order to draw a lower left rounded convex corner");
+                assertEqual(drawRoundedCorner(s, r, p="se", convex=1, $fa=12, $fs=2), concat([[0, 0]], arc(r=r, o=rotp(C2, 270), a1=start + 270, a=angle)), "Should produce a list of points in order to draw a lower right rounded convex corner");
+            }
+            testUnit("compute points of corner with bigger radius for each position and adjust value", 10) {
+                C = center2D(A, B, r, true);
+                C2 = center2D(A, B, r, false);
+                angle = angle2D(C - A, C - B);
+                start = (90 - angle) / 2;
+                start2 = absdeg(absdeg(round(atan2(-1, -1) - 45)) + 180 + (90 - angle) / 2);
+                assertTrue(angle >= 0 && angle <= 90, "The arc angle should be between O° and 90°");
+                assertTrue(start2 >= 0 && start2 <= 90, "The start angle should be between O° and 90°");
+
+                assertEqual(drawRoundedCorner(s, r, p="ne", adjust=1, $fa=12, $fs=2), concat([[s, -1], [-1, -1], [-1, s]], arc(r=r, o=rotp(C, 0), a1=start + 180, a=angle)), "Should produce a list of points in order to draw an upper right rounded concave corner");
+                assertEqual(drawRoundedCorner(s, r, p="nw", adjust=1, $fa=12, $fs=2), concat([[1, s], [1, -1], [-s, -1]], arc(r=r, o=rotp(C, 90), a1=start + 270, a=angle)), "Should produce a list of points in order to draw an upper left rounded concave corner");
+                assertEqual(drawRoundedCorner(s, r, p="sw", adjust=1, $fa=12, $fs=2), concat([[-s, 1], [1, 1], [1, -s]], arc(r=r, o=rotp(C, 180), a1=start2, a=angle)), "Should produce a list of points in order to draw a lower left rounded concave corner");
+                assertEqual(drawRoundedCorner(s, r, p="se", adjust=1, $fa=12, $fs=2), concat([[-1, -s], [-1, 1], [s, 1]], arc(r=r, o=rotp(C, 270), a1=start2 + 90, a=angle)), "Should produce a list of points in order to draw a lower right rounded concave corner");
+
+                assertEqual(drawRoundedCorner(s, r, p="ne", convex=1, adjust=1, $fa=12, $fs=2), concat([[-1, s], [-1, -1], [s, -1]], arc(r=r, o=rotp(C2, 0), a1=start, a=angle)), "Should produce a list of points in order to draw an upper right rounded convex corner");
+                assertEqual(drawRoundedCorner(s, r, p="nw", convex=1, adjust=1, $fa=12, $fs=2), concat([[-s, -1], [1, -1], [1, s]], arc(r=r, o=rotp(C2, 90), a1=start + 90, a=angle)), "Should produce a list of points in order to draw an upper left rounded convex corner");
+                assertEqual(drawRoundedCorner(s, r, p="sw", convex=1, adjust=1, $fa=12, $fs=2), concat([[1, -s], [1, 1], [-s, 1]], arc(r=r, o=rotp(C2, 180), a1=start + 180, a=angle)), "Should produce a list of points in order to draw a lower left rounded convex corner");
+                assertEqual(drawRoundedCorner(s, r, p="se", convex=1, adjust=1, $fa=12, $fs=2), concat([[s, 1], [-1, 1], [-1, -s]], arc(r=r, o=rotp(C2, 270), a1=start + 270, a=angle)), "Should produce a list of points in order to draw a lower right rounded convex corner");
             }
         }
     }

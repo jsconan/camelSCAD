@@ -147,6 +147,37 @@ function sizeRoundedRectangle(size, r, d, w, h, rx, ry, dx, dy) =
 ;
 
 /**
+ * Computes the size of a rounded corner. For now the function can only handle square corner.
+ *
+ * @param Number [size] - The size of the corner.
+ * @param Number [r] - The radius of the round.
+ * @param Number [d] - The diameter of the round.
+ * @param String|Vector [p] - The position of the corner, as a cardinal point (default: "ne", aka North East).
+ * @param Boolean [convex] - Whether makes a convex corner (default: false).
+ * @returns Vector[] - Returns an array containing the vectors of size, radius and center, then the angles.
+ */
+function sizeRoundedCorner(size, r, d, p, convex) =
+    let(
+        r = d && !r ? float(d) / 2 : float(r),
+        s = divisor(size ? size : r),
+        p = let(p = cardinal(p)) [
+            p[0] >= 0 ? 1 : -1,
+            p[1] >= 0 ? 1 : -1
+        ],
+        R = max(s, r),
+        S = (s == R),
+        A = [0, s],
+        B = [s, 0],
+        C = S ? (convex ? [0, 0] : [ s, s ])
+              : center2D(A, B, R, !convex),
+        arcAngle = S ? 90 : angle2D(C - A, C - B),
+        cornerAngle = absdeg(round(atan2(p[1], p[0]) - 45)),
+        startAngle = absdeg(cornerAngle + (convex ? 0 : 180) + (90 - arcAngle) / 2)
+    )
+    [ vector2D(s), vector2D(R), rotp(C, cornerAngle), cornerAngle, startAngle, arcAngle ]
+;
+
+/**
  * Computes the points that draw the sketch of an arch shape.
  *
  * @param Number|Vector [size] - The size of the arch.
@@ -238,6 +269,36 @@ function drawRoundedRectangle(size, r, d, w, h, rx, ry, dx, dy) =
 ;
 
 /**
+ * Computes the points that draw the sketch of a rounded corner shape.
+ * For now the function can only handle square corner.
+ *
+ * @param Number [size] - The size of the corner.
+ * @param Number [r] - The radius of the round.
+ * @param Number [d] - The diameter of the round.
+ * @param String|Vector [p] - The position of the corner, as a cardinal point (default: "ne", aka North East).
+ * @param Boolean [convex] - Whether makes a convex corner (default: false).
+ * @param Number [adjust] - An adjust value added to the size in order to fix wall alignment issue.
+ * @returns Vector[]
+ */
+function drawRoundedCorner(size, r, d, p, convex, adjust) =
+    let(
+        specs = sizeRoundedCorner(size=size, r=r, d=d, p=p, convex=convex),
+        size = specs[0],
+        adjust = number(adjust),
+        frame = adjust ? [
+            rotp(convex ? [-adjust, size[1]] : [size[0], -adjust], specs[3]),
+            rotp([-adjust, -adjust], specs[3]),
+            rotp(convex ? [size[0], -adjust] : [-adjust, size[1]], specs[3])
+        ]
+       :[ [0, 0] ]
+    )
+    concat(
+        frame,
+        arc(r=specs[1], o=specs[2], a1=specs[4], a=specs[5])
+    )
+;
+
+/**
  * Creates an arch shape at the origin.
  *
  * @param Number|Vector [size] - The size of the arch.
@@ -293,6 +354,24 @@ module stadium(size, r, d, w, h, rx, ry, dx, dy) {
 module roundedRectangle(size, r, d, w, h, rx, ry, dx, dy) {
     polygon(
         points = drawRoundedRectangle(size=size, r=r, d=d, w=w, h=h, rx=rx, ry=ry, dx=dx, dy=dy),
+        convexity = 10
+    );
+}
+
+/**
+ * Creates a rounded corner shape at the origin.
+ * For now the function can only handle square corner.
+ *
+ * @param Number [size] - The size of the corner.
+ * @param Number [r] - The radius of the round.
+ * @param Number [d] - The diameter of the round.
+ * @param String|Vector [p] - The position of the corner, as a cardinal point (default: "ne", aka North East).
+ * @param Boolean [convex] - Whether makes a convex corner (default: false).
+ * @param Number [adjust] - An adjust value added to the size in order to fix wall alignment issue.
+ */
+module roundedCorner(size, r, d, p, convex, adjust) {
+    polygon(
+        points = drawRoundedCorner(size=size, r=r, d=d, p=p, convex=convex, adjust=adjust),
         convexity = 10
     );
 }

@@ -582,3 +582,22 @@ module plate(size, r, d, l, w, h, rx, ry, dx, dy) {
         }
     }
 }
+
+/**
+ * Creates a rounded corner wedge at the origin.
+ * For now the function can only handle square corner.
+ *
+ * @param Number [size] - The size of the corner.
+ * @param Number [r] - The radius of the round.
+ * @param Number [h] - The height of the solid.
+ * @param Number [d] - The diameter of the round.
+ * @param String|Vector [p] - The position of the corner, as a cardinal point (default: "ne", aka North East).
+ * @param Boolean [convex] - Whether makes a convex corner (default: false).
+ * @param Number [adjust] - An adjust value added to the size in order to fix wall alignment issue.
+ * @param Boolean [center] - Whether or not center the solid on the vertical axis.
+ */
+module roundedCornerWedge(size, r, h, d, p, convex, adjust, center) {
+    linear_extrude(height=divisor(h), center=center, convexity=10) {
+        roundedCorner(size=size, r=r, d=d, p=p, convex=convex, adjust=adjust);
+    }
+}
