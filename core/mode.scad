@@ -72,3 +72,15 @@ function facetAngle(mode) = renderMode(mode)[1];
  * @returns Number
  */
 function facetSize(mode) = renderMode(mode)[2];
+
+/**
+ * Applies a render mode onto the children modules.
+ *
+ * @param String [mode] - The mode to apply on the children modules.
+ */
+module applyMode(mode) {
+    $fa = facetAngle(mode);
+    $fs = facetSize(mode);
+
+    children();
+}
