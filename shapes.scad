@@ -58,6 +58,8 @@ include <operator/repeat/translate.scad>
 include <operator/rotate/axis.scad>
 include <operator/rotate/origin.scad>
 
+include <operator/translate/axis.scad>
+
 include <operator/operation.scad>
 include <operator/transform.scad>
 
