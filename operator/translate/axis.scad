@@ -24,41 +24,43 @@
  */
 
 /**
- * Entry point of the camelSCAD library.
+ * Part of the camelSCAD library.
  *
- * Features set: Includes the core components and the operators.
+ * Operators that translate children modules with respect to particular rules.
  *
+ * @package operator/translate
  * @author jsconan
  */
 
-/* CORE */
-include <core/version.scad>
-include <core/type.scad>
-include <core/logic.scad>
-include <core/list.scad>
-include <core/maths.scad>
-include <core/line.scad>
-include <core/vector.scad>
-include <core/vector-2d.scad>
-include <core/vector-3d.scad>
-include <core/string.scad>
-include <core/util.scad>
-include <core/mode.scad>
+/**
+ * Translates the children modules along the X axis.
+ *
+ * @param Number d - The distance to move.
+ */
+module translateX(d) {
+    translate([d, 0, 0]) {
+        children();
+    }
+}
 
-/* OPERATORS */
-include <operator/distribute/grid.scad>
-include <operator/distribute/mirror.scad>
-include <operator/distribute/rotate.scad>
-include <operator/distribute/translate.scad>
+/**
+ * Translates the children modules along the Y axis.
+ *
+ * @param Number d - The distance to move.
+ */
+module translateY(d) {
+    translate([0, d, 0]) {
+        children();
+    }
+}
 
-include <operator/repeat/mirror.scad>
-include <operator/repeat/rotate.scad>
-include <operator/repeat/translate.scad>
-
-include <operator/rotate/axis.scad>
-include <operator/rotate/origin.scad>
-
-include <operator/translate/axis.scad>
-
-include <operator/operation.scad>
-include <operator/transform.scad>
+/**
+ * Translates the children modules along the Z axis.
+ *
+ * @param Number d - The distance to move.
+ */
+module translateZ(d) {
+    translate([0, 0, d]) {
+        children();
+    }
+}
