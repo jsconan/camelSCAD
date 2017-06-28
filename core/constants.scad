@@ -26,55 +26,50 @@
 /**
  * Part of the camelSCAD library.
  *
- * Rendering mode.
+ * Global constants to include.
  *
- * @package core/mode
+ * @package core/constants
  * @author jsconan
  */
 
 /**
- * Specifications for each rendering modes.
- * Each mode is defined this way: ["name", value for $fa, value for $fs]
- * @type Vector
+ * The name of the default rendering mode.
+ * @type String
  */
-MODES = [
-    ["dirty", 6, 2],
-    ["dev", 1, 1.5],
-    ["prod", .5, .5]
-];
+DEFAULT_MODE = "dev";
 
 /**
- * Gets the specifications of a particular rendering mode.
- *
- * @param String [mode] - The mode for which get the specifications.
- * @returns Vector
+ * Degrees in a circle.
+ * @type Number
  */
-function renderMode(mode) = fetch(MODES, or(mode, DEFAULT_MODE));
+DEGREES = 360;
 
 /**
- * Gets the minimum facet angle for a particular rendering mode.
- *
- * @param String [mode] - The mode for which get the specification.
- * @returns Number
+ * Minimum value for $fa and $fs.
+ * @type Number
  */
-function facetAngle(mode) = renderMode(mode)[1];
+MIN_ANGLE = 0.01;
 
 /**
- * Gets the minimum facet size for a particular rendering mode.
- *
- * @param String [mode] - The mode for which get the specification.
- * @returns Number
+ * Minimum allowed size.
+ * @type Number
  */
-function facetSize(mode) = renderMode(mode)[2];
+MIN_SIZE = 0.000001;
 
 /**
- * Applies a render mode onto the children modules.
- *
- * @param String [mode] - The mode to apply on the children modules.
+ * A very very small value.
+ * @type Number
  */
-module applyMode(mode) {
-    $fa = facetAngle(mode);
-    $fs = facetSize(mode);
+EPSILON = 0.000001;
 
-    children();
-}
+/**
+ * A value utilized to align wall and ensure proper cuts on one side.
+ * @type Number
+ */
+ALIGN = 0.001;
+
+/**
+ * A value utilized to align wall and ensure proper cuts on both sides.
+ * @type Number
+ */
+ALIGN2 = 2 * ALIGN;

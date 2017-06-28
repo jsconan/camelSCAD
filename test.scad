@@ -33,6 +33,7 @@
 
 /* CORE */
 include <core/version.scad>
+include <core/constants.scad>
 include <core/type.scad>
 include <core/logic.scad>
 include <core/list.scad>
