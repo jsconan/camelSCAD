@@ -166,6 +166,7 @@ module trapeziumBox(size, a, b, w, h, center) {
  * @param Number [n] - The number of facets (min. 3).
  * @param Number [l] - The overall length.
  * @param Number [w] - The overall width.
+ * @param Number [h] - The overall height.
  * @param Number [s] - The length of a side.
  * @param Boolean [center] - Whether or not center the box on the vertical axis.
  */
@@ -183,6 +184,7 @@ module regularPolygonBox(size, n, l, w, h, s, center) {
  * @param Number [adjust] - An adjust length added on the horizontal side
  * @param Number [l] - The overall length.
  * @param Number [w] - The overall width.
+ * @param Number [h] - The overall height.
  * @param Number [s] - The length of a side.
  * @param Boolean [center] - Whether or not center the box on the vertical axis.
  */
@@ -200,7 +202,8 @@ module hexagonBox(size, adjust, l, w, h, s, center) {
  * @param Number|Vector [core] - The size of the core.
  * @param Number [edges] - The number of star edges (min. 3).
  * @param Number [l] - The overall length.
- * @param Number [w] - The overall width.
+ * @param Number [w] - The overall width
+ * @param Number [h] - The overall height..
  * @param Number [cl] - The core length.
  * @param Number [cw] - The core width.
  * @param Boolean [center] - Whether or not center the box on the vertical axis.
