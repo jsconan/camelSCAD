@@ -32,37 +32,8 @@
  */
 
 /* CORE */
-include <core/version.scad>
-include <core/constants.scad>
-include <core/type.scad>
-include <core/logic.scad>
-include <core/list.scad>
-include <core/maths.scad>
-include <core/line.scad>
-include <core/vector.scad>
-include <core/vector-2d.scad>
-include <core/vector-3d.scad>
-include <core/string.scad>
-include <core/util.scad>
-include <core/mode.scad>
-
 /* OPERATORS */
-include <operator/distribute/grid.scad>
-include <operator/distribute/mirror.scad>
-include <operator/distribute/rotate.scad>
-include <operator/distribute/translate.scad>
-
-include <operator/repeat/mirror.scad>
-include <operator/repeat/rotate.scad>
-include <operator/repeat/translate.scad>
-
-include <operator/rotate/axis.scad>
-include <operator/rotate/origin.scad>
-
-include <operator/translate/axis.scad>
-
-include <operator/operation.scad>
-include <operator/transform.scad>
+include <operators.scad>
 
 /* SHAPES */
 include <shape/2D/ellipse.scad>
