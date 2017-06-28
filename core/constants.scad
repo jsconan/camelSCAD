@@ -24,30 +24,52 @@
  */
 
 /**
- * Entry point of the camelSCAD library.
+ * Part of the camelSCAD library.
  *
- * Features set: Includes the core components and the operators.
+ * Global constants to include.
  *
+ * @package core/constants
  * @author jsconan
  */
 
-/* CORE */
-include <core.scad>
+/**
+ * The name of the default rendering mode.
+ * @type String
+ */
+DEFAULT_MODE = "dev";
 
-/* OPERATORS */
-include <operator/distribute/grid.scad>
-include <operator/distribute/mirror.scad>
-include <operator/distribute/rotate.scad>
-include <operator/distribute/translate.scad>
+/**
+ * Degrees in a circle.
+ * @type Number
+ */
+DEGREES = 360;
 
-include <operator/repeat/mirror.scad>
-include <operator/repeat/rotate.scad>
-include <operator/repeat/translate.scad>
+/**
+ * Minimum value for $fa and $fs.
+ * @type Number
+ */
+MIN_ANGLE = 0.01;
 
-include <operator/rotate/axis.scad>
-include <operator/rotate/origin.scad>
+/**
+ * Minimum allowed size.
+ * @type Number
+ */
+MIN_SIZE = 0.000001;
 
-include <operator/translate/axis.scad>
+/**
+ * A very very small value.
+ * @type Number
+ */
+EPSILON = 0.000001;
 
-include <operator/operation.scad>
-include <operator/transform.scad>
+/**
+ * A value utilized to align wall and ensure proper cuts on one side.
+ * @type Number
+ */
+ALIGN = 0.001;
+
+/**
+ * A value utilized to align wall and ensure proper cuts on both sides.
+ * @type Number
+ */
+ALIGN2 = 2 * ALIGN;

@@ -33,24 +33,6 @@
  */
 
 /**
- * Degrees in a circle.
- * @type Number
- */
-DEGREES = 360;
-
-/**
- * Minimum value for $fa and $fs.
- * @type Number
- */
-MIN_ANGLE = 0.01;
-
- /**
-  * Minimum allowed size.
-  * @type Number
-  */
-MIN_SIZE = 0.000001;
-
-/**
  * Ensures an angle is defined within degree range (-360..360).
  *
  * @param Number a - The angle.

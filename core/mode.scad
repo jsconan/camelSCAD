@@ -44,12 +44,6 @@ MODES = [
 ];
 
 /**
- * The name of the default rendering mode.
- * @type String
- */
-DEFAULT_MODE = "dev";
-
-/**
  * Gets the specifications of a particular rendering mode.
  *
  * @param String [mode] - The mode for which get the specifications.
