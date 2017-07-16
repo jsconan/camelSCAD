@@ -40,6 +40,8 @@ include <operator/distribute/mirror.scad>
 include <operator/distribute/rotate.scad>
 include <operator/distribute/translate.scad>
 
+include <operator/extrude/negative.scad>
+
 include <operator/repeat/mirror.scad>
 include <operator/repeat/rotate.scad>
 include <operator/repeat/translate.scad>
