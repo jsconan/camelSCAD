@@ -37,18 +37,18 @@
  *
  * @param Number [count] - The number of times the children must be repeated.
  * @param Vector [interval] - The interval between each repeated children.
- * @param Number [x] - The X interval between each repeated children
- *                     (will overwrite the X coordinate in the `interval` vector).
- * @param Number [y] - The Y interval between each repeated children
- *                     (will overwrite the Y coordinate in the `interval` vector).
- * @param Number [z] - The Z interval between each repeated children
- *                     (will overwrite the Z coordinate in the `interval` vector).
+ * @param Number [intervalX] - The X interval between each repeated children
+ *                             (will overwrite the X coordinate in the `interval` vector).
+ * @param Number [intervalY] - The Y interval between each repeated children
+ *                             (will overwrite the Y coordinate in the `interval` vector).
+ * @param Number [intervalZ] - The Z interval between each repeated children
+ *                             (will overwrite the Z coordinate in the `interval` vector).
  */
 module repeat(count    = 2,
               interval = [0, 0, 0],
-              x, y, z) {
+              intervalX, intervalY, intervalZ) {
 
-    interval = apply3D(interval, x, y, z);
+    interval = apply3D(interval, intervalX, intervalY, intervalZ);
 
     for (i = [0 : count - 1]) {
         translate(interval * i) {

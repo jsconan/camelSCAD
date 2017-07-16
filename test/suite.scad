@@ -57,6 +57,8 @@ use <shape/3D/ellipsoid.scad>
 use <shape/3D/rounded.scad>
 use <shape/3D/polyhedron.scad>
 
+use <shape/context/build-box.scad>
+
 testCoreVersion();
 testCoreType();
 testCoreLogic();
@@ -81,3 +83,5 @@ testShape2dPolygon();
 testShape3dEllipsoid();
 testShape3dRounded();
 testShape3dPolyhedron();
+
+testShapeContextBuildBox();

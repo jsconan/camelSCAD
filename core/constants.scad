@@ -33,10 +33,28 @@
  */
 
 /**
+ * The name of the development rendering mode.
+ * @type String
+ */
+MODE_DEV = "dev";
+
+/**
+ * The name of the production rendering mode.
+ * @type String
+ */
+MODE_PROD = "prod";
+
+/**
+ * The name of the dirty rendering mode.
+ * @type String
+ */
+MODE_DIRTY = "dirty";
+
+/**
  * The name of the default rendering mode.
  * @type String
  */
-DEFAULT_MODE = "dev";
+DEFAULT_MODE = MODE_DEV;
 
 /**
  * Degrees in a circle.
@@ -79,3 +97,21 @@ ALIGN = 0.005;
  * @type Number
  */
 ALIGN2 = 2 * ALIGN;
+
+/**
+ * The default size of the build plate.
+ * @type Number
+ */
+DEFAULT_BUILD_PLATE_SIZE = 200;
+
+/**
+ * The default size of the build volume.
+ * @type Number
+ */
+DEFAULT_BUILD_VOLUME_SIZE = DEFAULT_BUILD_PLATE_SIZE;
+
+/**
+ * The default size of a cell on the build plate.
+ * @type Number
+ */
+DEFAULT_BUILD_PLATE_CELL = 10;
