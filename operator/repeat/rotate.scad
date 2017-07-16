@@ -40,12 +40,12 @@
  * @param Vector [axis] - The rotation axis around which rotate the children.
  * @param Vector [interval] - The interval between each repeated children.
  * @param Vector [origin] - The rotate origin.
- * @param Number [x] - The X interval between each repeated children
- *                     (will overwrite the X coordinate in the `interval` vector).
- * @param Number [y] - The Y interval between each repeated children
- *                     (will overwrite the Y coordinate in the `interval` vector).
- * @param Number [z] - The Z interval between each repeated children
- *                     (will overwrite the Z coordinate in the `interval` vector).
+ * @param Number [intervalX] - The X interval between each repeated children
+ *                             (will overwrite the X coordinate in the `interval` vector).
+ * @param Number [intervalY] - The Y interval between each repeated children
+ *                             (will overwrite the Y coordinate in the `interval` vector).
+ * @param Number [intervalZ] - The Z interval between each repeated children
+ *                             (will overwrite the Z coordinate in the `interval` vector).
  * @param Number [axisX] - The X axis factor (will overwrite the X coordinate in the `axis` vector).
  * @param Number [axisY] - The Y axis factor (will overwrite the Y coordinate in the `axis` vector).
  * @param Number [axisZ] - The Z axis factor (will overwrite the Z coordinate in the `axis` vector).
@@ -58,11 +58,11 @@ module repeatRotate(count    = 2,
                     axis     = [0, 0, 1],
                     interval = [0, 0, 0],
                     origin   = [0, 0, 0],
-                    x, y, z,
+                    intervalX, intervalY, intervalZ,
                     axisX, axisY, axisZ,
                     originX, originY, originZ) {
 
-    interval = apply3D(interval, x, y, z);
+    interval = apply3D(interval, intervalX, intervalY, intervalZ);
     origin = apply3D(origin, originX, originY, originZ);
     angle = deg(angle);
     partAngle = angle / (angle % 360 ? count - 1 : count);
