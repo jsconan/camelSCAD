@@ -74,6 +74,19 @@ module testUnit(title, expected) {
 }
 
 /**
+ * Declares a unit test context. That allows to isolate context data from other unit tests.
+ *
+ * @param String title
+ * @param Number [expected]
+ */
+module testUnitContext(title, expected) {
+    $testUnit = str($testUnit, " - ", string(title));
+
+    children();
+    displayExpectedAsserts($children, expected, "assertion");
+}
+
+/**
  * Asserts the actual value is equal to the expected value.
  *
  * @param * actual
