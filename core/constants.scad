@@ -97,3 +97,21 @@ ALIGN = 0.005;
  * @type Number
  */
 ALIGN2 = 2 * ALIGN;
+
+/**
+ * The default size of the build plate.
+ * @type Number
+ */
+DEFAULT_BUILD_PLATE_SIZE = 200;
+
+/**
+ * The default size of the build volume.
+ * @type Number
+ */
+DEFAULT_BUILD_VOLUME_SIZE = DEFAULT_BUILD_PLATE_SIZE;
+
+/**
+ * The default size of a cell on the build plate.
+ * @type Number
+ */
+DEFAULT_BUILD_PLATE_CELL = 10;
