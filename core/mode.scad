@@ -38,9 +38,9 @@
  * @type Vector
  */
 MODES = [
-    ["dirty", 6, 2],
-    ["dev", 1, 1.5],
-    ["prod", .5, .5]
+    [MODE_DIRTY, 6, 2],
+    [MODE_DEV, 1, 1.5],
+    [MODE_PROD, .5, .5]
 ];
 
 /**

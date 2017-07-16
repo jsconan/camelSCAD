@@ -33,10 +33,28 @@
  */
 
 /**
+ * The name of the development rendering mode.
+ * @type String
+ */
+MODE_DEV = "dev";
+
+/**
+ * The name of the production rendering mode.
+ * @type String
+ */
+MODE_PROD = "prod";
+
+/**
+ * The name of the dirty rendering mode.
+ * @type String
+ */
+MODE_DIRTY = "dirty";
+
+/**
  * The name of the default rendering mode.
  * @type String
  */
-DEFAULT_MODE = "dev";
+DEFAULT_MODE = MODE_DEV;
 
 /**
  * Degrees in a circle.
