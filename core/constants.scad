@@ -60,13 +60,19 @@ MIN_SIZE = 0.000001;
  * A very very small value.
  * @type Number
  */
-EPSILON = 0.000001;
+EPSILON = 0.0000001;
+
+/**
+ * The maximum number of decimals
+ * @type Number
+ */
+MAX_DECIMALS = 7;
 
 /**
  * A value utilized to align wall and ensure proper cuts on one side.
  * @type Number
  */
-ALIGN = 0.001;
+ALIGN = 0.005;
 
 /**
  * A value utilized to align wall and ensure proper cuts on both sides.
