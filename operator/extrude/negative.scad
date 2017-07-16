@@ -52,7 +52,7 @@
 module negativeExtrude(height, direction, center, convexity, twist, slices, scale) {
     center = boolean(center);
     convexity = numberOr(convexity, 10);
-    height = align(height=height, direction=direction, center=center);
+    height = align(value=height, direction=direction, center=center);
 
     translateZ(height[1]) {
         linear_extrude(height=height[0], center=center, convexity=convexity, twist=twist, slices=slices, scale=scale) {
