@@ -64,7 +64,7 @@ function sizeBuildPlate(size, cell, l, w, cl, cw) =
 ;
 
 /**
- * Creates a build plate vizualization at the origin.
+ * Creates a build plate visualization at the origin.
  *
  * @param Number|Vector [size] - The size of the build plate.
  * @param Number|Vector [cell] - The size of each cell on the build plate.
@@ -103,7 +103,7 @@ module buildPlate(size=DEFAULT_BUILD_PLATE_SIZE, cell=DEFAULT_BUILD_PLATE_CELL, 
 }
 
 /**
- * Creates a build volume vizualization at the origin.
+ * Creates a build volume visualization at the origin.
  *
  * @param Number|Vector [size] - The size of the build box.
  * @param Number|Vector [cell] - The size of each cell on the build plate.
@@ -120,8 +120,8 @@ module buildVolume(size=DEFAULT_BUILD_VOLUME_SIZE, l, w, h) {
 }
 
 /**
- * Creates a build box vizualization at the origin.
- * A build box contains vizualizations for a build plate and a build volume.
+ * Creates a build box visualization at the origin.
+ * A build box contains visualizations for a build plate and a build volume.
  * It also applies a render mode.
  * @param String [mode] - The mode to apply on the children modules.
  * @param Number|Vector [size] - The size of the build volume.
