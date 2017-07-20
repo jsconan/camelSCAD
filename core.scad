@@ -38,6 +38,7 @@ include <core/type.scad>
 include <core/logic.scad>
 include <core/list.scad>
 include <core/maths.scad>
+include <core/hex.scad>
 include <core/line.scad>
 include <core/vector.scad>
 include <core/vector-2d.scad>
