@@ -181,17 +181,18 @@ module regularPolygonBox(size, n, l, w, h, s, center) {
  * Creates an hexagon at the origin.
  *
  * @param Number|Vector [size] - The size of the hexagon.
- * @param Number [adjust] - An adjust length added on the horizontal side
+ * @param Boolean [pointy] - Tells if the hexagon must be pointy topped (default: false, Flat topped).
+ * @param Number [adjust] - An adjust length added on the horizontal side.
  * @param Number [l] - The overall length.
  * @param Number [w] - The overall width.
  * @param Number [h] - The overall height.
  * @param Number [s] - The length of a side.
  * @param Boolean [center] - Whether or not center the box on the vertical axis.
  */
-module hexagonBox(size, adjust, l, w, h, s, center) {
+module hexagonBox(size, pointy, adjust, l, w, h, s, center) {
     size = sizeRegularPolygonBox(size=size, n=6, l=l, w=w, h=h, s=s);
     linear_extrude(height=size[2], center=center, convexity=10) {
-        hexagon(size, adjust);
+        hexagon(size=size, pointy=pointy, adjust=adjust);
     }
 }
 

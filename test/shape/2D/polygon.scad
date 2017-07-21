@@ -181,26 +181,41 @@ module testShape2dPolygon() {
             }
         }
         // test shape/2D/polygon/drawHexagon()
-        testModule("drawHexagon()", 2) {
+        testModule("drawHexagon()", 3) {
             testUnit("default values", 3) {
-                assertEqual(drawHexagon(), [ for(i = [0 : 5]) _rotP(i * 360/6, 0.5, 0.5) ], "Should return a list of points to draw an hexagon with a size of 1");
-                assertEqual(drawHexagon("12", "12", "12"), [ for(i = [0 : 5]) _rotP(i * 360/6, 0.5, 0.5) ], "Should return a list of points to draw an hexagon with a size of 1 if wrong parameter has been provided (string)");
-                assertEqual(drawHexagon(true, true, true), [ for(i = [0 : 5]) _rotP(i * 360/6, 0.5, 0.5) ], "Should return a list of points to draw an hexagon with a size of 1 if wrong parameter has been provided (boolean)");
+                assertEqual(drawHexagon(), [ for(i = [0 : 5]) _rotP(i * 360/6, 0.5, 0.5) ], "Should return a list of points to draw a flat topped hexagon with a size of 1");
+                assertEqual(drawHexagon("12", "12", "12"), [ for(i = [0 : 5]) _rotP(i * 360/6 + 30, 0.5, 0.5) ], "Should return a list of points to draw a pointy topped hexagon with a size of 1 if wrong parameter has been provided (string)");
+                assertEqual(drawHexagon(true, true, true), [ for(i = [0 : 5]) _rotP(i * 360/6 + 30, 0.5, 0.5) ], "Should return a list of points to draw a pointy topped hexagon with a size of 1 if wrong parameter has been provided (boolean)");
             }
-            testUnit("draw shape", 12) {
-                assertEqual(drawHexagon(3), [ for(i = [0 : 5]) _rotP(i * 360/6, 1.5, 1.5) ], "Should return a list of points to draw an hexagon. Single number size should be translated into vector");
-                assertEqual(drawHexagon([3, 4]), [ for(i = [0 : 5]) _rotP(i * 360/6, 1.5, 2) ], "Should return a list of points to draw an hexagon using the provided size vector");
-                assertEqual(drawHexagon([3, 4], l=2), [ for(i = [0 : 5]) _rotP(i * 360/6, 1, 2) ], "Should return a list of points to draw an hexagon using the provided size vector and the particular length");
-                assertEqual(drawHexagon([3, 4], w=2), [ for(i = [0 : 5]) _rotP(i * 360/6, 1.5, 1) ], "Should return a list of points to draw an hexagon using the provided size vector and the particular width");
-                assertEqual(drawHexagon(l=3, w=4), [ for(i = [0 : 5]) _rotP(i * 360/6, 1.5, 2) ], "Should return a list of points to draw an hexagon using the provided size length and width");
-                assertEqual(drawHexagon(s=2), [ for(i = [0 : 5]) _rotP(i * 360/6, 2/(2 * sin(180/6)), 2/(2 * sin(180/6))) ], "Should return a list of points to draw an hexagon using the provided facet size");
+            testUnit("draw shape, flat topped", 12) {
+                assertEqual(drawHexagon(3), [ for(i = [0 : 5]) _rotP(i * 360/6, 1.5, 1.5) ], "Should return a list of points to draw a flat topped hexagon. Single number size should be translated into vector");
+                assertEqual(drawHexagon([3, 4]), [ for(i = [0 : 5]) _rotP(i * 360/6, 1.5, 2) ], "Should return a list of points to draw a flat topped hexagon using the provided size vector");
+                assertEqual(drawHexagon([3, 4], l=2), [ for(i = [0 : 5]) _rotP(i * 360/6, 1, 2) ], "Should return a list of points to draw a flat topped hexagon using the provided size vector and the particular length");
+                assertEqual(drawHexagon([3, 4], w=2), [ for(i = [0 : 5]) _rotP(i * 360/6, 1.5, 1) ], "Should return a list of points to draw a flat topped hexagon using the provided size vector and the particular width");
+                assertEqual(drawHexagon(l=3, w=4), [ for(i = [0 : 5]) _rotP(i * 360/6, 1.5, 2) ], "Should return a list of points to draw a flat topped hexagon using the provided size length and width");
+                assertEqual(drawHexagon(s=2), [ for(i = [0 : 5]) _rotP(i * 360/6, 2/(2 * sin(180/6)), 2/(2 * sin(180/6))) ], "Should return a list of points to draw a flat topped hexagon using the provided facet size");
 
-                assertEqual(drawHexagon(3, adjust=2), [ for(i = [0 : 5]) _rotP(i * 360/6, 1.5, 1.5) + [i >= 2 && i<= 4 ? -1 : 1, 0] ], "Should return a list of points to draw an hexagon. Single number size should be translated into vector");
-                assertEqual(drawHexagon([3, 4], adjust=2), [ for(i = [0 : 5]) _rotP(i * 360/6, 1.5, 2) + [i >= 2 && i<= 4 ? -1 : 1, 0] ], "Should return a list of points to draw an hexagon using the provided size vector");
-                assertEqual(drawHexagon([3, 4], l=2, adjust=2), [ for(i = [0 : 5]) _rotP(i * 360/6, 1, 2) + [i >= 2 && i<= 4 ? -1 : 1, 0] ], "Should return a list of points to draw an hexagon using the provided size vector and the particular length");
-                assertEqual(drawHexagon([3, 4], w=2, adjust=2), [ for(i = [0 : 5]) _rotP(i * 360/6, 1.5, 1) + [i >= 2 && i<= 4 ? -1 : 1, 0] ], "Should return a list of points to draw an hexagon using the provided size vector and the particular width");
-                assertEqual(drawHexagon(l=3, w=4, adjust=2), [ for(i = [0 : 5]) _rotP(i * 360/6, 1.5, 2) + [i >= 2 && i<= 4 ? -1 : 1, 0] ], "Should return a list of points to draw an hexagon using the provided size length and width");
-                assertEqual(drawHexagon(s=2, , adjust=2), [ for(i = [0 : 5]) _rotP(i * 360/6, 2/(2 * sin(180/6)), 2/(2 * sin(180/6))) + [i >= 2 && i<= 4 ? -1 : 1, 0] ], "Should return a list of points to draw an hexagon using the provided facet size");
+                assertEqual(drawHexagon(3, adjust=2), [ for(i = [0 : 5]) _rotP(i * 360/6, 1.5, 1.5) + [i >= 2 && i<= 4 ? -1 : 1, 0] ], "Should return a list of points to draw a flat topped hexagon. Single number size should be translated into vector");
+                assertEqual(drawHexagon([3, 4], adjust=2), [ for(i = [0 : 5]) _rotP(i * 360/6, 1.5, 2) + [i >= 2 && i<= 4 ? -1 : 1, 0] ], "Should return a list of points to draw a flat topped hexagon using the provided size vector");
+                assertEqual(drawHexagon([3, 4], l=2, adjust=2), [ for(i = [0 : 5]) _rotP(i * 360/6, 1, 2) + [i >= 2 && i<= 4 ? -1 : 1, 0] ], "Should return a list of points to draw a flat topped hexagon using the provided size vector and the particular length");
+                assertEqual(drawHexagon([3, 4], w=2, adjust=2), [ for(i = [0 : 5]) _rotP(i * 360/6, 1.5, 1) + [i >= 2 && i<= 4 ? -1 : 1, 0] ], "Should return a list of points to draw a flat topped hexagon using the provided size vector and the particular width");
+                assertEqual(drawHexagon(l=3, w=4, adjust=2), [ for(i = [0 : 5]) _rotP(i * 360/6, 1.5, 2) + [i >= 2 && i<= 4 ? -1 : 1, 0] ], "Should return a list of points to draw a flat topped hexagon using the provided size length and width");
+                assertEqual(drawHexagon(s=2, , adjust=2), [ for(i = [0 : 5]) _rotP(i * 360/6, 2/(2 * sin(180/6)), 2/(2 * sin(180/6))) + [i >= 2 && i<= 4 ? -1 : 1, 0] ], "Should return a list of points to draw a flat topped hexagon using the provided facet size");
+            }
+            testUnit("draw shape, pointy topped", 12) {
+                assertEqual(drawHexagon(3, pointy=true), [ for(i = [0 : 5]) _rotP(i * 360/6 + 30, 1.5, 1.5) ], "Should return a list of points to draw a pointy topped hexagon. Single number size should be translated into vector");
+                assertEqual(drawHexagon([3, 4], pointy=true), [ for(i = [0 : 5]) _rotP(i * 360/6 + 30, 1.5, 2) ], "Should return a list of points to draw a pointy topped hexagon using the provided size vector");
+                assertEqual(drawHexagon([3, 4], l=2, pointy=true), [ for(i = [0 : 5]) _rotP(i * 360/6 + 30, 1, 2) ], "Should return a list of points to draw a pointy topped hexagon using the provided size vector and the particular length");
+                assertEqual(drawHexagon([3, 4], w=2, pointy=true), [ for(i = [0 : 5]) _rotP(i * 360/6 + 30, 1.5, 1) ], "Should return a list of points to draw a pointy topped hexagon using the provided size vector and the particular width");
+                assertEqual(drawHexagon(l=3, w=4, pointy=true), [ for(i = [0 : 5]) _rotP(i * 360/6 + 30, 1.5, 2) ], "Should return a list of points to draw a pointy topped hexagon using the provided size length and width");
+                assertEqual(drawHexagon(s=2, pointy=true), [ for(i = [0 : 5]) _rotP(i * 360/6 + 30, 2/(2 * sin(180/6)), 2/(2 * sin(180/6))) ], "Should return a list of points to draw a pointy topped hexagon using the provided facet size");
+
+                assertEqual(drawHexagon(3, adjust=2, pointy=true), [ for(i = [0 : 5]) _rotP(i * 360/6 + 30, 1.5, 1.5) + [0, i >= 3 ? -1 : 1] ], "Should return a list of points to draw a pointy topped hexagon. Single number size should be translated into vector");
+                assertEqual(drawHexagon([3, 4], adjust=2, pointy=true), [ for(i = [0 : 5]) _rotP(i * 360/6 + 30, 1.5, 2) + [0, i >= 3 ? -1 : 1] ], "Should return a list of points to draw a pointy topped hexagon using the provided size vector");
+                assertEqual(drawHexagon([3, 4], l=2, adjust=2, pointy=true), [ for(i = [0 : 5]) _rotP(i * 360/6 + 30, 1, 2) + [0, i >= 3 ? -1 : 1] ], "Should return a list of points to draw a pointy topped hexagon using the provided size vector and the particular length");
+                assertEqual(drawHexagon([3, 4], w=2, adjust=2, pointy=true), [ for(i = [0 : 5]) _rotP(i * 360/6 + 30, 1.5, 1) + [0, i >= 3 ? -1 : 1] ], "Should return a list of points to draw a pointy topped hexagon using the provided size vector and the particular width");
+                assertEqual(drawHexagon(l=3, w=4, adjust=2, pointy=true), [ for(i = [0 : 5]) _rotP(i * 360/6 + 30, 1.5, 2) + [0, i >= 3 ? -1 : 1] ], "Should return a list of points to draw a pointy topped hexagon using the provided size length and width");
+                assertEqual(drawHexagon(s=2, , adjust=2, pointy=true), [ for(i = [0 : 5]) _rotP(i * 360/6 + 30, 2/(2 * sin(180/6)), 2/(2 * sin(180/6))) + [0, i >= 3 ? -1 : 1] ], "Should return a list of points to draw a pointy topped hexagon using the provided facet size");
             }
         }
         // test shape/2D/polygon/drawStar()
