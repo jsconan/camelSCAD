@@ -34,24 +34,78 @@ use <../../full.scad>
  * @author jsconan
  */
 module testCoreHex() {
-    testPackage("core/hex.scad", 7) {
+    testPackage("core/hex.scad", 9) {
         // test core/hex/radialHexGrid()
-        testModule("radialHexGrid()", 3) {
+        testModule("radialHexGrid()", 4) {
             testUnit("no parameter", 1) {
                 assertEqual(radialHexGrid(), [[0, 0]], "Without parameter the function should produce a default grid of 1 cell");
             }
-            testUnit("wrong type", 5) {
+            testUnit("wrong type", 4) {
                 assertEqual(radialHexGrid("10"), [[0, 0]], "A string should produce a default grid of 1 cell");
                 assertEqual(radialHexGrid(true), [[0, 0]], "A boolean should produce a default grid of 1 cell");
                 assertEqual(radialHexGrid([]), [[0, 0]], "An empty array should produce a default grid of 1 cell");
                 assertEqual(radialHexGrid(["1"]), [[0, 0]], "An array should produce a default grid of 1 cell");
-                assertEqual(radialHexGrid([1]), [[0, 0]], "A vector should produce a default grid of 1 cell");
             }
-            testUnit("number", 4) {
+            testUnit("number", 5) {
                 assertEqual(radialHexGrid(0), [[0, 0]], "A grid of range 0 is a grid with one cell");
-                assertEqual(radialHexGrid(1), [[-1, 1], [-1, 0], [0, 1], [0, 0], [0, -1], [1, 0], [1, -1]], "A grid of range 1 is a grid with 7 cells");
-                assertEqual(radialHexGrid(2), [[-2, 2], [-2, 1], [-2, 0], [-1, 2], [-1, 1], [-1, 0], [-1, -1], [0, 2], [0, 1], [0, 0], [0, -1], [0, -2], [1, 1], [1, 0], [1, -1], [1, -2], [2, 0], [2, -1], [2, -2]], "A grid of range 2 is a grid with 19 cells");
-                assertEqual(radialHexGrid(-1), [[-1, 1], [-1, 0], [0, 1], [0, 0], [0, -1], [1, 0], [1, -1]], "Negative range should be converter to positive");
+                assertEqual(radialHexGrid(3), [[-1, 1], [-1, 0], [0, 1], [0, 0], [0, -1], [1, 0], [1, -1]], "A grid with 3 cells on a line will have 7 cells");
+                assertEqual(radialHexGrid(4), [[-1, 1], [-1, 0], [0, 1], [0, 0], [0, -1], [1, 0], [1, -1]], "A grid with 4 cells on a line will have 7 cells");
+                assertEqual(radialHexGrid(5), [[-2, 2], [-2, 1], [-2, 0], [-1, 2], [-1, 1], [-1, 0], [-1, -1], [0, 2], [0, 1], [0, 0], [0, -1], [0, -2], [1, 1], [1, 0], [1, -1], [1, -2], [2, 0], [2, -1], [2, -2]], "A grid with 5 cells on a line will have 7 cells");
+                assertEqual(radialHexGrid(-3), [[-1, 1], [-1, 0], [0, 1], [0, 0], [0, -1], [1, 0], [1, -1]], "Negative range should be converted to positive");
+            }
+            testUnit("vector", 5) {
+                assertEqual(radialHexGrid([0, 0]), [[0, 0]], "A grid of range 0 is a grid with one cell");
+                assertEqual(radialHexGrid([3, 4]), [[-1, 1], [-1, 0], [0, 1], [0, 0], [0, -1], [1, 0], [1, -1]], "A grid with [3, 4] cells on a line will have 7 cells");
+                assertEqual(radialHexGrid([4, 5]), [[-1, 1], [-1, 0], [0, 1], [0, 0], [0, -1], [1, 0], [1, -1]], "A grid with [4, 5] cells on a line will have 7 cells");
+                assertEqual(radialHexGrid([5, 6]), [[-2, 2], [-2, 1], [-2, 0], [-1, 2], [-1, 1], [-1, 0], [-1, -1], [0, 2], [0, 1], [0, 0], [0, -1], [0, -2], [1, 1], [1, 0], [1, -1], [1, -2], [2, 0], [2, -1], [2, -2]], "A grid with [5, 6] cells on a line will have 7 cells");
+                assertEqual(radialHexGrid([-3, -4]), [[-1, 1], [-1, 0], [0, 1], [0, 0], [0, -1], [1, 0], [1, -1]], "Negative range should be converted to positive");
+            }
+        }
+        // test core/hex/radialHexRange()
+        testModule("radialHexRange()", 4) {
+            testUnit("no parameter", 1) {
+                assertEqual(radialHexRange(), 0, "Without parameter the function should tell the grid has range 0");
+            }
+            testUnit("wrong type", 4) {
+                assertEqual(radialHexRange("10"), 0, "With a string the function should tell the grid is has range 0");
+                assertEqual(radialHexRange(true), 0, "With a boolean the function should tell the grid is has range 0");
+                assertEqual(radialHexRange([]), 0, "With an empty array the function should tell the grid is has range 0");
+                assertEqual(radialHexRange(["1"]), 0, "With an array the function should tell the grid is has range 0");
+            }
+            testUnit("number", 5) {
+                assertEqual(radialHexRange(0), 0, "An empty size should produce a range 0");
+                assertEqual(radialHexRange(1), 0, "A size of 1 should produce a range 0");
+                assertEqual(radialHexRange(2), 0, "A size of 2 should produce a range 0");
+                assertEqual(radialHexRange(3), 1, "A size of 3 should produce a range 1");
+                assertEqual(radialHexRange(10), 4, "A size of 10 should produce a range 4");
+            }
+            testUnit("vector", 6) {
+                assertEqual(radialHexRange([0, 0]), 0, "An empty size should produce a range 0");
+                assertEqual(radialHexRange([1, 1]), 0, "A size of 1 should produce a range 0");
+                assertEqual(radialHexRange([2, 2]), 0, "A size of 2 should produce a range 0");
+                assertEqual(radialHexRange([3, 3]), 1, "A size of 3 should produce a range 1");
+                assertEqual(radialHexRange([10, 10]), 4, "A size of 10 should produce a range 4");
+                assertEqual(radialHexRange([15, 20]), 7, "Should take the lower size to compute the range");
+            }
+        }
+        // test core/hex/radialHexCount()
+        testModule("radialHexCount()", 3) {
+            testUnit("no parameter", 1) {
+                assertEqual(radialHexCount(), [1, 1], "Without parameter the function should assume it is a range 0 and the size should be 1");
+            }
+            testUnit("wrong type", 5) {
+                assertEqual(radialHexCount("10"), [1, 1], "With a string the function should assume it is a range 0 and the size should be 1");
+                assertEqual(radialHexCount(true), [1, 1], "With a boolean the function should assume it is a range 0 and the size should be 1");
+                assertEqual(radialHexCount([]), [1, 1], "With an empty array the function should assume it is a range 0 and the size should be 1");
+                assertEqual(radialHexCount(["1"]), [1, 1], "With an array the function should assume it is a range 0 and the size should be 1");
+                assertEqual(radialHexCount([10]), [1, 1], "With a vector the function should assume it is a range 0 and the size should be 1");
+            }
+            testUnit("number", 5) {
+                assertEqual(radialHexCount(0), [1, 1], "A range 0 should produce a size of 1");
+                assertEqual(radialHexCount(1), [3, 3], "A range 1 should produce a size of 3");
+                assertEqual(radialHexCount(2), [5, 5], "A range 2 should produce a size of 5");
+                assertEqual(radialHexCount(3), [7, 7], "A range 3 should produce a size of 7");
+                assertEqual(radialHexCount(10), [21, 21], "A range 10 should produce a size of 21");
             }
         }
         // test core/hex/radialHexCoord()
@@ -301,63 +355,63 @@ module testCoreHex() {
         // test core/hex/countHexCell()
         testModule("countHexCell()", 4) {
             testUnit("no parameter", 1) {
-                assertEqual(countHexCell(), 0, "Without parameter the function should produce a grid of range 0");
+                assertEqual(countHexCell(), [1, 1], "Without parameter the function should tell the grid is 1x1");
             }
             testUnit("wrong type", 4) {
-                assertEqual(countHexCell("10"), 0, "A string should produce a grid of range 0");
-                assertEqual(countHexCell(true), 0, "A boolean should produce a grid of range 0");
-                assertEqual(countHexCell([]), 0, "An empty array should produce a grid of range 0");
-                assertEqual(countHexCell(["1"]), 0, "An array should produce a grid of range 0");
+                assertEqual(countHexCell("10"), [1, 1], "With a string the function should tell the grid is 1x1");
+                assertEqual(countHexCell(true), [1, 1], "With a boolean the function should tell the grid is 1x1");
+                assertEqual(countHexCell([]), [1, 1], "With an empty array the function should tell the grid is 1x1");
+                assertEqual(countHexCell(["1"]), [1, 1], "With an array the function should tell the grid is 1x1");
             }
             testUnit("number", 2) {
                 testUnitContext("flat topped", 2) {
                     testUnitContext("radial", 3) {
-                        assertApproxEqual(countHexCell(10), 5, "Should produce a grid of range 5");
-                        assertEqual(countHexCell(10, 3), 1, "Should produce a grid of range 1");
-                        assertEqual(countHexCell(10, 3, l=10, w=20, cl=3, cw=4), 1, "Should produce a grid of range 1");
+                        assertApproxEqual(countHexCell(10), [13, 11], "Should tell the grid is 13x11");
+                        assertEqual(countHexCell(10, 3), [4, 3], "Should tell the grid is 4x3");
+                        assertEqual(countHexCell(10, 3, l=10, w=20, cl=3, cw=4), [4, 5], "Should tell the grid is 4x5");
                     }
                     testUnitContext("linear", 3) {
                         assertApproxEqual(countHexCell(10, linear=true), [13, 11], "Should tell the grid is 13x11");
                         assertEqual(countHexCell(10, 3, linear=true), [4, 3], "Should tell the grid is 4x3");
-                        assertEqual(countHexCell(10, 3, linear=true, l=10, w=20, cl=3, cw=4), [4, 5], "Should tell the grid is 4x7");
+                        assertEqual(countHexCell(10, 3, linear=true, l=10, w=20, cl=3, cw=4), [4, 5], "Should tell the grid is 4x5");
                     }
                 }
                 testUnitContext("pointy topped", 2) {
                     testUnitContext("radial", 3) {
-                        assertApproxEqual(countHexCell(10, pointy=true), 5, "Should produce a grid of range 5");
-                        assertEqual(countHexCell(10, 3, pointy=true), 1, "Should produce a grid of range 1");
-                        assertEqual(countHexCell(10, 3, pointy=true, l=10, w=20, cl=3, cw=4), 1, "Should produce a grid of range 1");
+                        assertApproxEqual(countHexCell(10, pointy=true), [11, 13], "Should tell the grid is 11x13");
+                        assertEqual(countHexCell(10, 3, pointy=true), [3, 4], "Should tell the grid is 3x4");
+                        assertEqual(countHexCell(10, 3, pointy=true, l=10, w=20, cl=3, cw=4), [3, 6], "Should tell the grid is 3x6");
                     }
                     testUnitContext("linear", 3) {
                         assertApproxEqual(countHexCell(10, linear=true, pointy=true), [11, 13], "Should tell the grid is 11x13");
                         assertEqual(countHexCell(10, 3, linear=true, pointy=true), [3, 4], "Should tell the grid is 3x4");
-                        assertEqual(countHexCell(10, 3, linear=true, pointy=true, l=10, w=20, cl=3, cw=4), [3, 6], "Should tell the grid is 3x8");
+                        assertEqual(countHexCell(10, 3, linear=true, pointy=true, l=10, w=20, cl=3, cw=4), [3, 6], "Should tell the grid is 3x6");
                     }
                 }
             }
             testUnit("vector", 2) {
                 testUnitContext("flat topped", 2) {
                     testUnitContext("radial", 3) {
-                        assertApproxEqual(countHexCell([10, 10]), 5, "Should produce a grid of range 5");
-                        assertEqual(countHexCell([10, 10], [3, 3]), 1, "Should produce a grid of range 1");
-                        assertEqual(countHexCell([10, 10], [3, 3], l=10, w=20, cl=3, cw=4), 1, "Should produce a grid of range 1");
+                        assertApproxEqual(countHexCell([10, 10]), [13, 11], "Should tell the grid is 13x11");
+                        assertEqual(countHexCell([10, 10], [3, 3]), [4, 3], "Should tell the grid is 4x3");
+                        assertEqual(countHexCell([10, 10], [3, 3], l=10, w=20, cl=3, cw=4), [4, 5], "Should tell the grid is 4x5");
                     }
                     testUnitContext("linear", 3) {
                         assertApproxEqual(countHexCell([10, 10], linear=true), [13, 11], "Should tell the grid is 13x11");
                         assertEqual(countHexCell([10, 10], [3, 3], linear=true), [4, 3], "Should tell the grid is 4x3");
-                        assertEqual(countHexCell([10, 10], [3, 3], linear=true, l=10, w=20, cl=3, cw=4), [4, 5], "Should tell the grid is 4x7");
+                        assertEqual(countHexCell([10, 10], [3, 3], linear=true, l=10, w=20, cl=3, cw=4), [4, 5], "Should tell the grid is 4x5");
                     }
                 }
                 testUnitContext("pointy topped", 2) {
                     testUnitContext("radial", 3) {
-                        assertApproxEqual(countHexCell([10, 10], pointy=true), 5, "Should produce a grid of range 5");
-                        assertEqual(countHexCell([10, 10], [3, 3], pointy=true), 1, "Should produce a grid of range 1");
-                        assertEqual(countHexCell([10, 10], [3, 3], pointy=true, l=10, w=20, cl=3, cw=4), 1, "Should produce a grid of range 1");
+                        assertApproxEqual(countHexCell([10, 10], pointy=true), [11, 13], "Should tell the grid is 11x13");
+                        assertEqual(countHexCell([10, 10], [3, 3], pointy=true), [3, 4], "Should tell the grid is 3x4");
+                        assertEqual(countHexCell([10, 10], [3, 3], pointy=true, l=10, w=20, cl=3, cw=4), [3, 6], "Should tell the grid is 3x6");
                     }
                     testUnitContext("linear", 3) {
                         assertApproxEqual(countHexCell([10, 10], linear=true, pointy=true), [11, 13], "Should tell the grid is 11x13");
                         assertEqual(countHexCell([10, 10], [3, 3], linear=true, pointy=true), [3, 4], "Should tell the grid is 3x4");
-                        assertEqual(countHexCell([10, 10], [3, 3], linear=true, pointy=true, l=10, w=20, cl=3, cw=4), [3, 6], "Should tell the grid is 3x8");
+                        assertEqual(countHexCell([10, 10], [3, 3], linear=true, pointy=true, l=10, w=20, cl=3, cw=4), [3, 6], "Should tell the grid is 3x6");
                     }
                 }
             }
