@@ -179,7 +179,7 @@ function sizeHexCell(size, count, pointy, linear, l, w, cx, cy) =
 ;
 
 /**
- * Computes the number of a cells in a hex grid that fits the provided size.
+ * Computes the number of cells in a hex grid that fits the provided size.
  *
  * @param Vector|Number [size] - The size of the hex grid.
  * @param Vector|Number [cell] - The size of a cell in the hex grid.
@@ -209,17 +209,17 @@ function countHexCell(size, cell, pointy, linear, l, w, cl, cw) =
 ;
 
 /**
- * Computes the physical coordinates of a cell in a radial hex grid based on its logical coordinates.
+ * Computes the physical coordinates of a cell in a hex grid based on its logical coordinates.
  *
  * @param Vector|Number hex - The logical coordinates in the hex grid.
- * @param Vector|Number [size] - The size of a cell in the hex grid.
+ * @param Vector|Number [size] - The size the cell.
  * @param Boolean [pointy] - Tells if the hexagons in the grid are pointy topped (default: false, Flat topped).
  * @param Boolean [linear] - Tells if the grid is linear instead of radial (default: false).
  * @param Boolean [even] - Tells if the first hexagons should be below the line (default: false).
  * @param Number [x] - The logical X-coordinate in the hex grid.
  * @param Number [y] - The logical Y-coordinate in the hex grid.
- * @param Number [l] - The length of a cell in the hex grid.
- * @param Number [w] - The width of a cell in the hex grid.
+ * @param Number [l] - The length of the cell.
+ * @param Number [w] - The width of the cell.
  * @returns Vector - Physical coordinates.
  */
 function coordHexCell(hex, size, pointy, linear, even, x, y, l, w) =
