@@ -63,6 +63,12 @@ DEFAULT_MODE = MODE_DEV;
 DEGREES = 360;
 
 /**
+ * Useful value for computations based on hexagons.
+ * @type Number
+ */
+SQRT3 = sqrt(3);
+
+/**
  * Minimum value for $fa and $fs.
  * @type Number
  */

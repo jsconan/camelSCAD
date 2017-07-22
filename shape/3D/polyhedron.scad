@@ -181,17 +181,18 @@ module regularPolygonBox(size, n, l, w, h, s, center) {
  * Creates an hexagon at the origin.
  *
  * @param Number|Vector [size] - The size of the hexagon.
- * @param Number [adjust] - An adjust length added on the horizontal side
+ * @param Boolean [pointy] - Tells if the hexagon must be pointy topped (default: false, Flat topped).
+ * @param Number [adjust] - An adjust length added on the horizontal side.
  * @param Number [l] - The overall length.
  * @param Number [w] - The overall width.
  * @param Number [h] - The overall height.
  * @param Number [s] - The length of a side.
  * @param Boolean [center] - Whether or not center the box on the vertical axis.
  */
-module hexagonBox(size, adjust, l, w, h, s, center) {
+module hexagonBox(size, pointy, adjust, l, w, h, s, center) {
     size = sizeRegularPolygonBox(size=size, n=6, l=l, w=w, h=h, s=s);
     linear_extrude(height=size[2], center=center, convexity=10) {
-        hexagon(size, adjust);
+        hexagon(size=size, pointy=pointy, adjust=adjust);
     }
 }
 
@@ -212,5 +213,30 @@ module starBox(size, core, edges, l, w, h, cl, cw, center) {
     size = sizeStarBox(size=size, core=core, edges=edges, l=l, w=w, h=h, cl=cl, cw=cw);
     linear_extrude(height=size[0][2], center=center, convexity=10) {
         star(size[0], size[1], size[2]);
+    }
+}
+
+/**
+ * Creates a mesh with honeycomb cells using a hex grid pattern.
+ *
+ * @param Number|Vector [size] - The outer size of the mesh.
+ * @param Number|Vector [count] - The number of cells on each lines and each columns.
+ * @param Number|Vector [gap] - The space between two cells.
+ * @param Boolean [pointy] - Tells if the hexagons in the mesh are pointy topped (default: false, Flat topped).
+ * @param Boolean [linear] - Tells if the hex grid is linear instead of radial (default: false).
+ * @param Boolean [even] - Tells if the first hexagons of a the linear grid should be below the line (default: false).
+ * @param Number [l] - The overall length.
+ * @param Number [w] - The overall width.
+ * @param Number [h] - The overall height.
+ * @param Number [cx] - The number of cells per lines.
+ * @param Number [cy] - The number of cells per columns.
+ * @param Number [gx] - The space between two cells on each lines.
+ * @param Number [gy] - The space between two cells on each columns.
+ * @param Boolean [center] - Whether or not center the box on the vertical axis.
+ */
+module meshBox(size, count, gap, pointy, linear, even, l, w, h, cx, cy, gx, gy, center) {
+    size = apply3D(size, l, w, h);
+    linear_extrude(height=size[2], center=center, convexity=10) {
+        mesh(size=size, count=count, gap=gap, pointy=pointy, linear=linear, even=even, cx=cx, cy=cy, gx=gx, gy=gy);
     }
 }
