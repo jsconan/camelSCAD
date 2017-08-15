@@ -9,9 +9,10 @@
 
 // As we need to use some shapes, use the right entry point of the library
 use <../shapes.scad>
+include <../core/constants.scad>
 
 // We will render the object using the specifications of this mode
-renderMode = "prod";
+renderMode = MODE_PROD;
 
 // Defines the dimensions of the pipe
 height = 50;
@@ -20,8 +21,7 @@ innerDiameter = 9.5;
 outerDiameter = innerDiameter + width * 2;
 
 // Sets the minimum facet angle and size using the defined render mode.
-$fa = facetAngle(renderMode);
-$fs = facetSize(renderMode);
-
-// And draw the pipe accordingly
-pipe(d=outerDiameter, h=height, w=width);
+applyMode(renderMode) {
+    // And draw the pipe accordingly
+    pipe(d=outerDiameter, h=height, w=width);
+}
