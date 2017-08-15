@@ -26,55 +26,41 @@
 /**
  * Part of the camelSCAD library.
  *
- * Rendering mode.
+ * Operators that translate children modules with respect to particular rules.
  *
- * @package core/mode
+ * @package operator/translate
  * @author jsconan
  */
 
 /**
- * Specifications for each rendering modes.
- * Each mode is defined this way: ["name", value for $fa, value for $fs]
- * @type Vector
+ * Translates the children modules along the X axis.
+ *
+ * @param Number d - The distance to move.
  */
-MODES = [
-    [MODE_DIRTY, 6, 2],
-    [MODE_DEV, 1, 1.5],
-    [MODE_PROD, .5, .5]
-];
+module translateX(d) {
+    translate([d, 0, 0]) {
+        children();
+    }
+}
 
 /**
- * Gets the specifications of a particular rendering mode.
+ * Translates the children modules along the Y axis.
  *
- * @param String [mode] - The mode for which get the specifications.
- * @returns Vector
+ * @param Number d - The distance to move.
  */
-function renderMode(mode) = fetch(MODES, or(mode, DEFAULT_MODE));
+module translateY(d) {
+    translate([0, d, 0]) {
+        children();
+    }
+}
 
 /**
- * Gets the minimum facet angle for a particular rendering mode.
+ * Translates the children modules along the Z axis.
  *
- * @param String [mode] - The mode for which get the specification.
- * @returns Number
+ * @param Number d - The distance to move.
  */
-function facetAngle(mode) = renderMode(mode)[1];
-
-/**
- * Gets the minimum facet size for a particular rendering mode.
- *
- * @param String [mode] - The mode for which get the specification.
- * @returns Number
- */
-function facetSize(mode) = renderMode(mode)[2];
-
-/**
- * Applies a render mode onto the children modules.
- *
- * @param String [mode] - The mode to apply on the children modules.
- */
-module applyMode(mode) {
-    $fa = facetAngle(mode);
-    $fs = facetSize(mode);
-
-    children();
+module translateZ(d) {
+    translate([0, 0, d]) {
+        children();
+    }
 }

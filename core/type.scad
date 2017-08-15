@@ -57,6 +57,14 @@ function isNumber(value) = (sign(value) != undef);
 function isInteger(value) = (value != undef && floor(value) == value);
 
 /**
+ * Checks if the value is small enough to be considered equal to 0.
+ *
+ * @param * value - The value to check.
+ * @returns Boolean - Returns `true` whether the value is equal to 0 or near enough.
+ */
+function isZero(value) = (sign(value) != undef && value > -EPSILON && value < EPSILON);
+
+/**
  * Checks if the value is boolean.
  *
  * @param * value - The value to check.

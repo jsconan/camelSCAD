@@ -107,3 +107,29 @@ function cardinal(p) =
         [ position(min(len(search("wW", p)), 1), min(len(search("eE", p)), 1)),
           position(min(len(search("sS", p)), 1), min(len(search("nN", p)), 1)) ]
 ;
+
+/**
+ * Computes a size value, and its offset, of an object to be used as a negative for a `difference()` operation.
+ * An alignment value will be added according to the parameter `direction` to counter the wall alignment issue.
+ *
+ * @param Number [value] - The value of the size to adjust. If the value is negative, the offset will be adjusted
+ *                         to allow top to bottom position (below the origin).
+ * @param Number|String [direction] - Tells on what sides adjust the size to make sure the difference won't
+ *                                    produce dummy walls.
+ * @param Boolean [center] - Whether or not center the position on the axis.
+ * @returns Vector - A 2D vector that contains the adjusted size and its offset.
+ */
+function align(value, direction, center) =
+    let(
+        direction = cardinal(uor(direction, 2))[1],
+        value = divisor(value),
+        absv = abs(value),
+        adjust = direction ? (direction == 2 ? ALIGN2 : ALIGN) : 0,
+        offset = center ? (direction == 2 || direction == 0 ? 0 : direction * ALIGN / 2)
+                        : (direction == 2 || direction == -1 ? -ALIGN : 0)
+    )
+    [
+        absv + adjust,
+        offset + (value < 0 && !center ? value : 0)
+    ]
+;

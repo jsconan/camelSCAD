@@ -24,6 +24,7 @@
  */
 
 use <../../full.scad>
+include <../../core/constants.scad>
 
 /**
  * Part of the camelSCAD library.
@@ -34,7 +35,7 @@ use <../../full.scad>
  * @author jsconan
  */
 module testCoreUtil() {
-    testPackage("core/util.scad", 4) {
+    testPackage("core/util.scad", 5) {
         // test core/util/position()
         testModule("position()", 5) {
             testUnit("no parameter", 1) {
@@ -162,6 +163,43 @@ module testCoreUtil() {
                 assertEqual(cardinal("1"), [0, 0], "String containing numbers should produce [0, 0]");
                 assertEqual(cardinal(["1", "2", "3"]), [0, 0], "An array of strings containing numbers should produce [0, 0]");
                 assertEqual(cardinal(["n", "e"]), [1, 1], "An array of strings could produce positions");
+            }
+        }
+        // test core/util/align()
+        testModule("align()", 4) {
+            testUnit("no parameter", 1) {
+                assertEqual(align(), [1 + ALIGN2, -ALIGN], "Should return a default value, with default adjustment");
+            }
+            testUnit("wrong type", 3) {
+                assertEqual(align("1", "0", "false"), [1, 0], "Cannot adjust dimension from strings, should return a default value, without adjustment");
+                assertEqual(align(true, true, true), [1, 0], "Cannot adjust dimension from booleans, should return a default value, without adjustment");
+                assertEqual(align([1], [2], [3]), [1, 0], "Cannot adjust dimension from vectors, should return a default value, without adjustment");
+            }
+            testUnit("number", 10) {
+                assertEqual(align(42), [42 + ALIGN2, -ALIGN], "When only the value is provided, the result should be this value with the default adjustment");
+                assertEqual(align(42, direction=2), [42 + ALIGN2, -ALIGN], "Dimension, with alignment on both edges, not centered");
+                assertEqual(align(42, direction=1), [42 + ALIGN, 0], "Dimension, with alignment on top, not centered");
+                assertEqual(align(42, direction=0), [42, 0], "dimension, without alignment and not centered");
+                assertEqual(align(42, direction=-1), [42 + ALIGN, -ALIGN], "Dimension, with alignment on bottom, not centered");
+
+                assertEqual(align(42, center=true), [42 + ALIGN2, 0], "When only the value is provided, but centered, the result should be this value with the a centered adjustment");
+                assertEqual(align(42, direction=2, center=true), [42 + ALIGN2, 0], "Dimension, with alignment on both edges, centered");
+                assertEqual(align(42, direction=1, center=true), [42 + ALIGN, ALIGN / 2], "Dimension, with alignment on top, centered");
+                assertEqual(align(42, direction=0, center=true), [42, 0], "dimension, without alignment and centered");
+                assertEqual(align(42, direction=-1, center=true), [42 + ALIGN, -ALIGN / 2], "Dimension, with alignment on bottom, centered");
+            }
+            testUnit("number and string", 10) {
+                assertEqual(align(42, direction="ns"), [42 + ALIGN2, -ALIGN], "Dimension, with alignment on both edges, not centered");
+                assertEqual(align(42, direction="n"), [42 + ALIGN, 0], "Dimension, with alignment on top, not centered");
+                assertEqual(align(42, direction=""), [42, 0], "dimension, without alignment and not centered");
+                assertEqual(align(42, direction="we"), [42, 0], "dimension, with wrong alignment and not centered");
+                assertEqual(align(42, direction="s"), [42 + ALIGN, -ALIGN], "Dimension, with alignment on bottom, not centered");
+
+                assertEqual(align(42, direction="ns", center=true), [42 + ALIGN2, 0], "Dimension, with alignment on both edges, centered");
+                assertEqual(align(42, direction="n", center=true), [42 + ALIGN, ALIGN / 2], "Dimension, with alignment on top, centered");
+                assertEqual(align(42, direction="", center=true), [42, 0], "dimension, without alignment and centered");
+                assertEqual(align(42, direction="we", center=true), [42, 0], "dimension, with wrong alignment and centered");
+                assertEqual(align(42, direction="s", center=true), [42 + ALIGN, -ALIGN / 2], "Dimension, with alignment on bottom, centered");
             }
         }
     }

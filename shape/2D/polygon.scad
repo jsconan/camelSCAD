@@ -188,28 +188,40 @@ function drawRegularPolygon(size, n, l, w, s) =
  * Computes the points that draw the sketch of an hexagon.
  *
  * @param Number|Vector [size] - The size of the hexagon.
- * @param Number [adjust] - An adjust length added on the horizontal side
+ * @param Boolean [pointy] - Tells if the hexagon must be pointy topped (default: false, Flat topped).
+ * @param Number [adjust] - An adjust length added on the horizontal side.
  * @param Number [l] - The overall length.
  * @param Number [w] - The overall width.
  * @param Number [s] - The length of a side.
  * @returns Vector[]
  */
-function drawHexagon(size, adjust, l, w, s) =
+function drawHexagon(size, pointy, adjust, l, w, s) =
     let(
         n = 6,
         size = sizeRegularPolygon(size=size, n=n, l=l, w=w, s=s),
         step = DEGREES / n,
-        o = [float(adjust) / 2, 0],
-        radius = size / 2
+        radius = size / 2,
+        adjust = float(adjust) / 2
     )
-    [
-        arcp(radius, 0) + o,
-        arcp(radius, 60) + o,
-        arcp(radius, 120) - o,
-        arcp(radius, 180) - o,
-        arcp(radius, 240) - o,
-        arcp(radius, 300) + o
-    ]
+    pointy
+   ?let(o = [0, adjust])    // pointy topped
+        [
+            arcp(radius, 30) + o,
+            arcp(radius, 90) + o,
+            arcp(radius, 150) + o,
+            arcp(radius, 210) - o,
+            arcp(radius, 270) - o,
+            arcp(radius, 330) - o
+        ]
+   :let(o = [adjust, 0])    // flat topped
+        [
+            arcp(radius, 0) + o,
+            arcp(radius, 60) + o,
+            arcp(radius, 120) - o,
+            arcp(radius, 180) - o,
+            arcp(radius, 240) - o,
+            arcp(radius, 300) + o
+        ]
 ;
 
 /**
@@ -296,14 +308,15 @@ module regularPolygon(size, n, l, w, s) {
  * Creates an hexagon at the origin.
  *
  * @param Number|Vector [size] - The size of the hexagon.
- * @param Number [adjust] - An adjust length added on the horizontal side
+ * @param Boolean [pointy] - Tells if the hexagon must be pointy topped (default: false, Flat topped).
+ * @param Number [adjust] - An adjust length added on the horizontal side.
  * @param Number [l] - The overall length.
  * @param Number [w] - The overall width.
  * @param Number [s] - The length of a side.
  */
-module hexagon(size, adjust, l, w, s) {
+module hexagon(size, pointy, adjust, l, w, s) {
     polygon(
-        points = drawHexagon(size=size, adjust=adjust, l=l, w=w, s=s),
+        points = drawHexagon(size=size, pointy=pointy, adjust=adjust, l=l, w=w, s=s),
         convexity = 10
     );
 }
@@ -324,4 +337,35 @@ module star(size, core, edges, l, w, cl, cw) {
         points = drawStar(size=size, core=core, edges=edges, l=l, w=w, cl=cl, cw=cw),
         convexity = 10
     );
+}
+
+/**
+ * Creates a mesh with honeycomb cells using a hex grid pattern.
+ *
+ * @param Number|Vector [size] - The outer size of the mesh.
+ * @param Number|Vector [count] - The number of cells on each lines and each columns.
+ * @param Number|Vector [gap] - The space between two cells.
+ * @param Boolean [pointy] - Tells if the hexagons in the mesh are pointy topped (default: false, Flat topped).
+ * @param Boolean [linear] - Tells if the hex grid is linear instead of radial (default: false).
+ * @param Boolean [even] - Tells if the first hexagons of a the linear grid should be below the line (default: false).
+ * @param Number [l] - The overall length.
+ * @param Number [w] - The overall width.
+ * @param Number [cx] - The number of cells per lines.
+ * @param Number [cy] - The number of cells per columns.
+ * @param Number [gx] - The space between two cells on each lines.
+ * @param Number [gy] - The space between two cells on each columns.
+ */
+module mesh(size, count, gap, pointy, linear, even, l, w, cx, cy, gx, gy) {
+    size = apply2D(size, l, w);
+    count = divisor2D(apply2D(count, cx, cy));
+    gap = apply2D(gap, gx, gy);
+    cell = sizeHexCell(size=size, count=count, pointy=pointy, linear=linear);
+    inner = cell - gap;
+    offset = offsetHexGrid(size=cell, count=count, pointy=pointy, linear=linear, even=even);
+
+    for(hex = buildHexGrid(count=count, linear=linear)) {
+        translate(offset + coordHexCell(hex=hex, size=cell, linear=linear, even=even, pointy=pointy)) {
+            hexagon(size=inner, pointy=pointy);
+        }
+    }
 }
