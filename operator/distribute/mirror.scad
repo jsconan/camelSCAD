@@ -38,9 +38,12 @@
  *
  * @param Vector [interval] - The interval between each elements.
  * @param Vector [axis] - The normal vector of the mirroring plan around which mirror the elements.
- * @param Number [x] - The X interval between each elements (will overwrite the X coordinate in the `interval` vector).
- * @param Number [y] - The Y interval between each elements (will overwrite the Y coordinate in the `interval` vector).
- * @param Number [z] - The Z interval between each elements (will overwrite the Z coordinate in the `interval` vector).
+ * @param Number [intervalX] - The X interval between each repeated children
+ *                             (will overwrite the X coordinate in the `interval` vector).
+ * @param Number [intervalY] - The Y interval between each repeated children
+ *                             (will overwrite the Y coordinate in the `interval` vector).
+ * @param Number [intervalZ] - The Z interval between each repeated children
+ *                             (will overwrite the Z coordinate in the `interval` vector).
  * @param Number [axisX] - The X-coordinate of the normal vector of the mirroring plan around which mirror the elements
  *                         (will overwrite the X coordinate in the `axis` vector).
  * @param Number [axisY] - The Y-coordinate of the normal vector of the mirroring plan around which mirror the elements
@@ -50,10 +53,10 @@
  */
 module distributeMirror(interval = [0, 0, 0],
                         axis     = [1, 0, 0],
-                        x, y, z,
+                        intervalX, intervalY, intervalZ,
                         axisX, axisY, axisZ) {
 
-    interval = apply3D(interval, x, y, z);
+    interval = apply3D(interval, intervalX, intervalY, intervalZ);
     axis = apply3D(axis, axisX, axisY, axisZ);
 
     for (i = [0 : $children - 1]) {

@@ -37,6 +37,7 @@ use <core/type.scad>
 use <core/logic.scad>
 use <core/list.scad>
 use <core/maths.scad>
+use <core/hex.scad>
 use <core/line.scad>
 use <core/vector.scad>
 use <core/vector-2d.scad>
@@ -57,11 +58,14 @@ use <shape/3D/ellipsoid.scad>
 use <shape/3D/rounded.scad>
 use <shape/3D/polyhedron.scad>
 
+use <shape/context/build-box.scad>
+
 testCoreVersion();
 testCoreType();
 testCoreLogic();
 testCoreList();
 testCoreMaths();
+testCoreHex();
 testCoreLine();
 testCoreVector();
 testCoreVector2D();
@@ -81,3 +85,5 @@ testShape2dPolygon();
 testShape3dEllipsoid();
 testShape3dRounded();
 testShape3dPolyhedron();
+
+testShapeContextBuildBox();

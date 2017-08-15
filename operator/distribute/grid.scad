@@ -35,11 +35,9 @@
 /**
  * Distributes the children modules on a grid with the provided `interval`, up to `line` elements per lines.
  *
- * @param Vector [interval] - The interval between each elements.
+ * @param Vector [intervalX] - The interval between each columns.
+ * @param Vector [intervalY] - The interval between each lines.
  * @param Number [line] - The max number of elements per lines.
- * @param Number [x] - The X interval between each elements (will overwrite the X coordinate in the `interval` vector).
- * @param Number [y] - The Y interval between each elements (will overwrite the Y coordinate in the `interval` vector).
- * @param Number [z] - The Z interval between each elements (will overwrite the Z coordinate in the `interval` vector).
  */
 module distributeGrid(intervalX = [1, 0, 0],
                       intervalY = [0, 1, 0],

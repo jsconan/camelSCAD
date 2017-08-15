@@ -34,7 +34,7 @@ use <../../full.scad>
  * @author jsconan
  */
 module testCoreMaths() {
-    testPackage("core/maths.scad", 8) {
+    testPackage("core/maths.scad", 10) {
         // test core/maths/deg()
         testModule("deg()", 3) {
             testUnit("no parameter", 1) {
@@ -455,12 +455,55 @@ module testCoreMaths() {
             testUnit("round value", 8) {
                 assertEqual(fixed(18), 18, "Should return the provided integer");
                 assertEqual(fixed(18, 5), 18, "Should return the provided integer, even if a decimal precision have been provided");
-                assertEqual(fixed(3.14), 3, "Should truncate the number if no precision is provided");
-                assertEqual(fixed(-3.14), -3, "Should truncate the number if no precision is provided");
-                assertEqual(fixed(1.12345678, 3), 1.123, "Should round the number with the provided precision");
-                assertEqual(fixed(1.12345678, 5), 1.12346, "Should round the number with the provided precision");
-                assertEqual(fixed(-1.12345678, 3), -1.123, "Should round the number with the provided precision");
-                assertEqual(fixed(-1.12345678, 5), -1.12346, "Should round the number with the provided precision");
+                assertEqual(fixed(3.14), 3, "Should truncate the positive number if no precision is provided");
+                assertEqual(fixed(-3.14), -3, "Should truncate the negative number if no precision is provided");
+                assertEqual(fixed(1.12345678, 3), 1.123, "Should round the positive number with the provided precision (3)");
+                assertEqual(fixed(1.12345678, 5), 1.12346, "Should round the positive number with the provided precision (5)");
+                assertEqual(fixed(-1.12345678, 3), -1.123, "Should round the negative number with the provided precision (3)");
+                assertEqual(fixed(-1.12345678, 5), -1.12346, "Should round the negative number with the provided precision (5)");
+            }
+        }
+        // test core/maths/roundBy()
+        testModule("roundBy()", 2) {
+            testUnit("default value", 4) {
+                assertEqual(roundBy(), 0, "Should return a 0");
+                assertEqual(roundBy("8"), 0, "Cannot round a string");
+                assertEqual(roundBy(true), 0, "Cannot round a boolean");
+                assertEqual(roundBy([10]), 0, "Cannot round a vector");
+            }
+            testUnit("round value", 12) {
+                assertEqual(roundBy(11), 11, "Should return the provided integer");
+                assertEqual(roundBy(11, unit=0), 11, "Should return the provided integer, even if a zero unit has been provided");
+                assertEqual(roundBy(18, unit=5), 20, "Should round the provided integer to the near unit (18 ~ 20)");
+                assertEqual(roundBy(16, unit=5), 15, "Should round the provided integer to the near unit (16 ~ 15)");
+                assertEqual(roundBy(3.14), 3, "Should truncate the positive number if no unit is provided");
+                assertEqual(roundBy(-3.14), -3, "Should truncate the negative number if no unit is provided");
+                assertEqual(roundBy(1.12345678, unit=.5), 1, "Should round the number to the nearest unit of .5 (1.12345678 ~ 1)");
+                assertEqual(roundBy(1.35, unit=.5), 1.5, "Should round the number to the nearest unit of .5 (1.35 ~ 1.5)");
+                assertEqual(roundBy(1.73, unit=.5), 1.5, "Should round the number to the nearest unit of .5 (1.73 ~ 1.5)");
+                assertEqual(roundBy(1.78, unit=.5), 2, "Should round the number to the nearest unit of .5 (1.78 ~ 2)");
+                assertEqual(roundBy(1.5, .2), 1.6, "Should round the positive number to the nearest unit of .2 (1.5 ~ 1.6)");
+                assertEqual(roundBy(-1.5, .2), -1.6, "Should round the negative number to the nearest unit of .2 (1.5 ~ 1.6)");
+            }
+        }
+        // test core/maths/decimals()
+        testModule("decimals()", 2) {
+            testUnit("default value", 4) {
+                assertEqual(decimals(), 0, "Should return a 0");
+                assertEqual(decimals("8"), 0, "Cannot count decimals in a string");
+                assertEqual(decimals(true), 0, "Cannot count decimals in a boolean");
+                assertEqual(decimals([10]), 0, "Cannot count decimals in a vector");
+            }
+            testUnit("number value", 9) {
+                assertEqual(decimals(18), 0, "Should not count any decimals in the provided integer");
+                assertEqual(decimals(.2), 1, "Should count 1 decimal in this positive number");
+                assertEqual(decimals(-.2), 1, "Should count 1 decimal in this negative number");
+                assertEqual(decimals(3.14), 2, "Should count 2 decimals in this positive number");
+                assertEqual(decimals(-3.14), 2, "Should count 2 decimals in this negative number");
+                assertEqual(decimals(1.123456), 6, "Should count 6 decimals in this positive number");
+                assertEqual(decimals(-1.123456), 6, "Should count 6 decimals in this negative number");
+                assertEqual(decimals(1.12345678), 7, "Should count 7 decimals in this positive number");
+                assertEqual(decimals(-1.12345678), 7, "Should count 7 decimals in this negative number");
             }
         }
     }

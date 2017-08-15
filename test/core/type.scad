@@ -34,7 +34,7 @@ use <../../full.scad>
  * @author jsconan
  */
 module testCoreType() {
-    testPackage("core/type.scad", 18) {
+    testPackage("core/type.scad", 19) {
         // test core/type/isUndef()
         testModule("isUndef()", 2) {
             testUnit("no parameter", 1) {
@@ -90,6 +90,35 @@ module testCoreType() {
                 assertEqual(isInteger("0"), false, "A string is not an integer");
                 assertEqual(isInteger([]), false, "An empty array is not an integer");
                 assertEqual(isInteger([0]), false, "A vector is not an integer");
+            }
+        }
+        // test core/type/isZero()
+        testModule("isZero()", 2) {
+            testUnit("no parameter", 1) {
+                assertEqual(isZero(), false, "No parameter, not a number");
+            }
+            testUnit("parameter", 21) {
+                assertEqual(isZero(undef), false, "Undef is not a number");
+                assertEqual(isZero(false), false, "False is not a number");
+                assertEqual(isZero(true), false, "True is not a number");
+                assertEqual(isZero(0), true, "0 is a equal to 0");
+                assertEqual(isZero(0.0), true, "0.0 is equal to 0");
+                assertEqual(isZero(1e-7), false, "1e-7 is not equal to 0");
+                assertEqual(isZero(1e-9), true, "1e-9 is considered equal to 0");
+                assertEqual(isZero(1e-15), true, "1e-15 is considered equal to 0");
+                assertEqual(isZero(floor(.2)), true, "floor(.2) is equal to 0");
+                assertEqual(isZero(floor(.12345)), true, "floor(.12345) is equal to 0");
+                assertEqual(isZero(2 - floor(2)), true, "2 - floor(2) is equal to 0");
+                assertEqual(isZero(3 - floor(3.22)), true, "3 - floor(3.22) is equal to 0");
+                assertEqual(isZero(32 - floor(32.23)), true, "32 - floor(32.23) is equal to 0");
+                assertEqual(isZero(12), false, "12 is not equal to 0");
+                assertEqual(isZero(3.14), false, "3.14 is not equal to 0");
+                assertEqual(isZero(-2), false, "-2 is not equal to 0");
+                assertEqual(isZero(-5.88), false, "-5.88 is not equal to 0");
+                assertEqual(isZero(""), false, "An empty string is not equal to 0");
+                assertEqual(isZero("0"), false, "A string is not equal to 0");
+                assertEqual(isZero([]), false, "An empty array is not equal to 0");
+                assertEqual(isZero([0]), false, "A vector is not equal to 0");
             }
         }
         // test core/type/isBoolean()

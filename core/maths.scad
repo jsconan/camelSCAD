@@ -33,24 +33,6 @@
  */
 
 /**
- * Degrees in a circle.
- * @type Number
- */
-DEGREES = 360;
-
-/**
- * Minimum value for $fa and $fs.
- * @type Number
- */
-MIN_ANGLE = 0.01;
-
- /**
-  * Minimum allowed size.
-  * @type Number
-  */
-MIN_SIZE = 0.000001;
-
-/**
  * Ensures an angle is defined within degree range (-360..360).
  *
  * @param Number a - The angle.
@@ -143,10 +125,10 @@ function limit(value, low, high) =
 ;
 
 /**
- * Round a value with the requested precision
+ * Rounds a value with the requested precision.
  *
  * @param Number value - The value to round.
- * @param Number precision - The number of decimal digits
+ * @param Number precision - The number of decimal digits.
  * @returns Number
  */
 function fixed(value, precision) =
@@ -154,4 +136,35 @@ function fixed(value, precision) =
         precision = pow(10, float(precision))
     )
     round(float(value) * precision) / precision
+;
+
+/**
+ * Rounds a value by the provided unit.
+ *
+ * @param Number value - The value to round.
+ * @param Number unit - The value to round.
+ * @returns Number
+ */
+function roundBy(value, unit) =
+    let(
+        unit = divisor(unit)
+    )
+    round(float(value) / unit) * unit
+;
+
+/**
+ * Counts the number of decimals in the fractional part of the number.
+ *
+ * @param Number value - The value to analyse.
+ * @returns Number
+ */
+function decimals(value) =
+    let(
+        value = abs(float(value))
+    )
+    isZero(value) ? 0
+   :let(
+        value = value - floor(value)
+    )
+    isZero(value) ? 0 : min(1 + decimals(value * 10), MAX_DECIMALS)
 ;

@@ -26,55 +26,35 @@
 /**
  * Part of the camelSCAD library.
  *
- * Rendering mode.
+ * Takes a sample of the scene.
  *
- * @package core/mode
+ * @package operator
  * @author jsconan
  */
 
 /**
- * Specifications for each rendering modes.
- * Each mode is defined this way: ["name", value for $fa, value for $fs]
- * @type Vector
+ * Takes a sample of the scene and place it at the origin.
+ * @param Number|Vector [size] - The size of sample.
+ * @param Number|Vector [offset] - The position of the sample center. Will be the on the bottom face if center=false,
+                                   and on the actual center if center=true.
+ * @param Number [l] - The overall length.
+ * @param Number [w] - The overall width.
+ * @param Number [h] - The overall height.
+ * @param Number [x] - The horizontal offset.
+ * @param Number [y] - The depth offset.
+ * @param Number [z] - The vertical offset.
+ * @param Boolean [center] - Whether or not center the sample on the vertical axis.
  */
-MODES = [
-    [MODE_DIRTY, 6, 2],
-    [MODE_DEV, 1, 1.5],
-    [MODE_PROD, .5, .5]
-];
+module sample(size, offset, l, w, h, x, y, z, center) {
+    size = apply3D(size, l, w, h);
+    offset = apply3D(offset, x, y, z);
 
-/**
- * Gets the specifications of a particular rendering mode.
- *
- * @param String [mode] - The mode for which get the specifications.
- * @returns Vector
- */
-function renderMode(mode) = fetch(MODES, or(mode, DEFAULT_MODE));
-
-/**
- * Gets the minimum facet angle for a particular rendering mode.
- *
- * @param String [mode] - The mode for which get the specification.
- * @returns Number
- */
-function facetAngle(mode) = renderMode(mode)[1];
-
-/**
- * Gets the minimum facet size for a particular rendering mode.
- *
- * @param String [mode] - The mode for which get the specification.
- * @returns Number
- */
-function facetSize(mode) = renderMode(mode)[2];
-
-/**
- * Applies a render mode onto the children modules.
- *
- * @param String [mode] - The mode to apply on the children modules.
- */
-module applyMode(mode) {
-    $fa = facetAngle(mode);
-    $fs = facetSize(mode);
-
-    children();
+    translate(-offset) {
+        intersection() {
+            translate(offset) {
+                box(size, center=center);
+            }
+            children();
+        }
+    }
 }

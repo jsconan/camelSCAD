@@ -39,12 +39,12 @@
  * @param Number [count] - The number of times the children must be repeated.
  * @param Vector [interval] - The interval between each repeated children.
  * @param Vector [axis] - The normal vector of the mirroring plan around which mirror the children.
- * @param Number [x] - The X interval between each repeated children
- *                     (will overwrite the X coordinate in the `interval` vector).
- * @param Number [y] - The Y interval between each repeated children
- *                     (will overwrite the Y coordinate in the `interval` vector).
- * @param Number [z] - The Z interval between each repeated children
- *                     (will overwrite the Z coordinate in the `interval` vector).
+ * @param Number [intervalX] - The X interval between each repeated children
+ *                             (will overwrite the X coordinate in the `interval` vector).
+ * @param Number [intervalY] - The Y interval between each repeated children
+ *                             (will overwrite the Y coordinate in the `interval` vector).
+ * @param Number [intervalZ] - The Z interval between each repeated children
+ *                             (will overwrite the Z coordinate in the `interval` vector).
  * @param Number [axisX] - The X-coordinate of the normal vector of the mirroring plan around which mirror the children
  *                         (will overwrite the X coordinate in the `axis` vector).
  * @param Number [axisY] - The Y-coordinate of the normal vector of the mirroring plan around which mirror the children
@@ -55,10 +55,10 @@
 module repeatMirror(count    = 2,
                     interval = [0, 0, 0],
                     axis     = [1, 0, 0],
-                    x, y, z,
+                    intervalX, intervalY, intervalZ,
                     axisX, axisY, axisZ) {
 
-    interval = apply3D(interval, x, y, z);
+    interval = apply3D(interval, intervalX, intervalY, intervalZ);
     axis = apply3D(axis, axisX, axisY, axisZ);
 
     for (i = [0 : count - 1]) {
