@@ -33,7 +33,7 @@
  */
 
 /**
- * Extrudes linearly the children modules, and apply a wall adjustment to ensure
+ * Extrudes linearly the children modules, and applies a wall adjustment to ensure
  * the final object will not produce artifacts after a `difference()` operation.
  *
  * @param Number [height] - The height of the extrusion. If the value is negative,
