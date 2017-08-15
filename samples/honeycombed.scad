@@ -9,6 +9,7 @@
 
 // As we need to use some shapes, use the right entry point of the library
 use <../shapes.scad>
+include <../core/constants.scad>
 
 /**
  * Renders a honeycomb at the origin.
@@ -29,7 +30,7 @@ module honeycomb(size, thickness) {
         hexagonBox(l=width, w=width, h=size[2], adjust=adjust);
 
         // This is the inside of the honeycomb
-        translate([0, 0, thickness]) {
+        translateZ(thickness) {
             hexagonBox(l=innerWidth, w=innerWidth, h=size[2], adjust=adjust);
         }
     }
@@ -37,7 +38,7 @@ module honeycomb(size, thickness) {
 }
 
 // We will render the object using the specifications of this mode
-renderMode = "prod";
+renderMode = MODE_PROD;
 
 // Defines the dimensions of the honeycomb
 length = 60;
@@ -55,10 +56,9 @@ nbX = 4;
 nbY = 4;
 
 // Sets the minimum facet angle and size using the defined render mode.
-$fa = facetAngle(renderMode);
-$fs = facetSize(renderMode);
-
-// The honeycombed box is drawed by rendering several honeycombs using the repeat2D operator
-repeat2D(countX=nbX, countY=nbY, intervalX=[length - spaceX, spaceY / 2, 0], intervalY=[0, spaceY, 0]) {
-    honeycomb(size = [length, width, height], thickness=thickness);
+applyMode(renderMode) {
+    // The honeycombed box is drawed by rendering several honeycombs using the repeat2D operator
+    repeat2D(countX=nbX, countY=nbY, intervalX=[length - spaceX, spaceY / 2, 0], intervalY=[0, spaceY, 0]) {
+        honeycomb(size = [length, width, height], thickness=thickness);
+    }
 }

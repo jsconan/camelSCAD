@@ -9,6 +9,7 @@
 
 // As we need to use some shapes, use the right entry point of the library
 use <../shapes.scad>
+include <../core/constants.scad>
 
 /**
  * Renders a rounded box at the origin.
@@ -38,7 +39,7 @@ module simpleBox(size, thickness, radius) {
         cushion(size=size, r=radius);
 
         // This is the inside of the box
-        translate([0, 0, thickness]) {
+        translateZ(thickness) {
             cushion(size=apply3D(size, x=size[0] - thickness * 2, y=size[1] - thickness * 2), r=radius-thickness/2);
         }
 
@@ -53,7 +54,7 @@ module simpleBox(size, thickness, radius) {
 }
 
 // We will render the object using the specifications of this mode
-renderMode = "prod";
+renderMode = MODE_PROD;
 
 // Defines the dimensions of the box
 length = 100;
@@ -63,18 +64,17 @@ thickness = 1;
 radius = 5;
 
 // Sets the minimum facet angle and size using the defined render mode.
-$fa = facetAngle(renderMode);
-$fs = facetSize(renderMode);
+applyMode(renderMode) {
+    // And draw the box accordingly
+    simpleBox(size = [length, width, height], thickness=thickness, radius=radius);
 
-// And draw the box accordingly
-simpleBox(size = [length, width, height], thickness=thickness, radius=radius);
-
-// You may also draw a cover by rendering another box that has an increased size with respect to the wall thickness...
-%translate([0, 0, height + thickness]) {
-    rotateX(180) {
-        // Use an additional adjustment value (0.1) to counter the printer's precision lack and
-        // allow to put the cover in place once printed.
-        sizeAdjust = thickness * 2 + 0.1;
-        simpleBox(size = [length + sizeAdjust, width + sizeAdjust, height + thickness], thickness=thickness, radius=radius);
+    // We may also draw a cover by rendering another box that has an increased size with respect to the wall thickness...
+    %translateZ(height + thickness) {
+        rotateX(180) {
+            // Use an additional adjustment value (0.1) to counter the printer's precision lack and
+            // allow to put the cover in place once printed.
+            sizeAdjust = thickness * 2 + 0.1;
+            simpleBox(size = [length + sizeAdjust, width + sizeAdjust, height + thickness], thickness=thickness, radius=radius);
+        }
     }
 }

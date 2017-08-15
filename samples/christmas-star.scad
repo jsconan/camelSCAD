@@ -9,9 +9,10 @@
 
 // As we need to use some shapes, use the right entry point of the library
 use <../shapes.scad>
+include <../core/constants.scad>
 
 // We will render the object using the specifications of this mode
-renderMode = "prod";
+renderMode = MODE_PROD;
 
 // Defines the dimensions of the star
 radius = 40;
@@ -22,11 +23,7 @@ ringDiameter = holeDiameter + ringThickness * 2;
 coreRadius = (radius * 2) * (1 - 3 / 5);
 
 // Sets the minimum facet angle and size using the defined render mode.
-$fa = facetAngle(renderMode);
-$fs = facetSize(renderMode);
-
-// And draw the star
-union() {
+applyMode(renderMode) {
     // This is the frame of the star
     difference() {
         starBox(size=radius, h=thickness, edges=5, center=true);

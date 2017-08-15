@@ -9,6 +9,7 @@
 
 // Only include the core of the library as only the render mode helpers are needed
 use <../core.scad>
+include <../core/constants.scad>
 
 // Defines the list of shapes sizes
 DEMO_RANGE = [1 : 10];
@@ -27,9 +28,10 @@ DEMO_FONT_SIZE = 10;
 
 // The list of render modes to illustrate
 DEMO_MODES = [
-    [[.5, 0, 0], "dirty"],
-    [[0, .5, 0], "dev"],
-    [[0, 0, .5], "prod"],
+    [null, null], // MODE_DEFAULT
+    [[.5, 0, 0], MODE_DIRTY],
+    [[0, .5, 0], MODE_DEV],
+    [[0, 0, .5], MODE_PROD],
 ];
 
 /**
@@ -38,37 +40,25 @@ DEMO_MODES = [
  */
 module demo(mode) {
     // Draw some shapes
-    for(i = DEMO_RANGE) {
-        translate([DEMO_OFFSET_X + DEMO_STEP * i, 0, 0]) {
-            sphere(i);
+    applyMode(mode) {
+        for(i = DEMO_RANGE) {
+            translate([DEMO_OFFSET_X + DEMO_STEP * i, 0, 0]) {
+                sphere(i);
+            }
         }
     }
 
     // Display the mode name
-    text(mode, DEMO_FONT_SIZE, halign="center", valign="center");
+    text(or(mode, "default"), DEMO_FONT_SIZE, halign="center", valign="center");
 }
-
-/**
- * Sets the minimum facet angle and size using the default render mode.
- */
-$fa = facetAngle();
-$fs = facetSize();
 
 /**
  * Will apply each render mode and will illustrate them by drawing some shapes
  */
-translate([DEMO_OFFSET_X, 0, 0]) {
-    demo("default");
-}
 for (i = [0 : len(DEMO_MODES) - 1]) {
-    translate([DEMO_OFFSET_X, (i + 1) * DEMO_OFFSET_Y, 0]) {
+    translate([DEMO_OFFSET_X, (i + .5) * DEMO_OFFSET_Y, 0]) {
         color(DEMO_MODES[i][0]) {
-            mode = DEMO_MODES[i][1];
-
-            $fa = facetAngle(mode);
-            $fs = facetSize(mode);
-
-            demo(mode);
+            demo(DEMO_MODES[i][1]);
         }
     }
 }
