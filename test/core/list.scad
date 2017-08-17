@@ -34,7 +34,7 @@ use <../../full.scad>
  * @author jsconan
  */
 module testCoreList() {
-    testPackage("core/list.scad", 18) {
+    testPackage("core/list.scad", 19) {
         // test core/list/fill()
         testModule("fill()", 4) {
             testUnit("no parameter", 1) {
@@ -334,6 +334,31 @@ module testCoreList() {
                 assertEqual(slice([1, 2, 3, 4, 5], 1, 20), [2, 3, 4, 5], "When the end boundary is longer than the length it should return all elements till the length is reached");
                 assertEqual(slice([1, 2, 3, 4, 5], 10), [], "When the start boundary is longer than the length it should return an empty array");
                 assertEqual(slice([1], end=-1), [], "When the end boundary is leser than the start it should return an empty array");
+            }
+        }
+        // test core/list/splice()
+        testModule("splice()", 3) {
+            testUnit("no parameter", 1) {
+                assertEmptyArray(splice(), "Parameters are needed to produce a sliced array, otherwise return []");
+            }
+            testUnit("not array", 3) {
+                assertEmptyArray(splice(1, 1, 1), "Cannot slice a number, should return []");
+                assertEmptyArray(splice("123", 1, 2), "Cannot slice a string, should return []");
+                assertEmptyArray(splice(true, false, true), "Cannot slice a boolean, should return []");
+            }
+            testUnit("array", 12) {
+                assertEqual(splice([1, 2, 3, 4, 5]), [], "If only the array is provided, should return an empty array");
+                assertEqual(splice([1, 2, 3, 4, 5], 2), [1, 2], "When the start index is provided but no count the array should be truncated");
+                assertEqual(splice([1, 2, 3, 4, 5], 1, 3), [1, 5], "When the start index and the count are provided, the elements should be removed");
+                assertEqual(splice([1, 2, 3, 4, 5], 1, 3, [22, 33]), [1, 22, 33, 5], "When the start index and the count are provided, the elements should be removed and replaced");
+                assertEqual(splice([], 1, 3, [22, 33]), [22, 33], "When the array is empty, the elements to add should be inserted");
+                assertEqual(splice([1, 2, 3, 4, 5], -2), [1, 2, 3], "When the start index is provided and is negative, the array should be truncated from the end");
+                assertEqual(splice([1, 2, 3, 4, 5], -3, 2), [1, 2, 5], "When the start index is provided and is negative, the elements should be removed from the end");
+                assertEqual(splice([1, 2, 3, 4, 5], 1, 20), [1], "When the amount of elements to remove is greater that the number of left elements after the start index, the array should jusr be truncated");
+                assertEqual(splice([1, 2, 3, 4, 5], 10), [1, 2, 3, 4, 5], "When the start index is after the end of the array, the array should be untouched");
+                assertEqual(splice([1, 2, 3, 4, 5], -10), [], "When the start index is before the beginning of the array, the array should be truncated");
+                assertEqual(splice([1, 2, 3, 4, 5], -10, 6), [], "When the start index is before the beginning of the array, the array should be truncated if the number of elements to delete is greater or equal to the length");
+                assertEqual(splice([1, 2, 3, 4, 5], -10, 2), [3, 4, 5], "When the start index is before the beginning of the array, the array should be truncated by the number of elements to delete");
             }
         }
         // test core/list/first()

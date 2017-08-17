@@ -165,6 +165,33 @@ function slice(collection, start, end) =
 ;
 
 /**
+ * Changes the contents of an array by removing existing elements and/or adding new elements.
+ *
+ * @param Array collection - The collection to slice.
+ * @param Number [start] - The index at which to start changing the array. If negative, will start from the end.
+ * @param Number [remove] - The number of elements to remove.
+ * @param Array [elems] - The elements to add to the array, beginning at the start index.
+ * @returns Array
+ */
+function splice(collection, start, remove, elems) =
+    let(
+        collection = arrayOr(collection, []),
+        elems = arrayOr(elems, []),
+        length = len(collection),
+        start = min(start < 0 ? max(0, length + start) : integer(start), length),
+        next = start + numberOr(remove, length - start),
+        last = length - 1
+    )
+    length || len(elems)
+   ?concat(
+       length && start > 0 ? [ for (i = [0 : start - 1]) collection[i] ] : [],
+       elems,
+       length && next <= last ? [ for (i = [next : last]) collection[i] ] : []
+    )
+   :[]
+;
+
+/**
  * Gets the N first elements of an array.
  *
  * @param Array collection - The collection from which get the elements.
