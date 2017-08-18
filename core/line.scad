@@ -76,13 +76,15 @@ function arc(r, a=DEGREES, o, a1, a2) =
  * @param Number p - The phase of the sinusoid (the start angle).
  * @param Number o - The offset of the sinusoid.
  * @param Number a - A rotation angle.
- * @returns Vector
+ * @returns Vector[]
  */
 function sinusoid(l, w, h, p, o, a) =
     let(
         a = deg(a),
         l = float(l),
-        step = l / fragments(l)
+        w = divisor(w),
+        h = divisor(h),
+        step = l / (fragments(h) * l / w)
     )
     [
         for (x = [0 : step : l])
@@ -101,13 +103,15 @@ function sinusoid(l, w, h, p, o, a) =
  * @param Number p - The phase of the cosinusoid (the start angle).
  * @param Number o - The offset of the cosinusoid.
  * @param Number a - A rotation angle.
- * @returns Vector
+ * @returns Vector[]
  */
 function cosinusoid(l, w, h, p, o, a) =
     let(
         a = deg(a),
         l = float(l),
-        step = l / fragments(l)
+        w = divisor(w),
+        h = divisor(h),
+        step = l / (fragments(h) * l / w)
     )
     [
         for (y = [0 : step : l])

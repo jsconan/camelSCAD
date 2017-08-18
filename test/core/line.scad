@@ -97,18 +97,22 @@ module testCoreLine() {
                 assertEqual(sinusoid([1], [1]), [], "Cannot build a sinusoid using vectors, should return an empty array");
             }
             testUnit("straight", 5) {
-                assertEqual(sinusoid(1, $fn=6), [ for (a = [0 : 1/6 : 1]) [a, sin(360 * a)] ], "Should build a simple sinusoid with a length of 1 and 6 segments");
-                assertEqual(sinusoid(1, 2, $fn=6), [ for (a = [0 : 1/6 : 1]) [a, sin(360 * a / 2)] ], "Should build a simple sinusoid with a length of 1, a period of 2 and 6 segments");
-                assertEqual(sinusoid(1, 2, 4, $fn=6), [ for (a = [0 : 1/6 : 1]) [a, 4 * sin(360 * a / 2)] ], "Should build a simple sinusoid with a length of 1, a period of 2, an amplitude of 4 and 6 segments");
-                assertEqual(sinusoid(1, 2, 4, 6, $fn=6), [ for (a = [0 : 1/6 : 1]) [a, 4 * sin(360 * a / 2 + 6)] ], "Should build a simple sinusoid with a length of 1, a period of 2, an amplitude of 4, a delay of 6 and 6 segments");
-                assertEqual(sinusoid(1, 2, 4, 6, 8, $fn=6), [ for (a = [0 : 1/6 : 1]) [a, 4 * sin(360 * a / 2 + 6) + 8] ], "Should build a simple sinusoid with a length of 1, a period of 2, an amplitude of 4, a delay of 6, an offset of 8 and 6 segments");
+                $fn = 6;
+                step = 1 / $fn;
+                assertEqual(sinusoid(1), [ for (a = [0 : step : 1]) [a, sin(360 * a)] ], "Should build a simple sinusoid with a length of 1 and 6 segments");
+                assertEqual(sinusoid(1, 2), [ for (a = [0 : step*2 : 1]) [a, sin(360 * a / 2)] ], "Should build a simple sinusoid with a length of 1, a period of 2 and 6 segments");
+                assertEqual(sinusoid(1, 2, 4), [ for (a = [0 : step*2 : 1]) [a, 4 * sin(360 * a / 2)] ], "Should build a simple sinusoid with a length of 1, a period of 2, an amplitude of 4 and 6 segments");
+                assertEqual(sinusoid(1, 2, 4, 6), [ for (a = [0 : step*2 : 1]) [a, 4 * sin(360 * a / 2 + 6)] ], "Should build a simple sinusoid with a length of 1, a period of 2, an amplitude of 4, a delay of 6 and 6 segments");
+                assertEqual(sinusoid(1, 2, 4, 6, 8), [ for (a = [0 : step*2 : 1]) [a, 4 * sin(360 * a / 2 + 6) + 8] ], "Should build a simple sinusoid with a length of 1, a period of 2, an amplitude of 4, a delay of 6, an offset of 8 and 6 segments");
             }
             testUnit("rotated", 5) {
-                assertEqual(sinusoid(3, a=70, $fn=8), [ for (a = [0 : 3/8 : 3]) _rot2([a, sin(360 * a)], 70) ], "Should build a sinusoid rotated by 70° with a length of 1 and 6 segments");
-                assertEqual(sinusoid(3, 2, a=70, $fn=8), [ for (a = [0 : 3/8 : 3]) _rot2([a, sin(360 * a / 2)], 70) ], "Should build a sinusoid rotated by 70° with a length of 1, a period of 2 and 6 segments");
-                assertEqual(sinusoid(3, 2, 4, a=70, $fn=8), [ for (a = [0 : 3/8 : 3]) _rot2([a, 4 * sin(360 * a / 2)], 70) ], "Should build a sinusoid rotated by 70° with a length of 1, a period of 2, an amplitude of 4 and 6 segments");
-                assertEqual(sinusoid(3, 2, 4, 6, a=70, $fn=8), [ for (a = [0 : 3/8 : 3]) _rot2([a, 4 * sin(360 * a / 2 + 6)], 70) ], "Should build a sinusoid rotated by 70° with a length of 1, a period of 2, an amplitude of 4, a delay of 6 and 6 segments");
-                assertEqual(sinusoid(3, 2, 4, 6, 8, a=70, $fn=8), [ for (a = [0 : 3/8 : 3]) _rot2([a, 4 * sin(360 * a / 2 + 6) + 8], 70) ], "Should build a sinusoid rotated by 70° with a length of 1, a period of 2, an amplitude of 4, a delay of 6, an offset of 8 and 6 segments");
+                $fn = 8;
+                step = 1 / $fn;
+                assertEqual(sinusoid(3, a=70), [ for (a = [0 : step : 3]) _rot2([a, sin(360 * a)], 70) ], "Should build a sinusoid rotated by 70° with a length of 1 and 6 segments");
+                assertEqual(sinusoid(3, 2, a=70), [ for (a = [0 : step*2 : 3]) _rot2([a, sin(360 * a / 2)], 70) ], "Should build a sinusoid rotated by 70° with a length of 1, a period of 2 and 6 segments");
+                assertEqual(sinusoid(3, 2, 4, a=70), [ for (a = [0 : step*2 : 3]) _rot2([a, 4 * sin(360 * a / 2)], 70) ], "Should build a sinusoid rotated by 70° with a length of 1, a period of 2, an amplitude of 4 and 6 segments");
+                assertEqual(sinusoid(3, 2, 4, 6, a=70), [ for (a = [0 : step*2 : 3]) _rot2([a, 4 * sin(360 * a / 2 + 6)], 70) ], "Should build a sinusoid rotated by 70° with a length of 1, a period of 2, an amplitude of 4, a delay of 6 and 6 segments");
+                assertEqual(sinusoid(3, 2, 4, 6, 8, a=70), [ for (a = [0 : step*2 : 3]) _rot2([a, 4 * sin(360 * a / 2 + 6) + 8], 70) ], "Should build a sinusoid rotated by 70° with a length of 1, a period of 2, an amplitude of 4, a delay of 6, an offset of 8 and 6 segments");
             }
         }
         // test core/line/cosinusoid()
@@ -122,18 +126,22 @@ module testCoreLine() {
                 assertEqual(cosinusoid([1], [1]), [], "Cannot build a sinusoid using vectors, should return an empty array");
             }
             testUnit("straight", 5) {
-                assertEqual(cosinusoid(1, $fn=6), [ for (a = [0 : 1/6 : 1]) [cos(360 * a), a] ], "Should build a simple sinusoid with a length of 1 and 6 segments");
-                assertEqual(cosinusoid(1, 2, $fn=6), [ for (a = [0 : 1/6 : 1]) [cos(360 * a / 2), a] ], "Should build a simple sinusoid with a length of 1, a period of 2 and 6 segments");
-                assertEqual(cosinusoid(1, 2, 4, $fn=6), [ for (a = [0 : 1/6 : 1]) [4 * cos(360 * a / 2), a] ], "Should build a simple sinusoid with a length of 1, a period of 2, an amplitude of 4 and 6 segments");
-                assertEqual(cosinusoid(1, 2, 4, 6, $fn=6), [ for (a = [0 : 1/6 : 1]) [4 * cos(360 * a / 2 + 6), a] ], "Should build a simple sinusoid with a length of 1, a period of 2, an amplitude of 4, a delay of 6 and 6 segments");
-                assertEqual(cosinusoid(1, 2, 4, 6, 8, $fn=6), [ for (a = [0 : 1/6 : 1]) [4 * cos(360 * a / 2 + 6) + 8, a] ], "Should build a simple sinusoid with a length of 1, a period of 2, an amplitude of 4, a delay of 6, an offset of 8 and 6 segments");
+                $fn = 6;
+                step = 1 / $fn;
+                assertEqual(cosinusoid(1), [ for (a = [0 : step : 1]) [cos(360 * a), a] ], "Should build a simple sinusoid with a length of 1 and 6 segments");
+                assertEqual(cosinusoid(1, 2), [ for (a = [0 : step*2 : 1]) [cos(360 * a / 2), a] ], "Should build a simple sinusoid with a length of 1, a period of 2 and 6 segments");
+                assertEqual(cosinusoid(1, 2, 4), [ for (a = [0 : step*2 : 1]) [4 * cos(360 * a / 2), a] ], "Should build a simple sinusoid with a length of 1, a period of 2, an amplitude of 4 and 6 segments");
+                assertEqual(cosinusoid(1, 2, 4, 6), [ for (a = [0 : step*2 : 1]) [4 * cos(360 * a / 2 + 6), a] ], "Should build a simple sinusoid with a length of 1, a period of 2, an amplitude of 4, a delay of 6 and 6 segments");
+                assertEqual(cosinusoid(1, 2, 4, 6, 8), [ for (a = [0 : step*2 : 1]) [4 * cos(360 * a / 2 + 6) + 8, a] ], "Should build a simple sinusoid with a length of 1, a period of 2, an amplitude of 4, a delay of 6, an offset of 8 and 6 segments");
             }
             testUnit("rotated", 5) {
-                assertEqual(cosinusoid(3, a=70, $fn=8), [ for (a = [0 : 3/8 : 3]) _rot2([cos(360 * a), a], 70) ], "Should build a sinusoid rotated by 70° with a length of 1 and 6 segments");
-                assertEqual(cosinusoid(3, 2, a=70, $fn=8), [ for (a = [0 : 3/8 : 3]) _rot2([cos(360 * a / 2), a], 70) ], "Should build a sinusoid rotated by 70° with a length of 1, a period of 2 and 6 segments");
-                assertEqual(cosinusoid(3, 2, 4, a=70, $fn=8), [ for (a = [0 : 3/8 : 3]) _rot2([4 * cos(360 * a / 2), a], 70) ], "Should build a sinusoid rotated by 70° with a length of 1, a period of 2, an amplitude of 4 and 6 segments");
-                assertEqual(cosinusoid(3, 2, 4, 6, a=70, $fn=8), [ for (a = [0 : 3/8 : 3]) _rot2([4 * cos(360 * a / 2 + 6), a], 70) ], "Should build a sinusoid rotated by 70° with a length of 1, a period of 2, an amplitude of 4, a delay of 6 and 6 segments");
-                assertEqual(cosinusoid(3, 2, 4, 6, 8, a=70, $fn=8), [ for (a = [0 : 3/8 : 3]) _rot2([4 * cos(360 * a / 2 + 6) + 8, a], 70) ], "Should build a sinusoid rotated by 70° with a length of 1, a period of 2, an amplitude of 4, a delay of 6, an offset of 8 and 6 segments");
+                $fn = 8;
+                step = 1 / $fn;
+                assertEqual(cosinusoid(3, a=70), [ for (a = [0 : step : 3]) _rot2([cos(360 * a), a], 70) ], "Should build a sinusoid rotated by 70° with a length of 1 and 6 segments");
+                assertEqual(cosinusoid(3, 2, a=70, $fn=8), [ for (a = [0 : step*2 : 3]) _rot2([cos(360 * a / 2), a], 70) ], "Should build a sinusoid rotated by 70° with a length of 1, a period of 2 and 6 segments");
+                assertEqual(cosinusoid(3, 2, 4, a=70, $fn=8), [ for (a = [0 : step*2 : 3]) _rot2([4 * cos(360 * a / 2), a], 70) ], "Should build a sinusoid rotated by 70° with a length of 1, a period of 2, an amplitude of 4 and 6 segments");
+                assertEqual(cosinusoid(3, 2, 4, 6, a=70, $fn=8), [ for (a = [0 : step*2 : 3]) _rot2([4 * cos(360 * a / 2 + 6), a], 70) ], "Should build a sinusoid rotated by 70° with a length of 1, a period of 2, an amplitude of 4, a delay of 6 and 6 segments");
+                assertEqual(cosinusoid(3, 2, 4, 6, 8, a=70, $fn=8), [ for (a = [0 : step*2 : 3]) _rot2([4 * cos(360 * a / 2 + 6) + 8, a], 70) ], "Should build a sinusoid rotated by 70° with a length of 1, a period of 2, an amplitude of 4, a delay of 6, an offset of 8 and 6 segments");
             }
         }
     }
