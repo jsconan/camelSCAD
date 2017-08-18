@@ -63,6 +63,36 @@ DEFAULT_MODE = MODE_DEV;
 DEGREES = 360;
 
 /**
+ * Degrees of a straight angle.
+ * @type Number
+ */
+STRAIGHT = 180;
+
+/**
+ * The end angle of the first quadrant in a circle.
+ * @type Number
+ */
+QUADRANT_1 = 90;
+
+/**
+ * The end angle of the second quadrant in a circle.
+ * @type Number
+ */
+QUADRANT_2 = 180;
+
+/**
+ * The end angle of the third quadrant in a circle.
+ * @type Number
+ */
+QUADRANT_3 = 270;
+
+/**
+ * The end angle of the fourth quadrant in a circle.
+ * @type Number
+ */
+QUADRANT_4 = 360;
+
+/**
  * Useful value for computations based on hexagons.
  * @type Number
  */
