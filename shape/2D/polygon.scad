@@ -83,7 +83,7 @@ function sizeTrapezium(size, a, b, w) =
 function sizeRegularPolygon(size, n, l, w, s) =
     let(
         n = max(3, float(n)),
-        size = (s && !size && !l && !w) ? vector2D(2 * divisor(s) / (2 * sin(180 / n)))
+        size = (s && !size && !l && !w) ? vector2D(2 * divisor(s) / (2 * sin(STRAIGHT / n)))
                                         : apply2D(size, l, w)
     )
     [
@@ -180,7 +180,7 @@ function drawRegularPolygon(size, n, l, w, s) =
     )
     [
         for(i = [0 : n - 1])
-            arcp(radius, i * step + 90)
+            arcp(radius, i * step + RIGHT)
     ]
 ;
 
@@ -250,7 +250,7 @@ function drawStar(size, core, edges, l, w, cl, cw) =
             let(
                 e = floor(i / 2),
                 m = i % 2,
-                a = angle * e + (m ? step : 0) + 90
+                a = angle * e + (m ? step : 0) + RIGHT
             )
             [
                 cos(a) * (m ? inner[0] : outer[0]),

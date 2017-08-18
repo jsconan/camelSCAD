@@ -113,7 +113,7 @@ function drawEllipse(r, d, rx, ry, dx, dy) =
  * @param Number [dy] - The vertical diameter.
  * @returns Vector[]
  */
-function drawPie(r, a=90, d, a1, a2, rx, ry, dx, dy) =
+function drawPie(r, a=RIGHT, d, a1, a2, rx, ry, dx, dy) =
     let (
         a1 = deg(a1),
         a2 = a2 != undef ? deg(a2) : a1 + deg(a),
@@ -154,7 +154,7 @@ module ellipse(r, d, rx, ry, dx, dy) {
  * @param Number [dx] - The horizontal diameter.
  * @param Number [dy] - The vertical diameter.
  */
-module pie(r, a=90, d, a1, a2, rx, ry, dx, dy) {
+module pie(r, a=RIGHT, d, a1, a2, rx, ry, dx, dy) {
     polygon(
         points = drawPie(r=r, a=a, d=d, a1=a1, a2=a2, rx=rx, ry=ry, dx=dx, dy=dy),
         convexity = 10
@@ -174,7 +174,7 @@ module pie(r, a=90, d, a1, a2, rx, ry, dx, dy) {
  * @param Number [dx] - The horizontal diameter.
  * @param Number [dy] - The vertical diameter.
  */
-module chord(r, a=90, d, a1, a2, rx, ry, dx, dy) {
+module chord(r, a=RIGHT, d, a1, a2, rx, ry, dx, dy) {
     polygon(
         points = arc(v=sizeEllipse(r=r, d=d, rx=rx, ry=ry, dx=dx, dy=dy), a=a, a1=a1, a2=a2),
         convexity = 10
