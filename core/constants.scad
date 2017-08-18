@@ -78,25 +78,25 @@ STRAIGHT = 180;
  * The end angle of the first quadrant in a circle.
  * @type Number
  */
-QUADRANT_1 = 90;
+QUADRANT_1 = RIGHT;
 
 /**
  * The end angle of the second quadrant in a circle.
  * @type Number
  */
-QUADRANT_2 = 180;
+QUADRANT_2 = STRAIGHT;
 
 /**
  * The end angle of the third quadrant in a circle.
  * @type Number
  */
-QUADRANT_3 = 270;
+QUADRANT_3 = DEGREES - RIGHT;
 
 /**
  * The end angle of the fourth quadrant in a circle.
  * @type Number
  */
-QUADRANT_4 = 360;
+QUADRANT_4 = DEGREES;
 
 /**
  * Useful value for computations based on hexagons.
