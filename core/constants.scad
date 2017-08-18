@@ -63,6 +63,12 @@ DEFAULT_MODE = MODE_DEV;
 DEGREES = 360;
 
 /**
+ * Degrees of a right angle.
+ * @type Number
+ */
+RIGHT = 90;
+
+/**
  * Degrees of a straight angle.
  * @type Number
  */
