@@ -309,7 +309,7 @@ function drawBullet(size, r, d, l, w, h, rx, ry, dx, dy) =
         center = [
             0, size[2] - radius[1]
         ],
-        points = arc(r=radius, o=center, a=90)
+        points = arc(r=radius, o=center, a=RIGHT)
     )
     complete(points, [radius[0], 0], [0, 0])
 ;
@@ -338,10 +338,10 @@ function drawPill(size, r, d, l, w, h, rx, ry, dx, dy) =
             0, size[2] / 2 - radius[1]
         ]
     )
-    center == [0, 0] ? arc(r=radius, a1=-90, a2=90)
+    center == [0, 0] ? arc(r=radius, a1=-RIGHT, a2=RIGHT)
    :concat(
-        arc(r=radius, o=-center, a=-90),
-        arc(r=radius, o=center, a=90)
+        arc(r=radius, o=-center, a=-RIGHT),
+        arc(r=radius, o=center, a=RIGHT)
     )
 ;
 
@@ -373,11 +373,11 @@ function drawPeg(size, r, d, l, w, h, rx, ry, dx, dy) =
         ]
     )
     radius == [0, 0] ? [ [right, top], [0, top], [0, -top], [right, -top] ]
-   :center == [0, 0] ? arc(r=radius, a1=-90, a2=90)
+   :center == [0, 0] ? arc(r=radius, a1=-RIGHT, a2=RIGHT)
    :complete(
         concat(
-            arc(r=radius, o=[center[0], -center[1]], a1=270, a2=360),
-            arc(r=radius, o=center, a1=0, a2=90)
+            arc(r=radius, o=[center[0], -center[1]], a1=QUADRANT_3, a2=QUADRANT_4),
+            arc(r=radius, o=center, a1=0, a2=QUADRANT_1)
         ),
         [0, -top],
         [0, top]
@@ -407,7 +407,7 @@ function drawPlate(size, r, d, w, h, rx, ry, dx, dy) =
         center = [
             max(size[0], size[1]) / 2 - radius[0], 0
         ],
-        points = arc(r=radius, o=center, a1=-90, a2=90)
+        points = arc(r=radius, o=center, a1=-RIGHT, a2=RIGHT)
     )
     center == [0, 0] ? points
    :complete(points, -[0, radius[1]], [0, radius[1]])

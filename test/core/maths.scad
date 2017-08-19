@@ -34,7 +34,7 @@ use <../../full.scad>
  * @author jsconan
  */
 module testCoreMaths() {
-    testPackage("core/maths.scad", 10) {
+    testPackage("core/maths.scad", 11) {
         // test core/maths/deg()
         testModule("deg()", 3) {
             testUnit("no parameter", 1) {
@@ -81,6 +81,30 @@ module testCoreMaths() {
                 assertEqual(absdeg(720), 360, "720 degrees should be converted to 360");
                 assertEqual(absdeg(-420), 300, "-420 degrees should be converted to 300");
                 assertEqual(absdeg(420), 60, "420 degrees should be converted to 60");
+            }
+        }
+        // test core/maths/straight()
+        testModule("straight()", 3) {
+            testUnit("no parameter", 1) {
+                assertEqual(straight(), 0, "Without parameter the function should return 0");
+            }
+            testUnit("wrong type", 5) {
+                assertEqual(straight("10"), 0, "A string should be converted to 0");
+                assertEqual(straight(true), 0, "A boolean should be converted to 0");
+                assertEqual(straight([]), 0, "An empty array should be converted to 0");
+                assertEqual(straight(["1"]), 0, "An array should be converted to 0");
+                assertEqual(straight([1]), 0, "A vector should be converted to 0");
+            }
+            testUnit("number", 9) {
+                assertEqual(straight(0), 0, "0 degree should be converted to 0");
+                assertEqual(straight(-10), 10, "-10 degrees should be converted to 10");
+                assertEqual(straight(10), 10, "10 degrees should be converted to 10");
+                assertEqual(straight(-360), 0, "-360 degrees should be converted to 180");
+                assertEqual(straight(360), 0, "360 degrees should be converted to 0");
+                assertEqual(straight(-720), 0, "-720 degrees should be converted to 180");
+                assertEqual(straight(720), 0, "720 degrees should be converted to 0");
+                assertEqual(straight(-420), 60, "-420 degrees should be converted to 60");
+                assertEqual(straight(420), 60, "420 degrees should be converted to 60");
             }
         }
         // test core/maths/fragments()
