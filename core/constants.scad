@@ -105,6 +105,12 @@ QUADRANT_4 = DEGREES;
 SQRT3 = sqrt(3);
 
 /**
+ * The distance tolerance that will apply to $fs to check if we still need to subdivide the curve.
+ * @type Number
+ */
+BEZIER_TOLERANCE = .25;
+
+/**
  * Minimum value for $fa and $fs.
  * @type Number
  */
@@ -127,6 +133,12 @@ EPSILON = 0.0000001;
  * @type Number
  */
 MAX_DECIMALS = 7;
+
+/**
+ * The maximum recursion depth
+ * @type Number
+ */
+MAX_RECURSE = 32;
 
 /**
  * A value utilized to align wall and ensure proper cuts on one side.

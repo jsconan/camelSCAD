@@ -48,10 +48,7 @@ function quadraticBezierPoint(t, p0, p1, p2) =
         tm12 = tm1 * tm1,
         t2 = t * t
     )
-    [
-        float(p0[0]) * tm12 + float(p1[0]) * 2 * t * tm1 + float(p2[0]) * t2,
-        float(p0[1]) * tm12 + float(p1[1]) * 2 * t * tm1 + float(p2[1]) * t2
-    ]
+    vector2D(p0) * tm12 + vector2D(p1) * 2 * t * tm1 + vector2D(p2) * t2
 ;
 
 /**
@@ -73,8 +70,96 @@ function cubicBezierPoint(t, p0, p1, p2, p3) =
         t2 = t * t,
         t3 = t2 * t
     )
-    [
-        float(p0[0]) * tm13 + float(p1[0]) * 3 * t * tm12 + float(p2[0]) * 3 * t2 * tm1 + float(p3[0]) * t3,
-        float(p0[1]) * tm13 + float(p1[1]) * 3 * t * tm12 + float(p2[1]) * 3 * t2 * tm1 + float(p3[1]) * t3
-    ]
+    vector2D(p0) * tm13 + vector2D(p1) * 3 * t * tm12 + vector2D(p2) * 3 * t2 * tm1 + vector2D(p3) * t3
+;
+
+/**
+ * Computes the coordinates of a quadratic bezier curve.
+ *
+ * @param Vector p0 - The coordinates of the 1st control point.
+ * @param Vector p1 - The coordinates of the 2nd control point.
+ * @param Vector p2 - The coordinates of the 3rd control point.
+ * @returns Vector[] - Returns the coordinates of each points in the curve.
+ */
+function quadraticBezierCurve(p0, p1, p2, recurse) =
+    isUndef(recurse)
+   ?let(
+        p0 = vector2D(p0),
+        p1 = vector2D(p1),
+        p2 = vector2D(p2)
+    )
+    complete(
+        quadraticBezierCurve(p0, p1, p2, 0),
+        p0,
+        p2
+    )
+   :recurse > MAX_RECURSE ? []
+   :let(
+        p01 = (p0 + p1) / 2,
+        p12 = (p1 + p2) / 2,
+        p012 = (p01 + p12) / 2,
+        finish = !recurse ? false
+       :let(
+            d12 = p1 - p2,
+            d0 = p2 - p0,
+            d1 = abs(d12[0] * d0[1] - d12[1] * d0[0]),
+            tolerance = $fs * $fa * BEZIER_TOLERANCE
+        )
+        d1 > EPSILON ? d1 < tolerance
+                     : let(d = p012 - (p0 + p2) / 2) d[0] + d[1] <= tolerance
+    )
+    finish ? [p012] : concat(
+        quadraticBezierCurve(p0, p01, p012, recurse + 1),
+        quadraticBezierCurve(p012, p12, p2, recurse + 1)
+    )
+;
+
+/**
+ * Computes the coordinates of a cubic bezier curve.
+ *
+ * @param Vector p0 - The coordinates of the 1st control point.
+ * @param Vector p1 - The coordinates of the 2nd control point.
+ * @param Vector p2 - The coordinates of the 3rd control point.
+ * @param Vector p3 - The coordinates of the 4th control point.
+ * @returns Vector[] - Returns the coordinates of each points in the curve.
+ */
+function cubicBezierCurve(p0, p1, p2, p3, recurse) =
+    isUndef(recurse)
+   ?let(
+        p0 = vector2D(p0),
+        p1 = vector2D(p1),
+        p2 = vector2D(p2),
+        p3 = vector2D(p3)
+    )
+    complete(
+        cubicBezierCurve(p0, p1, p2, p3, 0),
+        p0,
+        p3
+    )
+   :recurse > MAX_RECURSE ? []
+   :let(
+        p01 = (p0 + p1) / 2,
+        p12 = (p1 + p2) / 2,
+        p23 = (p2 + p3) / 2,
+        p012 = (p01 + p12) / 2,
+        p123 = (p12 + p23) / 2,
+        p0123 = (p012 + p123) / 2,
+        finish = !recurse ? false
+       :let(
+            d13 = p1 - p3,
+            d23 = p2 - p3,
+            d0 = p3 - p0,
+            d1 = abs(d13[0] * d0[1] - d13[1] * d0[0]),
+            d2 = abs(d23[0] * d0[1] - d23[1] * d0[0]),
+            tolerance = $fs * $fa * BEZIER_TOLERANCE
+        )
+        d1 > EPSILON && d2 > EPSILON ? d1 + d2 < tolerance
+       :d1 > EPSILON ? d1 < tolerance
+       :d2 > EPSILON ? d2 < tolerance
+       :let(d = p0123 - (p0 + p3) / 2) d[0] + d[1] <= tolerance
+    )
+    finish ? [p0123] : concat(
+        cubicBezierCurve(p0, p01, p012, p0123, recurse + 1),
+        cubicBezierCurve(p0123, p123, p23, p3, recurse + 1)
+    )
 ;
