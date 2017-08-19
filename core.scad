@@ -40,6 +40,7 @@ include <core/list.scad>
 include <core/maths.scad>
 include <core/hex.scad>
 include <core/line.scad>
+include <core/bezier.scad>
 include <core/vector.scad>
 include <core/vector-2d.scad>
 include <core/vector-3d.scad>

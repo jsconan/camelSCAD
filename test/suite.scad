@@ -39,6 +39,7 @@ use <core/list.scad>
 use <core/maths.scad>
 use <core/hex.scad>
 use <core/line.scad>
+use <core/bezier.scad>
 use <core/vector.scad>
 use <core/vector-2d.scad>
 use <core/vector-3d.scad>
@@ -67,6 +68,7 @@ testCoreList();
 testCoreMaths();
 testCoreHex();
 testCoreLine();
+testCoreBezier();
 testCoreVector();
 testCoreVector2D();
 testCoreVector3D();

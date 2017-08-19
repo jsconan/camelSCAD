@@ -60,6 +60,18 @@ function absdeg(a) =
 ;
 
 /**
+ * Ensures an angle is defined within an absolute straight angle range (0..180).
+ *
+ * @param Number a - The angle.
+ * @returns Number
+ */
+function straight(a) =
+    let( a = absdeg(a) )
+    a > STRAIGHT ? DEGREES - a
+                 : a
+;
+
+/**
  * Computes the number of fragments needed to draw a circle with the provided radius.
  *
  * @param Number [r] - The radius of the circle.

@@ -53,7 +53,7 @@
  * @param Number [originY] - The Y origin (will overwrite the Y coordinate in the `origin` vector).
  * @param Number [originZ] - The Z origin (will overwrite the Z coordinate in the `origin` vector).
  */
-module distributeRotate(angle    = 360,
+module distributeRotate(angle    = DEGREES,
                         axis     = [0, 0, 1],
                         interval = [0, 0, 0],
                         origin   = [0, 0, 0],
@@ -64,7 +64,7 @@ module distributeRotate(angle    = 360,
     interval = apply3D(interval, intervalX, intervalY, intervalZ);
     origin = apply3D(origin, originX, originY, originZ);
     angle = deg(angle);
-    partAngle = angle / (angle % 360 ? $children - 1 : $children);
+    partAngle = angle / (angle % DEGREES ? $children - 1 : $children);
     axis = apply3D(axis, axisX, axisY, axisZ) * partAngle;
 
     for (i = [0 : $children - 1]) {
