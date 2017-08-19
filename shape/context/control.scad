@@ -24,25 +24,29 @@
  */
 
 /**
- * Entry point of the camelSCAD library.
+ * Part of the camelSCAD library.
  *
- * Features set: Includes the core components, the operators and the shapes.
+ * Control stuff visualization.
  *
+ * @package shape/context
  * @author jsconan
  */
 
-/* CORE */
-/* OPERATORS */
-include <operators.scad>
-
-/* SHAPES */
-include <shape/2D/ellipse.scad>
-include <shape/2D/rounded.scad>
-include <shape/2D/polygon.scad>
-
-include <shape/3D/ellipsoid.scad>
-include <shape/3D/rounded.scad>
-include <shape/3D/polyhedron.scad>
-
-include <shape/context/build-box.scad>
-include <shape/context/control.scad>
+/**
+ * Displays a list of control points
+ *
+ * @param Vector [points] - The control points to display.
+ * @param Number|Vector [size] - The size of the points.
+ * @param Number [l] - The length of a point.
+ * @param Number [w] - The width of a point.
+ * @param Number [h] - The height of a point.
+ */
+module controlPoints(points, size, l, w, h) {
+    %color([1, .2, .2, .3]) {
+        for (p = points) {
+            translate(vector3D(p)) {
+                ellipsoid(d=uor(size, 1), dx=l, dy=w, dz=h);
+            }
+        }
+    }
+}
