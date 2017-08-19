@@ -106,12 +106,9 @@ module buildPlate(size=DEFAULT_BUILD_PLATE_SIZE, cell=DEFAULT_BUILD_PLATE_CELL, 
  * Creates a build volume visualization at the origin.
  *
  * @param Number|Vector [size] - The size of the build box.
- * @param Number|Vector [cell] - The size of each cell on the build plate.
  * @param Number [l] - The overall length.
  * @param Number [w] - The overall width.
  * @param Number [h] - The overall height.
- * @param Number [cl] - The length of a cell.
- * @param Number [cw] - The width of cell.
  */
 module buildVolume(size=DEFAULT_BUILD_VOLUME_SIZE, l, w, h) {
     %color([1, 1, 1, .1]) {
@@ -123,11 +120,14 @@ module buildVolume(size=DEFAULT_BUILD_VOLUME_SIZE, l, w, h) {
  * Creates a build box visualization at the origin.
  * A build box contains visualizations for a build plate and a build volume.
  * It also applies a render mode.
- * @param String [mode] - The mode to apply on the children modules.
  * @param Number|Vector [size] - The size of the build volume.
+ * @param Number|Vector [cell] - The size of each cell on the build plate.
+ * @param String [mode] - The mode to apply on the children modules.
  * @param Number [l] - The overall length.
  * @param Number [w] - The overall width.
  * @param Number [h] - The overall height.
+ * @param Number [cl] - The length of a cell.
+ * @param Number [cw] - The width of cell.
  */
 module buildBox(size, cell, mode, l, w, h, cl, cw) {
     size = apply3D(uor(size, DEFAULT_BUILD_PLATE_SIZE), l, w, h);

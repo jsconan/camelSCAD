@@ -170,9 +170,9 @@ function sizeRoundedCorner(size, r, d, p, convex) =
         B = [s, 0],
         C = S ? (convex ? [0, 0] : [ s, s ])
               : center2D(A, B, R, !convex),
-        arcAngle = S ? 90 : angle2D(C - A, C - B),
+        arcAngle = S ? RIGHT : angle2D(C - A, C - B),
         cornerAngle = absdeg(round(atan2(p[1], p[0]) - 45)),
-        startAngle = absdeg(cornerAngle + (convex ? 0 : 180) + (90 - arcAngle) / 2)
+        startAngle = absdeg(cornerAngle + (convex ? 0 : STRAIGHT) + (RIGHT - arcAngle) / 2)
     )
     [ vector2D(s), vector2D(R), rotp(C, cornerAngle), cornerAngle, startAngle, arcAngle ]
 ;
@@ -199,7 +199,7 @@ function drawArch(size, r, d, w, h, rx, ry, dx, dy) =
         center = [
             0, size[1] - radius[1]
         ],
-        points = arc(r=radius, o=center, a=180)
+        points = arc(r=radius, o=center, a=STRAIGHT)
     )
     center == [0, 0] ? points
    :complete(points, [radius[0], 0], -[radius[0], 0])
@@ -229,7 +229,7 @@ function drawStadium(size, r, d, w, h, rx, ry, dx, dy) =
         ]
     )
     center == [0, 0] ? arc(r=radius)
-   :concat(arc(r=radius, o=center, a=180), arc(r=radius, o=-center, a=-180))
+   :concat(arc(r=radius, o=center, a=STRAIGHT), arc(r=radius, o=-center, a=-STRAIGHT))
 ;
 
 /**
@@ -261,10 +261,10 @@ function drawRoundedRectangle(size, r, d, w, h, rx, ry, dx, dy) =
     radius == [0, 0] ? [ [right, top], [-right, top], [-right, -top], [right, -top] ]
    :center == [0, 0] ? arc(r=radius)
    :concat(
-       arc(r=radius, o=center, a1=0, a2=90),
-       arc(r=radius, o=[-center[0], center[1]], a1=90, a2=180),
-       arc(r=radius, o=[-center[0], -center[1]], a1=180, a2=270),
-       arc(r=radius, o=[center[0], -center[1]], a1=270, a2=360)
+       arc(r=radius, o=center, a1=0, a2=QUADRANT_1),
+       arc(r=radius, o=[-center[0], center[1]], a1=QUADRANT_1, a2=QUADRANT_2),
+       arc(r=radius, o=[-center[0], -center[1]], a1=QUADRANT_2, a2=QUADRANT_3),
+       arc(r=radius, o=[center[0], -center[1]], a1=QUADRANT_3, a2=QUADRANT_4)
    )
 ;
 

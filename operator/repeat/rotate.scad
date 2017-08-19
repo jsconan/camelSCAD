@@ -54,7 +54,7 @@
  * @param Number [originZ] - The Z origin (will overwrite the Z coordinate in the `origin` vector).
  */
 module repeatRotate(count    = 2,
-                    angle    = 360,
+                    angle    = DEGREES,
                     axis     = [0, 0, 1],
                     interval = [0, 0, 0],
                     origin   = [0, 0, 0],
@@ -65,7 +65,7 @@ module repeatRotate(count    = 2,
     interval = apply3D(interval, intervalX, intervalY, intervalZ);
     origin = apply3D(origin, originX, originY, originZ);
     angle = deg(angle);
-    partAngle = angle / (angle % 360 ? count - 1 : count);
+    partAngle = angle / (angle % DEGREES ? count - 1 : count);
     axis = apply3D(axis, axisX, axisY, axisZ) * partAngle;
 
     for (i = [0 : count - 1]) {
@@ -93,8 +93,8 @@ module repeatRotate(count    = 2,
  */
 module repeatRotate2D(countX    = 2,
                       countY    = 2,
-                      angleX    = 360,
-                      angleY    = 360,
+                      angleX    = DEGREES,
+                      angleY    = DEGREES,
                       axisX     = [0, 0, 1],
                       axisY     = [0, 1, 0],
                       intervalX = [0, 0, 0],
@@ -131,9 +131,9 @@ module repeatRotate2D(countX    = 2,
 module repeatRotate3D(countX    = 2,
                       countY    = 2,
                       countZ    = 2,
-                      angleX    = 360,
-                      angleY    = 360,
-                      angleZ    = 360,
+                      angleX    = DEGREES,
+                      angleY    = DEGREES,
+                      angleZ    = DEGREES,
                       axisX     = [0, 0, 1],
                       axisY     = [0, 1, 0],
                       axisZ     = [1, 0, 0],

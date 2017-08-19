@@ -89,7 +89,7 @@ function sizeTrapeziumBox(size, a, b, w, h) =
 function sizeRegularPolygonBox(size, n, l, w, h, s) =
     let(
         n = max(3, float(n)),
-        size = (s && !size && !l && !w) ? vector3D(2 * divisor(s) / (2 * sin(180 / n)))
+        size = (s && !size && !l && !w) ? vector3D(2 * divisor(s) / (2 * sin(STRAIGHT / n)))
                                         : apply3D(size, l, w, h)
     )
     [
