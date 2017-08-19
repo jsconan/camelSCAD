@@ -33,7 +33,7 @@
  */
 
 /**
- * Displays a list of control points
+ * Displays a list of control points.
  *
  * @param Vector [points] - The control points to display.
  * @param Number|Vector [size] - The size of the points.
