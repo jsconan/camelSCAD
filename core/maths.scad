@@ -165,6 +165,34 @@ function roundBy(value, unit) =
 ;
 
 /**
+ * Rounds a value by the provided unit to the lowest.
+ *
+ * @param Number value - The value to round.
+ * @param Number unit - The value to round.
+ * @returns Number
+ */
+function floorBy(value, unit) =
+    let(
+        unit = divisor(unit)
+    )
+    floor(float(value) / unit) * unit
+;
+
+/**
+ * Rounds a value by the provided unit to the highest.
+ *
+ * @param Number value - The value to round.
+ * @param Number unit - The value to round.
+ * @returns Number
+ */
+function ceilBy(value, unit) =
+    let(
+        unit = divisor(unit)
+    )
+    ceil(float(value) / unit) * unit
+;
+
+/**
  * Counts the number of decimals in the fractional part of the number.
  *
  * @param Number value - The value to analyse.

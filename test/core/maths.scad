@@ -34,7 +34,7 @@ use <../../full.scad>
  * @author jsconan
  */
 module testCoreMaths() {
-    testPackage("core/maths.scad", 11) {
+    testPackage("core/maths.scad", 13) {
         // test core/maths/deg()
         testModule("deg()", 3) {
             testUnit("no parameter", 1) {
@@ -508,6 +508,52 @@ module testCoreMaths() {
                 assertEqual(roundBy(1.78, unit=.5), 2, "Should round the number to the nearest unit of .5 (1.78 ~ 2)");
                 assertEqual(roundBy(1.5, .2), 1.6, "Should round the positive number to the nearest unit of .2 (1.5 ~ 1.6)");
                 assertEqual(roundBy(-1.5, .2), -1.6, "Should round the negative number to the nearest unit of .2 (1.5 ~ 1.6)");
+            }
+        }
+        // test core/maths/floorBy()
+        testModule("floorBy()", 2) {
+            testUnit("default value", 4) {
+                assertEqual(floorBy(), 0, "Should return a 0");
+                assertEqual(floorBy("8"), 0, "Cannot round a string");
+                assertEqual(floorBy(true), 0, "Cannot round a boolean");
+                assertEqual(floorBy([10]), 0, "Cannot round a vector");
+            }
+            testUnit("round value", 12) {
+                assertEqual(floorBy(11), 11, "Should return the provided integer");
+                assertEqual(floorBy(11, unit=0), 11, "Should return the provided integer, even if a zero unit has been provided");
+                assertEqual(floorBy(18, unit=5), 15, "Should round the provided integer to the near unit (18 ~ 15)");
+                assertEqual(floorBy(16, unit=5), 15, "Should round the provided integer to the near unit (16 ~ 15)");
+                assertEqual(floorBy(3.14), 3, "Should truncate the positive number if no unit is provided");
+                assertEqual(floorBy(-3.14), -4, "Should truncate the negative number if no unit is provided");
+                assertEqual(floorBy(1.12345678, unit=.5), 1, "Should round the number to the nearest unit of .5 (1.12345678 ~ 1)");
+                assertEqual(floorBy(1.35, unit=.5), 1, "Should round the number to the nearest unit of .5 (1.35 ~ 1)");
+                assertEqual(floorBy(1.73, unit=.5), 1.5, "Should round the number to the nearest unit of .5 (1.73 ~ 1.5)");
+                assertEqual(floorBy(1.78, unit=.5), 1.5, "Should round the number to the nearest unit of .5 (1.78 ~ 1.5)");
+                assertApproxEqual(floorBy(1.5, .2), 1.4, "Should round the positive number to the nearest unit of .2 (1.5 ~ 1.4)");
+                assertEqual(floorBy(-1.5, .2), -1.6, "Should round the negative number to the nearest unit of .2 (1.5 ~ 1.6)");
+            }
+        }
+        // test core/maths/ceilBy()
+        testModule("ceilBy()", 2) {
+            testUnit("default value", 4) {
+                assertEqual(ceilBy(), 0, "Should return a 0");
+                assertEqual(ceilBy("8"), 0, "Cannot round a string");
+                assertEqual(ceilBy(true), 0, "Cannot round a boolean");
+                assertEqual(ceilBy([10]), 0, "Cannot round a vector");
+            }
+            testUnit("round value", 12) {
+                assertEqual(ceilBy(11), 11, "Should return the provided integer");
+                assertEqual(ceilBy(11, unit=0), 11, "Should return the provided integer, even if a zero unit has been provided");
+                assertEqual(ceilBy(18, unit=5), 20, "Should round the provided integer to the near unit (18 ~ 20)");
+                assertEqual(ceilBy(16, unit=5), 20, "Should round the provided integer to the near unit (16 ~ 20)");
+                assertEqual(ceilBy(3.14), 4, "Should truncate the positive number if no unit is provided");
+                assertEqual(ceilBy(-3.14), -3, "Should truncate the negative number if no unit is provided");
+                assertEqual(ceilBy(1.12345678, unit=.5), 1.5, "Should round the number to the nearest unit of .5 (1.12345678 ~ 1.5)");
+                assertEqual(ceilBy(1.35, unit=.5), 1.5, "Should round the number to the nearest unit of .5 (1.35 ~ 1.5)");
+                assertEqual(ceilBy(1.73, unit=.5), 2, "Should round the number to the nearest unit of .5 (1.73 ~ 2)");
+                assertEqual(ceilBy(1.78, unit=.5), 2, "Should round the number to the nearest unit of .5 (1.78 ~ 2)");
+                assertEqual(ceilBy(1.5, .2), 1.6, "Should round the positive number to the nearest unit of .2 (1.5 ~ 1.6)");
+                assertApproxEqual(ceilBy(-1.5, .2), -1.4, "Should round the negative number to the nearest unit of .2 (1.5 ~ 1.4)");
             }
         }
         // test core/maths/decimals()
