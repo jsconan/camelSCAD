@@ -119,3 +119,58 @@ function cosinusoid(l, w, h, p, o, a) =
             a ? rotp(p, a) : p
     ]
 ;
+
+/**
+ * Computes a line from a path.
+ *
+ * A path is composed of commands, each one being a simple array starting by the
+ * command name. Each command will produce points relative to the last command
+ * or to the last existing point. When the line starts it will rely on the
+ * existing points, if any. If no existing points is provided, the line will
+ * start from the absolute origin ([0, 0]), unless the first command is a point.
+ *
+ * The following commands are recognized:
+ * - P, Point: ["P", <x>, <y>] - Adds an point at the given absolute coordinates.
+ * - L, Line: ["L", <x>, <y>] - Adds a line from the last point to the given relative coordinates.
+ * - H, Horizontal line: ["H", <length>] - Adds an horizontal line from the last point with the given length. The sign of the length determines the direction.
+ * - V, Vertical line: ["V", <length>] - Adds a vertical line from the last point with the given length. The sign of the length determines the direction.
+ * - A, Angle: ["A", <angle>, <length>] - Adds a leaned line from the last point with the given angle and the given length The sign of the length determines the direction.
+ * - C, Circle: ["C", <radius>, <start angle>, <end angle>] - Adds a circle arc from the last point with the given radius and with the given angle.
+ * - B, Bezier curve: ["B", <P1>, <P2>, <P3>] - Adds a cubic bezier curve from the last point with the given control points (up to 3, the first beeing the last existing point).
+ *
+ * @param Array p - The path from which build the line
+ * @param Vector[] points - The existing points to start the line from.
+ * @param Number i - The start index in the path (default: 0)
+ * @returns Vector[]
+ */
+function path(p, points, i) =
+    let(
+        p = array(p),
+        i = integer(i),
+        points = array(points),
+        length = len(points),
+        point = vector2D(points[length - 1]),
+        cur = p[i],
+        cmd = cur[0],
+        l = len(cur)
+    )
+    i >= len(p) ? points
+   :let(
+        values = (
+            l <= 1 ? [point]
+            :cmd == "P" || cmd == "p" ? [apply2D(x=cur[1], y=cur[2])]
+            :cmd == "L" || cmd == "l" ? [point, point + apply2D(x=cur[1], y=cur[2])]
+            :cmd == "H" || cmd == "h" ? [point, point + apply2D(x=cur[1])]
+            :cmd == "V" || cmd == "v" ? [point, point + apply2D(y=cur[1])]
+            :cmd == "A" || cmd == "a" ? [point, point + arcPoint(a=cur[1], r=cur[2])]
+            :cmd == "C" || cmd == "c" ? arc(r=cur[1], a1=cur[2], a2=cur[3], o=point + arcPoint(a=float(cur[2]) + STRAIGHT, r=cur[1]))
+            :cmd == "B" || cmd == "b" ? (
+                l >= 4 ? concat([point], cubicBezierCurve(point, point + vector2D(cur[1]), point + vector2D(cur[2]), point + vector2D(cur[3])))
+               :l == 3 ? concat([point], quadraticBezierCurve(point, point + vector2D(cur[1]), point + vector2D(cur[2])))
+               :[point, point + vector2D(cur[1])]
+            )
+            :[]
+        )
+    )
+    path(p=p, points=concat(values[0] == point ? slice(points, 0, -1) : points, values), i=i + 1)
+;
