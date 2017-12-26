@@ -34,7 +34,7 @@ use <../../full.scad>
  * @author jsconan
  */
 module testCoreLine() {
-    testPackage("core/line.scad", 3) {
+    testPackage("core/line.scad", 4) {
         // test core/line/arc()
         testModule("arc()", 7) {
             testUnit("no parameter", 1) {
@@ -142,6 +142,84 @@ module testCoreLine() {
                 assertEqual(cosinusoid(3, 2, 4, a=70, $fn=8), [ for (a = [0 : step*2 : 3]) _rot2([4 * cos(360 * a / 2), a], 70) ], "Should build a sinusoid rotated by 70° with a length of 1, a period of 2, an amplitude of 4 and 6 segments");
                 assertEqual(cosinusoid(3, 2, 4, 6, a=70, $fn=8), [ for (a = [0 : step*2 : 3]) _rot2([4 * cos(360 * a / 2 + 6), a], 70) ], "Should build a sinusoid rotated by 70° with a length of 1, a period of 2, an amplitude of 4, a delay of 6 and 6 segments");
                 assertEqual(cosinusoid(3, 2, 4, 6, 8, a=70, $fn=8), [ for (a = [0 : step*2 : 3]) _rot2([4 * cos(360 * a / 2 + 6) + 8, a], 70) ], "Should build a sinusoid rotated by 70° with a length of 1, a period of 2, an amplitude of 4, a delay of 6, an offset of 8 and 6 segments");
+            }
+        }
+        // test core/line/path()
+        testModule("path()", 3) {
+            testUnit("no parameter", 1) {
+                assertEqual(path(), [], "Cannot build a line without parameters, should return an empty array");
+            }
+            testUnit("wrong type", 3) {
+                assertEqual(path("1", "1"), [[0, 0]], "Cannot build a line using strings");
+                assertEqual(path(true, true), [true], "Cannot build a line using booleans");
+                assertEqual(path(1, 1), [1], "Cannot build a line using numbers");
+            }
+            testUnit("path only", 41) {
+                // point
+                assertEqual(path([["P"]]), [[0, 0]], "Path with 1 empty point");
+                assertEqual(path([["P", 10, 20]]), [[10, 20]], "Path with 1 absolute point");
+                assertEqual(path([["P", 10, 20], ["P"]]), [[10, 20]], "Path with 1 absolute point and 1 empty point");
+                assertEqual(path([["P", 10, 20], ["P", 0, 5]]), [[10, 20], [0, 5]], "Path with 2 absolute points");
+                assertEqual(path([["P", 10, 20], ["P", 0, 5], ["P", 7, 4]]), [[10, 20], [0, 5], [7, 4]], "Path with 3 absolute points");
+
+                // line
+                assertEqual(path([["L"]]), [[0, 0]], "Path with 1 empty line");
+                assertEqual(path([["L", 10, 20]]), [[0, 0], [10, 20]], "Path with 1 line");
+                assertEqual(path([["P", 5, 6], ["L", 10, 20]]), [[5, 6], [15, 26]], "Path with 1 line from an absolute point");
+                assertEqual(path([["P", 5, 6], ["L"]]), [[5, 6]], "Path with 1 empty line from an absolute point");
+
+                // horizontal line
+                assertEqual(path([["H"]]), [[0, 0]], "Path with 1 empty horizontal line");
+                assertEqual(path([["H", 10]]), [[0, 0], [10, 0]], "Path with 1 horizontal line");
+                assertEqual(path([["P", 5, 6], ["H", 10]]), [[5, 6], [15, 6]], "Path with 1 horizontal line from an absolute point");
+                assertEqual(path([["P", 5, 6], ["H"]]), [[5, 6]], "Path with 1 empty horizontal line from an absolute point");
+
+                // vertical line
+                assertEqual(path([["V"]]), [[0, 0]], "Path with 1 empty vertical line");
+                assertEqual(path([["V", 10]]), [[0, 0], [0, 10]], "Path with 1 vertical line");
+                assertEqual(path([["P", 5, 6], ["V", 10]]), [[5, 6], [5, 16]], "Path with 1 vertical line from an absolute point");
+                assertEqual(path([["P", 5, 6], ["V"]]), [[5, 6]], "Path with 1 empty vertical line from an absolute point");
+
+                // leaned line
+                assertEqual(path([["A"]]), [[0, 0]], "Path with 1 empty leaned line");
+                assertEqual(path([["A", 50, 20]]), [[0, 0], _rotP(50, 20, 20)], "Path with 1 leaned line");
+                assertEqual(path([["P", 5, 6], ["A", 40, 15]]), [[5, 6], [5, 6] + _rotP(40, 15, 15)], "Path with 1 leaned line from an absolute point");
+                assertEqual(path([["P", 5, 6], ["A"]]), [[5, 6]], "Path with 1 empty leaned line from an absolute point");
+
+                // circle
+                assertEqual(path([["C"]]), [[0, 0]], "Path with 1 empty circle arc");
+                assertEqual(path([["C", 20, 40, 80]]), concat([ for (a = [40 : astep(20) : 80]) _rotP(220, 20, 20) + _rotP(a, 20, 20) ], [_rotP(220, 20, 20) + _rotP(80, 20, 20)]), "Path with 1 circle arc");
+                assertEqual(path([["P", 5, 6], ["C", 20, 40, 80]]), concat([ for (a = [40 : astep(20) : 80]) [5, 6] + _rotP(220, 20, 20) + _rotP(a, 20, 20) ], [[5, 6] + _rotP(220, 20, 20) + _rotP(80, 20, 20)]), "Path with 1 circle arc from an absolute point");
+                assertEqual(path([["P", 5, 6], ["C"]]), [[5, 6]], "Path with 1 empty circle arc from an absolute point");
+
+                // bezier point
+                assertEqual(path([["B"]]), [[0, 0]], "Path with 1 empty bezier");
+                assertEqual(path([["P", 5, 6], ["B"]]), [[5, 6]], "Path with 1 empty bezier from an absolute point");
+
+                assertEqual(path([["B", [7, 8]]]), [[0, 0], [7, 8]], "Path with 1 bezier point");
+                assertEqual(path([["P", 5, 6], ["B", [7, 8]]]), [[5, 6], [12, 14]], "Path with 1 bezier point from an absolute point");
+
+                // quadratic bezier
+                quadratic1 = path([["B", [7, 8], [9, 10]]]);
+                assertEqual(len(quadratic1), 5, "Path with 1 quadratic bezier should produce a list of points");
+                assertEqual(quadratic1[0], [0, 0], "Path with 1 quadratic bezier should start at the origin");
+                assertEqual(quadratic1[4], [9, 10], "Path with 1 quadratic bezier should end with the last control point");
+
+                quadratic2 = path([["P", 5, 6], ["B", [7, 8], [9, 10]]]);
+                assertEqual(len(quadratic2), 5, "Path with 1 quadratic bezier from an absolute point should produce a list of points");
+                assertEqual(quadratic2[0], [5, 6], "Path with 1 quadratic bezier from an absolute point should start at the provided point");
+                assertEqual(quadratic2[4], [14, 16], "Path with 1 quadratic bezier from an absolute point should end with the last control point");
+
+                // cubic bezier
+                cubic1 = path([["B", [7, 8], [9, 10], [11, 12]]]);
+                assertEqual(len(cubic1), 5, "Path with 1 cubic bezier should produce a list of points");
+                assertEqual(cubic1[0], [0, 0], "Path with 1 cubic bezier should start at the origin");
+                assertEqual(cubic1[4], [11, 12], "Path with 1 cubic bezier should end with the last control point");
+
+                cubic2 = path([["P", 5, 6], ["B", [7, 8], [9, 10], [11, 12]]]);
+                assertEqual(len(cubic2), 5, "Path with 1 cubic bezier from an absolute point should produce a list of points");
+                assertEqual(cubic2[0], [5, 6], "Path with 1 cubic bezier from an absolute point should start at the provided point");
+                assertEqual(cubic2[4], [16, 18], "Path with 1 cubic bezier from an absolute point should end with the last control point");
             }
         }
     }

@@ -404,7 +404,7 @@ module testCoreVector2D() {
                 assertEqual(arcPoint([]), [0, 0], "An empty vector should produce [0, 0]");
                 assertEqual(arcPoint([], 30), [0, 0], "An empty vector should produce [0, 0], whatever the angle is");
                 assertEqual(arcPoint(10), [10, 0], "A single number should be converted to vector");
-                assertEqual(arcPoint([10, 10]), [10, 0], "Without angle, the vector should be arcPoint on the X axis");
+                assertEqual(arcPoint([10, 10]), [10, 0], "Without angle, the vector should be projected on the X axis");
                 assertEqual(arcPoint([10, 10], 45), [cos(45)*10, sin(45)*10], "Angle of 45 degrees");
                 assertEqual(arcPoint([20, 10], 30), [cos(30)*20, sin(30)*10], "Angle of 30 degrees");
                 assertEqual(arcPoint([10, 20], 60), [cos(60)*10, sin(60)*20], "Angle of 60 degrees");
