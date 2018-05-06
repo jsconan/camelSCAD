@@ -34,7 +34,7 @@ use <../../full.scad>
  * @author jsconan
  */
 module testCoreVector2D() {
-    testPackage("core/vector-2d.scad", 26) {
+    testPackage("core/vector-2d.scad", 27) {
         // test core/vector-2d/vector2D()
         testModule("vector2D()", 3) {
             testUnit("no parameter", 1) {
@@ -322,6 +322,44 @@ module testCoreVector2D() {
                 assertEqual(intersect2D([0, -3], [1, 0], [0, 3], [1, 0]), [1, 0], "Lines crossing on X axis");
                 assertEqual(intersect2D([-3, 0], [0, 1], [3, 0], [0, 1]), [0, 1], "Lines crossing on Y axis");
                 assertEqual(intersect2D([-3, 1], [3, 8], [-2, 5], [7, 3]), [-3, 1] + (-38 / -75) * [6, 7], "Lines crossing on Y axis");
+            }
+        }
+        // test core/vector-2d/tangent2D()
+        testModule("tangent2D()", 5) {
+            testUnit("no parameter", 1) {
+                assertEqual(tangent2D(), [0, 0], "Without parameter the function should return the origin");
+            }
+            testUnit("wrong type", 4) {
+                assertEqual(tangent2D("10", "10", "10"), [0, 0], "Cannot compute tangent of strings, should return the origin");
+                assertEqual(tangent2D(true, true, true), [0, 0], "Cannot compute tangent of boolean, should return the origin");
+                assertEqual(tangent2D([], [], []), [0, 0], "Cannot compute tangent of empty arrays, should return the origin");
+                assertEqual(tangent2D(["1"], ["2"], ["3"]), [0, 0], "Cannot compute tangent of arrays, should return the origin");
+            }
+            testUnit("inside circle", 2) {
+                assertApproxEqual(tangent2D(1, 2, 3), [1, 1], "Numbers should be converted to vectors");
+                assertApproxEqual(tangent2D([6, 4], [5, 6], 3), [6, 4], "The point is inside the circle");
+            }
+            testUnit("positive", 9) {
+                assertApproxEqual(tangent2D(3, 2, 1), [3, 2], "Numbers should be converted to vectors");
+                assertApproxEqual(tangent2D([11, 5], [19, 11], 2), [11, 5] + arcPoint(sqrt(96), atan2(6, 8) + asin(2 / 10)), "First quadrant, a cicle on the right");
+                assertApproxEqual(tangent2D([19, 11], [11, 5], 2), [19, 11] + arcPoint(sqrt(96), atan2(-6, -8) + asin(2 / 10)), "First quadrant, a cicle on the left");
+                assertApproxEqual(tangent2D([-11, 5], [-19, 11], 2), [-11, 5] + arcPoint(sqrt(96), atan2(6, -8) + asin(2 / 10)), "Second quadrant, a cicle on the left");
+                assertApproxEqual(tangent2D([-19, 11], [-11, 5], 2), [-19, 11] + arcPoint(sqrt(96), atan2(-6, 8) + asin(2 / 10)), "Second quadrant, a cicle on the right");
+                assertApproxEqual(tangent2D([-11, -5], [-19, -11], 2), [-11, -5] + arcPoint(sqrt(96), atan2(-6, -8) + asin(2 / 10)), "Third quadrant, a cicle on the left");
+                assertApproxEqual(tangent2D([-19, -11], [-11, -5], 2), [-19, -11] + arcPoint(sqrt(96), atan2(6, 8) + asin(2 / 10)), "Third quadrant, a cicle on the right");
+                assertApproxEqual(tangent2D([11, -5], [19, -11], 2), [11, -5] + arcPoint(sqrt(96), atan2(-6, 8) + asin(2 / 10)), "Fourth quadrant, a cicle on the right");
+                assertApproxEqual(tangent2D([19, -11], [11, -5], 2), [19, -11] + arcPoint(sqrt(96), atan2(6, -8) + asin(2 / 10)), "Fourth quadrant, a cicle on the left");
+            }
+            testUnit("negative", 9) {
+                assertApproxEqual(tangent2D(3, 2, -1), [2, 3], "Numbers should be converted to vectors");
+                assertApproxEqual(tangent2D([11, 5], [19, 11], -2), [11, 5] + arcPoint(sqrt(96), atan2(6, 8) + asin(-2 / 10)), "First quadrant, a cicle on the right");
+                assertApproxEqual(tangent2D([19, 11], [11, 5], -2), [19, 11] + arcPoint(sqrt(96), atan2(-6, -8) + asin(-2 / 10)), "First quadrant, a cicle on the left");
+                assertApproxEqual(tangent2D([-11, 5], [-19, 11], -2), [-11, 5] + arcPoint(sqrt(96), atan2(6, -8) + asin(-2 / 10)), "Second quadrant, a cicle on the left");
+                assertApproxEqual(tangent2D([-19, 11], [-11, 5], -2), [-19, 11] + arcPoint(sqrt(96), atan2(-6, 8) + asin(-2 / 10)), "Second quadrant, a cicle on the right");
+                assertApproxEqual(tangent2D([-11, -5], [-19, -11], -2), [-11, -5] + arcPoint(sqrt(96), atan2(-6, -8) + asin(-2 / 10)), "Third quadrant, a cicle on the left");
+                assertApproxEqual(tangent2D([-19, -11], [-11, -5], -2), [-19, -11] + arcPoint(sqrt(96), atan2(6, 8) + asin(-2 / 10)), "Third quadrant, a cicle on the right");
+                assertApproxEqual(tangent2D([11, -5], [19, -11], -2), [11, -5] + arcPoint(sqrt(96), atan2(-6, 8) + asin(-2 / 10)), "Fourth quadrant, a cicle on the right");
+                assertApproxEqual(tangent2D([19, -11], [11, -5], -2), [19, -11] + arcPoint(sqrt(96), atan2(6, -8) + asin(-2 / 10)), "Fourth quadrant, a cicle on the left");
             }
         }
         // test core/vector-2d/angle2D()

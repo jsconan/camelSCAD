@@ -231,6 +231,34 @@ function intersect2D(a, b, c, d) =
 ;
 
 /**
+ * Computes the point at the intersection of a circle and a tangent line.
+ * The center is defined by a center and a radius.
+ * The line is defined by a point.
+ *
+ * @param Vector p - A point on the line that should be tangent to the circle
+ * @param Vector c - The center of the circle.
+ * @param Number r - The radius of the circle
+ * @returns Vector
+ */
+function tangent2D(p, c, r) =
+    let(
+        p = vector2D(p),
+        c = vector2D(c),
+        r = float(r),
+        v = c - p,
+        d = norm2D(v)
+    )
+    d > r ? (
+        let(
+            t = pythagore(0, r, d),
+            a = atan2(v[1], v[0]) + asin(r / d)
+        )
+        p + arcPoint(t, a)
+    )
+   :p
+;
+
+/**
  * Computes the angle between two 2D vectors.
  *
  * @param Vector [a] - The first vector
