@@ -34,7 +34,7 @@ use <../../full.scad>
  * @author jsconan
  */
 module testCoreVector2D() {
-    testPackage("core/vector-2d.scad", 24) {
+    testPackage("core/vector-2d.scad", 25) {
         // test core/vector-2d/vector2D()
         testModule("vector2D()", 3) {
             testUnit("no parameter", 1) {
@@ -280,6 +280,28 @@ module testCoreVector2D() {
                 assertEqual(center2D([10], [8], 10, true), [9, 0] + ([0, -2] / norm([0, -2])) * sqrt(100 - pow(norm([-2, 0]) / 2, 2)), "Should accept vector smaller than 2D, then upscale them and compute the center of the circle using 2D");
                 assertEqual(center2D([10, 20, 30], [8, 16, 32], 10, true), [9, 18] + ([4, -2] / norm([4, -2])) * sqrt(100 - pow(norm([2, 4]) / 2, 2)), "Should accept vector bigger than 2D, but should only compute the center of the circle using 2D");
                 assertEqual(center2D([10, 20], [8, 16], 1, true), [9, 18], "Cannot compute the center if the radius is smaller than the distance between the points, should return the point at the middle");
+            }
+        }
+        // test core/vector-2d/parallel2D()
+        testModule("parallel2D()", 3) {
+            testUnit("no parameter", 1) {
+                assertEqual(parallel2D(), true, "Without parameter the function should return true");
+            }
+            testUnit("wrong type", 4) {
+                assertEqual(parallel2D("10", "10", "10", "10"), true, "Cannot tell if strings are parallels");
+                assertEqual(parallel2D(true, true, true, true), true, "Cannot tell if boolean are parallels");
+                assertEqual(parallel2D([], [], [], []), true, "Cannot tell if empty arrays are parallels");
+                assertEqual(parallel2D(["1"], ["2"], ["3"], ["4"]), true, "Cannot tell if arrays are parallels");
+            }
+            testUnit("check", 8) {
+                assertEqual(parallel2D(0, 1, 2, 3), true, "Numbers should be converted to vectors");
+                assertEqual(parallel2D([0, 0], [1, 1], [2, 2], [3, 3]), true, "45° positive segments");
+                assertEqual(parallel2D([0, 0], [-1, 1], [-2, 2], [-3, 3]), true, "45° negative segments");
+                assertEqual(parallel2D([0, 0], [3, 0], [1, 2], [3, 2]), true, "horizontal segments");
+                assertEqual(parallel2D([0, 0], [0, 3], [2, 1], [2, 3]), true, "vertical segments");
+                assertEqual(parallel2D([4, 5], [6, 7], [2, 3], [0, 1]), true, "parallels segments");
+                assertEqual(parallel2D([4, 5], [8, 7], [2, 3], [5, 1]), false, "not parallels segments");
+                assertEqual(parallel2D([0, 0], [3, 0], [1, 2], [1, 4]), false, "perpendicular segments");
             }
         }
         // test core/vector-2d/angle2D()

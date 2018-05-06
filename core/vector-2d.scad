@@ -184,6 +184,24 @@ function center2D(a, b, r, negative) =
 ;
 
 /**
+ * Checks if two line are parallels.
+ * Each line is defined by two points.
+ *
+ * @param Vector a - The first point on the first line.
+ * @param Vector b - The second point on the first line.
+ * @param Vector c - The first point on the second line.
+ * @param Vector d - The second point on the second line.
+ * @returns Boolean
+ */
+function parallel2D(a, b, c, d) =
+    let(
+        i = vector2D(b) - vector2D(a),
+        j = vector2D(d) - vector2D(c)
+    )
+    i[0] * j[1] - i[1] * j[0] == 0
+;
+
+/**
  * Computes the angle between two 2D vectors.
  *
  * @param Vector [a] - The first vector
