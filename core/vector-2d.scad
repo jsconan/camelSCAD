@@ -184,6 +184,123 @@ function center2D(a, b, r, negative) =
 ;
 
 /**
+ * Checks if two line are parallels.
+ * Each line is defined by two points.
+ *
+ * @param Vector a - The first point on the first line.
+ * @param Vector b - The second point on the first line.
+ * @param Vector c - The first point on the second line.
+ * @param Vector d - The second point on the second line.
+ * @returns Boolean
+ */
+function parallel2D(a, b, c, d) =
+    let(
+        i = vector2D(b) - vector2D(a),
+        j = vector2D(d) - vector2D(c)
+    )
+    i[0] * j[1] - i[1] * j[0] == 0
+;
+
+/**
+ * Computes the point at the intersection of two lines.
+ * Each line is defined by two points.
+ *
+ * @param Vector a - The first point on the first line.
+ * @param Vector b - The second point on the first line.
+ * @param Vector c - The first point on the second line.
+ * @param Vector d - The second point on the second line.
+ * @returns Vector
+ */
+function intersect2D(a, b, c, d) =
+    let(
+        a = vector2D(a),
+        b = vector2D(b),
+        c = vector2D(c),
+        d = vector2D(d),
+        i = b - a,
+        j = d - c,
+        n = i[0] * j[1] - i[1] * j[0]
+    )
+    n ? (
+        let(
+            k = -(a[0] * j[1] - c[0] * j[1] - j[0] * a[1] + j[0] * c[1]) / n
+        )
+        a + k * i
+    )
+   :a
+;
+
+/**
+ * Computes the point at the intersection of a circle and a tangent line.
+ * The center is defined by a center and a radius.
+ * The line is defined by a point.
+ *
+ * @param Vector p - A point on the line that should be tangent to the circle
+ * @param Vector c - The center of the circle.
+ * @param Number r - The radius of the circle
+ * @returns Vector
+ */
+function tangent2D(p, c, r) =
+    let(
+        p = vector2D(p),
+        c = vector2D(c),
+        r = float(r),
+        v = c - p,
+        d = norm2D(v)
+    )
+    d > r ? (
+        let(
+            t = pythagore(0, r, d),
+            a = atan2(v[1], v[0]) + asin(r / d)
+        )
+        p + arcPoint(t, a)
+    )
+   :p
+;
+
+/**
+ * Computes the third edge of an isosceles triangle.
+ * The edges that have the same angle must be provided.
+ * The height or the angle must be provided.
+ * If both are provided, the height overrides the angle.
+ *
+ * @param Vector a - The first edge
+ * @param Vector b - The second edge
+ * @param Number [h] - The height of the triangle
+ * @param Number [angle] - The angle of the triangle
+ * @returns Vector
+ */
+function isosceles2D(a, b, h, angle) =
+    let(
+        a = vector2D(a),
+        b = vector2D(b),
+        v = b - a,
+        d = norm2D(v) / 2,
+        w = atan2(v[1], v[0])
+    )
+    h != undef ? (
+        let(
+            h = float(h),
+            r = pythagore(h, d),
+            angle = atan2(h, d)
+        )
+        a + arcPoint(r, w + angle)
+    )
+   :(
+       let(
+           angle = straight(angle)
+       )
+       angle < RIGHT ? (
+           let(
+               r = d / cos(angle)
+           )
+           a + arcPoint(r, w + angle)
+       )
+      :a
+   )
+;
+
+/**
  * Computes the angle between two 2D vectors.
  *
  * @param Vector [a] - The first vector
