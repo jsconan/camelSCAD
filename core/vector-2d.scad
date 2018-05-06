@@ -202,6 +202,35 @@ function parallel2D(a, b, c, d) =
 ;
 
 /**
+ * Computes the point at the intersection of two lines.
+ * Each line is defined by two points.
+ *
+ * @param Vector a - The first point on the first line.
+ * @param Vector b - The second point on the first line.
+ * @param Vector c - The first point on the second line.
+ * @param Vector d - The second point on the second line.
+ * @returns Vector
+ */
+function intersect2D(a, b, c, d) =
+    let(
+        a = vector2D(a),
+        b = vector2D(b),
+        c = vector2D(c),
+        d = vector2D(d),
+        i = b - a,
+        j = d - c,
+        n = i[0] * j[1] - i[1] * j[0]
+    )
+    n ? (
+        let(
+            k = -(a[0] * j[1] - c[0] * j[1] - j[0] * a[1] + j[0] * c[1]) / n
+        )
+        a + k * i
+    )
+   :a
+;
+
+/**
  * Computes the angle between two 2D vectors.
  *
  * @param Vector [a] - The first vector

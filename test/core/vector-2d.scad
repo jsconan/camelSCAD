@@ -34,7 +34,7 @@ use <../../full.scad>
  * @author jsconan
  */
 module testCoreVector2D() {
-    testPackage("core/vector-2d.scad", 25) {
+    testPackage("core/vector-2d.scad", 26) {
         // test core/vector-2d/vector2D()
         testModule("vector2D()", 3) {
             testUnit("no parameter", 1) {
@@ -302,6 +302,26 @@ module testCoreVector2D() {
                 assertEqual(parallel2D([4, 5], [6, 7], [2, 3], [0, 1]), true, "parallels segments");
                 assertEqual(parallel2D([4, 5], [8, 7], [2, 3], [5, 1]), false, "not parallels segments");
                 assertEqual(parallel2D([0, 0], [3, 0], [1, 2], [1, 4]), false, "perpendicular segments");
+            }
+        }
+        // test core/vector-2d/intersect2D()
+        testModule("intersect2D()", 3) {
+            testUnit("no parameter", 1) {
+                assertEqual(intersect2D(), [0, 0], "Without parameter the function should return the origin");
+            }
+            testUnit("wrong type", 4) {
+                assertEqual(intersect2D("10", "10", "10", "10"), [0, 0], "Cannot compute intersection of strings, should return the origin");
+                assertEqual(intersect2D(true, true, true, true), [0, 0], "Cannot compute intersection of boolean, should return the origin");
+                assertEqual(intersect2D([], [], [], []), [0, 0], "Cannot compute intersection of empty arrays, should return the origin");
+                assertEqual(intersect2D(["1"], ["2"], ["3"], ["4"]), [0, 0], "Cannot compute intersection of arrays, should return the origin");
+            }
+            testUnit("intersection", 6) {
+                assertEqual(intersect2D(1, 2, 3, 4), [1, 1], "Numbers should be converted to vectors");
+                assertEqual(intersect2D([1, 1], [2, 2], [3, 1], [4, 2]), [1, 1], "Parallel lines");
+                assertEqual(intersect2D([1, 1], [2, 2], [1, 2], [2, 1]), [1.5, 1.5], "Perpendicular lines");
+                assertEqual(intersect2D([0, -3], [1, 0], [0, 3], [1, 0]), [1, 0], "Lines crossing on X axis");
+                assertEqual(intersect2D([-3, 0], [0, 1], [3, 0], [0, 1]), [0, 1], "Lines crossing on Y axis");
+                assertEqual(intersect2D([-3, 1], [3, 8], [-2, 5], [7, 3]), [-3, 1] + (-38 / -75) * [6, 7], "Lines crossing on Y axis");
             }
         }
         // test core/vector-2d/angle2D()
