@@ -259,6 +259,48 @@ function tangent2D(p, c, r) =
 ;
 
 /**
+ * Computes the third edge of an isosceles triangle.
+ * The edges that have the same angle must be provided.
+ * The height or the angle must be provided.
+ * If both are provided, the height overrides the angle.
+ *
+ * @param Vector a - The first edge
+ * @param Vector b - The second edge
+ * @param Number [h] - The height of the triangle
+ * @param Number [angle] - The angle of the triangle
+ * @returns Vector
+ */
+function isosceles2D(a, b, h, angle) =
+    let(
+        a = vector2D(a),
+        b = vector2D(b),
+        v = b - a,
+        d = norm2D(v) / 2,
+        w = atan2(v[1], v[0])
+    )
+    h != undef ? (
+        let(
+            h = float(h),
+            r = pythagore(h, d),
+            angle = atan2(h, d)
+        )
+        a + arcPoint(r, w + angle)
+    )
+   :(
+       let(
+           angle = straight(angle)
+       )
+       angle < RIGHT ? (
+           let(
+               r = d / cos(angle)
+           )
+           a + arcPoint(r, w + angle)
+       )
+      :a
+   )
+;
+
+/**
  * Computes the angle between two 2D vectors.
  *
  * @param Vector [a] - The first vector

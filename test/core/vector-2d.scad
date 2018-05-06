@@ -34,7 +34,7 @@ use <../../full.scad>
  * @author jsconan
  */
 module testCoreVector2D() {
-    testPackage("core/vector-2d.scad", 27) {
+    testPackage("core/vector-2d.scad", 28) {
         // test core/vector-2d/vector2D()
         testModule("vector2D()", 3) {
             testUnit("no parameter", 1) {
@@ -360,6 +360,36 @@ module testCoreVector2D() {
                 assertApproxEqual(tangent2D([-19, -11], [-11, -5], -2), [-19, -11] + arcPoint(sqrt(96), atan2(6, 8) + asin(-2 / 10)), "Third quadrant, a cicle on the right");
                 assertApproxEqual(tangent2D([11, -5], [19, -11], -2), [11, -5] + arcPoint(sqrt(96), atan2(-6, 8) + asin(-2 / 10)), "Fourth quadrant, a cicle on the right");
                 assertApproxEqual(tangent2D([19, -11], [11, -5], -2), [19, -11] + arcPoint(sqrt(96), atan2(6, -8) + asin(-2 / 10)), "Fourth quadrant, a cicle on the left");
+            }
+        }
+        // test core/vector-2d/isosceles2D()
+        testModule("isosceles2D()", 4) {
+            testUnit("no parameter", 1) {
+                assertEqual(isosceles2D(), [0, 0], "Without parameter the function should return the origin");
+            }
+            testUnit("wrong type", 4) {
+                assertEqual(isosceles2D("10", "10", "10"), [0, 0], "Cannot compute edge of strings, should return the origin");
+                assertEqual(isosceles2D(true, true, true), [0, 0], "Cannot compute edge of boolean, should return the origin");
+                assertEqual(isosceles2D([], [], []), [0, 0], "Cannot compute intersection of edge arrays, should return the origin");
+                assertEqual(isosceles2D(["1"], ["2"], ["3"]), [0, 0], "Cannot compute edge of arrays, should return the origin");
+            }
+            testUnit("height", 7) {
+                assertApproxEqual(isosceles2D(1, 2, 3), [1, 1] + arcPoint(pythagore(3, norm2D([1, 1]) / 2), 45 + atan2(3, norm2D([1, 1]) / 2)), "Numbers should be converted to vectors");
+                assertApproxEqual(isosceles2D([10, 5], [20, 5], 10), [10, 5] + arcPoint(pythagore(10, 5), atan2(10, 5)), "Horizontal triangle, edge on the top");
+                assertApproxEqual(isosceles2D([20, 5], [10, 5], 10), [20, 5] - arcPoint(pythagore(10, 5), atan2(10, 5)), "Horizontal triangle, edge on the bottom");
+                assertApproxEqual(isosceles2D([5, 10], [5, 20], 10), [5, 10] + arcPoint(pythagore(10, 5), atan2(5, -10)), "Vertical triangle, edge on the left");
+                assertApproxEqual(isosceles2D([5, 20], [5, 10], 10), [5, 20] - arcPoint(pythagore(10, 5), atan2(5, -10)), "Vertical triangle, edge on the right");
+                assertApproxEqual(isosceles2D([10, 10], [18, 16], 10), [10, 10] + arcPoint(pythagore(10, 5), atan2(10, 5) + atan2(6, 8)), "Tilted triangle, edge on the top");
+                assertApproxEqual(isosceles2D([18, 16], [10, 10], 10), [18, 16] - arcPoint(pythagore(10, 5), atan2(10, 5) + atan2(6, 8)), "Tilted triangle, edge on the bottom");
+            }
+            testUnit("angle", 7) {
+                assertApproxEqual(isosceles2D(1, 2, angle=45), [1, 2], "Numbers should be converted to vectors");
+                assertApproxEqual(isosceles2D([10, 5], [20, 5], angle=45), [15, 10], "Horizontal triangle, edge on the top");
+                assertApproxEqual(isosceles2D([20, 5], [10, 5], angle=45), [15, 0], "Horizontal triangle, edge on the bottom");
+                assertApproxEqual(isosceles2D([5, 10], [5, 20], angle=45), [0, 15], "Vertical triangle, edge on the left");
+                assertApproxEqual(isosceles2D([5, 20], [5, 10], angle=45), [10, 15], "Vertical triangle, edge on the right");
+                assertApproxEqual(isosceles2D([10, 10], [18, 16], angle=45), [11, 17], "Tilted triangle, edge on the top");
+                assertApproxEqual(isosceles2D([18, 16], [10, 10], angle=45), [17, 9], "Tilted triangle, edge on the bottom");
             }
         }
         // test core/vector-2d/angle2D()
