@@ -154,7 +154,7 @@ module testCoreLine() {
                 assertEqual(path(true, true), [true], "Cannot build a line using booleans");
                 assertEqual(path(1, 1), [1], "Cannot build a line using numbers");
             }
-            testUnit("path only", 41) {
+            testUnit("path only", 49) {
                 // point
                 assertEqual(path([["P"]]), [[0, 0]], "Path with 1 empty point");
                 assertEqual(path([["P", 10, 20]]), [[10, 20]], "Path with 1 absolute point");
@@ -179,6 +179,18 @@ module testCoreLine() {
                 assertEqual(path([["V", 10]]), [[0, 0], [0, 10]], "Path with 1 vertical line");
                 assertEqual(path([["P", 5, 6], ["V", 10]]), [[5, 6], [5, 16]], "Path with 1 vertical line from an absolute point");
                 assertEqual(path([["P", 5, 6], ["V"]]), [[5, 6]], "Path with 1 empty vertical line from an absolute point");
+
+                // intersection line
+                assertEqual(path([["I"]]), [[0, 0]], "Path with 1 empty intersection line");
+                assertEqual(path([["I", [3, 3], [1, 3], [6, -2]]]), [[0, 0], [2, 2]], "Path with 1 intersection line");
+                assertEqual(path([["P", 5, 6], ["I", [8, 9], [6, 9], [11, 4]]]), [[5, 6], [7, 8]], "Path with 1 intersection line from an absolute point");
+                assertEqual(path([["P", 5, 6], ["I"]]), [[5, 6]], "Path with 1 empty intersection line from an absolute point");
+
+                // tangent line
+                assertEqual(path([["T"]]), [[0, 0]], "Path with 1 empty tangent line");
+                assertEqual(path([["T", 8, 6, 2]]), [[0, 0], arcPoint(sqrt(96), atan2(6, 8) + asin(2 / 10))], "Path with 1 tangent line");
+                assertEqual(path([["P", 11, 5], ["T", 19, 11, 2]]), [[11, 5], [11, 5] + arcPoint(sqrt(96), atan2(6, 8) + asin(2 / 10))], "Path with 1 tangent line from an absolute point");
+                assertEqual(path([["P", 5, 6], ["T"]]), [[5, 6]], "Path with 1 empty tangent line from an absolute point");
 
                 // leaned line
                 assertEqual(path([["A"]]), [[0, 0]], "Path with 1 empty leaned line");
