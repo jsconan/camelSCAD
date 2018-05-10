@@ -34,7 +34,7 @@ use <../../full.scad>
  * @author jsconan
  */
 module testCoreVector2D() {
-    testPackage("core/vector-2d.scad", 28) {
+    testPackage("core/vector-2d.scad", 29) {
         // test core/vector-2d/vector2D()
         testModule("vector2D()", 3) {
             testUnit("no parameter", 1) {
@@ -390,6 +390,22 @@ module testCoreVector2D() {
                 assertApproxEqual(isosceles2D([5, 20], [5, 10], angle=45), [10, 15], "Vertical triangle, edge on the right");
                 assertApproxEqual(isosceles2D([10, 10], [18, 16], angle=45), [11, 17], "Tilted triangle, edge on the top");
                 assertApproxEqual(isosceles2D([18, 16], [10, 10], angle=45), [17, 9], "Tilted triangle, edge on the bottom");
+            }
+        }
+        // test core/vector-2d/protractor()
+        testModule("protractor()", 2) {
+            testUnit("default value", 3) {
+                assertEqual(protractor(), 0, "Should return 0 if no point was provided");
+                assertEqual(protractor("1", "2"), 0, "Cannot compute angle of strings");
+                assertEqual(protractor(true, true), 0, "Cannot compute angle of booleans");
+            }
+            testUnit("compute angle", 6) {
+                assertEqual(protractor(1, 2), 45, "When single numbers are provided, they should be translated to vector.");
+                assertEqual(protractor([3, 5], [3, 9]), 90, "Positive straight angle");
+                assertEqual(protractor([3, 9], [3, 5]), -90, "Negative straight angle");
+                assertEqual(protractor([3, 2], [6, 7]), atan2(5, 3), "Angle of a positive line");
+                assertEqual(protractor([6, 7], [3, 2]), atan2(-5, -3), "Angle of a negative line");
+                assertEqual(protractor([3, 2], [3, 2]), 0, "Angle of a point");
             }
         }
         // test core/vector-2d/angle2D()

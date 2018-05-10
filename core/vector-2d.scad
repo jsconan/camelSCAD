@@ -301,6 +301,21 @@ function isosceles2D(a, b, h, angle) =
 ;
 
 /**
+ * Computes the angle of a line defined by two points.
+ *
+ * @param Vector [a] - The first point on the line
+ * @param Vector [b] - The second point on the line
+ * @returns Number
+ */
+function protractor(a, b) =
+    let(
+        v = vector2D(b) - vector2D(a)
+    )
+    v[0] || v[1] ? atan2(v[1], v[0])
+                 : 0
+;
+
+/**
  * Computes the angle between two 2D vectors.
  *
  * @param Vector [a] - The first vector
