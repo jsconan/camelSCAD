@@ -53,16 +53,18 @@ function arc(r, a=DEGREES, o, a1, a2) =
    :let(
         start = min(a1, a2),
         end = max(a1, a2),
-        step = astep(max(r), absdeg(end - start))
+        range = end - start,
+        step = astep(max(r), absdeg(range)),
+        inc = sign(a2 - a1) * step
     )
     complete(
         // intermediate points
-        end - start <= step ? []
-       :[ for (a = [start + step : step : end]) arcp(r, a) + o ],
+        range <= step ? []
+       :[ for (a = [a1 + inc : inc : a2]) arcp(r, a) + o ],
         // the start point
-        arcp(r, start) + o,
+        arcp(r, a1) + o,
         // the final point
-        arcp(r, end) + o
+        arcp(r, a2) + o
     )
 ;
 
