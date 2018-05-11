@@ -340,7 +340,7 @@ function drawPill(size, r, d, l, w, h, rx, ry, dx, dy) =
     )
     center == [0, 0] ? arc(r=radius, a1=-RIGHT, a2=RIGHT)
    :concat(
-        arc(r=radius, o=-center, a=-RIGHT),
+        arc(r=radius, o=-center, a=RIGHT, a1=-RIGHT),
         arc(r=radius, o=center, a=RIGHT)
     )
 ;
