@@ -36,7 +36,7 @@ use <../../full.scad>
 module testCoreLine() {
     testPackage("core/line.scad", 4) {
         // test core/line/arc()
-        testModule("arc()", 7) {
+        testModule("arc()", 9) {
             testUnit("no parameter", 1) {
                 assertEqual(arc(), [], "Cannot build an arc without parameters, should return an empty array");
             }
@@ -53,37 +53,79 @@ module testCoreLine() {
                 assertEqual(arc(1, 0), [], "Cannot build a 0° circle arc, should return an empty array");
                 assertEqual(arc([1, 1], 0), [], "Cannot build a 0° ellipse arc, should return an empty array");
             }
-            testUnit("circle", 4) {
+            testUnit("circle", 5) {
                 assertEqual(arc(1, $fn=3), [ for (a = [360/3 : 360/3 : 360]) _rotP(a, 1, 1) ], "Should return a list of points to draw a circle with a radius of 1 and 3 facets (triangle)");
                 assertEqual(arc(1, $fn=4), [ for (a = [360/4 : 360/4 : 360]) _rotP(a, 1, 1) ], "Should return a list of points to draw a circle with a radius of 1 and 4 facets (square)");
                 assertEqual(arc(1, $fn=6), [ for (a = [360/6 : 360/6 : 360]) _rotP(a, 1, 1) ], "Should return a list of points to draw a circle with a radius of 1 and 6 facets (hexagon)");
                 assertEqual(arc(5, $fa=12, $fs=2), [ for (a = [astep(5, $fa=12, $fs=2) : astep(5, $fa=12, $fs=2) : 360]) _rotP(a, 5, 5) ], "Should return a list of points to draw a circle with a radius of 1 and 16 facets");
+                assertEqual(arc(10, $fn=36), [ for (a = [10 : 10 : 360]) _rotP(a, 10, 10) ], "Should return a list of points to draw a circle with a radius of 10 and 36 facets");
             }
-            testUnit("ellipse", 4) {
+            testUnit("ellipse", 5) {
                 assertEqual(arc([1, 2], $fn=3), [ for (a = [360/3 : 360/3 : 360]) _rotP(a, 1, 2) ], "Should return a list of points to draw an ellipse with a radius of [1, 2] and 3 facets (triangle)");
                 assertEqual(arc([1, 2], $fn=4), [ for (a = [360/4 : 360/4 : 360]) _rotP(a, 1, 2) ], "Should return a list of points to draw an ellipse with a radius of [1, 2] and 4 facets (square)");
                 assertEqual(arc([1, 2], $fn=6), [ for (a = [360/6 : 360/6 : 360]) _rotP(a, 1, 2) ], "Should return a list of points to draw an ellipse with a radius of [1, 2] and 6 facets (hexagon)");
                 assertEqual(arc([5, 6], $fa=12, $fs=2), [ for (a = [0 : astep(6, $fa=12, $fs=2) : 360]) _rotP(a, 5, 6) ], "Should return a list of points to draw an ellipse with a radius of [5, 6] and 20 facets");
+                assertEqual(arc([10, 20], $fn=36), [ for (a = [10 : 10 : 360]) _rotP(a, 10, 20) ], "Should return a list of points to draw an ellipse with a radius of [10, 20] and 36 facets");
             }
-            testUnit("circle arc", 8) {
+            testUnit("circle arc from origin", 12) {
                 assertEqual(arc(1, a=30, $fn=3), [ for (a = [0 : 30 : 30]) _rotP(a, 1, 1) ], "Should return a list of points to draw a 30° arc with a radius of 1 and 3 facets (triangle)");
                 assertEqual(arc(1, a=140, $fn=3), concat([ for (a = [0 : 120 : 140]) _rotP(a, 1, 1) ], [_rotP(140, 1, 1)]), "Should return a list of points to draw a 140° arc with a radius of 1 and 3 facets (triangle)");
                 assertEqual(arc(1, a=140, $fn=4), concat([ for (a = [0 : 90 : 140]) _rotP(a, 1, 1) ], [_rotP(140, 1, 1)]), "Should return a list of points to draw a 140° arc with a radius of 1 and 4 facets (square)");
                 assertEqual(arc(1, a=200, $fn=4), concat([ for (a = [0 : 90 : 200]) _rotP(a, 1, 1) ], [_rotP(200, 1, 1)]), "Should return a list of points to draw a 200° arc with a radius of 1 and 4 facets (square)");
                 assertEqual(arc(1, a=140, $fn=6), concat([ for (a = [0 : 60 : 140]) _rotP(a, 1, 1) ], [_rotP(140, 1, 1)]), "Should return a list of points to draw a 140° arc with a radius of 1 and 6 facets (hexagon)");
                 assertEqual(arc(1, a=200, $fn=6), concat([ for (a = [0 : 60 : 200]) _rotP(a, 1, 1) ], [_rotP(200, 1, 1)]), "Should return a list of points to draw a 200° arc with a radius of 1 and 6 facets (hexagon)");
-                assertEqual(arc(5, a=80, $fa=12, $fs=2), concat([ for (a = [0 : astep(5, $fa=12, $fs=2) : 80]) _rotP(a, 5, 5) ], [_rotP(80, 5, 5)]), "Should return a list of points to draw a 30° arc with a radius of 1 and 16 facets");
-                assertEqual(arc(5, a=160, $fa=12, $fs=2), concat([ for (a = [0 : astep(5, $fa=12, $fs=2) : 160]) _rotP(a, 5, 5) ], [_rotP(160, 5, 5)]), "Should return a list of points to draw a 30° arc with a radius of 1 and 16 facets");
+                assertEqual(arc(5, a=80, $fa=12, $fs=2), concat([ for (a = [0 : astep(5, $fa=12, $fs=2) : 80]) _rotP(a, 5, 5) ], [_rotP(80, 5, 5)]), "Should return a list of points to draw a 80° arc with a radius of 1 and 16 facets");
+                assertEqual(arc(5, a=160, $fa=12, $fs=2), concat([ for (a = [0 : astep(5, $fa=12, $fs=2) : 160]) _rotP(a, 5, 5) ], [_rotP(160, 5, 5)]), "Should return a list of points to draw a 160° arc with a radius of 1 and 16 facets");
+                assertEqual(arc(10, a=300, $fn=36), [ for (a = [0 : 10 : 300]) _rotP(a, 10, 10) ], "Should return a list of points to draw a 300° arc with a radius of 10 and 36 facets");
+                assertEqual(arc(10, a=360, $fn=36), [ for (a = [10 : 10 : 360]) _rotP(a, 10, 10) ], "Should return a list of points to draw a 360° arc with a radius of 10 and 36 facets");
+                assertEqual(arc(10, a=660, $fn=36), [ for (a = [0 : 10 : 300]) _rotP(a, 10, 10) ], "Should return a list of points to draw a 660° arc with a radius of 10 and 36 facets");
+                assertEqual(arc(10, a=720, $fn=36), [ for (a = [10 : 10 : 360]) _rotP(a, 10, 10) ], "Should return a list of points to draw a 720° arc with a radius of 10 and 36 facets");
             }
-            testUnit("ellipse arc", 8) {
+            testUnit("ellipse arc from origin", 12) {
                 assertEqual(arc([1, 2], a=30, $fn=3), [ for (a = [0 : 30 : 30]) _rotP(a, 1, 2) ], "Should return a list of points to draw a 30° arc with a radius of [1, 2] and 3 facets (triangle)");
                 assertEqual(arc([1, 2], a=140, $fn=3), concat([ for (a = [0 : 120 : 140]) _rotP(a, 1, 2) ], [_rotP(140, 1, 2)]), "Should return a list of points to draw a 140° arc with a radius of [1, 2] and 3 facets (triangle)");
                 assertEqual(arc([1, 2], a=140, $fn=4), concat([ for (a = [0 : 90 : 140]) _rotP(a, 1, 2) ], [_rotP(140, 1, 2)]), "Should return a list of points to draw a 140° arc with a radius of [1, 2] and 4 facets (square)");
                 assertEqual(arc([1, 2], a=200, $fn=4), concat([ for (a = [0 : 90 : 200]) _rotP(a, 1, 2) ], [_rotP(200, 1, 2)]), "Should return a list of points to draw a 200° arc with a radius of [1, 2] and 4 facets (square)");
                 assertEqual(arc([1, 2], a=140, $fn=6), concat([ for (a = [0 : 60 : 140]) _rotP(a, 1, 2) ], [_rotP(140, 1, 2)]), "Should return a list of points to draw a 140° arc with a radius of [1, 2] and 6 facets (hexagon)");
                 assertEqual(arc([1, 2], a=200, $fn=6), concat([ for (a = [0 : 60 : 200]) _rotP(a, 1, 2) ], [_rotP(200, 1, 2)]), "Should return a list of points to draw a 200° arc with a radius of [1, 2] and 6 facets (hexagon)");
-                assertEqual(arc([5, 6], a=80, $fa=12, $fs=2), concat([ for (a = [0 : astep(6, $fa=12, $fs=2) : 80]) _rotP(a, 5, 6) ], [_rotP(80, 5, 6)]), "Should return a list of points to draw a 30° arc with a radius of [5, 6] and 16 facets");
-                assertEqual(arc([5, 6], a=160, $fa=12, $fs=2), concat([ for (a = [0 : astep(6, $fa=12, $fs=2) : 160]) _rotP(a, 5, 6) ], [_rotP(160, 5, 6)]), "Should return a list of points to draw a 30° arc with a radius of [5, 6] and 16 facets");
+                assertEqual(arc([5, 6], a=80, $fa=12, $fs=2), concat([ for (a = [0 : astep(6, $fa=12, $fs=2) : 80]) _rotP(a, 5, 6) ], [_rotP(80, 5, 6)]), "Should return a list of points to draw a 80° arc with a radius of [5, 6] and 16 facets");
+                assertEqual(arc([5, 6], a=160, $fa=12, $fs=2), concat([ for (a = [0 : astep(6, $fa=12, $fs=2) : 160]) _rotP(a, 5, 6) ], [_rotP(160, 5, 6)]), "Should return a list of points to draw a 160° arc with a radius of [5, 6] and 16 facets");
+                assertEqual(arc([10, 20], a=300, $fn=36), [ for (a = [0 : 10 : 300]) _rotP(a, 10, 20) ], "Should return a list of points to draw a 300° arc with a radius of [10, 20] and 36 facets");
+                assertEqual(arc([10, 20], a=360, $fn=36), [ for (a = [10 : 10 : 360]) _rotP(a, 10, 20) ], "Should return a list of points to draw a 360° arc with a radius of [10, 20] and 36 facets");
+                assertEqual(arc([10, 20], a=660, $fn=36), [ for (a = [0 : 10 : 300]) _rotP(a, 10, 20) ], "Should return a list of points to draw a 660° arc with a radius of [10, 20] and 36 facets");
+                assertEqual(arc([10, 20], a=720, $fn=36), [ for (a = [10 : 10 : 360]) _rotP(a, 10, 20) ], "Should return a list of points to draw a 720° arc with a radius of [10, 20] and 36 facets");
+            }
+            testUnit("circle arc arbitrary angle", 14) {
+                assertEqual(arc(1, a1=30, a2=60, $fn=36), [ for (a = [30 : 10 : 60]) _rotP(a, 1, 1) ], "Should return a list of points to draw an arc from 30° to 60° with a radius of 1");
+                assertEqual(arc(1, a1=60, a2=30, $fn=36), [ for (a = [60 : -10 : 30]) _rotP(a, 1, 1) ], "Should return a list of points to draw an arc from 60° to 30° with a radius of 1");
+                assertEqual(arc(1, a1=45, a=30, $fn=36), [ for (a = [45 : 10 : 75]) _rotP(a, 1, 1) ], "Should return a list of points to draw a 30° arc from 45° with a radius of 1");
+                assertEqual(arc(1, a1=45, a=-30, $fn=36), [ for (a = [45 : -10 : 15]) _rotP(a, 1, 1) ], "Should return a list of points to draw a -30° arc from 45° with a radius of 1");
+                assertEqual(arc(1, a1=-45, a=30, $fn=36), [ for (a = [-45 : 10 : -15]) _rotP(a, 1, 1) ], "Should return a list of points to draw a 30° arc from -45° with a radius of 1");
+                assertEqual(arc(1, a1=-45, a=-30, $fn=36), [ for (a = [-45 : -10 : -75]) _rotP(a, 1, 1) ], "Should return a list of points to draw a -30° arc from -45° with a radius of 1");
+                assertEqual(arc(1, a1=405, a=390, $fn=36), [ for (a = [45 : 10 : 75]) _rotP(a, 1, 1) ], "Should return a list of points to draw a 390° arc from 405° with a radius of 1");
+                assertEqual(arc(1, a1=405, a=-390, $fn=36), [ for (a = [45 : -10 : 15]) _rotP(a, 1, 1) ], "Should return a list of points to draw a -390° arc from 405° with a radius of 1");
+                assertEqual(arc(1, a1=-30, a2=-60, $fn=36), [ for (a = [-30 : -10 : -60]) _rotP(a, 1, 1) ], "Should return a list of points to draw an arc from -30° to -60° with a radius of 1");
+                assertEqual(arc(1, a1=-60, a2=-30, $fn=36), [ for (a = [-60 : 10 : -30]) _rotP(a, 1, 1) ], "Should return a list of points to draw an arc from -60° to -30° with a radius of 1");
+                assertEqual(arc(1, a1=-30, a2=30, $fn=36), [ for (a = [-30 : 10 : 30]) _rotP(a, 1, 1) ], "Should return a list of points to draw an arc from -30° to 30° with a radius of 1");
+                assertEqual(arc(1, a1=30, a2=-30, $fn=36), [ for (a = [30 : -10 : -30]) _rotP(a, 1, 1) ], "Should return a list of points to draw an arc from 30° to -30° with a radius of 1");
+                assertEqual(arc(1, a1=-390, a2=390, $fn=36), [ for (a = [-30 : 10 : 30]) _rotP(a, 1, 1) ], "Should return a list of points to draw an arc from -390° to 390° with a radius of 1");
+                assertEqual(arc(1, a1=390, a2=-390, $fn=36), [ for (a = [30 : -10 : -30]) _rotP(a, 1, 1) ], "Should return a list of points to draw an arc from 390° to -390° with a radius of 1");
+            }
+            testUnit("ellipse arc arbitrary angle", 14) {
+                assertEqual(arc([1, 2], a1=30, a2=60, $fn=36), [ for (a = [30 : 10 : 60]) _rotP(a, 1, 2) ], "Should return a list of points to draw an arc from 30° to 60° with a radius of [1, 2]");
+                assertEqual(arc([1, 2], a1=60, a2=30, $fn=36), [ for (a = [60 : -10 : 30]) _rotP(a, 1, 2) ], "Should return a list of points to draw an arc from 60° to 30° with a radius of [1, 2]");
+                assertEqual(arc([1, 2], a1=45, a=30, $fn=36), [ for (a = [45 : 10 : 75]) _rotP(a, 1, 2) ], "Should return a list of points to draw a 30° arc from 45° with a radius of [1, 2]");
+                assertEqual(arc([1, 2], a1=45, a=-30, $fn=36), [ for (a = [45 : -10 : 15]) _rotP(a, 1, 2) ], "Should return a list of points to draw a -30° arc from 45° with a radius of [1, 2]");
+                assertEqual(arc([1, 2], a1=-45, a=30, $fn=36), [ for (a = [-45 : 10 : -15]) _rotP(a, 1, 2) ], "Should return a list of points to draw a 30° arc from -45° with a radius of [1, 2]");
+                assertEqual(arc([1, 2], a1=-45, a=-30, $fn=36), [ for (a = [-45 : -10 : -75]) _rotP(a, 1, 2) ], "Should return a list of points to draw a -30° arc from -45° with a radius of [1, 2]");
+                assertEqual(arc([1, 2], a1=405, a=390, $fn=36), [ for (a = [45 : 10 : 75]) _rotP(a, 1, 2) ], "Should return a list of points to draw a 390° arc from 405° with a radius of [1, 2]");
+                assertEqual(arc([1, 2], a1=405, a=-390, $fn=36), [ for (a = [45 : -10 : 15]) _rotP(a, 1, 2) ], "Should return a list of points to draw a -390° arc from 405° with a radius of [1, 2]");
+                assertEqual(arc([1, 2], a1=-30, a2=-60, $fn=36), [ for (a = [-30 : -10 : -60]) _rotP(a, 1, 2) ], "Should return a list of points to draw an arc from -30° to -60° with a radius of [1, 2]");
+                assertEqual(arc([1, 2], a1=-60, a2=-30, $fn=36), [ for (a = [-60 : 10 : -30]) _rotP(a, 1, 2) ], "Should return a list of points to draw an arc from -60° to -30° with a radius of [1, 2]");
+                assertEqual(arc([1, 2], a1=-30, a2=30, $fn=36), [ for (a = [-30 : 10 : 30]) _rotP(a, 1, 2) ], "Should return a list of points to draw an arc from -30° to 30° with a radius of [1, 2]");
+                assertEqual(arc([1, 2], a1=30, a2=-30, $fn=36), [ for (a = [30 : -10 : -30]) _rotP(a, 1, 2) ], "Should return a list of points to draw an arc from 30° to -30° with a radius of [1, 2]");
+                assertEqual(arc([1, 2], a1=-390, a2=390, $fn=36), [ for (a = [-30 : 10 : 30]) _rotP(a, 1, 2) ], "Should return a list of points to draw an arc from -390° to 390° with a radius of [1, 2]");
+                assertEqual(arc([1, 2], a1=390, a2=-390, $fn=36), [ for (a = [30 : -10 : -30]) _rotP(a, 1, 2) ], "Should return a list of points to draw an arc from 390° to -390° with a radius of [1, 2]");
             }
         }
         // test core/line/sinusoid()
@@ -154,7 +196,7 @@ module testCoreLine() {
                 assertEqual(path(true, true), [true], "Cannot build a line using booleans");
                 assertEqual(path(1, 1), [1], "Cannot build a line using numbers");
             }
-            testUnit("path only", 49) {
+            testUnit("path only", 52) {
                 // point
                 assertEqual(path([["P"]]), [[0, 0]], "Path with 1 empty point");
                 assertEqual(path([["P", 10, 20]]), [[10, 20]], "Path with 1 absolute point");
@@ -200,8 +242,11 @@ module testCoreLine() {
 
                 // circle
                 assertEqual(path([["C"]]), [[0, 0]], "Path with 1 empty circle arc");
+                assertEqual(path([["C", 20]]), [ for (a = [astep(360) : astep(360) : 360]) _rotP(180, 20, 20) + _rotP(a, 20, 20) ], "Path with 1 full circle");
                 assertEqual(path([["C", 20, 40, 80]]), concat([ for (a = [40 : astep(20) : 80]) _rotP(220, 20, 20) + _rotP(a, 20, 20) ], [_rotP(220, 20, 20) + _rotP(80, 20, 20)]), "Path with 1 circle arc");
+                assertEqual(path([["C", 20, 80, 40]]), concat([ for (a = [80 : -astep(20) : 40]) _rotP(260, 20, 20) + _rotP(a, 20, 20) ], [_rotP(260, 20, 20) + _rotP(40, 20, 20)]), "Path with 1 negative circle arc");
                 assertEqual(path([["P", 5, 6], ["C", 20, 40, 80]]), concat([ for (a = [40 : astep(20) : 80]) [5, 6] + _rotP(220, 20, 20) + _rotP(a, 20, 20) ], [[5, 6] + _rotP(220, 20, 20) + _rotP(80, 20, 20)]), "Path with 1 circle arc from an absolute point");
+                assertEqual(path([["P", 5, 6], ["C", 20, 80, 40]]), concat([ for (a = [80 : -astep(20) : 40]) [5, 6] + _rotP(260, 20, 20) + _rotP(a, 20, 20) ], [[5, 6] + _rotP(260, 20, 20) + _rotP(40, 20, 20)]), "Path with 1 negative circle arc from an absolute point");
                 assertEqual(path([["P", 5, 6], ["C"]]), [[5, 6]], "Path with 1 empty circle arc from an absolute point");
 
                 // bezier point
