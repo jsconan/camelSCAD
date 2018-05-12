@@ -34,7 +34,7 @@ use <../../full.scad>
  * @author jsconan
  */
 module testCoreVector2D() {
-    testPackage("core/vector-2d.scad", 29) {
+    testPackage("core/vector-2d.scad", 30) {
         // test core/vector-2d/vector2D()
         testModule("vector2D()", 3) {
             testUnit("no parameter", 1) {
@@ -253,6 +253,44 @@ module testCoreVector2D() {
                 assertEqual(move2D([1, 2, 3]), [1, 2], "Should truncate too big vector and returns a 2D vector (no direction vector)");
                 assertEqual(move2D([1, 2, 3], [1, 2, 3]), [1, 2], "Should truncate too big vector and returns a 2D vector (direction vector but not distance)");
                 assertEqual(move2D([1, 2, 3], [1, 2, 3], 1), [1, 2] + [1, 2] / norm2D([1, 2]), "Should truncate too big vector and returns a 2D vector (direction vector and distance)");
+            }
+        }
+        // test core/vector-2d/extend2D()
+        testModule("extend2D()", 3) {
+            testUnit("no parameter", 1) {
+                assertEqual(extend2D(), [0, 0], "Should always produce a 2D vector, even if input is wrong");
+            }
+            testUnit("not vector", 15) {
+                assertEqual(extend2D(1), [1, 1], "Should translate number to 2D vector (only origin)");
+                assertEqual(extend2D(1, 1), [1, 1], "Should translate number to 2D vector (origin and second point)");
+                assertEqual(extend2D(1, 2, 3), [1, 1] + unit2D([1, 1]) * 3, "Should translate number to 2D vector (all parameters)");
+
+                assertEqual(extend2D(true), [0, 0], "Should produce a default 2D vector if input is boolean (only origin)");
+                assertEqual(extend2D(true, true), [0, 0], "Should produce a default 2D vector if input is boolean (origin and second point)");
+                assertEqual(extend2D(true, true, true), [0, 0], "Should produce a default 2D vector if input is boolean (all parameters)");
+
+                assertEqual(extend2D("1"), [0, 0], "Should produce a default 2D vector if input is string (only origin)");
+                assertEqual(extend2D("1", "1"), [0, 0], "Should produce a default 2D vector if input is string (origin and second point)");
+                assertEqual(extend2D("1", "1", "1"), [0, 0], "Should produce a default 2D vector if input is string (all parameters)");
+
+                assertEqual(extend2D(["1"]), [0, 0], "Should produce a default 2D vector if input is array (only origin)");
+                assertEqual(extend2D(["1"], ["1"]), [0, 0], "Should produce a default 2D vector if input is array (origin and second point)");
+                assertEqual(extend2D(["1"], ["1"], ["1"]), [0, 0], "Should produce a default 2D vector if input is array (all parameters)");
+
+                assertEqual(extend2D(["1", 1]), [0, 1], "Should produce a corrected 2D vector if input is wrong (only origin)");
+                assertEqual(extend2D(["1", 1], ["1", 1]), [0, 1], "Should produce a corrected 2D vector if input is wrong (origin and second point)");
+                assertEqual(extend2D(["1", 1], ["1", 1], 1), [0, 1], "Should produce a corrected 2D vector if input is wrong (all parameters)");
+            }
+            testUnit("vector", 9) {
+                assertEqual(extend2D([1]), [1, 0], "Should complete incomplete 2D vector (only origin)");
+                assertEqual(extend2D([1], [1]), [1, 0], "Should complete incomplete 2D vector (origin and second point)");
+                assertEqual(extend2D([1], [1], 1), [1, 0], "Should complete incomplete 2D vector (all parameters)");
+                assertEqual(extend2D([1, 2]), [1, 2], "Should return the provided 2D vector (only origin)");
+                assertEqual(extend2D([1, 2], [3, 4]), [1, 2], "Should return the provided 2D vector (origin and second point)");
+                assertEqual(extend2D([1, 2], [3, 4], 3), [1, 2] + unit2D([2, 2]) * 3, "Should return a 2D vector (all parameters)");
+                assertEqual(extend2D([1, 2, 3]), [1, 2], "Should truncate too big vector and returns a 2D vector (only origin)");
+                assertEqual(extend2D([1, 2, 3], [4, 5, 6]), [1, 2], "Should truncate too big vector and returns a 2D vector (origin and second point)");
+                assertEqual(extend2D([1, 2, 3], [3, 4, 5], 3), [1, 2] + unit2D([2, 2]) * 3, "Should truncate too big vector and returns a 2D vector (all parameters)");
             }
         }
         // test core/vector-2d/center2D()

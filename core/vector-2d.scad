@@ -162,6 +162,24 @@ function middle2D(a, b) = (vector2D(a) + vector2D(b)) / 2;
 function move2D(p, v, d) = vector2D(p) + unit2D(v) * float(d);
 
 /**
+ * Computes the point at the wanted distance from the origin on the defined line.
+ * The line is defined by two points: the origin and another arbitrary point.
+ *
+ * @param Vector a - The origin of the line.
+ * @param Vector b - The second point on the line.
+ * @param Number d - The distance from the origin where to find the wanted point.
+ * @returns Vector
+ */
+function extend2D(a, b, d) =
+    let(
+        a = vector2D(a),
+        b = vector2D(b),
+        d = float(d)
+    )
+    a + unit2D(b - a) * d
+;
+
+/**
  * Computes the center of a cicle that pass through two points.
  *
  * @param Number a - The first point.
