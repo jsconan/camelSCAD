@@ -196,17 +196,19 @@ module testCoreLine() {
                 assertEqual(path(true, true), [true], "Cannot build a line using booleans");
                 assertEqual(path(1, 1), [1], "Cannot build a line using numbers");
             }
-            testUnit("path only", 52) {
+            testUnit("path only", 55) {
                 // point
                 assertEqual(path([["P"]]), [[0, 0]], "Path with 1 empty point");
-                assertEqual(path([["P", 10, 20]]), [[10, 20]], "Path with 1 absolute point");
+                assertEqual(path([["P", 10, 20]]), [[10, 20]], "Path with 1 absolute point, using coordinates");
+                assertEqual(path([["P", [10, 20]]]), [[10, 20]], "Path with 1 absolute point, using point value");
                 assertEqual(path([["P", 10, 20], ["P"]]), [[10, 20]], "Path with 1 absolute point and 1 empty point");
                 assertEqual(path([["P", 10, 20], ["P", 0, 5]]), [[10, 20], [0, 5]], "Path with 2 absolute points");
                 assertEqual(path([["P", 10, 20], ["P", 0, 5], ["P", 7, 4]]), [[10, 20], [0, 5], [7, 4]], "Path with 3 absolute points");
 
                 // line
                 assertEqual(path([["L"]]), [[0, 0]], "Path with 1 empty line");
-                assertEqual(path([["L", 10, 20]]), [[0, 0], [10, 20]], "Path with 1 line");
+                assertEqual(path([["L", 10, 20]]), [[0, 0], [10, 20]], "Path with 1 line, using coordinates");
+                assertEqual(path([["L", [10, 20]]]), [[0, 0], [10, 20]], "Path with 1 line, using point value");
                 assertEqual(path([["P", 5, 6], ["L", 10, 20]]), [[5, 6], [15, 26]], "Path with 1 line from an absolute point");
                 assertEqual(path([["P", 5, 6], ["L"]]), [[5, 6]], "Path with 1 empty line from an absolute point");
 
@@ -230,7 +232,8 @@ module testCoreLine() {
 
                 // tangent line
                 assertEqual(path([["T"]]), [[0, 0]], "Path with 1 empty tangent line");
-                assertEqual(path([["T", 8, 6, 2]]), [[0, 0], arcPoint(sqrt(96), atan2(6, 8) + asin(2 / 10))], "Path with 1 tangent line");
+                assertEqual(path([["T", 8, 6, 2]]), [[0, 0], arcPoint(sqrt(96), atan2(6, 8) + asin(2 / 10))], "Path with 1 tangent line, using coordinates");
+                assertEqual(path([["T", [8, 6], 2]]), [[0, 0], arcPoint(sqrt(96), atan2(6, 8) + asin(2 / 10))], "Path with 1 tangent line, using point value");
                 assertEqual(path([["P", 11, 5], ["T", 19, 11, 2]]), [[11, 5], [11, 5] + arcPoint(sqrt(96), atan2(6, 8) + asin(2 / 10))], "Path with 1 tangent line from an absolute point");
                 assertEqual(path([["P", 5, 6], ["T"]]), [[5, 6]], "Path with 1 empty tangent line from an absolute point");
 
