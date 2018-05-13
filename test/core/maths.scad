@@ -34,7 +34,7 @@ use <../../full.scad>
  * @author jsconan
  */
 module testCoreMaths() {
-    testPackage("core/maths.scad", 13) {
+    testPackage("core/maths.scad", 14) {
         // test core/maths/deg()
         testModule("deg()", 3) {
             testUnit("no parameter", 1) {
@@ -320,6 +320,40 @@ module testCoreMaths() {
                 assertEqual(pythagore(a=3, c=8), sqrt(64-9), "If B and C are provided the function should compute A");
                 assertEqual(pythagore(a=3, b=5, c=8), sqrt(64-9), "If A, B and C are provided the function should compute B");
 
+            }
+        }
+        // test core/maths/apothem()
+        testModule("apothem()") {
+            testUnit("no parameter", 1) {
+                assertEqual(apothem(), 0, "Without parameter the function should return 0");
+            }
+            testUnit("wrong type", 5) {
+                assertEqual(apothem("10", "10"), 0, "Strings should be converted to 0");
+                assertEqual(apothem(true, true), 0, "Booleans should be converted to 0");
+                assertEqual(apothem([], []), 0, "Empty arrays should be converted to 0");
+                assertEqual(apothem(["1"], ["2"]), 0, "Arrays should be converted to 0");
+                assertEqual(apothem([1], [2]), 0, "Vectors should be converted to 0");
+            }
+            testUnit("number", 15) {
+                assertEqual(apothem(0), 0, "If the only one parameter is 0, the function should not fail, but should return 0");
+                assertEqual(apothem(0, 0), 0, "If all parameters are 0 the function should not fail, but should return 0");
+
+                assertEqual(apothem(r=8), 8 * cos(PI / 3), "If only the radius is provided, the function should compute the apothem of a triangle");
+                assertEqual(apothem(a=8), 8 / 2 * tan(PI / 3), "If only the lenght of a side is provided, the function should compute the apothem of a triangle");
+                assertEqual(apothem(n=8), 0, "If only the number of sides is provided, the function cannot compute the result");
+
+                assertEqual(apothem(n=4, r=8), 8 * cos(PI / 4), "Apothem of a square, using the radius");
+                assertEqual(apothem(n=5, r=8), 8 * cos(PI / 5), "Apothem of a pentagon, using the radius");
+                assertEqual(apothem(n=6, r=8), 8 * cos(PI / 6), "Apothem of an hexagon, using the radius");
+                assertEqual(apothem(n=8, r=8), 8 * cos(PI / 8), "Apothem of an octogon, using the radius");
+
+                assertEqual(apothem(n=4, a=8), 8 / 2 * tan(PI / 4), "Apothem of a square, using the side");
+                assertEqual(apothem(n=5, a=8), 8 / 2 * tan(PI / 5), "Apothem of a pentagon, using the side");
+                assertEqual(apothem(n=6, a=8), 8 / 2 * tan(PI / 6), "Apothem of an hexagon, using the side");
+                assertEqual(apothem(n=8, a=8), 8 / 2 * tan(PI / 8), "Apothem of an octogon, using the side");
+
+                assertEqual(apothem(6, 8), 8 * cos(PI / 6), "Apothem of an hexagon, using the default order of parameters");
+                assertEqual(apothem(6, 8, 10), 8 * cos(PI / 6), "Apothem of an hexagon, using the default order of parameters with all provided (radius should predomin)");
             }
         }
         // test core/maths/factorial()
