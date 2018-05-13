@@ -334,26 +334,30 @@ module testCoreMaths() {
                 assertEqual(apothem(["1"], ["2"]), 0, "Arrays should be converted to 0");
                 assertEqual(apothem([1], [2]), 0, "Vectors should be converted to 0");
             }
-            testUnit("number", 15) {
+            testUnit("number", 18) {
                 assertEqual(apothem(0), 0, "If the only one parameter is 0, the function should not fail, but should return 0");
-                assertEqual(apothem(0, 0), 0, "If all parameters are 0 the function should not fail, but should return 0");
+                assertEqual(apothem(0, 0, 0), 0, "If all parameters are 0 the function should not fail, but should return 0");
 
-                assertEqual(apothem(r=8), 8 * cos(PI / 3), "If only the radius is provided, the function should compute the apothem of a triangle");
-                assertEqual(apothem(a=8), 8 / 2 * tan(PI / 3), "If only the lenght of a side is provided, the function should compute the apothem of a triangle");
+                assertEqual(apothem(r=8), 8 * cos(60), "If only the radius is provided, the function should compute the apothem of a triangle");
+                assertEqual(apothem(l=8), 8 / (2 * tan(60)), "If only the length of a side is provided, the function should compute the apothem of a triangle");
                 assertEqual(apothem(n=8), 0, "If only the number of sides is provided, the function cannot compute the result");
 
-                assertEqual(apothem(n=4, r=8), 8 * cos(PI / 4), "Apothem of a square, using the radius");
-                assertEqual(apothem(n=5, r=8), 8 * cos(PI / 5), "Apothem of a pentagon, using the radius");
-                assertEqual(apothem(n=6, r=8), 8 * cos(PI / 6), "Apothem of an hexagon, using the radius");
-                assertEqual(apothem(n=8, r=8), 8 * cos(PI / 8), "Apothem of an octogon, using the radius");
+                assertEqual(apothem(r=8, n=4), 8 * cos(45), "Apothem of a square, using the radius");
+                assertEqual(apothem(r=8, n=5), 8 * cos(36), "Apothem of a pentagon, using the radius");
+                assertEqual(apothem(r=8, n=6), 8 * cos(30), "Apothem of an hexagon, using the radius");
+                assertEqual(apothem(r=8, n=8), 8 * cos(22.5), "Apothem of an octogon, using the radius");
 
-                assertEqual(apothem(n=4, a=8), 8 / 2 * tan(PI / 4), "Apothem of a square, using the side");
-                assertEqual(apothem(n=5, a=8), 8 / 2 * tan(PI / 5), "Apothem of a pentagon, using the side");
-                assertEqual(apothem(n=6, a=8), 8 / 2 * tan(PI / 6), "Apothem of an hexagon, using the side");
-                assertEqual(apothem(n=8, a=8), 8 / 2 * tan(PI / 8), "Apothem of an octogon, using the side");
+                assertEqual(apothem(l=8, n=4), 8 / (2 * tan(45)), "Apothem of a square, using the side");
+                assertEqual(apothem(l=8, n=5), 8 / (2 * tan(36)), "Apothem of a pentagon, using the side");
+                assertEqual(apothem(l=8, n=6), 8 / (2 * tan(30)), "Apothem of an hexagon, using the side");
+                assertEqual(apothem(l=8, n=8), 8 / (2 * tan(22.5)), "Apothem of an octogon, using the side");
 
-                assertEqual(apothem(6, 8), 8 * cos(PI / 6), "Apothem of an hexagon, using the default order of parameters");
-                assertEqual(apothem(6, 8, 10), 8 * cos(PI / 6), "Apothem of an hexagon, using the default order of parameters with all provided (radius should predomin)");
+                assertEqual(apothem(6, 8), 8 * cos(30), "Apothem of an hexagon, using the default order of parameters");
+                assertEqual(apothem(6, 8, 10), 8 * cos(30), "Apothem of an hexagon, using the default order of parameters with all provided (radius should predomin)");
+
+                assertEqual(apothem(n=4, r=sqrt(32) / 2), apothem(n=4, l=4), "Apothem of a square, comparing results using radius and side");
+                assertApproxEqual(apothem(n=4, l=4), 2, "Apothem of a square, comparing results and side");
+                assertApproxEqual(apothem(n=6, r=4), apothem(n=6, l=4), "Apothem of an hexagon, comparing results using radius and side");
             }
         }
         // test core/maths/factorial()

@@ -118,15 +118,15 @@ function pythagore(a, b, c) =
  *
  * @param Number n - The number of sides (min 3).
  * @param Number [r] - The radius of the inscribed circle.
- * @param Number [a] - The length of a side.
+ * @param Number [l] - The length of a side of the polygon.
  * @returns Number
  */
-function apothem(n, r, a) =
+function apothem(n, r, l) =
     let (
         n = max(float(n), 3)
     )
-    r ? float(r) * cos(PI / n)
-      : float(a) / 2 * tan(PI / n)
+    r ? float(r) * cos(STRAIGHT / n)
+      : float(l) / (2 * tan(STRAIGHT / n))
 ;
 
 /**
