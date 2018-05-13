@@ -34,7 +34,7 @@ use <../../full.scad>
  * @author jsconan
  */
 module testCoreMaths() {
-    testPackage("core/maths.scad", 14) {
+    testPackage("core/maths.scad", 15) {
         // test core/maths/deg()
         testModule("deg()", 3) {
             testUnit("no parameter", 1) {
@@ -358,6 +358,49 @@ module testCoreMaths() {
                 assertEqual(apothem(n=4, r=sqrt(32) / 2), apothem(n=4, l=4), "Apothem of a square, comparing results using radius and side");
                 assertApproxEqual(apothem(n=4, l=4), 2, "Apothem of a square, comparing results and side");
                 assertApproxEqual(apothem(n=6, r=4), apothem(n=6, l=4), "Apothem of an hexagon, comparing results using radius and side");
+            }
+        }
+        // test core/maths/circumradius()
+        testModule("circumradius()") {
+            testUnit("no parameter", 1) {
+                assertEqual(circumradius(), 0, "Without parameter the function should return 0");
+            }
+            testUnit("wrong type", 5) {
+                assertEqual(circumradius("10", "10"), 0, "Strings should be converted to 0");
+                assertEqual(circumradius(true, true), 0, "Booleans should be converted to 0");
+                assertEqual(circumradius([], []), 0, "Empty arrays should be converted to 0");
+                assertEqual(circumradius(["1"], ["2"]), 0, "Arrays should be converted to 0");
+                assertEqual(circumradius([1], [2]), 0, "Vectors should be converted to 0");
+            }
+            testUnit("number", 22) {
+                assertEqual(circumradius(0), 0, "If the only one parameter is 0, the function should not fail, but should return 0");
+                assertEqual(circumradius(0, 0, 0), 0, "If all parameters are 0 the function should not fail, but should return 0");
+
+                assertEqual(circumradius(a=8), 8 / cos(60), "If only the length is provided, the function should compute the circumradius of a triangle");
+                assertEqual(circumradius(l=8), apothem(l=8)/ cos(60), "If only the length of a side is provided, the function should compute the circumradius of a triangle");
+                assertEqual(circumradius(n=8), 0, "If only the number of sides is provided, the function cannot compute the result");
+
+                assertEqual(circumradius(a=8, n=4), 8 / cos(45), "Circumradius of a square, using the the apothem");
+                assertEqual(circumradius(a=8, n=5), 8 / cos(36), "Circumradius of a pentagon, using the the apothem");
+                assertEqual(circumradius(a=8, n=6), 8 / cos(30), "Circumradius of an hexagon, using the the apothem");
+                assertEqual(circumradius(a=8, n=8), 8 / cos(22.5), "Circumradius of an octogon, using the the apothem");
+
+                assertEqual(circumradius(l=8, n=4), apothem(l=8, n=4) / cos(45), "Circumradius of a square, using the the side");
+                assertEqual(circumradius(l=8, n=5), apothem(l=8, n=5) / cos(36), "Circumradius of a pentagon, using the the side");
+                assertEqual(circumradius(l=8, n=6), apothem(l=8, n=6) / cos(30), "Circumradius of an hexagon, using the the side");
+                assertEqual(circumradius(l=8, n=8), apothem(l=8, n=8) / cos(22.5), "Circumradius of an octogon, using the the side");
+
+                assertEqual(circumradius(6, 8), 8 / cos(30), "Circumradius of an hexagon, using the default order of parameters");
+                assertEqual(circumradius(6, 8, 10), 8 / cos(30), "Circumradius of an hexagon, using the default order of parameters with all provided (apothem should predomin)");
+
+                assertEqual(circumradius(n=6, a=apothem(n=6, l=8)), circumradius(n=6, l=8), "Circumradius of an hexagon, comparing results using apothem and side");
+                assertApproxEqual(circumradius(n=4, a=2), circumradius(n=4, l=4), "Circumradius of a square, comparing results using apothem and side");
+                assertApproxEqual(circumradius(n=6, l=4), 4, "Circumradius of an hexagon, comparing results and side");
+
+                assertEqual(circumradius(n=4, a=apothem(n=4, r=8)), 8, "Circumradius of a square, using radius of the inscribed circle");
+                assertEqual(circumradius(n=5, a=apothem(n=5, r=8)), 8, "Circumradius of a pentagon, using radius of the inscribed circle");
+                assertEqual(circumradius(n=6, a=apothem(n=6, r=8)), 8, "Circumradius of an hexagon, using radius of the inscribed circle");
+                assertEqual(circumradius(n=8, a=apothem(n=8, r=8)), 8, "Circumradius of an octogon, using radius of the inscribed circle");
             }
         }
         // test core/maths/factorial()

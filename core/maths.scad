@@ -130,6 +130,25 @@ function apothem(n, r, l) =
 ;
 
 /**
+ * Computes the radius of a circle circumscribing a regular N-sides polygon.
+ * The circumradius can be computed either from the apothem or the side of the
+ * circumscribed polygon. Only one of these values is required, if both are
+ * provided, the apothem is predominant.
+ *
+ * @param Number n - The number of sides (min 3).
+ * @param Number [a] - The apothem of the regular polygon.
+ * @param Number [l] - The length of a side of the polygon.
+ * @returns Number
+ */
+function circumradius(n, a, l) =
+    let (
+        n = max(float(n), 3),
+        a = a ? float(a) : float(l) / (2 * tan(STRAIGHT / n))
+    )
+    a / cos(STRAIGHT / n)
+;
+
+/**
  * Computes the factorial of N.
  *
  * @param Number n
