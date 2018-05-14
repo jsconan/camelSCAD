@@ -87,9 +87,9 @@ openscad -o "${dst}" "${src}" -D CSV=true >"${output}" 2>&1
 
 if [ "$?" != "0" ]; then
     echo -e "\033[31m"
-    cat "${output}"
+    echo "$(<${output})"
 else
-    cat "${output}" | sed -e 's/^ECHO: "\(.*\)"$/\1/g' >"${result}"
+    sed -e 's/^ECHO: "\(.*\)"$/\1/g' "${output}" >"${result}"
     awk -f "${scriptPath}/parse-test.awk" "${result}"
 fi
 
