@@ -132,13 +132,13 @@ function cosinusoid(l, w, h, p, o, a) =
  * start from the absolute origin ([0, 0]), unless the first command is a point.
  *
  * The following commands are recognized:
- * - P, Point: ["P", <x>, <y>] - Adds an point at the given absolute coordinates.
- * - L, Line: ["L", <x>, <y>] - Adds a line from the last point to the given relative coordinates.
+ * - P, Point: ["P", <x>, <y>] | ["P", <point>] - Adds a point at the given absolute coordinates.
+ * - L, Line: ["L", <x>, <y>] | ["L", <point>] - Adds a line from the last point to the given relative coordinates.
  * - H, Horizontal line: ["H", <length>] - Adds an horizontal line from the last point with the given length. The sign of the length determines the direction.
  * - V, Vertical line: ["V", <length>] - Adds a vertical line from the last point with the given length. The sign of the length determines the direction.
  * - I, Intersection: ["I", <P1>, <P2>, <P3>] - Adds a line from the last point, that pass through P1 and intersects with the line defined by P2 and P3.
- * - T, Tangent: ["T", <x>, <y>, <radius>] - Adds a line from the last point, that ends at the tangent point with the defined circle.
- * - A, Angle: ["A", <angle>, <length>] - Adds a leaned line from the last point with the given angle and the given length The sign of the length determines the direction.
+ * - T, Tangent: ["T", <x>, <y>, <radius>] | ["T", <point>, <radius>] - Adds a line from the last point, that ends at the tangent point with the defined circle. The sign of the radius determines the direction
+ * - A, Angle: ["A", <angle>, <length>] - Adds a leaned line from the last point with the given angle and the given length. The sign of the length determines the direction.
  * - C, Circle: ["C", <radius>, <start angle>, <end angle>] - Adds a circle arc from the last point with the given radius and with the given angle.
  * - B, Bezier curve: ["B", <P1>, <P2>, <P3>] - Adds a cubic bezier curve from the last point with the given control points (up to 3, the first beeing the last existing point).
  *
@@ -162,12 +162,12 @@ function path(p, points, i) =
    :let(
         values = (
             l <= 1 ? [point]
-            :cmd == "P" || cmd == "p" ? [apply2D(x=cur[1], y=cur[2])]
-            :cmd == "L" || cmd == "l" ? [point, point + apply2D(x=cur[1], y=cur[2])]
+            :cmd == "P" || cmd == "p" ? [isVector(cur[1]) ? vector2D(cur[1]) : apply2D(x=cur[1], y=cur[2])]
+            :cmd == "L" || cmd == "l" ? [point, point + (isVector(cur[1]) ? vector2D(cur[1]) : apply2D(x=cur[1], y=cur[2]))]
             :cmd == "H" || cmd == "h" ? [point, point + apply2D(x=cur[1])]
             :cmd == "V" || cmd == "v" ? [point, point + apply2D(y=cur[1])]
-            :cmd == "I" || cmd == "i" ? [point, intersect2D(point, vector2D(cur[1]), vector2D(cur[2]), vector2D(cur[3]))]
-            :cmd == "T" || cmd == "t" ? [point, tangent2D(point, apply2D(x=cur[1], y=cur[2]), float(cur[3]))]
+            :cmd == "I" || cmd == "i" ? [point, intersect2D(point, cur[1], cur[2], cur[3])]
+            :cmd == "T" || cmd == "t" ? let(isv = isVector(cur[1])) [point, tangent2D(point, isv ? cur[1] : apply2D(x=cur[1], y=cur[2]), isv ? cur[2] : cur[3])]
             :cmd == "A" || cmd == "a" ? [point, point + arcPoint(a=cur[1], r=cur[2])]
             :cmd == "C" || cmd == "c" ? arc(r=cur[1], a1=cur[2], a2=cur[3], o=point + arcPoint(a=float(cur[2]) + STRAIGHT, r=cur[1]))
             :cmd == "B" || cmd == "b" ? (

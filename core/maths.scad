@@ -109,6 +109,46 @@ function pythagore(a, b, c) =
 ;
 
 /**
+ * Computes the apothem of a regular N-sides polygon.
+ * An apothem is a line from the center of a regular polygon at right angles
+ * to any of its sides.
+ * The apothem can be computed either from the radius of the inscribed circle
+ * or from the length of one side. Only one of these values is required, if
+ * both are provided, the radius is predominant.
+ *
+ * @param Number n - The number of sides (min 3).
+ * @param Number [r] - The radius of the inscribed circle.
+ * @param Number [l] - The length of a side of the polygon.
+ * @returns Number
+ */
+function apothem(n, r, l) =
+    let (
+        n = max(float(n), 3)
+    )
+    r ? float(r) * cos(STRAIGHT / n)
+      : float(l) / (2 * tan(STRAIGHT / n))
+;
+
+/**
+ * Computes the radius of a circle circumscribing a regular N-sides polygon.
+ * The circumradius can be computed either from the apothem or the side of the
+ * circumscribed polygon. Only one of these values is required, if both are
+ * provided, the apothem is predominant.
+ *
+ * @param Number n - The number of sides (min 3).
+ * @param Number [a] - The apothem of the regular polygon.
+ * @param Number [l] - The length of a side of the polygon.
+ * @returns Number
+ */
+function circumradius(n, a, l) =
+    let (
+        n = max(float(n), 3),
+        a = a ? float(a) : float(l) / (2 * tan(STRAIGHT / n))
+    )
+    a / cos(STRAIGHT / n)
+;
+
+/**
  * Computes the factorial of N.
  *
  * @param Number n

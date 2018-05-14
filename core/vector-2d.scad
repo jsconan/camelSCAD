@@ -202,26 +202,32 @@ function center2D(a, b, r, negative) =
 ;
 
 /**
- * Checks if two line are parallels.
- * Each line is defined by two points.
+ * Computes a parallel line. The source line is defined by two points.
+ * The parallel line will be defined by two other points translated by
+ * the provided distance.
  *
- * @param Vector a - The first point on the first line.
- * @param Vector b - The second point on the first line.
- * @param Vector c - The first point on the second line.
- * @param Vector d - The second point on the second line.
- * @returns Boolean
+ * @param Vector a - The first point on the line.
+ * @param Vector b - The second point on the line.
+ * @param Number d - The distance to the parallel line. The sign determines the direction
+ * @returns Vector[]
  */
-function parallel2D(a, b, c, d) =
+function parallel2D(a, b, d) =
     let(
-        i = vector2D(b) - vector2D(a),
-        j = vector2D(d) - vector2D(c)
+        a = vector2D(a),
+        b = vector2D(b),
+        v = normal(unit2D(b - a)),
+        d = float(d)
     )
-    i[0] * j[1] - i[1] * j[0] == 0
+    [
+        a + v * d,
+        b + v * d
+    ]
 ;
 
 /**
  * Computes the point at the intersection of two lines.
  * Each line is defined by two points.
+ * If the lines cannot intersect (i.e. are parallel), returns the first point.
  *
  * @param Vector a - The first point on the first line.
  * @param Vector b - The second point on the first line.

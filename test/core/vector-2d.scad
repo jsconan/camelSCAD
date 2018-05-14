@@ -323,23 +323,24 @@ module testCoreVector2D() {
         // test core/vector-2d/parallel2D()
         testModule("parallel2D()", 3) {
             testUnit("no parameter", 1) {
-                assertEqual(parallel2D(), true, "Without parameter the function should return true");
+                assertEqual(parallel2D(), [[0, 0], [0, 0]], "Without parameter the function should return the origin");
             }
             testUnit("wrong type", 4) {
-                assertEqual(parallel2D("10", "10", "10", "10"), true, "Cannot tell if strings are parallels");
-                assertEqual(parallel2D(true, true, true, true), true, "Cannot tell if boolean are parallels");
-                assertEqual(parallel2D([], [], [], []), true, "Cannot tell if empty arrays are parallels");
-                assertEqual(parallel2D(["1"], ["2"], ["3"], ["4"]), true, "Cannot tell if arrays are parallels");
+                assertEqual(parallel2D("10", "10", "10"), [[0, 0], [0, 0]], "Cannot compute parallel of strings");
+                assertEqual(parallel2D(true, true, true), [[0, 0], [0, 0]], "Cannot compute parallel of boolean");
+                assertEqual(parallel2D([], [], []), [[0, 0], [0, 0]], "Cannot compute parallel of empty arrays");
+                assertEqual(parallel2D(["1"], ["2"], ["3"]), [[0, 0], [0, 0]], "Cannot compute parallel of arrays");
             }
-            testUnit("check", 8) {
-                assertEqual(parallel2D(0, 1, 2, 3), true, "Numbers should be converted to vectors");
-                assertEqual(parallel2D([0, 0], [1, 1], [2, 2], [3, 3]), true, "45° positive segments");
-                assertEqual(parallel2D([0, 0], [-1, 1], [-2, 2], [-3, 3]), true, "45° negative segments");
-                assertEqual(parallel2D([0, 0], [3, 0], [1, 2], [3, 2]), true, "horizontal segments");
-                assertEqual(parallel2D([0, 0], [0, 3], [2, 1], [2, 3]), true, "vertical segments");
-                assertEqual(parallel2D([4, 5], [6, 7], [2, 3], [0, 1]), true, "parallels segments");
-                assertEqual(parallel2D([4, 5], [8, 7], [2, 3], [5, 1]), false, "not parallels segments");
-                assertEqual(parallel2D([0, 0], [3, 0], [1, 2], [1, 4]), false, "perpendicular segments");
+            testUnit("check", 9) {
+                assertApproxEqual(parallel2D(0, 1, 2), [[-2 * cos(135), -2 * sin(135)], [1 - 2 * cos(135), 1 - 2 * sin(135)]], "Numbers should be converted to vectors");
+                assertApproxEqual(parallel2D([0, 0], [1, 1], 2), [[-2 * cos(135), -2 * sin(135)], [1 - 2 * cos(135), 1 - 2 * sin(135)]], "45° positive line with a distance of 2");
+                assertApproxEqual(parallel2D([0, 0], [1, 1], -2), [[2 * cos(135), 2 * sin(135)], [1 + 2 * cos(135), 1 + 2 * sin(135)]], "45° positive line with a distance of -2");
+                assertApproxEqual(parallel2D([0, 0], [-1, -1], 2), [[2 * cos(135), 2 * sin(135)], [-1 + 2 * cos(135), -1 + 2 * sin(135)]], "45° negative line with a distance of 2");
+                assertApproxEqual(parallel2D([0, 0], [-1, -1], -2), [[-2 * cos(135), -2 * sin(135)], [-1 - 2 * cos(135), -1 - 2 * sin(135)]], "45° negative line with a distance of -2");
+                assertEqual(parallel2D([0, 2], [3, 2], 3), [[0, -1], [3, -1]], "horizontal line with a distance of 3");
+                assertEqual(parallel2D([0, 2], [3, 2], -3), [[0, 5], [3, 5]], "horizontal line with a distance of -3");
+                assertEqual(parallel2D([4, -2], [4, 8], 3), [[7, -2], [7, 8]], "vertical line with a distance of 3");
+                assertEqual(parallel2D([4, -2], [4, 8], -3), [[1, -2], [1, 8]], "vertical line with a distance of -3");
             }
         }
         // test core/vector-2d/intersect2D()
