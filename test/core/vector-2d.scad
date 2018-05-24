@@ -34,7 +34,7 @@ use <../../full.scad>
  * @author jsconan
  */
 module testCoreVector2D() {
-    testPackage("core/vector-2d.scad", 31) {
+    testPackage("core/vector-2d.scad", 32) {
         // test core/vector-2d/vector2D()
         testModule("vector2D()", 3) {
             testUnit("no parameter", 1) {
@@ -451,6 +451,54 @@ module testCoreVector2D() {
                 assertApproxEqual(circleLineIntersect2D([-1, -1], [-5, -1], [-3, -3], -1), [], "Horizontal line, no intersection");
                 assertApproxEqual(circleLineIntersect2D([-1, -1], [-1, -5], [-3, -3], -1), [], "Vertical line, no intersection");
                 assertApproxEqual(circleLineIntersect2D([-1, -1], [-1, -1], [-3, -3], -1), [], "Point, no intersection");
+            }
+        }
+        // test core/vector-2d/circleIntersect2D()
+        testModule("circleIntersect2D()", 4) {
+            testUnit("no parameter", 1) {
+                assertEqual(circleIntersect2D(), [], "Without parameter the function cannot compute the intersection");
+            }
+            testUnit("wrong type", 4) {
+                assertEqual(circleIntersect2D("10", "10", "10", "10"), [], "Cannot compute intersection of strings");
+                assertEqual(circleIntersect2D(true, true, true, true), [], "Cannot compute intersection of booleans");
+                assertEqual(circleIntersect2D([], [], [], []), [], "Cannot compute intersection of empty arrays");
+                assertEqual(circleIntersect2D(["10"], ["10"], ["10"], ["10"]), [], "Cannot compute intersection of arrays");
+            }
+            testUnit("positive", 13) {
+                assertApproxEqual(circleIntersect2D(1, 2, 3, 4), [[(2 - sqrt(28)) / 4, 1 - (2 - sqrt(28)) / 4], [(2 + sqrt(28)) / 4, 1 - (2 + sqrt(28)) / 4]], "Numbers should be converted to vectors");
+                assertApproxEqual(circleIntersect2D([1, 1], 2, [3, 3], 4), [[(2 - sqrt(28)) / 4, 1 - (2 - sqrt(28)) / 4], [(2 + sqrt(28)) / 4, 1 - (2 + sqrt(28)) / 4]], "Circles aligned at 45°");
+                assertApproxEqual(circleIntersect2D([3, 2], 3, [4, 5], 2), [
+                    [((25 - 3 * sqrt(15)) / 3) / (20 / 9), 11 / 2 - ((25 - 3 * sqrt(15)) / 3) / (20 / 9) / 3],
+                    [((25 + 3 * sqrt(15)) / 3) / (20 / 9), 11 / 2 - ((25 + 3 * sqrt(15)) / 3) / (20 / 9) / 3]
+                ], "Intersecting circles");
+                assertApproxEqual(circleIntersect2D([1, 1], 2, [3, 1], 2), [[0, 1 + sqrt(3)], [2, 1 + sqrt(3)]], "Circles aligned on horizontal axis");
+                assertApproxEqual(circleIntersect2D([1, 1], 2, [1, 3], 2), [[1 + sqrt(3), 0], [1 + sqrt(3), 2]], "Circles aligned on vertical axis");
+                assertApproxEqual(circleIntersect2D([1, 1], 2, [5, 1], 2), [[3, 1], [3, 1]], "Tangent circles on horizontal axis");
+                assertApproxEqual(circleIntersect2D([1, 1], 2, [1, 5], 2), [[1, 3], [1, 3]], "Tangent circles on vertical axis");
+                assertApproxEqual(circleIntersect2D([1, 1], 2, [1, 1] + [4 * cos(45), 4 * sin(45)], 2), [[1, 1] + [2 * cos(45), 2 * sin(45)], [1, 1] + [2 * cos(45), 2 * sin(45)]], "Tangent circles");
+                assertApproxEqual(circleIntersect2D([1, 1], 2, [6, 1], 2), [], "Not intersecting circles aligned on horizontal axis");
+                assertApproxEqual(circleIntersect2D([1, 1], 2, [1, 6], 2), [], "Not intersecting circles aligned on vertical axis");
+                assertApproxEqual(circleIntersect2D([1, 1], 2, [1, 1], 3), [], "Concentric circles");
+                assertApproxEqual(circleIntersect2D([1, 1], 2, [1, 1], 2), [], "Concentric and equal circles");
+                assertApproxEqual(circleIntersect2D([1, 4], 2, [8, 3], 2), [], "Not intersecting circles");
+            }
+            testUnit("negative", 13) {
+                assertApproxEqual(circleIntersect2D(-1, -2, -3, -4), [[(-2 - sqrt(28)) / 4, -1 - (-2 - sqrt(28)) / 4], [(-2 + sqrt(28)) / 4, -1 - (-2 + sqrt(28)) / 4]], "Numbers should be converted to vectors");
+                assertApproxEqual(circleIntersect2D([-1, -1], -2, [-3, -3], -4), [[(-2 - sqrt(28)) / 4, -1 - (-2 - sqrt(28)) / 4], [(-2 + sqrt(28)) / 4, -1 - (-2 + sqrt(28)) / 4]], "Circles aligned at 45°");
+                assertApproxEqual(circleIntersect2D([-3, -2], -3, [-4, -5], -2), [
+                    [((-25 - 3 * sqrt(15)) / 3) / (20 / 9), -11 / 2 - ((-25 - 3 * sqrt(15)) / 3) / (20 / 9) / 3],
+                    [((-25 + 3 * sqrt(15)) / 3) / (20 / 9), -11 / 2 - ((-25 + 3 * sqrt(15)) / 3) / (20 / 9) / 3]
+                ], "Intersecting circles");
+                assertApproxEqual(circleIntersect2D([-1, -1], -2, [-3, -1], -2), [[0, -1 + sqrt(3)], [-2, -1 + sqrt(3)]], "Circles aligned on horizontal axis");
+                assertApproxEqual(circleIntersect2D([-1, -1], -2, [-1, -3], -2), [[-1 + sqrt(3), 0], [-1 + sqrt(3), -2]], "Circles aligned on vertical axis");
+                assertApproxEqual(circleIntersect2D([-1, -1], -2, [-5, -1], -2), [[-3, -1], [-3, -1]], "Tangent circles on horizontal axis");
+                assertApproxEqual(circleIntersect2D([-1, -1], -2, [-1, -5], -2), [[-1, -3], [-1, -3]], "Tangent circles on vertical axis");
+                assertApproxEqual(circleIntersect2D([-1, -1], -2, [-1, -1] - [4 * cos(45), 4 * sin(45)], 2), [[-1, -1] - [2 * cos(45), 2 * sin(45)], [-1, -1] - [2 * cos(45), 2 * sin(45)]], "Tangent circles");
+                assertApproxEqual(circleIntersect2D([-1, -1], -2, [-6, -1], -2), [], "Not intersecting circles aligned on horizontal axis");
+                assertApproxEqual(circleIntersect2D([-1, -1], -2, [-1, -6], -2), [], "Not intersecting circles aligned on vertical axis");
+                assertApproxEqual(circleIntersect2D([-1, -1], -2, [-1, -1], -3), [], "Concentric circles");
+                assertApproxEqual(circleIntersect2D([-1, -1], -2, [-1, -1], -2), [], "Concentric and equal circles");
+                assertApproxEqual(circleIntersect2D([-1, -4], -2, [-8, -3], -2), [], "Not intersecting circles");
             }
         }
         // test core/vector-2d/isosceles2D()
