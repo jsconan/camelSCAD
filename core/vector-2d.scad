@@ -283,6 +283,168 @@ function tangent2D(p, c, r) =
 ;
 
 /**
+ * Computes the points at the intersection of a circle and a line.
+ * The circle is defined by a center and a radius.
+ * The line is defined by two points.
+ * If the function cannot compute the intersection, returns an empty vector.
+ *
+ * @param Vector i - The first point on the line
+ * @param Vector j - The second point on the line
+ * @param Vector c - The center of the circle.
+ * @param Number r - The radius of the circle
+ * @returns Vector[]
+ */
+function circleLineIntersect2D(i, j, c, r) =
+    let(
+        i = vector2D(i),
+        j = vector2D(j),
+        c = vector2D(c),
+        r = abs(float(r)),
+        v = i[0] == j[0],
+        h = i[1] == j[1]
+    )
+    h && v ? (
+        approx(pow(i[0] - c[0], 2) + pow(i[1] - c[1], 2), r * r) ? [i, j] : []
+    )
+   :v ? (
+        let(
+            a = abs(i[0] - c[0])
+        )
+        a <= r ? (
+            let(
+                b = pythagore(a, 0, r)
+            )
+            [
+                [i[0], c[1] - b],
+                [i[0], c[1] + b]
+            ]
+        )
+       :[]
+
+    )
+   :h ? (
+       let(
+           a = abs(i[1] - c[1])
+       )
+       a <= r ? (
+           let(
+               b = pythagore(a, 0, r)
+           )
+           [
+               [c[0] - b, i[1]],
+               [c[0] + b, i[1]]
+           ]
+       )
+      :[]
+    )
+   :(
+        let(
+            v = i - j,
+            a = v[1] / v[0],
+            b = i[1] - a * i[0],
+            x = quadraticEquation(
+                1 + a * a,
+                2 * (-c[0] + (b - c[1]) * a),
+                c[0] * c[0] + c[1] * c[1] + (c[1] * -2 + b) * b - r * r
+            )
+        )
+        len(x) ? (
+            [
+                [x[0], a * x[0] + b],
+                [x[1], a * x[1] + b]
+            ]
+        )
+       :[]
+    )
+;
+
+/**
+ * Computes the points at the intersection of two circles.
+ * Each circle is defined by a center and a radius.
+ * If the function cannot compute the intersection, returns an empty vector.
+ *
+ * @param Vector c1 - The center of the first circle.
+ * @param Number r1 - The radius of the first circle
+ * @param Vector c2 - The center of the second circle.
+ * @param Number r2 - The radius of the second circle
+ * @returns Vector[]
+ */
+function circleIntersect2D(c1, r1, c2, r2) =
+    let(
+        c1 = vector2D(c1),
+        c2 = vector2D(c2),
+        r1 = abs(float(r1)),
+        r2 = abs(float(r2)),
+        v = c1[0] == c2[0],
+        h = c1[1] == c2[1]
+    )
+    v && h ? []
+   :v ? (
+        let(
+            a = c2[1] - c1[1],
+            l = abs(a),
+            d = r1 + r2
+        )
+        l > d ? []
+       :l == d ? (
+            let(
+                p = c1 + [0, sign(a) * r1]
+            )
+            [ p, p ]
+        )
+       :(
+            let(
+                y = (r2 * r2 - a * a - r1 * r1) / (-2 * a),
+                x = sqrt(r2 * r2 - (a - y) * (a - y))
+            )
+            [ c1 + [x, -y], c1 + [x, y] ]
+        )
+    )
+   :h ? (
+       let(
+           a = c2[0] - c1[0],
+           l = abs(a),
+           d = r1 + r2
+       )
+       l > d ? []
+      :l == d ? (
+           let(
+               p = c1 + [sign(a) * r1, 0]
+           )
+           [ p, p ]
+       )
+      :(
+           let(
+               x = (r2 * r2 - a * a - r1 * r1) / (-2 * a),
+               y = sqrt(r2 * r2 - (a - x) * (a - x))
+           )
+           [ c1 + [-x, y], c1 + [x, y] ]
+       )
+   )
+  :(
+        let(
+            x12 = c1[0] * c1[0],
+            y12 = c1[1] * c1[1],
+            r12 = r1 * r1,
+            a = (c2[0] * c2[0] + c2[1] * c2[1] - x12 - y12 + r12 - r2 * r2) / (2 * (c2[1] - c1[1])),
+            b = (c2[0] - c1[0]) / (c2[1] - c1[1]),
+            x = quadraticEquation(
+                b * b + 1,
+                (-c1[0] + (c1[1] - a) * b) * 2,
+                (2 * -c1[1] + a) * a + x12 + y12 - r12
+            )
+        )
+        len(x) ? (
+            [
+                [x[0], a - x[0] * b],
+                [x[1], a - x[1] * b]
+            ]
+        )
+       :[]
+   )
+;
+
+/**
  * Computes the third edge of an isosceles triangle.
  * The edges that have the same angle must be provided.
  * The height or the angle must be provided.
