@@ -34,7 +34,7 @@ use <../../full.scad>
  * @author jsconan
  */
 module testCoreVector2D() {
-    testPackage("core/vector-2d.scad", 30) {
+    testPackage("core/vector-2d.scad", 31) {
         // test core/vector-2d/vector2D()
         testModule("vector2D()", 3) {
             testUnit("no parameter", 1) {
@@ -399,6 +399,58 @@ module testCoreVector2D() {
                 assertApproxEqual(tangent2D([-19, -11], [-11, -5], -2), [-19, -11] + arcPoint(sqrt(96), atan2(6, 8) + asin(-2 / 10)), "Third quadrant, a cicle on the right");
                 assertApproxEqual(tangent2D([11, -5], [19, -11], -2), [11, -5] + arcPoint(sqrt(96), atan2(-6, 8) + asin(-2 / 10)), "Fourth quadrant, a cicle on the right");
                 assertApproxEqual(tangent2D([19, -11], [11, -5], -2), [19, -11] + arcPoint(sqrt(96), atan2(6, -8) + asin(-2 / 10)), "Fourth quadrant, a cicle on the left");
+            }
+        }
+        // test core/vector-2d/circleLineIntersect2D()
+        testModule("circleLineIntersect2D()", 4) {
+            testUnit("no parameter", 1) {
+                assertEqual(circleLineIntersect2D(), [[0, 0], [0, 0]], "Without parameter the function cannot compute the intersection");
+            }
+            testUnit("wrong type", 4) {
+                assertEqual(circleLineIntersect2D("10", "10", "10", "10"), [[0, 0], [0, 0]], "Cannot compute intersection of strings");
+                assertEqual(circleLineIntersect2D(true, true, true, true), [[0, 0], [0, 0]], "Cannot compute intersection of booleans");
+                assertEqual(circleLineIntersect2D([], [], [], []), [[0, 0], [0, 0]], "Cannot compute intersection of empty arrays");
+                assertEqual(circleLineIntersect2D(["10"], ["10"], ["10"], ["10"]), [[0, 0], [0, 0]], "Cannot compute intersection of arrays");
+            }
+            testUnit("positive", 15) {
+                assertApproxEqual(circleLineIntersect2D(1, 2, 3, 4), [vector2D((12 - sqrt(128)) / 4), vector2D((12 + sqrt(128)) / 4)], "Numbers should be converted to vectors");
+                assertApproxEqual(circleLineIntersect2D([1, -1], [5, 3], [5, 4], 2), [vector2D((22 - sqrt(28)) / 4) - [0, 2], vector2D((22 + sqrt(28)) / 4) - [0, 2]], "45° line");
+                assertApproxEqual(circleLineIntersect2D([1, 1], [5, 1], [3, 1], 1), [[2, 1], [4, 1]], "Horizontal centered line");
+                assertApproxEqual(circleLineIntersect2D([1, 1], [1, 5], [1, 3], 1), [[1, 2], [1, 4]], "Vertical centered line");
+                assertApproxEqual(circleLineIntersect2D([1, 1], [5, 1], [3, 2], 2), [[3 - sqrt(3), 1], [3 + sqrt(3), 1]], "Horizontal shifted line");
+                assertApproxEqual(circleLineIntersect2D([1, 1], [1, 5], [2, 3], 2), [[1, 3 - sqrt(3)], [1, 3 + sqrt(3)]], "Vertical shifted line");
+                assertApproxEqual(circleLineIntersect2D([1, 1], [5, 1], [3, 2], 1), [[3, 1], [3, 1]], "Horizontal tangent line");
+                assertApproxEqual(circleLineIntersect2D([1, 1], [1, 5], [2, 3], 1), [[1, 3], [1, 3]], "Vertical tangent line");
+                assertApproxEqual(circleLineIntersect2D([8, 0], [2, 12], [4, 3], sqrt(5)), [[6, 4], [6, 4]], "Leaned tangent line");
+                assertApproxEqual(circleLineIntersect2D([6, 4], [6, 4], [4, 3], sqrt(5)), [[6, 4], [6, 4]], "Tangent point");
+                assertApproxEqual(circleLineIntersect2D([2, 5], [8, 3], [5, 4], 3), [
+                    vmul(vector2D((100 / 9 - sqrt(40)) / (20 / 9)), [1, -1 / 3]) + [0, 17 / 3],
+                    vmul(vector2D((100 / 9 + sqrt(40)) / (20 / 9)), [1, -1 / 3]) + [0, 17 / 3]
+                ], "Leaned line");
+                assertApproxEqual(circleLineIntersect2D([2, 5], [8, 3], [10, 15], 3), [], "Leaned line, no intersection");
+                assertApproxEqual(circleLineIntersect2D([1, 1], [5, 1], [3, 3], 1), [], "Horizontal line, no intersection");
+                assertApproxEqual(circleLineIntersect2D([1, 1], [1, 5], [3, 3], 1), [], "Vertical line, no intersection");
+                assertApproxEqual(circleLineIntersect2D([1, 1], [1, 1], [3, 3], 1), [], "Point, no intersection");
+            }
+            testUnit("negative", 15) {
+                assertApproxEqual(circleLineIntersect2D(-1, -2, -3, -4), [vector2D((-12 - sqrt(128)) / 4), vector2D((-12 + sqrt(128)) / 4)], "Numbers should be converted to vectors");
+                assertApproxEqual(circleLineIntersect2D([-1, 1], [-5, -3], [-5, -4], -2), [vector2D((-22 - sqrt(28)) / 4) + [0, 2], vector2D((-22 + sqrt(28)) / 4) + [0, 2]], "45° line");
+                assertApproxEqual(circleLineIntersect2D([-1, -1], [-5, -1], [-3, -1], -1), [[-4, -1], [-2, -1]], "Horizontal centered line");
+                assertApproxEqual(circleLineIntersect2D([-1, -1], [-1, -5], [-1, -3], -1), [[-1, -4], [-1, -2]], "Vertical centered line");
+                assertApproxEqual(circleLineIntersect2D([-1, -1], [-5, -1], [-3, -2], -2), [[-3 - sqrt(3), -1], [-3 + sqrt(3), -1]], "Horizontal shifted line");
+                assertApproxEqual(circleLineIntersect2D([-1, -1], [-1, -5], [-2, -3], -2), [[-1, -3 - sqrt(3)], [-1, -3 + sqrt(3)]], "Vertical shifted line");
+                assertApproxEqual(circleLineIntersect2D([-1, -1], [-5, -1], [-3, -2], -1), [[-3, -1], [-3, -1]], "Horizontal tangent line");
+                assertApproxEqual(circleLineIntersect2D([-1, -1], [-1, -5], [-2, -3], -1), [[-1, -3], [-1, -3]], "Vertical tangent line");
+                assertApproxEqual(circleLineIntersect2D([-8, 0], [-2, -12], [-4, -3], sqrt(5)), [[-6, -4], [-6, -4]], "Leaned tangent line");
+                assertApproxEqual(circleLineIntersect2D([-6, -4], [-6, -4], [-4, -3], sqrt(5)), [[-6, -4], [-6, -4]], "Tangent point");
+                assertApproxEqual(circleLineIntersect2D([-2, -5], [-8, -3], [-5, -4], -3), [
+                    vmul(vector2D((-100 / 9 - sqrt(40)) / (20 / 9)), [1, -1 / 3]) - [0, 17 / 3],
+                    vmul(vector2D((-100 / 9 + sqrt(40)) / (20 / 9)), [1, -1 / 3]) - [0, 17 / 3]
+                ], "Leaned line");
+                assertApproxEqual(circleLineIntersect2D([-2, -5], [-8, -3], [-10, -15], -3), [], "Leaned line, no intersection");
+                assertApproxEqual(circleLineIntersect2D([-1, -1], [-5, -1], [-3, -3], -1), [], "Horizontal line, no intersection");
+                assertApproxEqual(circleLineIntersect2D([-1, -1], [-1, -5], [-3, -3], -1), [], "Vertical line, no intersection");
+                assertApproxEqual(circleLineIntersect2D([-1, -1], [-1, -1], [-3, -3], -1), [], "Point, no intersection");
             }
         }
         // test core/vector-2d/isosceles2D()

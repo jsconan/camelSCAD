@@ -283,6 +283,82 @@ function tangent2D(p, c, r) =
 ;
 
 /**
+ * Computes the points at the intersection of a circle and a line.
+ * The circle is defined by a center and a radius.
+ * The line is defined by two points.
+ * If the function cannot compute the intersection, returns an empty vector.
+ *
+ * @param Vector i - The first point on the line
+ * @param Vector j - The second point on the line
+ * @param Vector c - The center of the circle.
+ * @param Number r - The radius of the circle
+ * @returns Vector[]
+ */
+function circleLineIntersect2D(i, j, c, r) =
+    let(
+        i = vector2D(i),
+        j = vector2D(j),
+        c = vector2D(c),
+        r = abs(float(r)),
+        v = i[0] == j[0],
+        h = i[1] == j[1]
+    )
+    h && v ? (
+        approx(pow(i[0] - c[0], 2) + pow(i[1] - c[1], 2), r * r) ? [i, j] : []
+    )
+   :v ? (
+        let(
+            a = abs(i[0] - c[0])
+        )
+        a <= r ? (
+            let(
+                b = pythagore(a, 0, r)
+            )
+            [
+                [i[0], c[1] - b],
+                [i[0], c[1] + b]
+            ]
+        )
+       :[]
+
+    )
+   :h ? (
+       let(
+           a = abs(i[1] - c[1])
+       )
+       a <= r ? (
+           let(
+               b = pythagore(a, 0, r)
+           )
+           [
+               [c[0] - b, i[1]],
+               [c[0] + b, i[1]]
+           ]
+       )
+      :[]
+    )
+   :(
+        let(
+            v = i - j,
+            a = v[1] / v[0],
+            b = i[1] - a * i[0],
+            x = quadraticEquation(
+                1 + a * a,
+                2 * (-c[0] + (b - c[1]) * a),
+                c[0] * c[0] + c[1] * c[1] + (c[1] * -2 + b) * b - r * r
+            )
+        )
+        len(x) ? (
+            [
+                [x[0], a * x[0] + b],
+                [x[1], a * x[1] + b]
+            ]
+        )
+       :[]
+    )
+;
+
+/**
  * Computes the third edge of an isosceles triangle.
  * The edges that have the same angle must be provided.
  * The height or the angle must be provided.
