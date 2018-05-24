@@ -248,3 +248,29 @@ function decimals(value) =
     )
     isZero(value) ? 0 : min(1 + decimals(value * 10), MAX_DECIMALS)
 ;
+
+/**
+ * Resolves a quadratic equation: `ax^2+bx+c=0`.
+ * Returns the result as a vector of two values:
+ * - the first value is for the result of (-b - sqrt(delta)) / (2 * a)
+ * - the second value is for the result of (-b + sqrt(delta)) / (2 * a)
+ * If the equation cannot be resolved, returns an empty vector.
+ *
+ * @param Number a - The A term of the equation
+ * @param Number b - The B term of the equation
+ * @param Number c - The C term of the equation
+ * @returns Vector[]
+ */
+function quadraticEquation(a, b, c) =
+    let(
+        a = float(a) * 2,
+        b = float(b),
+        c = float(c),
+        d = sqrt(b * b - 2 * a * c)
+    )
+    a && d >= 0 ? [
+        (-b - d) / a,
+        (-b + d) / a
+    ]
+   :[]
+;

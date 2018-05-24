@@ -34,7 +34,7 @@ use <../../full.scad>
  * @author jsconan
  */
 module testCoreMaths() {
-    testPackage("core/maths.scad", 15) {
+    testPackage("core/maths.scad", 16) {
         // test core/maths/deg()
         testModule("deg()", 3) {
             testUnit("no parameter", 1) {
@@ -655,6 +655,23 @@ module testCoreMaths() {
                 assertEqual(decimals(-1.123456), 6, "Should count 6 decimals in this negative number");
                 assertEqual(decimals(1.12345678), 7, "Should count 7 decimals in this positive number");
                 assertEqual(decimals(-1.12345678), 7, "Should count 7 decimals in this negative number");
+            }
+        }
+        // test core/maths/quadraticEquation()
+        testModule("quadraticEquation()", 2) {
+            testUnit("default value", 4) {
+                assertEqual(quadraticEquation(), [], "Cannot resolve quadratic equation of undefined");
+                assertEqual(quadraticEquation("1", "2", "3"), [], "Cannot resolve quadratic equation of strings");
+                assertEqual(quadraticEquation(true, true, true), [], "Cannot resolve quadratic equation of booleans");
+                assertEqual(quadraticEquation([1], [2], [3]), [], "Cannot resolve quadratic equation of vectors");
+            }
+            testUnit("resolve", 6) {
+                assertEqual(quadraticEquation(2, -22, 53), [(22 - sqrt(60)) / 4, (22 + sqrt(60)) / 4], "Should resolve the quadratic equation 2x^2 - 22x + 53 = 0");
+                assertEqual(quadraticEquation(2, 4, -4), [-1 - sqrt(3), -1 + sqrt(3)], "Should resolve the quadratic equation 2x^2 + 4x - 4 = 0");
+                assertEqual(quadraticEquation(10, -124, 1603), [], "Should not resolve the quadratic equation 10x^2 + -124x - 1603 = 0");
+                assertEqual(quadraticEquation(0, 1, 2), [], "Should not resolve the quadratic equation 0x^2 + 1x - 2 = 0");
+                assertEqual(quadraticEquation(1, 0, 2), [], "Should not resolve the quadratic equation 1x^2 + 0x - 2 = 0");
+                assertEqual(quadraticEquation(1, 2, 0), [-2, 0], "Should resolve the quadratic equation 1x^2 + 2x - 0 = 0");
             }
         }
     }
