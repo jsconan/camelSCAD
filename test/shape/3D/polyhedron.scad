@@ -34,7 +34,7 @@ use <../../../full.scad>
  * @author jsconan
  */
 module testShape3dPolyhedron() {
-    testPackage("shape/3D/polyhedron.scad", 4) {
+    testPackage("shape/3D/polyhedron.scad", 5) {
         // test shape/3D/polyhedron/sizeBox()
         testModule("sizeBox()", 2) {
             testUnit("default values", 3) {
@@ -50,7 +50,35 @@ module testShape3dPolyhedron() {
                 assertEqual(sizeBox([3, 4, 5, 6]), [3, 4, 5], "Should truncate too big size vector");
                 assertEqual(sizeBox([3, 4, 2], l=5), [5, 4, 2], "Should set the length with the provided length in the provided size vector");
                 assertEqual(sizeBox([3, 4, 2], w=5), [3, 5, 2], "Should set the width with the provided width in the provided size vector");
-                assertEqual(sizeBox([3, 4, 2], h=5), [3, 4, 5], "Should set the height with the provided width in the provided size vector");
+                assertEqual(sizeBox([3, 4, 2], h=5), [3, 4, 5], "Should set the height with the provided height in the provided size vector");
+            }
+        }
+        // test shape/3D/polyhedron/sizeChamferedBox()
+        testModule("sizeChamferedBox()", 3) {
+            testUnit("default values", 3) {
+                assertEqual(sizeChamferedBox(), [[1, 1, 1], [0, 0]], "Should always return a size even if not parameter has been provided");
+                assertEqual(sizeChamferedBox("12", "12", "12"), [[1, 1, 1], [0, 0]], "Should always return a size even if wrong parameter has been provided (string)");
+                assertEqual(sizeChamferedBox(true, true, true), [[1, 1, 1], [0, 0]], "Should always return a size even if wrong parameter has been provided (boolean)");
+            }
+            testUnit("compute size", 8) {
+                assertEqual(sizeChamferedBox(3), [[3, 3, 3], [0, 0]], "Should produce a size vector from a single number size");
+                assertEqual(sizeChamferedBox([3]), [[3, 1, 1], [0, 0]], "Should complete incomplete size vector");
+                assertEqual(sizeChamferedBox([3, 2]), [[3, 2, 1], [0, 0]], "Should complete incomplete size vector");
+                assertEqual(sizeChamferedBox([3, 4, 5]), [[3, 4, 5], [0, 0]], "Should keep the provided size vector");
+                assertEqual(sizeChamferedBox([3, 4, 5, 6]), [[3, 4, 5], [0, 0]], "Should truncate too big size vector");
+                assertEqual(sizeChamferedBox([3, 4, 2], l=5), [[5, 4, 2], [0, 0]], "Should set the length with the provided length in the provided size vector");
+                assertEqual(sizeChamferedBox([3, 4, 2], w=5), [[3, 5, 2], [0, 0]], "Should set the width with the provided width in the provided size vector");
+                assertEqual(sizeChamferedBox([3, 4, 2], h=5), [[3, 4, 5], [0, 0]], "Should set the height with the provided width in the provided size vector");
+            }
+            testUnit("compute chamfer", 8) {
+                assertEqual(sizeChamferedBox(3, 1), [[3, 3, 3], [1, 1]], "Should produce a chamfer vector from a single number size");
+                assertEqual(sizeChamferedBox([3, 3, 3], [1]), [[3, 3, 3], [0, 0]], "Should not complete incomplete chamfer vector");
+                assertEqual(sizeChamferedBox([3, 3, 3], [0, 1]), [[3, 3, 3], [0, 0]], "Should not allow incomplete chamfer vector");
+                assertEqual(sizeChamferedBox([3, 4, 5], [1, 2]), [[3, 4, 5], [1, 2]], "Should keep the provided chamfer vector");
+                assertEqual(sizeChamferedBox([3, 4, 5], [1, 2, 3]), [[3, 4, 5], [1, 2]], "Should truncate too big chamfer vector");
+                assertEqual(sizeChamferedBox([6, 6, 6], [1, 1], cl=2), [[6, 6, 6], [2, 1]], "Should set the length with the provided length in the provided chamfer vector");
+                assertEqual(sizeChamferedBox([6, 6, 6], [1, 1], cw=2), [[6, 6, 6], [1, 2]], "Should set the width with the provided width in the provided chamfer vector");
+                assertEqual(sizeChamferedBox([6, 6, 6], cl=2, cw=2), [[6, 6, 6], [2, 2]], "Should set the chamfer from the provided length and width");
             }
         }
         // test shape/3D/polyhedron/sizeTrapeziumBox()

@@ -53,6 +53,35 @@ function sizeBox(size, l, w, h) =
 ;
 
 /**
+ * Computes the size of a chamfered box.
+ *
+ * @param Number|Vector [size] - The size of the chamfered box.
+ * @param Number|Vector [chamfer] - The size of the chamfers.
+ * @param Number [l] - The overall length.
+ * @param Number [w] - The overall width.
+ * @param Number [h] - The overall height.
+ * @param Number [cl] - The vertical length of the chamfers.
+ * @param Number [cw] - The horizontal width of the chamfers.
+ * @returns Vector[] - Returns an array containing the size vector and the chamfer vector.
+ */
+function sizeChamferedBox(size, chamfer, l, w, h, cl, cw) =
+    let(
+        s = apply3D(size, l, w, h),
+        c = apply2D(chamfer, cl, cw),
+        size = [
+            divisor(s[0] ? s[0] : c[0] * 2),
+            divisor(s[1] ? s[1] : c[1] * 2),
+            divisor(s[2])
+        ],
+        chamfer = [
+            min(size[0] / 2, c[0]),
+            min(size[1] / 2, c[1])
+        ]
+    )
+    [ size, chamfer[0] && chamfer[1] ? chamfer : [0, 0] ]
+;
+
+/**
  * Computes the size of a trapezium shape.
  *
  * @param Number|Vector [size] - The size of the trapezium.
@@ -139,6 +168,25 @@ module box(size, l, w, h, center) {
     size = sizeBox(size=size, l=l, w=w, h=h);
     linear_extrude(height=size[2], center=center, convexity=10) {
         rectangle(size);
+    }
+}
+
+/**
+ * Creates a chamfered box at the origin.
+ *
+ * @param Number|Vector [size] - The size of the chamfered box.
+ * @param Number|Vector [chamfer] - The size of the chamfers.
+ * @param Number [l] - The overall length.
+ * @param Number [w] - The overall width.
+ * @param Number [h] - The overall height.
+ * @param Number [cl] - The vertical length of the chamfers.
+ * @param Number [cw] - The horizontal width of the chamfers.
+ * @param Boolean [center] - Whether or not center the box on the vertical axis.
+ */
+module chamferedBox(size, chamfer, l, w, h, cl, cw, center) {
+    size = sizeBox(size=size, chamfer=chamfer, l=l, w=w, h=h, cl=cl, cw=cw);
+    linear_extrude(height=size[2], center=center, convexity=10) {
+        chamferedRectangle(size, chamfer);
     }
 }
 
