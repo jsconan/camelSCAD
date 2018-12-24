@@ -57,8 +57,8 @@ function sizeRectangle(size, l, w) =
  * @param Number|Vector [chamfer] - The size of the chamfers.
  * @param Number [l] - The overall length.
  * @param Number [w] - The overall width.
- * @param Number [cl] - The vertical length of the chamfers.
- * @param Number [cw] - The horizontal width of the chamfers.
+ * @param Number [cl] - The length of the chamfers.
+ * @param Number [cw] - The width of the chamfers.
  * @returns Vector[] - Returns an array containing the size vector and the chamfer vector.
  */
 function sizeChamferedRectangle(size, chamfer, l, w, cl, cw) =
@@ -173,8 +173,8 @@ function drawRectangle(size, l, w) =
  * @param Number|Vector [chamfer] - The size of the chamfers.
  * @param Number [l] - The overall length.
  * @param Number [w] - The overall width.
- * @param Number [cl] - The vertical length of the chamfers.
- * @param Number [cw] - The horizontal width of the chamfers.
+ * @param Number [cl] - The length of the chamfers.
+ * @param Number [cw] - The width of the chamfers.
  * @returns Vector[]
  */
 function drawChamferedRectangle(size, chamfer, l, w, cl, cw) =
@@ -344,8 +344,8 @@ module rectangle(size, l, w) {
  * @param Number|Vector [chamfer] - The size of the chamfers.
  * @param Number [l] - The overall length.
  * @param Number [w] - The overall width.
- * @param Number [cl] - The vertical length of the chamfers.
- * @param Number [cw] - The horizontal width of the chamfers.
+ * @param Number [cl] - The length of the chamfers.
+ * @param Number [cw] - The width of the chamfers.
  */
 module chamferedRectangle(size, chamfer, l, w, cl, cw) {
     polygon(

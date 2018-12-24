@@ -60,8 +60,8 @@ function sizeBox(size, l, w, h) =
  * @param Number [l] - The overall length.
  * @param Number [w] - The overall width.
  * @param Number [h] - The overall height.
- * @param Number [cl] - The vertical length of the chamfers.
- * @param Number [cw] - The horizontal width of the chamfers.
+ * @param Number [cl] - The length of the chamfers.
+ * @param Number [cw] - The width of the chamfers.
  * @returns Vector[] - Returns an array containing the size vector and the chamfer vector.
  */
 function sizeChamferedBox(size, chamfer, l, w, h, cl, cw) =
@@ -179,8 +179,8 @@ module box(size, l, w, h, center) {
  * @param Number [l] - The overall length.
  * @param Number [w] - The overall width.
  * @param Number [h] - The overall height.
- * @param Number [cl] - The vertical length of the chamfers.
- * @param Number [cw] - The horizontal width of the chamfers.
+ * @param Number [cl] - The length of the chamfers.
+ * @param Number [cw] - The width of the chamfers.
  * @param Boolean [center] - Whether or not center the box on the vertical axis.
  */
 module chamferedBox(size, chamfer, l, w, h, cl, cw, center) {
