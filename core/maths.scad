@@ -109,6 +109,46 @@ function pythagore(a, b, c) =
 ;
 
 /**
+ * Computes the apothem of a regular N-sides polygon.
+ * An apothem is a line from the center of a regular polygon at right angles
+ * to any of its sides.
+ * The apothem can be computed either from the radius of the inscribed circle
+ * or from the length of one side. Only one of these values is required, if
+ * both are provided, the radius is predominant.
+ *
+ * @param Number n - The number of sides (min 3).
+ * @param Number [r] - The radius of the inscribed circle.
+ * @param Number [l] - The length of a side of the polygon.
+ * @returns Number
+ */
+function apothem(n, r, l) =
+    let (
+        n = max(float(n), 3)
+    )
+    r ? float(r) * cos(STRAIGHT / n)
+      : float(l) / (2 * tan(STRAIGHT / n))
+;
+
+/**
+ * Computes the radius of a circle circumscribing a regular N-sides polygon.
+ * The circumradius can be computed either from the apothem or the side of the
+ * circumscribed polygon. Only one of these values is required, if both are
+ * provided, the apothem is predominant.
+ *
+ * @param Number n - The number of sides (min 3).
+ * @param Number [a] - The apothem of the regular polygon.
+ * @param Number [l] - The length of a side of the polygon.
+ * @returns Number
+ */
+function circumradius(n, a, l) =
+    let (
+        n = max(float(n), 3),
+        a = a ? float(a) : float(l) / (2 * tan(STRAIGHT / n))
+    )
+    a / cos(STRAIGHT / n)
+;
+
+/**
  * Computes the factorial of N.
  *
  * @param Number n
@@ -207,4 +247,30 @@ function decimals(value) =
         value = value - floor(value)
     )
     isZero(value) ? 0 : min(1 + decimals(value * 10), MAX_DECIMALS)
+;
+
+/**
+ * Resolves a quadratic equation: `ax^2+bx+c=0`.
+ * Returns the result as a vector of two values:
+ * - the first value is for the result of (-b - sqrt(delta)) / (2 * a)
+ * - the second value is for the result of (-b + sqrt(delta)) / (2 * a)
+ * If the equation cannot be resolved, returns an empty vector.
+ *
+ * @param Number a - The A term of the equation
+ * @param Number b - The B term of the equation
+ * @param Number c - The C term of the equation
+ * @returns Vector[]
+ */
+function quadraticEquation(a, b, c) =
+    let(
+        a = float(a) * 2,
+        b = float(b),
+        c = float(c),
+        d = sqrt(b * b - 2 * a * c)
+    )
+    a && d >= 0 ? [
+        (-b - d) / a,
+        (-b + d) / a
+    ]
+   :[]
 ;

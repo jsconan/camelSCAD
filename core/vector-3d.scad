@@ -123,6 +123,24 @@ function middle3D(a, b) = (vector3D(a) + vector3D(b)) / 2;
 function move3D(p, v, d) = vector3D(p) + unit3D(v) * float(d);
 
 /**
+ * Computes the point at the wanted distance from the origin on the defined line.
+ * The line is defined by two points: the origin and another arbitrary point.
+ *
+ * @param Vector a - The origin of the line.
+ * @param Vector b - The second point on the line.
+ * @param Number d - The distance from the origin where to find the wanted point.
+ * @returns Vector
+ */
+function extend3D(a, b, d) =
+    let(
+        a = vector3D(a),
+        b = vector3D(b),
+        d = float(d)
+    )
+    a + unit3D(b - a) * d
+;
+
+/**
  * Computes the angle between two 3D vectors.
  *
  * @param Vector [a] - The first vector

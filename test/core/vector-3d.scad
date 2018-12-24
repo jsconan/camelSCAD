@@ -34,7 +34,7 @@ use <../../full.scad>
  * @author jsconan
  */
 module testCoreVector3D() {
-    testPackage("core/vector-3d.scad", 13) {
+    testPackage("core/vector-3d.scad", 14) {
         // test core/vector-3d/vector3D()
         testModule("vector3D()", 3) {
             testUnit("no parameter", 1) {
@@ -223,6 +223,54 @@ module testCoreVector3D() {
                 assertEqual(move3D([1, 2, 3, 4]), [1, 2, 3], "Should truncate too big vector and returns a 3D vector (no direction vector)");
                 assertEqual(move3D([1, 2, 3, 4], [1, 2, 3, 4]), [1, 2, 3], "Should truncate too big vector and returns a 3D vector (direction vector but not distance)");
                 assertEqual(move3D([1, 2, 3, 4], [1, 2, 3, 4], 1), [1, 2, 3] + [1, 2, 3] / norm([1, 2, 3]), "Should truncate too big vector and returns a 3D vector (direction vector and distance)");
+            }
+        }
+        // test core/vector-3d/extend3D()
+        testModule("extend3D()", 3) {
+            testUnit("no parameter", 1) {
+                assertEqual(extend3D(), [0, 0, 0], "Should always produce a 3D vector, even if input is wrong");
+            }
+            testUnit("not vector", 18) {
+                assertEqual(extend3D(1), [1, 1, 1], "Should translate number to 3D vector (only origin)");
+                assertEqual(extend3D(1, 1), [1, 1, 1], "Should translate number to 3D vector (origin and second point)");
+                assertEqual(extend3D(1, 2, 3), [1, 1, 1] + unit3D([1, 1, 1]) * 3, "Should translate number to 3D vector (all parameters)");
+
+                assertEqual(extend3D(true), [0, 0, 0], "Should produce a default 3D vector if input is boolean (only origin)");
+                assertEqual(extend3D(true, true), [0, 0, 0], "Should produce a default 3D vector if input is boolean (origin and second point)");
+                assertEqual(extend3D(true, true, true), [0, 0, 0], "Should produce a default 3D vector if input is boolean (all parameters)");
+
+                assertEqual(extend3D("1"), [0, 0, 0], "Should produce a default 3D vector if input is string (only origin)");
+                assertEqual(extend3D("1", "1"), [0, 0, 0], "Should produce a default 3D vector if input is string (origin and second point)");
+                assertEqual(extend3D("1", "1", "1"), [0, 0, 0], "Should produce a default 3D vector if input is string (all parameters)");
+
+                assertEqual(extend3D(["1"]), [0, 0, 0], "Should produce a default 3D vector if input is array (only origin)");
+                assertEqual(extend3D(["1"], ["1"]), [0, 0, 0], "Should produce a default 3D vector if input is array (origin and second point)");
+                assertEqual(extend3D(["1"], ["1"], ["1"]), [0, 0, 0], "Should produce a default 3D vector if input is array (all parameters)");
+
+                assertEqual(extend3D(["1", 1]), [0, 1, 0], "Should produce a corrected 3D vector if input is wrong or incomplete (only origin)");
+                assertEqual(extend3D(["1", 1], ["1", 1]), [0, 1, 0], "Should produce a corrected 3D vector if input is wrong or incomplete (origin and second point)");
+                assertEqual(extend3D(["1", 1], ["1", 1], 1), [0, 1, 0], "Should produce a corrected 3D vector if input is wrong or incomplete (all parameters)");
+
+                assertEqual(extend3D(["1", 1, 1]), [0, 1, 1], "Should produce a corrected 3D vector if input is wrong (only origin)");
+                assertEqual(extend3D(["1", 1, 1], ["1", 1, 1]), [0, 1, 1], "Should produce a corrected 3D vector if input is wrong (origin and second point)");
+                assertEqual(extend3D(["1", 1, 1], ["1", 1, 1], 1), [0, 1, 1], "Should produce a corrected 3D vector if input is wrong (all parameters)");
+            }
+            testUnit("vector", 12) {
+                assertEqual(extend3D([1]), [1, 0, 0], "Should complete incomplete 3D vector (only origin)");
+                assertEqual(extend3D([1], [2]), [1, 0, 0], "Should complete incomplete 3D vector (origin and second point)");
+                assertEqual(extend3D([1], [2], 3), [1, 0, 0] + unit3D([1, 0, 0]) * 3, "Should complete incomplete 3D vector (all parameters)");
+
+                assertEqual(extend3D([1, 2]), [1, 2, 0], "Should complete incomplete 3D vector (only origin)");
+                assertEqual(extend3D([1, 2], [3, 4]), [1, 2, 0], "Should complete incomplete 3D vector (origin and second point)");
+                assertEqual(extend3D([1, 2], [3, 4], 3), [1, 2, 0] + unit3D([2, 2, 0]) * 3, "Should complete incomplete 3D vector (all parameters)");
+
+                assertEqual(extend3D([1, 2, 3]), [1, 2, 3], "Should return the provided 3D vector (only origin)");
+                assertEqual(extend3D([1, 2, 3], [4, 5, 6]), [1, 2, 3], "Should return the provided 3D vector (origin and second point)");
+                assertEqual(extend3D([1, 2, 3], [4, 5, 6], 3), [1, 2, 3] + unit3D([3, 3, 3]) * 3, "Should return a 3D vector (all parameters)");
+
+                assertEqual(extend3D([1, 2, 3, 4]), [1, 2, 3], "Should truncate too big vector and returns a 3D vector (only origin)");
+                assertEqual(extend3D([1, 2, 3, 4], [5, 6, 7, 8]), [1, 2, 3], "Should truncate too big vector and returns a 3D vector (origin and second point)");
+                assertEqual(extend3D([1, 2, 3, 4], [5, 6, 7, 8], 3), [1, 2, 3] + unit3D([4, 4, 4]) * 3, "Should truncate too big vector and returns a 3D vector (all parameters)");
             }
         }
         // test core/vector-3d/angle3D()

@@ -229,7 +229,7 @@ function drawStadium(size, r, d, w, h, rx, ry, dx, dy) =
         ]
     )
     center == [0, 0] ? arc(r=radius)
-   :concat(arc(r=radius, o=center, a=STRAIGHT), arc(r=radius, o=-center, a=-STRAIGHT))
+   :concat(arc(r=radius, o=center, a=STRAIGHT), arc(r=radius, o=-center, a=STRAIGHT, a1=STRAIGHT))
 ;
 
 /**

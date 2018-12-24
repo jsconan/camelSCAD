@@ -51,6 +51,33 @@ function sizeRectangle(size, l, w) =
 ;
 
 /**
+ * Computes the size of a chamfered rectangle shape.
+ *
+ * @param Number|Vector [size] - The size of the chamfered rectangle.
+ * @param Number|Vector [chamfer] - The size of the chamfers.
+ * @param Number [l] - The overall length.
+ * @param Number [w] - The overall width.
+ * @param Number [cl] - The length of the chamfers.
+ * @param Number [cw] - The width of the chamfers.
+ * @returns Vector[] - Returns an array containing the size vector and the chamfer vector.
+ */
+function sizeChamferedRectangle(size, chamfer, l, w, cl, cw) =
+    let(
+        s = apply2D(size, l, w),
+        c = apply2D(chamfer, cl, cw),
+        size = [
+            divisor(s[0] ? s[0] : c[0] * 2),
+            divisor(s[1] ? s[1] : c[1] * 2)
+        ],
+        chamfer = [
+            min(size[0] / 2, c[0]),
+            min(size[1] / 2, c[1])
+        ]
+    )
+    [ size, chamfer[0] && chamfer[1] ? chamfer : [0, 0] ]
+;
+
+/**
  * Computes the size of a trapezium shape.
  *
  * @param Number|Vector [size] - The size of the trapezium.
@@ -132,6 +159,43 @@ function drawRectangle(size, l, w) =
         half = size / 2
     )
     [
+        [ half[0],  half[1]],
+        [-half[0],  half[1]],
+        [-half[0], -half[1]],
+        [ half[0], -half[1]]
+    ]
+;
+
+/**
+ * Computes the points that draw the sketch of a chamfered rectangle shape.
+ *
+ * @param Number|Vector [size] - The size of the chamfered rectangle.
+ * @param Number|Vector [chamfer] - The size of the chamfers.
+ * @param Number [l] - The overall length.
+ * @param Number [w] - The overall width.
+ * @param Number [cl] - The length of the chamfers.
+ * @param Number [cw] - The width of the chamfers.
+ * @returns Vector[]
+ */
+function drawChamferedRectangle(size, chamfer, l, w, cl, cw) =
+    let(
+        specs = sizeChamferedRectangle(size=size, chamfer=chamfer, l=l, w=w, cl=cl, cw=cw),
+        size = specs[0],
+        chamfer = specs[1],
+        half = size / 2
+    )
+    chamfer[0]
+   ?[
+        [ half[0],  half[1] - chamfer[1]],
+        [ half[0] - chamfer[0],  half[1]],
+        [-half[0] + chamfer[0],  half[1]],
+        [-half[0],  half[1] - chamfer[1]],
+        [-half[0], -half[1] + chamfer[1]],
+        [-half[0] + chamfer[0], -half[1]],
+        [ half[0] - chamfer[0], -half[1]],
+        [ half[0], -half[1] + chamfer[1]]
+    ]
+   :[
         [ half[0],  half[1]],
         [-half[0],  half[1]],
         [-half[0], -half[1]],
@@ -269,6 +333,23 @@ function drawStar(size, core, edges, l, w, cl, cw) =
 module rectangle(size, l, w) {
     polygon(
         points = drawRectangle(size=size, l=l, w=w),
+        convexity = 10
+    );
+}
+
+/**
+ * Creates a chamfered rectangle at the origin.
+ *
+ * @param Number|Vector [size] - The size of the chamfered rectangle.
+ * @param Number|Vector [chamfer] - The size of the chamfers.
+ * @param Number [l] - The overall length.
+ * @param Number [w] - The overall width.
+ * @param Number [cl] - The length of the chamfers.
+ * @param Number [cw] - The width of the chamfers.
+ */
+module chamferedRectangle(size, chamfer, l, w, cl, cw) {
+    polygon(
+        points = drawChamferedRectangle(size=size, chamfer=chamfer, l=l, w=w, cl=cl, cw=cw),
         convexity = 10
     );
 }

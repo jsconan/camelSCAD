@@ -34,7 +34,7 @@ use <../../full.scad>
  * @author jsconan
  */
 module testCoreVector2D() {
-    testPackage("core/vector-2d.scad", 24) {
+    testPackage("core/vector-2d.scad", 32) {
         // test core/vector-2d/vector2D()
         testModule("vector2D()", 3) {
             testUnit("no parameter", 1) {
@@ -255,6 +255,44 @@ module testCoreVector2D() {
                 assertEqual(move2D([1, 2, 3], [1, 2, 3], 1), [1, 2] + [1, 2] / norm2D([1, 2]), "Should truncate too big vector and returns a 2D vector (direction vector and distance)");
             }
         }
+        // test core/vector-2d/extend2D()
+        testModule("extend2D()", 3) {
+            testUnit("no parameter", 1) {
+                assertEqual(extend2D(), [0, 0], "Should always produce a 2D vector, even if input is wrong");
+            }
+            testUnit("not vector", 15) {
+                assertEqual(extend2D(1), [1, 1], "Should translate number to 2D vector (only origin)");
+                assertEqual(extend2D(1, 1), [1, 1], "Should translate number to 2D vector (origin and second point)");
+                assertEqual(extend2D(1, 2, 3), [1, 1] + unit2D([1, 1]) * 3, "Should translate number to 2D vector (all parameters)");
+
+                assertEqual(extend2D(true), [0, 0], "Should produce a default 2D vector if input is boolean (only origin)");
+                assertEqual(extend2D(true, true), [0, 0], "Should produce a default 2D vector if input is boolean (origin and second point)");
+                assertEqual(extend2D(true, true, true), [0, 0], "Should produce a default 2D vector if input is boolean (all parameters)");
+
+                assertEqual(extend2D("1"), [0, 0], "Should produce a default 2D vector if input is string (only origin)");
+                assertEqual(extend2D("1", "1"), [0, 0], "Should produce a default 2D vector if input is string (origin and second point)");
+                assertEqual(extend2D("1", "1", "1"), [0, 0], "Should produce a default 2D vector if input is string (all parameters)");
+
+                assertEqual(extend2D(["1"]), [0, 0], "Should produce a default 2D vector if input is array (only origin)");
+                assertEqual(extend2D(["1"], ["1"]), [0, 0], "Should produce a default 2D vector if input is array (origin and second point)");
+                assertEqual(extend2D(["1"], ["1"], ["1"]), [0, 0], "Should produce a default 2D vector if input is array (all parameters)");
+
+                assertEqual(extend2D(["1", 1]), [0, 1], "Should produce a corrected 2D vector if input is wrong (only origin)");
+                assertEqual(extend2D(["1", 1], ["1", 1]), [0, 1], "Should produce a corrected 2D vector if input is wrong (origin and second point)");
+                assertEqual(extend2D(["1", 1], ["1", 1], 1), [0, 1], "Should produce a corrected 2D vector if input is wrong (all parameters)");
+            }
+            testUnit("vector", 9) {
+                assertEqual(extend2D([1]), [1, 0], "Should complete incomplete 2D vector (only origin)");
+                assertEqual(extend2D([1], [1]), [1, 0], "Should complete incomplete 2D vector (origin and second point)");
+                assertEqual(extend2D([1], [1], 1), [1, 0], "Should complete incomplete 2D vector (all parameters)");
+                assertEqual(extend2D([1, 2]), [1, 2], "Should return the provided 2D vector (only origin)");
+                assertEqual(extend2D([1, 2], [3, 4]), [1, 2], "Should return the provided 2D vector (origin and second point)");
+                assertEqual(extend2D([1, 2], [3, 4], 3), [1, 2] + unit2D([2, 2]) * 3, "Should return a 2D vector (all parameters)");
+                assertEqual(extend2D([1, 2, 3]), [1, 2], "Should truncate too big vector and returns a 2D vector (only origin)");
+                assertEqual(extend2D([1, 2, 3], [4, 5, 6]), [1, 2], "Should truncate too big vector and returns a 2D vector (origin and second point)");
+                assertEqual(extend2D([1, 2, 3], [3, 4, 5], 3), [1, 2] + unit2D([2, 2]) * 3, "Should truncate too big vector and returns a 2D vector (all parameters)");
+            }
+        }
         // test core/vector-2d/center2D()
         testModule("center2D()", 4) {
             testUnit("no parameter", 1) {
@@ -280,6 +318,233 @@ module testCoreVector2D() {
                 assertEqual(center2D([10], [8], 10, true), [9, 0] + ([0, -2] / norm([0, -2])) * sqrt(100 - pow(norm([-2, 0]) / 2, 2)), "Should accept vector smaller than 2D, then upscale them and compute the center of the circle using 2D");
                 assertEqual(center2D([10, 20, 30], [8, 16, 32], 10, true), [9, 18] + ([4, -2] / norm([4, -2])) * sqrt(100 - pow(norm([2, 4]) / 2, 2)), "Should accept vector bigger than 2D, but should only compute the center of the circle using 2D");
                 assertEqual(center2D([10, 20], [8, 16], 1, true), [9, 18], "Cannot compute the center if the radius is smaller than the distance between the points, should return the point at the middle");
+            }
+        }
+        // test core/vector-2d/parallel2D()
+        testModule("parallel2D()", 3) {
+            testUnit("no parameter", 1) {
+                assertEqual(parallel2D(), [[0, 0], [0, 0]], "Without parameter the function should return the origin");
+            }
+            testUnit("wrong type", 4) {
+                assertEqual(parallel2D("10", "10", "10"), [[0, 0], [0, 0]], "Cannot compute parallel of strings");
+                assertEqual(parallel2D(true, true, true), [[0, 0], [0, 0]], "Cannot compute parallel of boolean");
+                assertEqual(parallel2D([], [], []), [[0, 0], [0, 0]], "Cannot compute parallel of empty arrays");
+                assertEqual(parallel2D(["1"], ["2"], ["3"]), [[0, 0], [0, 0]], "Cannot compute parallel of arrays");
+            }
+            testUnit("check", 9) {
+                assertApproxEqual(parallel2D(0, 1, 2), [[-2 * cos(135), -2 * sin(135)], [1 - 2 * cos(135), 1 - 2 * sin(135)]], "Numbers should be converted to vectors");
+                assertApproxEqual(parallel2D([0, 0], [1, 1], 2), [[-2 * cos(135), -2 * sin(135)], [1 - 2 * cos(135), 1 - 2 * sin(135)]], "45° positive line with a distance of 2");
+                assertApproxEqual(parallel2D([0, 0], [1, 1], -2), [[2 * cos(135), 2 * sin(135)], [1 + 2 * cos(135), 1 + 2 * sin(135)]], "45° positive line with a distance of -2");
+                assertApproxEqual(parallel2D([0, 0], [-1, -1], 2), [[2 * cos(135), 2 * sin(135)], [-1 + 2 * cos(135), -1 + 2 * sin(135)]], "45° negative line with a distance of 2");
+                assertApproxEqual(parallel2D([0, 0], [-1, -1], -2), [[-2 * cos(135), -2 * sin(135)], [-1 - 2 * cos(135), -1 - 2 * sin(135)]], "45° negative line with a distance of -2");
+                assertEqual(parallel2D([0, 2], [3, 2], 3), [[0, -1], [3, -1]], "horizontal line with a distance of 3");
+                assertEqual(parallel2D([0, 2], [3, 2], -3), [[0, 5], [3, 5]], "horizontal line with a distance of -3");
+                assertEqual(parallel2D([4, -2], [4, 8], 3), [[7, -2], [7, 8]], "vertical line with a distance of 3");
+                assertEqual(parallel2D([4, -2], [4, 8], -3), [[1, -2], [1, 8]], "vertical line with a distance of -3");
+            }
+        }
+        // test core/vector-2d/intersect2D()
+        testModule("intersect2D()", 3) {
+            testUnit("no parameter", 1) {
+                assertEqual(intersect2D(), [0, 0], "Without parameter the function should return the origin");
+            }
+            testUnit("wrong type", 4) {
+                assertEqual(intersect2D("10", "10", "10", "10"), [0, 0], "Cannot compute intersection of strings, should return the origin");
+                assertEqual(intersect2D(true, true, true, true), [0, 0], "Cannot compute intersection of boolean, should return the origin");
+                assertEqual(intersect2D([], [], [], []), [0, 0], "Cannot compute intersection of empty arrays, should return the origin");
+                assertEqual(intersect2D(["1"], ["2"], ["3"], ["4"]), [0, 0], "Cannot compute intersection of arrays, should return the origin");
+            }
+            testUnit("intersection", 6) {
+                assertEqual(intersect2D(1, 2, 3, 4), [1, 1], "Numbers should be converted to vectors");
+                assertEqual(intersect2D([1, 1], [2, 2], [3, 1], [4, 2]), [1, 1], "Parallel lines");
+                assertEqual(intersect2D([1, 1], [2, 2], [1, 2], [2, 1]), [1.5, 1.5], "Perpendicular lines");
+                assertEqual(intersect2D([0, -3], [1, 0], [0, 3], [1, 0]), [1, 0], "Lines crossing on X axis");
+                assertEqual(intersect2D([-3, 0], [0, 1], [3, 0], [0, 1]), [0, 1], "Lines crossing on Y axis");
+                assertEqual(intersect2D([-3, 1], [3, 8], [-2, 5], [7, 3]), [-3, 1] + (-38 / -75) * [6, 7], "Lines crossing on Y axis");
+            }
+        }
+        // test core/vector-2d/tangent2D()
+        testModule("tangent2D()", 5) {
+            testUnit("no parameter", 1) {
+                assertEqual(tangent2D(), [0, 0], "Without parameter the function should return the origin");
+            }
+            testUnit("wrong type", 4) {
+                assertEqual(tangent2D("10", "10", "10"), [0, 0], "Cannot compute tangent of strings, should return the origin");
+                assertEqual(tangent2D(true, true, true), [0, 0], "Cannot compute tangent of boolean, should return the origin");
+                assertEqual(tangent2D([], [], []), [0, 0], "Cannot compute tangent of empty arrays, should return the origin");
+                assertEqual(tangent2D(["1"], ["2"], ["3"]), [0, 0], "Cannot compute tangent of arrays, should return the origin");
+            }
+            testUnit("inside circle", 2) {
+                assertApproxEqual(tangent2D(1, 2, 3), [1, 1], "Numbers should be converted to vectors");
+                assertApproxEqual(tangent2D([6, 4], [5, 6], 3), [6, 4], "The point is inside the circle");
+            }
+            testUnit("positive", 9) {
+                assertApproxEqual(tangent2D(3, 2, 1), [3, 2], "Numbers should be converted to vectors");
+                assertApproxEqual(tangent2D([11, 5], [19, 11], 2), [11, 5] + arcPoint(sqrt(96), atan2(6, 8) + asin(2 / 10)), "First quadrant, a cicle on the right");
+                assertApproxEqual(tangent2D([19, 11], [11, 5], 2), [19, 11] + arcPoint(sqrt(96), atan2(-6, -8) + asin(2 / 10)), "First quadrant, a cicle on the left");
+                assertApproxEqual(tangent2D([-11, 5], [-19, 11], 2), [-11, 5] + arcPoint(sqrt(96), atan2(6, -8) + asin(2 / 10)), "Second quadrant, a cicle on the left");
+                assertApproxEqual(tangent2D([-19, 11], [-11, 5], 2), [-19, 11] + arcPoint(sqrt(96), atan2(-6, 8) + asin(2 / 10)), "Second quadrant, a cicle on the right");
+                assertApproxEqual(tangent2D([-11, -5], [-19, -11], 2), [-11, -5] + arcPoint(sqrt(96), atan2(-6, -8) + asin(2 / 10)), "Third quadrant, a cicle on the left");
+                assertApproxEqual(tangent2D([-19, -11], [-11, -5], 2), [-19, -11] + arcPoint(sqrt(96), atan2(6, 8) + asin(2 / 10)), "Third quadrant, a cicle on the right");
+                assertApproxEqual(tangent2D([11, -5], [19, -11], 2), [11, -5] + arcPoint(sqrt(96), atan2(-6, 8) + asin(2 / 10)), "Fourth quadrant, a cicle on the right");
+                assertApproxEqual(tangent2D([19, -11], [11, -5], 2), [19, -11] + arcPoint(sqrt(96), atan2(6, -8) + asin(2 / 10)), "Fourth quadrant, a cicle on the left");
+            }
+            testUnit("negative", 9) {
+                assertApproxEqual(tangent2D(3, 2, -1), [2, 3], "Numbers should be converted to vectors");
+                assertApproxEqual(tangent2D([11, 5], [19, 11], -2), [11, 5] + arcPoint(sqrt(96), atan2(6, 8) + asin(-2 / 10)), "First quadrant, a cicle on the right");
+                assertApproxEqual(tangent2D([19, 11], [11, 5], -2), [19, 11] + arcPoint(sqrt(96), atan2(-6, -8) + asin(-2 / 10)), "First quadrant, a cicle on the left");
+                assertApproxEqual(tangent2D([-11, 5], [-19, 11], -2), [-11, 5] + arcPoint(sqrt(96), atan2(6, -8) + asin(-2 / 10)), "Second quadrant, a cicle on the left");
+                assertApproxEqual(tangent2D([-19, 11], [-11, 5], -2), [-19, 11] + arcPoint(sqrt(96), atan2(-6, 8) + asin(-2 / 10)), "Second quadrant, a cicle on the right");
+                assertApproxEqual(tangent2D([-11, -5], [-19, -11], -2), [-11, -5] + arcPoint(sqrt(96), atan2(-6, -8) + asin(-2 / 10)), "Third quadrant, a cicle on the left");
+                assertApproxEqual(tangent2D([-19, -11], [-11, -5], -2), [-19, -11] + arcPoint(sqrt(96), atan2(6, 8) + asin(-2 / 10)), "Third quadrant, a cicle on the right");
+                assertApproxEqual(tangent2D([11, -5], [19, -11], -2), [11, -5] + arcPoint(sqrt(96), atan2(-6, 8) + asin(-2 / 10)), "Fourth quadrant, a cicle on the right");
+                assertApproxEqual(tangent2D([19, -11], [11, -5], -2), [19, -11] + arcPoint(sqrt(96), atan2(6, -8) + asin(-2 / 10)), "Fourth quadrant, a cicle on the left");
+            }
+        }
+        // test core/vector-2d/circleLineIntersect2D()
+        testModule("circleLineIntersect2D()", 4) {
+            testUnit("no parameter", 1) {
+                assertEqual(circleLineIntersect2D(), [[0, 0], [0, 0]], "Without parameter the function cannot compute the intersection");
+            }
+            testUnit("wrong type", 4) {
+                assertEqual(circleLineIntersect2D("10", "10", "10", "10"), [[0, 0], [0, 0]], "Cannot compute intersection of strings");
+                assertEqual(circleLineIntersect2D(true, true, true, true), [[0, 0], [0, 0]], "Cannot compute intersection of booleans");
+                assertEqual(circleLineIntersect2D([], [], [], []), [[0, 0], [0, 0]], "Cannot compute intersection of empty arrays");
+                assertEqual(circleLineIntersect2D(["10"], ["10"], ["10"], ["10"]), [[0, 0], [0, 0]], "Cannot compute intersection of arrays");
+            }
+            testUnit("positive", 15) {
+                assertApproxEqual(circleLineIntersect2D(1, 2, 3, 4), [vector2D((12 - sqrt(128)) / 4), vector2D((12 + sqrt(128)) / 4)], "Numbers should be converted to vectors");
+                assertApproxEqual(circleLineIntersect2D([1, -1], [5, 3], [5, 4], 2), [vector2D((22 - sqrt(28)) / 4) - [0, 2], vector2D((22 + sqrt(28)) / 4) - [0, 2]], "45° line");
+                assertApproxEqual(circleLineIntersect2D([1, 1], [5, 1], [3, 1], 1), [[2, 1], [4, 1]], "Horizontal centered line");
+                assertApproxEqual(circleLineIntersect2D([1, 1], [1, 5], [1, 3], 1), [[1, 2], [1, 4]], "Vertical centered line");
+                assertApproxEqual(circleLineIntersect2D([1, 1], [5, 1], [3, 2], 2), [[3 - sqrt(3), 1], [3 + sqrt(3), 1]], "Horizontal shifted line");
+                assertApproxEqual(circleLineIntersect2D([1, 1], [1, 5], [2, 3], 2), [[1, 3 - sqrt(3)], [1, 3 + sqrt(3)]], "Vertical shifted line");
+                assertApproxEqual(circleLineIntersect2D([1, 1], [5, 1], [3, 2], 1), [[3, 1], [3, 1]], "Horizontal tangent line");
+                assertApproxEqual(circleLineIntersect2D([1, 1], [1, 5], [2, 3], 1), [[1, 3], [1, 3]], "Vertical tangent line");
+                assertApproxEqual(circleLineIntersect2D([8, 0], [2, 12], [4, 3], sqrt(5)), [[6, 4], [6, 4]], "Leaned tangent line");
+                assertApproxEqual(circleLineIntersect2D([6, 4], [6, 4], [4, 3], sqrt(5)), [[6, 4], [6, 4]], "Tangent point");
+                assertApproxEqual(circleLineIntersect2D([2, 5], [8, 3], [5, 4], 3), [
+                    vmul(vector2D((100 / 9 - sqrt(40)) / (20 / 9)), [1, -1 / 3]) + [0, 17 / 3],
+                    vmul(vector2D((100 / 9 + sqrt(40)) / (20 / 9)), [1, -1 / 3]) + [0, 17 / 3]
+                ], "Leaned line");
+                assertApproxEqual(circleLineIntersect2D([2, 5], [8, 3], [10, 15], 3), [], "Leaned line, no intersection");
+                assertApproxEqual(circleLineIntersect2D([1, 1], [5, 1], [3, 3], 1), [], "Horizontal line, no intersection");
+                assertApproxEqual(circleLineIntersect2D([1, 1], [1, 5], [3, 3], 1), [], "Vertical line, no intersection");
+                assertApproxEqual(circleLineIntersect2D([1, 1], [1, 1], [3, 3], 1), [], "Point, no intersection");
+            }
+            testUnit("negative", 15) {
+                assertApproxEqual(circleLineIntersect2D(-1, -2, -3, -4), [vector2D((-12 - sqrt(128)) / 4), vector2D((-12 + sqrt(128)) / 4)], "Numbers should be converted to vectors");
+                assertApproxEqual(circleLineIntersect2D([-1, 1], [-5, -3], [-5, -4], -2), [vector2D((-22 - sqrt(28)) / 4) + [0, 2], vector2D((-22 + sqrt(28)) / 4) + [0, 2]], "45° line");
+                assertApproxEqual(circleLineIntersect2D([-1, -1], [-5, -1], [-3, -1], -1), [[-4, -1], [-2, -1]], "Horizontal centered line");
+                assertApproxEqual(circleLineIntersect2D([-1, -1], [-1, -5], [-1, -3], -1), [[-1, -4], [-1, -2]], "Vertical centered line");
+                assertApproxEqual(circleLineIntersect2D([-1, -1], [-5, -1], [-3, -2], -2), [[-3 - sqrt(3), -1], [-3 + sqrt(3), -1]], "Horizontal shifted line");
+                assertApproxEqual(circleLineIntersect2D([-1, -1], [-1, -5], [-2, -3], -2), [[-1, -3 - sqrt(3)], [-1, -3 + sqrt(3)]], "Vertical shifted line");
+                assertApproxEqual(circleLineIntersect2D([-1, -1], [-5, -1], [-3, -2], -1), [[-3, -1], [-3, -1]], "Horizontal tangent line");
+                assertApproxEqual(circleLineIntersect2D([-1, -1], [-1, -5], [-2, -3], -1), [[-1, -3], [-1, -3]], "Vertical tangent line");
+                assertApproxEqual(circleLineIntersect2D([-8, 0], [-2, -12], [-4, -3], sqrt(5)), [[-6, -4], [-6, -4]], "Leaned tangent line");
+                assertApproxEqual(circleLineIntersect2D([-6, -4], [-6, -4], [-4, -3], sqrt(5)), [[-6, -4], [-6, -4]], "Tangent point");
+                assertApproxEqual(circleLineIntersect2D([-2, -5], [-8, -3], [-5, -4], -3), [
+                    vmul(vector2D((-100 / 9 - sqrt(40)) / (20 / 9)), [1, -1 / 3]) - [0, 17 / 3],
+                    vmul(vector2D((-100 / 9 + sqrt(40)) / (20 / 9)), [1, -1 / 3]) - [0, 17 / 3]
+                ], "Leaned line");
+                assertApproxEqual(circleLineIntersect2D([-2, -5], [-8, -3], [-10, -15], -3), [], "Leaned line, no intersection");
+                assertApproxEqual(circleLineIntersect2D([-1, -1], [-5, -1], [-3, -3], -1), [], "Horizontal line, no intersection");
+                assertApproxEqual(circleLineIntersect2D([-1, -1], [-1, -5], [-3, -3], -1), [], "Vertical line, no intersection");
+                assertApproxEqual(circleLineIntersect2D([-1, -1], [-1, -1], [-3, -3], -1), [], "Point, no intersection");
+            }
+        }
+        // test core/vector-2d/circleIntersect2D()
+        testModule("circleIntersect2D()", 4) {
+            testUnit("no parameter", 1) {
+                assertEqual(circleIntersect2D(), [], "Without parameter the function cannot compute the intersection");
+            }
+            testUnit("wrong type", 4) {
+                assertEqual(circleIntersect2D("10", "10", "10", "10"), [], "Cannot compute intersection of strings");
+                assertEqual(circleIntersect2D(true, true, true, true), [], "Cannot compute intersection of booleans");
+                assertEqual(circleIntersect2D([], [], [], []), [], "Cannot compute intersection of empty arrays");
+                assertEqual(circleIntersect2D(["10"], ["10"], ["10"], ["10"]), [], "Cannot compute intersection of arrays");
+            }
+            testUnit("positive", 13) {
+                assertApproxEqual(circleIntersect2D(1, 2, 3, 4), [[(2 - sqrt(28)) / 4, 1 - (2 - sqrt(28)) / 4], [(2 + sqrt(28)) / 4, 1 - (2 + sqrt(28)) / 4]], "Numbers should be converted to vectors");
+                assertApproxEqual(circleIntersect2D([1, 1], 2, [3, 3], 4), [[(2 - sqrt(28)) / 4, 1 - (2 - sqrt(28)) / 4], [(2 + sqrt(28)) / 4, 1 - (2 + sqrt(28)) / 4]], "Circles aligned at 45°");
+                assertApproxEqual(circleIntersect2D([3, 2], 3, [4, 5], 2), [
+                    [((25 - 3 * sqrt(15)) / 3) / (20 / 9), 11 / 2 - ((25 - 3 * sqrt(15)) / 3) / (20 / 9) / 3],
+                    [((25 + 3 * sqrt(15)) / 3) / (20 / 9), 11 / 2 - ((25 + 3 * sqrt(15)) / 3) / (20 / 9) / 3]
+                ], "Intersecting circles");
+                assertApproxEqual(circleIntersect2D([1, 1], 2, [3, 1], 2), [[0, 1 + sqrt(3)], [2, 1 + sqrt(3)]], "Circles aligned on horizontal axis");
+                assertApproxEqual(circleIntersect2D([1, 1], 2, [1, 3], 2), [[1 + sqrt(3), 0], [1 + sqrt(3), 2]], "Circles aligned on vertical axis");
+                assertApproxEqual(circleIntersect2D([1, 1], 2, [5, 1], 2), [[3, 1], [3, 1]], "Tangent circles on horizontal axis");
+                assertApproxEqual(circleIntersect2D([1, 1], 2, [1, 5], 2), [[1, 3], [1, 3]], "Tangent circles on vertical axis");
+                assertApproxEqual(circleIntersect2D([1, 1], 2, [1, 1] + [4 * cos(45), 4 * sin(45)], 2), [[1, 1] + [2 * cos(45), 2 * sin(45)], [1, 1] + [2 * cos(45), 2 * sin(45)]], "Tangent circles");
+                assertApproxEqual(circleIntersect2D([1, 1], 2, [6, 1], 2), [], "Not intersecting circles aligned on horizontal axis");
+                assertApproxEqual(circleIntersect2D([1, 1], 2, [1, 6], 2), [], "Not intersecting circles aligned on vertical axis");
+                assertApproxEqual(circleIntersect2D([1, 1], 2, [1, 1], 3), [], "Concentric circles");
+                assertApproxEqual(circleIntersect2D([1, 1], 2, [1, 1], 2), [], "Concentric and equal circles");
+                assertApproxEqual(circleIntersect2D([1, 4], 2, [8, 3], 2), [], "Not intersecting circles");
+            }
+            testUnit("negative", 13) {
+                assertApproxEqual(circleIntersect2D(-1, -2, -3, -4), [[(-2 - sqrt(28)) / 4, -1 - (-2 - sqrt(28)) / 4], [(-2 + sqrt(28)) / 4, -1 - (-2 + sqrt(28)) / 4]], "Numbers should be converted to vectors");
+                assertApproxEqual(circleIntersect2D([-1, -1], -2, [-3, -3], -4), [[(-2 - sqrt(28)) / 4, -1 - (-2 - sqrt(28)) / 4], [(-2 + sqrt(28)) / 4, -1 - (-2 + sqrt(28)) / 4]], "Circles aligned at 45°");
+                assertApproxEqual(circleIntersect2D([-3, -2], -3, [-4, -5], -2), [
+                    [((-25 - 3 * sqrt(15)) / 3) / (20 / 9), -11 / 2 - ((-25 - 3 * sqrt(15)) / 3) / (20 / 9) / 3],
+                    [((-25 + 3 * sqrt(15)) / 3) / (20 / 9), -11 / 2 - ((-25 + 3 * sqrt(15)) / 3) / (20 / 9) / 3]
+                ], "Intersecting circles");
+                assertApproxEqual(circleIntersect2D([-1, -1], -2, [-3, -1], -2), [[0, -1 + sqrt(3)], [-2, -1 + sqrt(3)]], "Circles aligned on horizontal axis");
+                assertApproxEqual(circleIntersect2D([-1, -1], -2, [-1, -3], -2), [[-1 + sqrt(3), 0], [-1 + sqrt(3), -2]], "Circles aligned on vertical axis");
+                assertApproxEqual(circleIntersect2D([-1, -1], -2, [-5, -1], -2), [[-3, -1], [-3, -1]], "Tangent circles on horizontal axis");
+                assertApproxEqual(circleIntersect2D([-1, -1], -2, [-1, -5], -2), [[-1, -3], [-1, -3]], "Tangent circles on vertical axis");
+                assertApproxEqual(circleIntersect2D([-1, -1], -2, [-1, -1] - [4 * cos(45), 4 * sin(45)], 2), [[-1, -1] - [2 * cos(45), 2 * sin(45)], [-1, -1] - [2 * cos(45), 2 * sin(45)]], "Tangent circles");
+                assertApproxEqual(circleIntersect2D([-1, -1], -2, [-6, -1], -2), [], "Not intersecting circles aligned on horizontal axis");
+                assertApproxEqual(circleIntersect2D([-1, -1], -2, [-1, -6], -2), [], "Not intersecting circles aligned on vertical axis");
+                assertApproxEqual(circleIntersect2D([-1, -1], -2, [-1, -1], -3), [], "Concentric circles");
+                assertApproxEqual(circleIntersect2D([-1, -1], -2, [-1, -1], -2), [], "Concentric and equal circles");
+                assertApproxEqual(circleIntersect2D([-1, -4], -2, [-8, -3], -2), [], "Not intersecting circles");
+            }
+        }
+        // test core/vector-2d/isosceles2D()
+        testModule("isosceles2D()", 4) {
+            testUnit("no parameter", 1) {
+                assertEqual(isosceles2D(), [0, 0], "Without parameter the function should return the origin");
+            }
+            testUnit("wrong type", 4) {
+                assertEqual(isosceles2D("10", "10", "10"), [0, 0], "Cannot compute edge of strings, should return the origin");
+                assertEqual(isosceles2D(true, true, true), [0, 0], "Cannot compute edge of boolean, should return the origin");
+                assertEqual(isosceles2D([], [], []), [0, 0], "Cannot compute intersection of edge arrays, should return the origin");
+                assertEqual(isosceles2D(["1"], ["2"], ["3"]), [0, 0], "Cannot compute edge of arrays, should return the origin");
+            }
+            testUnit("height", 7) {
+                assertApproxEqual(isosceles2D(1, 2, 3), [1, 1] + arcPoint(pythagore(3, norm2D([1, 1]) / 2), 45 + atan2(3, norm2D([1, 1]) / 2)), "Numbers should be converted to vectors");
+                assertApproxEqual(isosceles2D([10, 5], [20, 5], 10), [10, 5] + arcPoint(pythagore(10, 5), atan2(10, 5)), "Horizontal triangle, edge on the top");
+                assertApproxEqual(isosceles2D([20, 5], [10, 5], 10), [20, 5] - arcPoint(pythagore(10, 5), atan2(10, 5)), "Horizontal triangle, edge on the bottom");
+                assertApproxEqual(isosceles2D([5, 10], [5, 20], 10), [5, 10] + arcPoint(pythagore(10, 5), atan2(5, -10)), "Vertical triangle, edge on the left");
+                assertApproxEqual(isosceles2D([5, 20], [5, 10], 10), [5, 20] - arcPoint(pythagore(10, 5), atan2(5, -10)), "Vertical triangle, edge on the right");
+                assertApproxEqual(isosceles2D([10, 10], [18, 16], 10), [10, 10] + arcPoint(pythagore(10, 5), atan2(10, 5) + atan2(6, 8)), "Tilted triangle, edge on the top");
+                assertApproxEqual(isosceles2D([18, 16], [10, 10], 10), [18, 16] - arcPoint(pythagore(10, 5), atan2(10, 5) + atan2(6, 8)), "Tilted triangle, edge on the bottom");
+            }
+            testUnit("angle", 7) {
+                assertApproxEqual(isosceles2D(1, 2, angle=45), [1, 2], "Numbers should be converted to vectors");
+                assertApproxEqual(isosceles2D([10, 5], [20, 5], angle=45), [15, 10], "Horizontal triangle, edge on the top");
+                assertApproxEqual(isosceles2D([20, 5], [10, 5], angle=45), [15, 0], "Horizontal triangle, edge on the bottom");
+                assertApproxEqual(isosceles2D([5, 10], [5, 20], angle=45), [0, 15], "Vertical triangle, edge on the left");
+                assertApproxEqual(isosceles2D([5, 20], [5, 10], angle=45), [10, 15], "Vertical triangle, edge on the right");
+                assertApproxEqual(isosceles2D([10, 10], [18, 16], angle=45), [11, 17], "Tilted triangle, edge on the top");
+                assertApproxEqual(isosceles2D([18, 16], [10, 10], angle=45), [17, 9], "Tilted triangle, edge on the bottom");
+            }
+        }
+        // test core/vector-2d/protractor()
+        testModule("protractor()", 2) {
+            testUnit("default value", 3) {
+                assertEqual(protractor(), 0, "Should return 0 if no point was provided");
+                assertEqual(protractor("1", "2"), 0, "Cannot compute angle of strings");
+                assertEqual(protractor(true, true), 0, "Cannot compute angle of booleans");
+            }
+            testUnit("compute angle", 6) {
+                assertEqual(protractor(1, 2), 45, "When single numbers are provided, they should be translated to vector.");
+                assertEqual(protractor([3, 5], [3, 9]), 90, "Positive straight angle");
+                assertEqual(protractor([3, 9], [3, 5]), -90, "Negative straight angle");
+                assertEqual(protractor([3, 2], [6, 7]), atan2(5, 3), "Angle of a positive line");
+                assertEqual(protractor([6, 7], [3, 2]), atan2(-5, -3), "Angle of a negative line");
+                assertEqual(protractor([3, 2], [3, 2]), 0, "Angle of a point");
             }
         }
         // test core/vector-2d/angle2D()

@@ -28,7 +28,7 @@ DEMO_FONT_SIZE = 10;
 
 // The list of render modes to illustrate
 DEMO_MODES = [
-    [null, null], // MODE_DEFAULT
+    [undef, undef], // MODE_DEFAULT
     [[.5, 0, 0], MODE_DIRTY],
     [[0, .5, 0], MODE_DEV],
     [[0, 0, .5], MODE_PROD],
