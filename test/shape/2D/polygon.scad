@@ -34,7 +34,7 @@ use <../../../full.scad>
  * @author jsconan
  */
 module testShape2dPolygon() {
-    testPackage("shape/2D/polygon.scad", 9) {
+    testPackage("shape/2D/polygon.scad", 11) {
         // test shape/2D/polygon/sizeRectangle()
         testModule("sizeRectangle()", 2) {
             testUnit("default values", 3) {
@@ -49,6 +49,33 @@ module testShape2dPolygon() {
                 assertEqual(sizeRectangle([3, 4, 5]), [3, 4], "Should truncate too big size vector");
                 assertEqual(sizeRectangle([3, 4], l=5), [5, 4], "Should set the length with the provided length in the provided size vector");
                 assertEqual(sizeRectangle([3, 4], w=5), [3, 5], "Should set the width with the provided width in the provided size vector");
+            }
+        }
+        // test shape/2D/polygon/sizeChamferedRectangle()
+        testModule("sizeChamferedRectangle()", 3) {
+            testUnit("default values", 3) {
+                assertEqual(sizeChamferedRectangle(), [[1, 1], [0, 0]], "Should always return a size even if not parameter has been provided");
+                assertEqual(sizeChamferedRectangle("12", "12", "12"), [[1, 1], [0, 0]], "Should always return a size even if wrong parameter has been provided (string)");
+                assertEqual(sizeChamferedRectangle(true, true, true), [[1, 1], [0, 0]], "Should always return a size even if wrong parameter has been provided (boolean)");
+            }
+            testUnit("compute size", 7) {
+                assertEqual(sizeChamferedRectangle(3), [[3, 3], [0, 0]], "Should produce a size vector from a single number size");
+                assertEqual(sizeChamferedRectangle([3]), [[3, 1], [0, 0]], "Should complete incomplete size vector");
+                assertEqual(sizeChamferedRectangle([3, 4]), [[3, 4], [0, 0]], "Should keep the provided size vector");
+                assertEqual(sizeChamferedRectangle([3, 4, 5]), [[3, 4], [0, 0]], "Should truncate too big size vector");
+                assertEqual(sizeChamferedRectangle([3, 4], l=5), [[5, 4], [0, 0]], "Should set the length with the provided length in the provided size vector");
+                assertEqual(sizeChamferedRectangle([3, 4], w=5), [[3, 5], [0, 0]], "Should set the width with the provided width in the provided size vector");
+                assertEqual(sizeChamferedRectangle(l=4, w=5), [[4, 5], [0, 0]], "Should set the size from the provided length and width");
+            }
+            testUnit("compute chamfer", 8) {
+                assertEqual(sizeChamferedRectangle(3, 1), [[3, 3], [1, 1]], "Should produce a chamfer vector from a single number size");
+                assertEqual(sizeChamferedRectangle(5, [2]), [[5, 5], [0, 0]], "Should not complete incomplete chamfer vector");
+                assertEqual(sizeChamferedRectangle(5, [0, 2]), [[5, 5], [0, 0]], "Should not allow incomplete chamfer vector");
+                assertEqual(sizeChamferedRectangle([8, 8], [2, 3]), [[8, 8], [2, 3]], "Should keep the provided chamfer vector");
+                assertEqual(sizeChamferedRectangle([8, 8], [2, 3, 4]), [[8, 8], [2, 3]], "Should truncate too big chamfer vector");
+                assertEqual(sizeChamferedRectangle([8, 8], [2, 2], cl=3), [[8, 8], [3, 2]], "Should set the length with the provided length in the provided chamfer vector");
+                assertEqual(sizeChamferedRectangle([8, 8], [2, 2], cw=3), [[8, 8], [2, 3]], "Should set the width with the provided width in the provided chamfer vector");
+                assertEqual(sizeChamferedRectangle(cl=4, cw=5), [[8, 10], [4, 5]], "Should set the chamfer from the provided length and width");
             }
         }
         // test shape/2D/polygon/sizeTrapezium()
@@ -130,6 +157,26 @@ module testShape2dPolygon() {
                 assertEqual(drawRectangle([3, 4]), [[1.5, 2], [-1.5, 2], [-1.5, -2], [1.5, -2]], "Should return a list of points to draw a rectangle using the provided size vector");
                 assertEqual(drawRectangle([3, 4], l=5), [[2.5, 2], [-2.5, 2], [-2.5, -2], [2.5, -2]], "Should return a list of points to draw a rectangle using the provided size vector with the provided length");
                 assertEqual(drawRectangle([3, 4], w=5), [[1.5, 2.5], [-1.5, 2.5], [-1.5, -2.5], [1.5, -2.5]], "Should return a list of points to draw a rectangle using the provided size vector with the provided width");
+            }
+        }
+        // test shape/2D/polygon/drawChamferedRectangle()
+        testModule("drawChamferedRectangle()", 3) {
+            testUnit("default values", 3) {
+                assertEqual(drawChamferedRectangle(), [[0.5, 0.5], [-0.5, 0.5], [-0.5, -0.5], [0.5, -0.5]], "Should return a list of points to draw a rectangle with a size of 1");
+                assertEqual(drawChamferedRectangle("12", "12", "12"), [[0.5, 0.5], [-0.5, 0.5], [-0.5, -0.5], [0.5, -0.5]], "Should return a list of points to draw a rectangle with a size of 1 if wrong parameter has been provided (string)");
+                assertEqual(drawChamferedRectangle(true, true, true), [[0.5, 0.5], [-0.5, 0.5], [-0.5, -0.5], [0.5, -0.5]], "Should return a list of points to draw a rectangle with a size of 1 if wrong parameter has been provided (boolean)");
+            }
+            testUnit("draw shape without chamfer", 4) {
+                assertEqual(drawChamferedRectangle(3), [[1.5, 1.5], [-1.5, 1.5], [-1.5, -1.5], [1.5, -1.5]], "Should return a list of points to draw a rectangle. Single number size should be translated into vector");
+                assertEqual(drawChamferedRectangle([3, 4]), [[1.5, 2], [-1.5, 2], [-1.5, -2], [1.5, -2]], "Should return a list of points to draw a rectangle using the provided size vector");
+                assertEqual(drawChamferedRectangle([3, 4], l=5), [[2.5, 2], [-2.5, 2], [-2.5, -2], [2.5, -2]], "Should return a list of points to draw a rectangle using the provided size vector with the provided length");
+                assertEqual(drawChamferedRectangle([3, 4], w=5), [[1.5, 2.5], [-1.5, 2.5], [-1.5, -2.5], [1.5, -2.5]], "Should return a list of points to draw a rectangle using the provided size vector with the provided width");
+            }
+            testUnit("draw shape with chamfer", 4) {
+                assertEqual(drawChamferedRectangle(3, 1), [[1.5, 0.5], [0.5, 1.5], [-0.5, 1.5], [-1.5, 0.5], [-1.5, -0.5], [-0.5, -1.5], [0.5, -1.5], [1.5, -0.5]], "Should return a list of points to draw a chamfered rectangle. Single number size should be translated into vector");
+                assertEqual(drawChamferedRectangle([8, 9], [1, 1]), [[4, 3.5], [3, 4.5], [-3, 4.5], [-4, 3.5], [-4, -3.5], [-3, -4.5], [3, -4.5], [4, -3.5]], "Should return a list of points to draw a chamfered rectangle using the provided size vector");
+                assertEqual(drawChamferedRectangle([8, 9], [1, 1], cl=2), [[4, 3.5], [2, 4.5], [-2, 4.5], [-4, 3.5], [-4, -3.5], [-2, -4.5], [2, -4.5], [4, -3.5]], "Should return a list of points to draw a chamfered rectangle using the provided size vector with the provided chamfer length");
+                assertEqual(drawChamferedRectangle([8, 9], [1, 1], cw=2), [[4, 2.5], [3, 4.5], [-3, 4.5], [-4, 2.5], [-4, -2.5], [-3, -4.5], [3, -4.5], [4, -2.5]], "Should return a list of points to draw a chamfered rectangle using the provided size vector with the provided chamfer width");
             }
         }
         // test shape/2D/polygon/drawTrapezium()
