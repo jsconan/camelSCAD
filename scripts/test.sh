@@ -34,7 +34,13 @@
 
 name=suite
 if [ "$1" != "" ]; then
-    name=$1
+    folder=$(dirname $1)
+    basename=$(basename $1 .scad)
+    if [ "${folder}" != "." ]; then
+        name="${folder}/${basename}"
+    else
+        name="${basename}"
+    fi
 fi
 
 scriptPath=$(dirname $0)
