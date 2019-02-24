@@ -180,3 +180,30 @@ function path(p, points, i) =
     )
     path(p=p, points=concat(values[0] == point ? slice(points, 0, -1) : points, values), i=i + 1)
 ;
+
+/**
+ * Computes the outline of a polygon. The outline can be at a particular distance.
+ *
+ * @param Vector[] points - The points defining the polygon to outline.
+ * @param Number distance - The distance from the polygon for the outline.
+ *                          A positive distance will place the outline outside,
+ *                          while a negative distance will place it inside.
+ * @returns Vector[]
+ */
+function outline(points, distance) =
+    let(
+        points = array(points),
+        l = len(points),
+        prev = l - 1,
+        next = 1
+    )
+    l >= 3 ? [
+        for (i = [0 : 1 : l - 1])
+            vertexOutline2D(
+                a=points[(i + prev) % l],
+                v=points[i],
+                b=points[(i + next) % l],
+                distance=distance
+            )
+    ] : points
+;
