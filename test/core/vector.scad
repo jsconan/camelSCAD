@@ -34,7 +34,7 @@ use <../../full.scad>
  * @author jsconan
  */
 module testCoreVector() {
-    testPackage("core/vector.scad", 14) {
+    testPackage("core/vector.scad", 15) {
         // test core/vector/vadd()
         testModule("vadd()", 5) {
             testUnit("no parameter", 1) {
@@ -345,6 +345,25 @@ module testCoreVector() {
                 assertEqual(vboolean(["", "foo", "bar", ""], true), [false, true, true, false], "Array of strings should produce array of false and true if boolean type was requested");
                 assertEqual(vboolean([[], [0], [1], []]), [0, 1, 1, 0], "Array of arrays should produce array of 0 and 1 if boolean type was not requested");
                 assertEqual(vboolean([[], [0], [1], []], true), [false, true, true, false], "Array of arrays should produce array of false and true if boolean type was requested");
+            }
+        }
+        // test core/vector/vangle()
+        testModule("vangle()", 2) {
+            testUnit("default value", 5) {
+                assertEqual(vangle(), 0, "Cannot compute angle if no parameter was provided");
+                assertEqual(vangle(1, 2), 0, "Cannot compute angle of numbers");
+                assertEqual(vangle([], []), 0, "Cannot compute angle of empty arrays");
+                assertEqual(vangle("1", "2"), 0, "Cannot compute angle of strings");
+                assertEqual(vangle(true, true), 0, "Cannot compute angle of booleans");
+            }
+            testUnit("compute angle", 7) {
+                assertEqual(vangle([0, 0], [0, 0]), 0, "Origin vectors have an angle of 0°");
+                assertEqual(round(vangle([1, 1], [2, 2])), 0, "Aligned vectors have an angle of 0°");
+                assertEqual(vangle([1, 0], [0, 1]), 90, "Orthogonal vectors have an angle of 90°");
+                assertEqual(vangle([1, 0], [0, -1]), 90, "Orthogonal vectors have an angle of 90°, whatever their direction");
+                assertEqual(vangle([1, 0], [-1, 0]), 180, "Vectors with opposite direction have an angle of 180°");
+                assertEqual(round(vangle([6, 5], rotp([6, 5], -75))), 75, "Rotated vector should produce the expected angle");
+                assertEqual(round(vangle([1, 2], rotp([1, 2], 75))), 75, "Vector rotated with a negative angle should produce the expected angle");
             }
         }
     }

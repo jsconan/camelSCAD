@@ -244,3 +244,18 @@ function vboolean(a, bool) =
     :len(a) == 0 ? a
     :[ for (b = a) b ? t : f ]
 ;
+
+/**
+ * Computes the angle between two vectors.
+ *
+ * @param Vector [a] - The first vector
+ * @param Vector [b] - The second vector
+ * @returns Number
+ */
+function vangle(a, b) =
+    let(
+        a = a ? a : [0, 0, 0],
+        b = b ? b : [0, 0, 0]
+    )
+    float(acos((a * b) / (norm(a) * norm(b))))
+;
