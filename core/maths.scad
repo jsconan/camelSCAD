@@ -96,6 +96,24 @@ function fragments(r, d) =
 function astep(r, a=DEGREES, d) = min(DEGREES / fragments(r=r, d=d), float(a));
 
 /**
+ * Computes the angle of a point on a circle
+ *
+ * @param Number [x] - The X coordinate of the point
+ * @param Number [y] - The Y coordinate of the point
+ * @returns Number
+ */
+function getAngle(x, y) =
+    let(
+        x = float(x),
+        y = float(y),
+        a = x || y ? atan2(y, x)
+                   : 0
+    )
+    a >= 0 ? a
+           : a + DEGREES
+;
+
+/**
  * Computes a length based on the Pythagore's theorem.
  *
  * @param Number a - The A side of the rectangle (0 or undef to compute this value).

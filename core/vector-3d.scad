@@ -152,7 +152,24 @@ function angle3D(a, b) =
         a = vector3D(a),
         b = vector3D(b)
     )
-    float(acos((a * b) / (norm(a) * norm(b))))
+    vangle(a, b)
+;
+
+/**
+ * Computes the vertex angle given three 3D point.
+ *
+ * @param Vector [a] - The first point
+ * @param Vector [b] - The second point
+ * @param Vector [v] - The vertex point
+ * @returns Number
+ */
+function vertexAngle3D(a, b, v) =
+    let(
+        v = vector3D(v),
+        a = vector3D(a) - v,
+        b = vector3D(b) - v
+    )
+    vangle(a, b)
 ;
 
 /**

@@ -34,7 +34,7 @@ use <../../full.scad>
  * @author jsconan
  */
 module testCoreMaths() {
-    testPackage("core/maths.scad", 16) {
+    testPackage("core/maths.scad", 17) {
         // test core/maths/deg()
         testModule("deg()", 3) {
             testUnit("no parameter", 1) {
@@ -293,6 +293,30 @@ module testCoreMaths() {
                 assertEqual(astep(d=200, a=0.1, $fn=0, $fa=1, $fs=1), 0.1, "When the $fn value is not set, the number of fragments should be computed using $fa and $fs. A circle with a diameter of 100 should be fragmented in 63 facets with $fa=1 $fs=1, but the returned angle should be the provided one if lesser");
                 assertEqual(astep(d=200, a=0.1, $fn=0, $fa=1, $fs=1.5), 0.1, "When the $fn value is not set, the number of fragments should be computed using $fa and $fs. A circle with a diameter of 100 should be fragmented in 42 facets with $fa=1 $fs=1.5, but the returned angle should be the provided one if lesser");
                 assertEqual(astep(d=200, a=0.1, $fn=0, $fa=0.5, $fs=0.5), 0.1, "When the $fn value is not set, the number of fragments should be computed using $fa and $fs. A circle with a diameter of 100 should be fragmented in 63 facets with $fa=1 $fs=1, but the returned angle should be the provided one if lesser");
+            }
+        }
+        // test core/maths/getAngle()
+        testModule("getAngle()", 2) {
+            testUnit("default value", 5) {
+                assertEqual(getAngle(), 0, "Should return 0 if no parameter was provided");
+                assertEqual(getAngle([], []), 0, "Cannot compute angle of arrays");
+                assertEqual(getAngle([1, 2], [3, 4]), 0, "Cannot compute angle of vectors");
+                assertEqual(getAngle("1", "2"), 0, "Cannot compute angle of strings");
+                assertEqual(getAngle(true, true), 0, "Cannot compute angle of booleans");
+            }
+            testUnit("compute angle", 12) {
+                assertEqual(getAngle(0, 0), 0, "Angle of vector [0,0]");
+                assertEqual(getAngle(0, 1), 90, "Angle of vector [0,1]");
+                assertEqual(getAngle(0, -1), 270, "Angle of vector [0,-1]");
+                assertEqual(getAngle(1, 0), 0, "Angle of vector [1,0]");
+                assertEqual(getAngle(-1, 0), 180, "Angle of vector [-1,0]");
+                assertEqual(getAngle(1, 1), 45, "Angle of vector [1,1]");
+                assertEqual(getAngle(-1, -1), 225, "Angle of vector [-1,-1]");
+                assertEqual(getAngle(1, 2), atan2(2, 1), "Angle of vector [1,2]");
+                assertEqual(getAngle(2, 1), atan2(1, 2), "Angle of vector [2,1]");
+                assertEqual(getAngle(-2, 1), atan2(1, -2), "Angle of vector [-2,1]");
+                assertEqual(getAngle(2, -1), 360 + atan2(-1, 2), "Angle of vector [2,-1]");
+                assertEqual(getAngle(-2, -1), 360 + atan2(-1, -2), "Angle of vector [-2,-1]");
             }
         }
         // test core/maths/pythagore()

@@ -34,7 +34,7 @@ use <../../full.scad>
  * @author jsconan
  */
 module testCoreLine() {
-    testPackage("core/line.scad", 4) {
+    testPackage("core/line.scad", 5) {
         // test core/line/arc()
         testModule("arc()", 9) {
             testUnit("no parameter", 1) {
@@ -280,6 +280,29 @@ module testCoreLine() {
                 assertEqual(len(cubic2), 5, "Path with 1 cubic bezier from an absolute point should produce a list of points");
                 assertEqual(cubic2[0], [5, 6], "Path with 1 cubic bezier from an absolute point should start at the provided point");
                 assertEqual(cubic2[4], [16, 18], "Path with 1 cubic bezier from an absolute point should end with the last control point");
+            }
+        }
+        // test core/line/outline()
+        testModule("outline()", 5) {
+            testUnit("no parameter", 1) {
+                assertEqual(outline(), [], "Cannot build an outline without parameters");
+            }
+            testUnit("wrong type", 3) {
+                assertEqual(outline("1", "1"), ["1"], "Cannot build an outline using strings");
+                assertEqual(outline(true, true), [true], "Cannot build an outline using booleans");
+                assertEqual(outline([1], [1]), [1], "Cannot build an outline using vectors");
+            }
+            testUnit("short line", 2) {
+                assertEqual(outline([0], 1), [0], "The outline needs at least 3 points");
+                assertEqual(outline([0, 1], 1), [0, 1], "The outline needs at least 3 points");
+            }
+            testUnit("ouside", 2) {
+                assertEqual(outline([[1, 1], [2, 1], [2, 2], [1, 2]], 1), [[0, 0], [3, 0], [3, 3], [0, 3]], "Outline of a square");
+                assertEqual(outline([[2, 1], [1, 1], [1, 2], [-1, 2], [-1, 1], [-2, 1], [-2, -1], [-1, -1], [-1, -2], [1, -2], [1, -1], [2, -1]], 1), [[3, 2], [2, 2], [2, 3], [-2, 3], [-2, 2], [-3, 2], [-3, -2], [-2, -2], [-2, -3], [2, -3], [2, -2], [3, -2]], "Outline of a cross");
+            }
+            testUnit("inside", 2) {
+                assertEqual(outline([[0, 0], [3, 0], [3, 3], [0, 3]], -1), [[1, 1], [2, 1], [2, 2], [1, 2]], "Outline of a square");
+                assertEqual(outline([[3, 2], [2, 2], [2, 3], [-2, 3], [-2, 2], [-3, 2], [-3, -2], [-2, -2], [-2, -3], [2, -3], [2, -2], [3, -2]], -1), [[2, 1], [1, 1], [1, 2], [-1, 2], [-1, 1], [-2, 1], [-2, -1], [-1, -1], [-1, -2], [1, -2], [1, -1], [2, -1]], "Outline of a cross");
             }
         }
     }
