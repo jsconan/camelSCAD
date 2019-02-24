@@ -275,7 +275,7 @@ function tangent2D(p, c, r) =
     d > r ? (
         let(
             t = pythagore(0, r, d),
-            a = atan2(v[1], v[0]) + asin(r / d)
+            a = getAngle(v[0], v[1]) + asin(r / d)
         )
         p + arcPoint(t, a)
     )
@@ -462,13 +462,13 @@ function isosceles2D(a, b, h, angle) =
         b = vector2D(b),
         v = b - a,
         d = norm2D(v) / 2,
-        w = atan2(v[1], v[0])
+        w = getAngle(v[0], v[1])
     )
     h != undef ? (
         let(
             h = float(h),
             r = pythagore(h, d),
-            angle = atan2(h, d)
+            angle = getAngle(d, h)
         )
         a + arcPoint(r, w + angle)
     )
@@ -497,8 +497,7 @@ function protractor(a, b) =
     let(
         v = vector2D(b) - vector2D(a)
     )
-    v[0] || v[1] ? atan2(v[1], v[0])
-                 : 0
+    getAngle(v[0], v[1])
 ;
 
 /**
@@ -513,7 +512,24 @@ function angle2D(a, b) =
         a = vector2D(a),
         b = vector2D(b)
     )
-    float(acos((a * b) / (norm(a) * norm(b))))
+    vangle(a, b)
+;
+
+/**
+ * Computes the vertex angle given three 2D points.
+ *
+ * @param Vector [a] - The first point
+ * @param Vector [b] - The second point
+ * @param Vector [v] - The vertex point
+ * @returns Number
+ */
+function vertexAngle2D(a, b, v) =
+    let(
+        v = vector2D(v),
+        a = vector2D(a) - v,
+        b = vector2D(b) - v
+    )
+    vangle(a, b)
 ;
 
 /**

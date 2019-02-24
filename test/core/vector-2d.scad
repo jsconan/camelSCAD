@@ -34,7 +34,7 @@ use <../../full.scad>
  * @author jsconan
  */
 module testCoreVector2D() {
-    testPackage("core/vector-2d.scad", 32) {
+    testPackage("core/vector-2d.scad", 33) {
         // test core/vector-2d/vector2D()
         testModule("vector2D()", 3) {
             testUnit("no parameter", 1) {
@@ -539,27 +539,45 @@ module testCoreVector2D() {
                 assertEqual(protractor(true, true), 0, "Cannot compute angle of booleans");
             }
             testUnit("compute angle", 6) {
-                assertEqual(protractor(1, 2), 45, "When single numbers are provided, they should be translated to vector.");
+                assertEqual(protractor(1, 2), 45, "When single numbers are provided, they should be translated to vector");
                 assertEqual(protractor([3, 5], [3, 9]), 90, "Positive straight angle");
-                assertEqual(protractor([3, 9], [3, 5]), -90, "Negative straight angle");
+                assertEqual(protractor([3, 9], [3, 5]), 270, "Negative straight angle");
                 assertEqual(protractor([3, 2], [6, 7]), atan2(5, 3), "Angle of a positive line");
-                assertEqual(protractor([6, 7], [3, 2]), atan2(-5, -3), "Angle of a negative line");
+                assertEqual(protractor([6, 7], [3, 2]), 360 + atan2(-5, -3), "Angle of a negative line");
                 assertEqual(protractor([3, 2], [3, 2]), 0, "Angle of a point");
             }
         }
         // test core/vector-2d/angle2D()
         testModule("angle2D()", 2) {
             testUnit("default value", 3) {
-                assertEqual(angle2D(), 0, "Should return 0 if no vector was provided");
+                assertEqual(angle2D(), 0, "Should return 0 if no parameter was provided");
                 assertEqual(angle2D("1", "2"), 0, "Cannot compute angle of strings");
                 assertEqual(angle2D(true, true), 0, "Cannot compute angle of booleans");
             }
-            testUnit("compute angle", 5) {
-                assertEqual(round(angle2D(1, 2)), 0, "When single numbers are provided, they should be translated to vector. Vectors with same direction does not have angle.");
+            testUnit("compute angle", 6) {
+                assertEqual(round(angle2D(1, 2)), 0, "When single numbers are provided, they should be translated to vector");
                 assertEqual(angle2D([1, 0], [0, 1]), 90, "Orthogonal vectors have an angle of 90°");
                 assertEqual(angle2D([1, 0], [0, -1]), 90, "Orthogonal vectors have an angle of 90°, whatever their direction");
                 assertEqual(angle2D([1, 0], [-1, 0]), 180, "Vectors with opposite direction have an angle of 180°");
-                assertEqual(round(angle2D([1, 2], rotp([1, 2], 75))), 75, "Should have an angle of 75°");
+                assertEqual(round(angle2D([1, 2], rotp([1, 2], 75))), 75, "Rotated vector should produce the expected angle");
+                assertEqual(round(angle2D([1, 2], rotp([1, 2], -75))), 75, "Vector rotated with a negative angle should produce the expected angle");
+            }
+        }
+        // test core/vector-2d/vertexAngle2D()
+        testModule("vertexAngle2D()", 2) {
+            testUnit("default value", 3) {
+                assertEqual(vertexAngle2D(), 0, "Should return 0 if no parameter was provided");
+                assertEqual(vertexAngle2D("1", "2", "3"), 0, "Cannot compute angle of strings");
+                assertEqual(vertexAngle2D(true, true, true), 0, "Cannot compute angle of booleans");
+            }
+            testUnit("compute angle", 7) {
+                assertEqual(round(vertexAngle2D(1, 2, 3)), 0, "When single numbers are provided, they should be translated to vector (0° case)");
+                assertEqual(round(vertexAngle2D(a=1, v=2, b=3)), 180, "When single numbers are provided, they should be translated to vector (180° case)");
+                assertEqual(vertexAngle2D([2, 1], [1, 2], [1, 1]), 90, "Orthogonal vectors have an angle of 90°");
+                assertEqual(vertexAngle2D([2, 1], [1, 0], [1, 1]), 90, "Orthogonal vectors have an angle of 90°, whatever their direction");
+                assertEqual(vertexAngle2D([2, 1], [0, 1], [1, 1]), 180, "Vectors with opposite direction have an angle of 180°");
+                assertEqual(round(vertexAngle2D([5, 7], rotp([1, 2], -75) + [4, 5], [4, 5])), 75, "Rotated vector should produce the expected angle");
+                assertEqual(round(vertexAngle2D([5, 7], rotp([1, 2], 75) + [4, 5], [4, 5])), 75, "Vector rotated with a negative angle should produce the expected angle");
             }
         }
         // test core/vector-2d/sinp()
