@@ -533,6 +533,32 @@ function vertexAngle2D(a, b, v) =
 ;
 
 /**
+ * Computes the outline of a vertex at the given distance from the edges.
+ * The vertex is defined by three points.
+ * The distance from the edges is placed on a normal vector from each edge,
+ * and the outline point should be at the intersect of those vectors
+ *
+ * @param Vector [a] - The first point
+ * @param Vector [b] - The second point
+ * @param Vector [v] - The vertex point
+ * @param Number [distance] - The distance from the edges,
+ *                            on a perpendicular line from each edge
+ * @returns Vector
+ */
+function vertexOutline2D(a, b, v, distance) =
+    let(
+        v = vector2D(v),
+        a = vector2D(a) - v,
+        b = vector2D(b) - v,
+        angleA = getAngle(a[0], a[1]),
+        angleB = getAngle(b[0], b[1]),
+        angle = (angleB - angleA) / 2,
+        length = float(distance) / divisor(abs(sin(angle)))
+    )
+    v + arcp([length, length], angle < 0 ? angleB - angle + STRAIGHT : angleA + angle)
+;
+
+/**
  * Computes the coordinates of a 2D point on a sinusoid wave.
  *
  * @param Number x - The X-coordinate of the point.

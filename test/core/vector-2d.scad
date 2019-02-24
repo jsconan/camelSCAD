@@ -34,7 +34,7 @@ use <../../full.scad>
  * @author jsconan
  */
 module testCoreVector2D() {
-    testPackage("core/vector-2d.scad", 33) {
+    testPackage("core/vector-2d.scad", 34) {
         // test core/vector-2d/vector2D()
         testModule("vector2D()", 3) {
             testUnit("no parameter", 1) {
@@ -578,6 +578,73 @@ module testCoreVector2D() {
                 assertEqual(vertexAngle2D([2, 1], [0, 1], [1, 1]), 180, "Vectors with opposite direction have an angle of 180°");
                 assertEqual(round(vertexAngle2D([5, 7], rotp([1, 2], -75) + [4, 5], [4, 5])), 75, "Rotated vector should produce the expected angle");
                 assertEqual(round(vertexAngle2D([5, 7], rotp([1, 2], 75) + [4, 5], [4, 5])), 75, "Vector rotated with a negative angle should produce the expected angle");
+            }
+        }
+        // test core/vector-2d/vertexOutline2D()
+        testModule("vertexOutline2D()", 5) {
+            testUnit("default value", 5) {
+                assertEqual(vertexOutline2D(), [0, 0], "Should return [0, 0] if no parameter was provided");
+                assertEqual(vertexOutline2D("1", "2", "3", "4"),  [0, 0], "Cannot compute angle of strings");
+                assertEqual(vertexOutline2D(true, true, true, true),  [0, 0], "Cannot compute angle of booleans");
+                assertEqual(vertexOutline2D([], [], [], 0),  [0, 0], "Empty arrays should produce 0° angle");
+                assertEqual(vertexOutline2D([], [], [], 1),  [1, 0], "Empty arrays should produce 0° angle, the distance is then projected in this direction");
+            }
+            testUnit("single number", 2) {
+                assertApproxEqual(vertexOutline2D(a=3, v=2, b=1, distance=1), arcp([1, 1], 135) + [2, 2], "Single numbers, point above");
+                assertApproxEqual(vertexOutline2D(a=1, v=2, b=3, distance=1), arcp([1, 1], 315) + [2, 2], "Single numbers, point below");
+            }
+            testUnit("flat line", 8) {
+                assertApproxEqual(vertexOutline2D(a=[-1, 0], v=[0, 0], b=[1, 0], distance=1), [0, -1], "horizontal, left to right");
+                assertApproxEqual(vertexOutline2D(a=[1, 0], v=[0, 0], b=[-1, 0], distance=1), [0, 1], "horizontal, right to left");
+                assertApproxEqual(vertexOutline2D(a=[0, 1], v=[0, 0], b=[0, -1], distance=1), [-1, 0], "vertical, top to bottom");
+                assertApproxEqual(vertexOutline2D(a=[0, -1], v=[0, 0], b=[0, 1], distance=1), [1, 0], "vertical, bottom to top");
+
+                assertApproxEqual(vertexOutline2D(a=[1, -1], v=[0, 0], b=[-1, 1], distance=1), arcp([1, 1], 45), "bottom right to top left");
+                assertApproxEqual(vertexOutline2D(a=[1, 1], v=[0, 0], b=[-1, -1], distance=1), arcp([1, 1], 135), "top right to bottom left");
+                assertApproxEqual(vertexOutline2D(a=[-1, 1], v=[0, 0], b=[1, -1], distance=1), arcp([1, 1], 225), "top left to bottom right");
+                assertApproxEqual(vertexOutline2D(a=[-1, -1], v=[0, 0], b=[1, 1], distance=1), arcp([1, 1], 315), "bottom left to top right");
+            }
+            testUnit("inside vertex", 16) {
+                assertApproxEqual(vertexOutline2D(a=[2, 1], v=[1, 1], b=[1, 2], distance=1), [2, 2], "quadrant 1 [1,1], top right");
+                assertApproxEqual(vertexOutline2D(a=[2, 2], v=[2, 1], b=[1, 1], distance=1), [1, 2], "quadrant 1 [1,1], top left");
+                assertApproxEqual(vertexOutline2D(a=[1, 2], v=[2, 2], b=[2, 1], distance=1), [1, 1], "quadrant 1 [1,1], bottom left");
+                assertApproxEqual(vertexOutline2D(a=[1, 1], v=[1, 2], b=[2, 2], distance=1), [2, 1], "quadrant 1 [1,1], bottom right");
+
+                assertApproxEqual(vertexOutline2D(a=[-1, 1], v=[-2, 1], b=[-2, 2], distance=1), [-1, 2], "quadrant 2 [-1,1], top right");
+                assertApproxEqual(vertexOutline2D(a=[-1, 2], v=[-1, 1], b=[-2, 1], distance=1), [-2, 2], "quadrant 2 [-1,1], top left");
+                assertApproxEqual(vertexOutline2D(a=[-2, 2], v=[-1, 2], b=[-1, 1], distance=1), [-2, 1], "quadrant 2 [-1,1], bottom left");
+                assertApproxEqual(vertexOutline2D(a=[-2, 1], v=[-2, 2], b=[-1, 2], distance=1), [-1, 1], "quadrant 2 [-1,1], bottom right");
+
+                assertApproxEqual(vertexOutline2D(a=[-1, -2], v=[-2, -2], b=[-2, -1], distance=1), [-1, -1], "quadrant 3 [-1,-1], top right");
+                assertApproxEqual(vertexOutline2D(a=[-1, -1], v=[-1, -2], b=[-2, -2], distance=1), [-2, -1], "quadrant 3 [-1,-1], top left");
+                assertApproxEqual(vertexOutline2D(a=[-2, -1], v=[-1, -1], b=[-1, -2], distance=1), [-2, -2], "quadrant 3 [-1,-1], bottom left");
+                assertApproxEqual(vertexOutline2D(a=[-2, -2], v=[-2, -1], b=[-1, -1], distance=1), [-1, -2], "quadrant 3 [-1,-1], bottom right");
+
+                assertApproxEqual(vertexOutline2D(a=[2, -2], v=[1, -2], b=[1, -1], distance=1), [2, -1], "quadrant 4 [1,-1], top right");
+                assertApproxEqual(vertexOutline2D(a=[2, -1], v=[2, -2], b=[1, -2], distance=1), [1, -1], "quadrant 4 [1,-1], top left");
+                assertApproxEqual(vertexOutline2D(a=[1, -1], v=[2, -1], b=[2, -2], distance=1), [1, -2], "quadrant 4 [1,-1], bottom left");
+                assertApproxEqual(vertexOutline2D(a=[1, -2], v=[1, -1], b=[2, -1], distance=1), [2, -2], "quadrant 4 [1,-1], bottom right");
+            }
+            testUnit("outside vertex", 16) {
+                assertApproxEqual(vertexOutline2D(a=[2, 1], v=[2, 2], b=[1, 2], distance=1), [3, 3], "quadrant 1 [1,1], top right");
+                assertApproxEqual(vertexOutline2D(a=[2, 2], v=[1, 2], b=[1, 1], distance=1), [0, 3], "quadrant 1 [1,1], top left");
+                assertApproxEqual(vertexOutline2D(a=[1, 2], v=[1, 1], b=[2, 1], distance=1), [0, 0], "quadrant 1 [1,1], bottom left");
+                assertApproxEqual(vertexOutline2D(a=[1, 1], v=[2, 1], b=[2, 2], distance=1), [3, 0], "quadrant 1 [1,1], bottom right");
+
+                assertApproxEqual(vertexOutline2D(a=[-1, 1], v=[-1, 2], b=[-2, 2], distance=1), [0, 3], "quadrant 2 [-1,1], top right");
+                assertApproxEqual(vertexOutline2D(a=[-1, 2], v=[-2, 2], b=[-2, 1], distance=1), [-3, 3], "quadrant 2 [-1,1], top left");
+                assertApproxEqual(vertexOutline2D(a=[-2, 2], v=[-2, 1], b=[-1, 1], distance=1), [-3, 0], "quadrant 2 [-1,1], bottom left");
+                assertApproxEqual(vertexOutline2D(a=[-2, 1], v=[-1, 1], b=[-1, 2], distance=1), [0, 0], "quadrant 2 [-1,1], bottom right");
+
+                assertApproxEqual(vertexOutline2D(a=[-1, -2], v=[-1, -1], b=[-2, -1], distance=1), [0, 0], "quadrant 3 [-1,-1], top right");
+                assertApproxEqual(vertexOutline2D(a=[-1, -1], v=[-2, -1], b=[-2, -2], distance=1), [-3, 0], "quadrant 3 [-1,-1], top left");
+                assertApproxEqual(vertexOutline2D(a=[-2, -1], v=[-2, -2], b=[-1, -2], distance=1), [-3, -3], "quadrant 3 [-1,-1], bottom left");
+                assertApproxEqual(vertexOutline2D(a=[-2, -2], v=[-1, -2], b=[-1, -1], distance=1), [0, -3], "quadrant 3 [-1,-1], bottom right");
+
+                assertApproxEqual(vertexOutline2D(a=[2, -2], v=[2, -1], b=[1, -1], distance=1), [3, 0], "quadrant 4 [1,-1], top right");
+                assertApproxEqual(vertexOutline2D(a=[2, -1], v=[1, -1], b=[1, -2], distance=1), [0, 0], "quadrant 4 [1,-1], top left");
+                assertApproxEqual(vertexOutline2D(a=[1, -1], v=[1, -2], b=[2, -2], distance=1), [0, -3], "quadrant 4 [1,-1], bottom left");
+                assertApproxEqual(vertexOutline2D(a=[1, -2], v=[2, -2], b=[2, -1], distance=1), [3, -3], "quadrant 4 [1,-1], bottom right");
             }
         }
         // test core/vector-2d/sinp()
