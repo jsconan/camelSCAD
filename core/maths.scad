@@ -114,6 +114,20 @@ function getAngle(x, y) =
 ;
 
 /**
+ * Gets the angle value at a particular index in a regular polygon.
+ * @param Number index - The index of the angle
+ * @param Number [count] - The number of sides in the polygon
+ * @returns Number - The angle for the provided index
+ */
+function getPolygonAngle(index, count = 4) =
+    let(
+        count = divisor(count),
+        index = (float(index) + count) % count
+    )
+    DEGREES / count * index
+;
+
+/**
  * Computes a length based on the Pythagore's theorem.
  *
  * @param Number a - The A side of the rectangle (0 or undef to compute this value).
