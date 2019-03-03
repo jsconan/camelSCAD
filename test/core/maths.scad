@@ -34,7 +34,7 @@ use <../../full.scad>
  * @author jsconan
  */
 module testCoreMaths() {
-    testPackage("core/maths.scad", 17) {
+    testPackage("core/maths.scad", 18) {
         // test core/maths/deg()
         testModule("deg()", 3) {
             testUnit("no parameter", 1) {
@@ -317,6 +317,33 @@ module testCoreMaths() {
                 assertEqual(getAngle(-2, 1), atan2(1, -2), "Angle of vector [-2,1]");
                 assertEqual(getAngle(2, -1), 360 + atan2(-1, 2), "Angle of vector [2,-1]");
                 assertEqual(getAngle(-2, -1), 360 + atan2(-1, -2), "Angle of vector [-2,-1]");
+            }
+        }
+        // test core/maths/getPolygonAngle()
+        testModule("getPolygonAngle()", 2) {
+            testUnit("default value", 5) {
+                assertEqual(getPolygonAngle(), 0, "Should return 0 if no parameter was provided");
+                assertEqual(getPolygonAngle([], []), 0, "Cannot compute angle of arrays");
+                assertEqual(getPolygonAngle([1, 2], [3, 4]), 0, "Cannot compute angle of vectors");
+                assertEqual(getPolygonAngle("1", "2"), 0, "Cannot compute angle of strings");
+                assertEqual(getPolygonAngle(true, true), 0, "Cannot compute angle of booleans");
+            }
+            testUnit("compute angle", 15) {
+                assertEqual(getPolygonAngle(0, 0), 0, "Angle at index 0, should be 0");
+                assertEqual(getPolygonAngle(5, 0), 0, "Null count should be defaulted to 1");
+                assertEqual(getPolygonAngle(0), 0, "Default polygon, index 0");
+                assertEqual(getPolygonAngle(1), 90, "Default polygon, index 1");
+                assertEqual(getPolygonAngle(2), 180, "Default polygon, index 2");
+                assertEqual(getPolygonAngle(3), 270, "Default polygon, index 3");
+                assertEqual(getPolygonAngle(4), 0, "Default polygon, index 4");
+                assertEqual(getPolygonAngle(0, 6), 0, "Hexagon, index 0");
+                assertEqual(getPolygonAngle(1, 6), 360 / 6, "Hexagon, index 1");
+                assertEqual(getPolygonAngle(3, 6), 360 / 6 * 3, "Hexagon, index 3");
+                assertEqual(getPolygonAngle(10, 6), 360 / 6 * 4, "Hexagon, index 10");
+                assertEqual(getPolygonAngle(0, 8), 0, "Octogon, index 0");
+                assertEqual(getPolygonAngle(1, 8), 360 / 8, "Octogon, index 1");
+                assertEqual(getPolygonAngle(3, 8), 360 / 8 * 3, "Octogon, index 3");
+                assertEqual(getPolygonAngle(13, 8), 360 / 8 * 5, "Octogon, index 13");
             }
         }
         // test core/maths/pythagore()
