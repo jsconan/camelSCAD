@@ -34,7 +34,7 @@ use <../../../full.scad>
  * @author jsconan
  */
 module testShape2dPolygon() {
-    testPackage("shape/2D/polygon.scad", 11) {
+    testPackage("shape/2D/polygon.scad", 13) {
         // test shape/2D/polygon/sizeRectangle()
         testModule("sizeRectangle()", 2) {
             testUnit("default values", 3) {
@@ -143,6 +143,30 @@ module testShape2dPolygon() {
 
                 assertEqual(sizeStar(l=4, w=3, edges=5), [[4, 3], [4, 3] * (1 - 3 / 5), 5], "Should accept separate length and width");
                 assertEqual(sizeStar(l=4, w=3, cl=2, cw=1, edges=5), [[4, 3], [2, 1], 5], "Should accept separate core length and width");
+            }
+        }
+        // test shape/2D/polygon/sizeCross()
+        testModule("sizeCross()", 2) {
+            testUnit("default values", 3) {
+                assertEqual(sizeCross(), [[1, 1], [0, 0]], "Should always return a size even if not parameter has been provided");
+                assertEqual(sizeCross("12", "12", "12"), [[1, 1], [0, 0]], "Should always return a size even if wrong parameter has been provided (string)");
+                assertEqual(sizeCross(true, true, true), [[1, 1], [0, 0]], "Should always return a size even if wrong parameter has been provided (boolean)");
+            }
+            testUnit("compute size", 10) {
+                assertEqual(sizeCross(3), [[3, 3], [0, 0]], "Should produce a size vector from a single number size");
+                assertEqual(sizeCross(3, 2), [[3, 3], [2, 2]], "Should produce a size vector from a single number sizes");
+
+                assertEqual(sizeCross([3, 2], 1), [[3, 2], [1, 1]], "Should accept vector for the outer size");
+                assertEqual(sizeCross(3, [1, 2]), [[3, 3], [1, 2]], "Should accept vector for the core size");
+
+                assertEqual(sizeCross([3, 2], 1, l=4), [[4, 2], [1, 1]], "Should accept to override the length");
+                assertEqual(sizeCross([3, 2], 1, w=4), [[3, 4], [1, 1]], "Should accept to override the width");
+
+                assertEqual(sizeCross(3, [1, 1], cl=2), [[3, 3], [2, 1]], "Should accept to override the core length");
+                assertEqual(sizeCross(4, [1, 1], cw=2), [[4, 4], [1, 2]], "Should accept to override the core width");
+
+                assertEqual(sizeCross(l=4, w=3), [[4, 3], [0, 0]], "Should accept separate length and width");
+                assertEqual(sizeCross(l=4, w=3, cl=2, cw=1), [[4, 3], [2, 1]], "Should accept separate core length and width");
             }
         }
         // test shape/2D/polygon/drawRectangle()
@@ -292,6 +316,31 @@ module testShape2dPolygon() {
 
                 assertEqual(drawStar(l=4, w=3, edges=5), [ for(i = [0 : 9]) _rotP(i * 360/10 + 90, i % 2 ? 4 * (1 - 3 / 5) : 4, i % 2 ? 3 * (1 - 3 / 5) : 3) ], "Should return a list of points to draw a star. Should accept separate length and width");
                 assertEqual(drawStar(l=4, w=3, cl=2, cw=1, edges=5), [ for(i = [0 : 9]) _rotP(i * 360/10 + 90, i % 2 ?2 : 4, i % 2 ? 1 : 3) ], "Should return a list of points to draw a star. Should accept separate core length and width");
+            }
+        }
+        // test shape/2D/polygon/drawCross()
+        testModule("drawCross()", 2) {
+            testUnit("default values", 3) {
+                default = [ [0.5, 0.5], [-0.5, 0.5], [-0.5, -0.5], [0.5, -0.5] ];
+                assertEqual(drawCross(), default, "Should return a list of points to draw a cross with a size of 1");
+                assertEqual(drawCross("12", "12", "12"), default, "Should return a list of points to draw a cross with a size of 1 if wrong parameter has been provided (string)");
+                assertEqual(drawCross(true, true, true), default, "Should return a list of points to draw a cross with a size of 1 if wrong parameter has been provided (boolean)");
+            }
+            testUnit("draw shape", 10) {
+                assertEqual(drawCross(3), [[1.5, 1.5], [-1.5, 1.5], [-1.5, -1.5], [1.5, -1.5]], "Should return a list of points to draw a cross. Single number size should be translated into vector");
+                assertEqual(drawCross(3, 2), [[1, 1], [1, 1.5], [-1, 1.5], [-1, 1], [-1.5, 1], [-1.5, -1], [-1, -1], [-1, -1.5], [1, -1.5], [1, -1], [1.5, -1], [1.5,  1]], "Should return a list of points to draw a cross. Should produce a size vector from a single number sizes");
+
+                assertEqual(drawCross([3, 2], 1), [[0.5, 0.5], [0.5, 1], [-0.5, 1], [-0.5, 0.5], [-1.5, 0.5], [-1.5, -0.5], [-0.5, -0.5], [-0.5, -1], [0.5, -1], [0.5, -0.5], [1.5, -0.5], [1.5, 0.5]], "Should return a list of points to draw a cross. Should accept vector for the outer size");
+                assertEqual(drawCross(3, [1, 2]), [[0.5, 1], [0.5, 1.5], [-0.5, 1.5], [-0.5, 1], [-1.5, 1], [-1.5, -1], [-0.5, -1], [-0.5, -1.5], [0.5, -1.5], [0.5, -1], [1.5, -1], [1.5, 1]], "Should return a list of points to draw a cross. Should accept vector for the core size");
+
+                assertEqual(drawCross([3, 2], 1, l=4), [[ 0.5, 0.5], [ 0.5, 1], [-0.5, 1], [-0.5, 0.5], [-2, 0.5], [-2, -0.5], [-0.5, -0.5], [-0.5, -1], [0.5, -1], [0.5, -0.5], [2, -0.5], [2, 0.5]], "Should return a list of points to draw a cross. Should accept to override the length");
+                assertEqual(drawCross([3, 2], 1, w=4), [[0.5, 0.5], [0.5, 2], [-0.5, 2], [-0.5, 0.5], [-1.5, 0.5], [-1.5, -0.5], [-0.5, -0.5], [-0.5, -2], [0.5, -2], [0.5, -0.5], [1.5, -0.5], [1.5, 0.5]], "Should return a list of points to draw a cross. Should accept to override the width");
+
+                assertEqual(drawCross(4, [1, 1], cl=2), [[1, 0.5], [1, 2], [-1, 2], [-1, 0.5], [-2, 0.5], [-2, -0.5], [-1, -0.5], [-1, -2], [1, -2], [1, -0.5], [2, -0.5], [2, 0.5]], "Should return a list of points to draw a cross. Should accept to override the core length");
+                assertEqual(drawCross(4, [1, 1], cw=2), [[0.5, 1], [0.5, 2], [-0.5, 2], [-0.5, 1], [-2, 1], [-2, -1], [-0.5, -1], [-0.5, -2], [0.5, -2], [0.5, -1], [2, -1], [2, 1]], "Should return a list of points to draw a cross. Should accept to override the core width");
+
+                assertEqual(drawCross(l=4, w=3), [[2, 1.5], [-2, 1.5], [-2, -1.5], [2, -1.5]], "Should return a list of points to draw a cross. Should accept separate length and width");
+                assertEqual(drawCross(l=4, w=3, cl=2, cw=1), [[1, 0.5], [1, 1.5], [-1, 1.5], [-1, 0.5], [-2, 0.5], [-2, -0.5], [-1, -0.5], [-1, -1.5], [1, -1.5], [1, -0.5], [2, -0.5], [2, 0.5]], "Should return a list of points to draw a cross. Should accept separate core length and width");
             }
         }
     }

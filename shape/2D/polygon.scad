@@ -146,6 +146,28 @@ function sizeStar(size, core, edges, l, w, cl, cw) =
 ;
 
 /**
+ * Computes the size of a cross shape.
+ *
+ * @param Number|Vector [size] - The outer size of the cross.
+ * @param Number|Vector [core] - The size of the core.
+ * @param Number [l] - The overall length.
+ * @param Number [w] - The overall width.
+ * @param Number [cl] - The core length.
+ * @param Number [cw] - The core width.
+ * @returns Vector[] - Returns two vectors containing the outer and core size of the cross
+ */
+function sizeCross(size, core, l, w, cl, cw) =
+    let(
+        size = divisor2D(apply2D(size, l, w)),
+        core = apply2D(core, cl, cw)
+    )
+    [
+        size,
+        core
+    ]
+;
+
+/**
  * Computes the points that draw the sketch of a rectangle shape.
  *
  * @param Number|Vector [size] - The size of the rectangle.
@@ -324,6 +346,46 @@ function drawStar(size, core, edges, l, w, cl, cw) =
 ;
 
 /**
+ * Computes the points that draw the sketch of a cross shape.
+ *
+ * @param Number|Vector [size] - The outer size of the cross.
+ * @param Number|Vector [core] - The size of the core.
+ * @param Number [l] - The overall length.
+ * @param Number [w] - The overall width.
+ * @param Number [cl] - The core length.
+ * @param Number [cw] - The core width.
+ * @returns Vector[]
+ */
+function drawCross(size, core, l, w, cl, cw) =
+    let(
+        size = sizeCross(size=size, core=core, l=l, w=w, cl=cl, cw=cw),
+        outer = size[0] / 2,
+        inner = size[1] / 2
+    )
+    inner == [0, 0] ?
+    [
+        [ outer[0],  outer[1]],
+        [-outer[0],  outer[1]],
+        [-outer[0], -outer[1]],
+        [ outer[0], -outer[1]]
+    ]
+   :[
+        [ inner[0],  inner[1]],
+        [ inner[0],  outer[1]],
+        [-inner[0],  outer[1]],
+        [-inner[0],  inner[1]],
+        [-outer[0],  inner[1]],
+        [-outer[0], -inner[1]],
+        [-inner[0], -inner[1]],
+        [-inner[0], -outer[1]],
+        [ inner[0], -outer[1]],
+        [ inner[0], -inner[1]],
+        [ outer[0], -inner[1]],
+        [ outer[0],  inner[1]]
+    ]
+;
+
+/**
  * Creates a rectangle at the origin.
  *
  * @param Number|Vector [size] - The size of the rectangle.
@@ -416,6 +478,23 @@ module hexagon(size, pointy, adjust, l, w, s) {
 module star(size, core, edges, l, w, cl, cw) {
     polygon(
         points = drawStar(size=size, core=core, edges=edges, l=l, w=w, cl=cl, cw=cw),
+        convexity = 10
+    );
+}
+
+/**
+ * Creates a cross at the origin.
+ *
+ * @param Number|Vector [size] - The outer size of the cross.
+ * @param Number|Vector [core] - The size of the core.
+ * @param Number [l] - The overall length.
+ * @param Number [w] - The overall width.
+ * @param Number [cl] - The core length.
+ * @param Number [cw] - The core width.
+ */
+module regularCross(size, core, l, w, cl, cw) {
+    polygon(
+        points = drawCross(size=size, core=core, l=l, w=w, cl=cl, cw=cw),
         convexity = 10
     );
 }
