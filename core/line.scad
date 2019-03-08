@@ -226,3 +226,36 @@ function lineAdd(points, value) =
     l > 2 ? [ for (p = points) vector3D(p) + value ]
           : [ for (p = points) vector2D(p) + value ]
 ;
+
+/**
+ * Builds a vector of faces to be used in a polyhedron. The function accepts the
+ * number of points defining one main face of the polyhedron, then returns the
+ * faces vector that contains the indices of each face enclosing the solid. This
+ * only apply on simple polyhedron where two opposite faces share the same
+ * number of points?.
+ * @param Number length - The number of points for one main face of the polyhedron
+ * @returns Vector[]
+ */
+function simplePolyhedronFaces(length) =
+    let(
+        length = integer(length)
+    )
+    length < 3 ? []
+   :let(
+       r1 = 0,
+       r2 = length - 1,
+       r3 = length,
+       r4 = length * 2 - 1
+   )
+    concat([
+        range(r1, r2),
+        range(r3, r4)
+    ], [
+        for (i = [r1 : r2]) [
+            r1 + i,
+            (r1 + i + 1) % length,
+            r3 + (i + 1) % length,
+            r3 + i
+        ]
+    ])
+;

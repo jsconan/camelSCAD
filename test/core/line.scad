@@ -34,7 +34,7 @@ use <../../full.scad>
  * @author jsconan
  */
 module testCoreLine() {
-    testPackage("core/line.scad", 6) {
+    testPackage("core/line.scad", 7) {
         // test core/line/arc()
         testModule("arc()", 9) {
             testUnit("no parameter", 1) {
@@ -329,6 +329,64 @@ module testCoreLine() {
                 assertEqual(lineAdd([[2, 3, 1], [1, -2, -1]], [1, 2, 3]), [[3, 5, 4], [2, 0, 2]], "Add 3D vector");
                 assertEqual(lineAdd([[2, 3, 4], [1, -2, 1]], [1]), [[3, 3, 4], [2, -2, 1]], "Add truncated 3D vector");
                 assertEqual(lineAdd([[2], [-2]], [1, 2, 3]), [[3, 2, 3], [-1, 2, 3]], "Add 3D vector to truncated points");
+            }
+        }
+        // test core/line/simplePolyhedronFaces()
+        testModule("simplePolyhedronFaces()", 4) {
+            testUnit("no parameter", 1) {
+                assertEqual(simplePolyhedronFaces(), [], "Cannot get faces for an empty polyhedron");
+            }
+            testUnit("wrong type", 3) {
+                assertEqual(simplePolyhedronFaces("1"), [], "Cannot get faces for a wrong polyhedron (strings)");
+                assertEqual(simplePolyhedronFaces(true), [], "Cannot get faces for a wrong polyhedron (booleans)");
+                assertEqual(simplePolyhedronFaces([]), [], "Cannot get faces for a wrong polyhedron (vectors)");
+            }
+            testUnit("invalid polyhedron", 3) {
+                assertEqual(simplePolyhedronFaces(0), [], "Cannot get faces for an invalid polyhedron (0)");
+                assertEqual(simplePolyhedronFaces(1), [], "Cannot get faces for an invalid polyhedron (1)");
+                assertEqual(simplePolyhedronFaces(2), [], "Cannot get faces for an invalid polyhedron (2)");
+            }
+            testUnit("polyhedron", 4) {
+                assertEqual(simplePolyhedronFaces(3), [
+                    [0, 1, 2],
+                    [3, 4, 5],
+                    [0, 1, 4, 3],
+                    [1, 2, 5, 4],
+                    [2, 0, 3, 5]
+                ], "Polyhedron with 3 edges");
+                assertEqual(simplePolyhedronFaces(4), [
+                    [0, 1, 2, 3],
+                    [4, 5, 6, 7],
+                    [0, 1, 5, 4],
+                    [1, 2, 6, 5],
+                    [2, 3, 7, 6],
+                    [3, 0, 4, 7]
+                ], "Polyhedron with 4 edges");
+                assertEqual(simplePolyhedronFaces(5), [
+                    [0, 1, 2, 3, 4],
+                    [5, 6, 7, 8, 9],
+                    [0, 1, 6, 5],
+                    [1, 2, 7, 6],
+                    [2, 3, 8, 7],
+                    [3, 4, 9, 8],
+                    [4, 0, 5, 9]
+                ], "Polyhedron with 5 edges");
+                assertEqual(simplePolyhedronFaces(12), [
+                    [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+                    [12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23],
+                    [0, 1, 13, 12],
+                    [1, 2, 14, 13],
+                    [2, 3, 15, 14],
+                    [3, 4, 16, 15],
+                    [4, 5, 17, 16],
+                    [5, 6, 18, 17],
+                    [6, 7, 19, 18],
+                    [7, 8, 20, 19],
+                    [8, 9, 21, 20],
+                    [9, 10, 22, 21],
+                    [10, 11, 23, 22],
+                    [11, 0, 12, 23]
+                ], "Polyhedron with 12 edges");
             }
         }
     }
