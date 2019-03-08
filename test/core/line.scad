@@ -34,7 +34,7 @@ use <../../full.scad>
  * @author jsconan
  */
 module testCoreLine() {
-    testPackage("core/line.scad", 5) {
+    testPackage("core/line.scad", 6) {
         // test core/line/arc()
         testModule("arc()", 9) {
             testUnit("no parameter", 1) {
@@ -303,6 +303,32 @@ module testCoreLine() {
             testUnit("inside", 2) {
                 assertEqual(outline([[0, 0], [3, 0], [3, 3], [0, 3]], -1), [[1, 1], [2, 1], [2, 2], [1, 2]], "Outline of a square");
                 assertEqual(outline([[3, 2], [2, 2], [2, 3], [-2, 3], [-2, 2], [-3, 2], [-3, -2], [-2, -2], [-2, -3], [2, -3], [2, -2], [3, -2]], -1), [[2, 1], [1, 1], [1, 2], [-1, 2], [-1, 1], [-2, 1], [-2, -1], [-1, -1], [-1, -2], [1, -2], [1, -1], [2, -1]], "Outline of a cross");
+            }
+        }
+        // test core/line/lineAdd()
+        testModule("lineAdd()", 4) {
+            testUnit("no parameter", 1) {
+                assertEqual(lineAdd(), [], "Cannot add value to an empty line");
+            }
+            testUnit("wrong type", 3) {
+                assertEqual(lineAdd("1", "1"), [[0, 0]], "Cannot add value to strings");
+                assertEqual(lineAdd(true, true), [[0, 0]], "Cannot add value to booleans");
+                assertEqual(lineAdd([], []), [], "Cannot add value to empty vectors");
+            }
+            testUnit("2D vectors", 5) {
+                assertEqual(lineAdd(1, 1), [[2, 2]], "Simple values should be converted to 2D vectors");
+                assertEqual(lineAdd([0, 1], 1), [[1, 1], [2, 2]], "Single value points should be converted to 2D vectors");
+                assertEqual(lineAdd([[2, 3], [1, -2]], [1, 2]), [[3, 5], [2, 0]], "Add 2D vector");
+                assertEqual(lineAdd([[2, 3], [1, -2]], [1]), [[3, 3], [2, -2]], "Add truncated 2D vector");
+                assertEqual(lineAdd([[2], [-2]], [1, 2]), [[3, 2], [-1, 2]], "Add 2D vector to truncated points");
+            }
+            testUnit("3D vectors", 6) {
+                assertEqual(lineAdd(1, [1, 2, 3]), [[2, 3, 4]], "Simple values should be converted to 3D vectors if vector to add is 3D");
+                assertEqual(lineAdd([[1, 2, 3]], 1), [[2, 3, 4]], "Simple values should be converted to 3D vectors if line is 3D");
+                assertEqual(lineAdd([0, 1], [1, 1, 1]), [[1, 1, 1], [2, 2, 2]], "Single value points should be converted to 3D vectors if vector to add is 3D");
+                assertEqual(lineAdd([[2, 3, 1], [1, -2, -1]], [1, 2, 3]), [[3, 5, 4], [2, 0, 2]], "Add 3D vector");
+                assertEqual(lineAdd([[2, 3, 4], [1, -2, 1]], [1]), [[3, 3, 4], [2, -2, 1]], "Add truncated 3D vector");
+                assertEqual(lineAdd([[2], [-2]], [1, 2, 3]), [[3, 2, 3], [-1, 2, 3]], "Add 3D vector to truncated points");
             }
         }
     }

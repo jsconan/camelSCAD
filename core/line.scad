@@ -207,3 +207,22 @@ function outline(points, distance) =
             )
     ] : points
 ;
+
+/**
+ * Adds a value to each point of a line.
+ *
+ * @param Vector[] points - The points defining the line.
+ * @param Number|Vector value - The value to add to the line.
+ * @returns Vector[]
+ */
+function lineAdd(points, value) =
+    let(
+        l = max(
+            float(len(value)),
+            float(len(points[0]))
+        ),
+        value = vector3D(value)
+    )
+    l > 2 ? [ for (p = points) vector3D(p) + value ]
+          : [ for (p = points) vector2D(p) + value ]
+;
