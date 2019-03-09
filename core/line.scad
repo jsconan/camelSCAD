@@ -250,13 +250,13 @@ function simplePolyhedronFaces(length) =
    )
     concat([
         range(r1, r2),
-        range(r3, r4)
+        range(r4, r3)
     ], [
         for (i = [r1 : r2]) [
-            r1 + i,
-            (r1 + i + 1) % length,
+            r3 + i,
             r3 + (i + 1) % length,
-            r3 + i
+            (r1 + i + 1) % length,
+            r1 + i
         ]
     ])
 ;
