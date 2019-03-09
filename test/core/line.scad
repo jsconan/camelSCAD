@@ -34,7 +34,7 @@ use <../../full.scad>
  * @author jsconan
  */
 module testCoreLine() {
-    testPackage("core/line.scad", 7) {
+    testPackage("core/line.scad", 8) {
         // test core/line/arc()
         testModule("arc()", 9) {
             testUnit("no parameter", 1) {
@@ -387,6 +387,605 @@ module testCoreLine() {
                     [10, 11, 23, 22],
                     [11, 0, 12, 23]
                 ], "Polyhedron with 12 edges");
+            }
+        }
+        // test core/line/simplePolyhedronPoints()
+        testModule("simplePolyhedronPoints()", 3) {
+            testUnit("no parameter", 1) {
+                assertEqual(simplePolyhedronPoints(), [], "Cannot get points for an empty polyhedron");
+            }
+            testUnit("wrong type", 3) {
+                assertEqual(simplePolyhedronPoints("1"), [[0, 0, 0], [0, 0, 0]], "Cannot get points for a wrong polyhedron (strings)");
+                assertEqual(simplePolyhedronPoints(true), [[0, 0, 0], [0, 0, 0]], "Cannot get points for a wrong polyhedron (booleans)");
+                assertEqual(simplePolyhedronPoints([]), [], "Cannot get points for a wrong polyhedron (vectors)");
+            }
+            testUnit("polyhedron", 67) {
+                assertEqual(simplePolyhedronPoints([1, 2, 3], [4, 5, 6]), [[1, 1, 1], [2, 2, 2], [3, 3, 3], [4, 4, 4], [5, 5, 5], [6, 6, 6]], "Simple numbers should be converted into 3D vectors: bottom and top");
+                assertEqual(simplePolyhedronPoints(points=[1, 2, 3]), [[1, 1, 1], [2, 2, 2], [3, 3, 3], [1, 1, 1], [2, 2, 2], [3, 3, 3]], "Simple numbers should be converted into 3D vectors: points");
+                assertEqual(
+                    simplePolyhedronPoints(
+                        bottom = [[1, 1, 1], [2, 2, 2], [3, 3, 3]],
+                        top = [[4, 4, 4], [5, 5, 5], [6, 6, 6]]
+                    ),
+                    [[1, 1, 1], [2, 2, 2], [3, 3, 3], [4, 4, 4], [5, 5, 5], [6, 6, 6]],
+                    "Concat bottom and top"
+                );
+                assertEqual(
+                    simplePolyhedronPoints(
+                        bottom = [[1, 1, 1], [2, 2, 2], [3, 3, 3]],
+                        top = [[4, 4, 4], [5, 5, 5], [6, 6, 6]],
+                        distance = 1
+                    ),
+                    [[1, 1, 1], [2, 2, 2], [3, 3, 3], [5, 5, 5], [6, 6, 6], [7, 7, 7]],
+                    "Concat bottom and top, add distance as a number"
+                );
+                assertEqual(
+                    simplePolyhedronPoints(
+                        bottom = [[1, 1, 1], [2, 2, 2], [3, 3, 3]],
+                        top = [[4, 4, 4], [5, 5, 5], [6, 6, 6]],
+                        distance = [1, 2, 3]
+                    ),
+                    [[1, 1, 1], [2, 2, 2], [3, 3, 3], [5, 6, 7], [6, 7, 8], [7, 8, 9]],
+                    "Concat bottom and top, add distance as a vector"
+                );
+                assertEqual(
+                    simplePolyhedronPoints(
+                        bottom = [[1, 1, 1], [2, 2, 2], [3, 3, 3]],
+                        top = [[4, 4, 4], [5, 5, 5], [6, 6, 6]],
+                        distance = [1]
+                    ),
+                    [[1, 1, 1], [2, 2, 2], [3, 3, 3], [5, 4, 4], [6, 5, 5], [7, 6, 6]],
+                    "Concat bottom and top, complete and add distance (1)"
+                );
+                assertEqual(
+                    simplePolyhedronPoints(
+                        bottom = [[1, 1, 1], [2, 2, 2], [3, 3, 3]],
+                        top = [[4, 4, 4], [5, 5, 5], [6, 6, 6]],
+                        distance = [1, 2]
+                    ),
+                    [[1, 1, 1], [2, 2, 2], [3, 3, 3], [5, 6, 4], [6, 7, 5], [7, 8, 6]],
+                    "Concat bottom and top, complete and add distance (2)"
+                );
+                assertEqual(
+                    simplePolyhedronPoints(
+                        points = [[1, 1, 1], [2, 2, 2], [3, 3, 3]],
+                        distance = 1
+                    ),
+                    [[1, 1, 1], [2, 2, 2], [3, 3, 3], [2, 2, 2], [3, 3, 3], [4, 4, 4]],
+                    "Compose from points, convert distance"
+                );
+                assertEqual(
+                    simplePolyhedronPoints(
+                        points = [[1, 1, 1], [2, 2, 2], [3, 3, 3]],
+                        distance = [1, 2, 3]
+                    ),
+                    [[1, 1, 1], [2, 2, 2], [3, 3, 3], [2, 3, 4], [3, 4, 5], [4, 5, 6]],
+                    "Compose from points, add distance"
+                );
+                assertEqual(
+                    simplePolyhedronPoints(
+                        points = [[1, 1, 1], [2, 2, 2], [3, 3, 3]],
+                        distance = [1]
+                    ),
+                    [[1, 1, 1], [2, 2, 2], [3, 3, 3], [2, 1, 1], [3, 2, 2], [4, 3, 3]],
+                    "Compose from points, complete distance (1)"
+                );
+                assertEqual(
+                    simplePolyhedronPoints(
+                        points = [[1, 1, 1], [2, 2, 2], [3, 3, 3]],
+                        distance = [1, 2]
+                    ),
+                    [[1, 1, 1], [2, 2, 2], [3, 3, 3], [2, 3, 1], [3, 4, 2], [4, 5, 3]],
+                    "Compose from points, complete distance (2)"
+                );
+                assertEqual(
+                    simplePolyhedronPoints(
+                        bottom = [[1, 1, 1], [2, 2, 2], [3, 3, 3]],
+                        distance = 1
+                    ),
+                    [[1, 1, 1], [2, 2, 2], [3, 3, 3], [2, 2, 2], [3, 3, 3], [4, 4, 4]],
+                    "Compose from bottom, convert distance"
+                );
+                assertEqual(
+                    simplePolyhedronPoints(
+                        bottom = [[1, 1, 1], [2, 2, 2], [3, 3, 3]],
+                        distance = [1, 2, 3]
+                    ),
+                    [[1, 1, 1], [2, 2, 2], [3, 3, 3], [2, 3, 4], [3, 4, 5], [4, 5, 6]],
+                    "Compose from bottom, add distance"
+                );
+                assertEqual(
+                    simplePolyhedronPoints(
+                        bottom = [[1, 1, 1], [2, 2, 2], [3, 3, 3]],
+                        distance = [1]
+                    ),
+                    [[1, 1, 1], [2, 2, 2], [3, 3, 3], [2, 1, 1], [3, 2, 2], [4, 3, 3]],
+                    "Compose from bottom, complete distance (1)"
+                );
+                assertEqual(
+                    simplePolyhedronPoints(
+                        bottom = [[1, 1, 1], [2, 2, 2], [3, 3, 3]],
+                        distance = [1, 2]
+                    ),
+                    [[1, 1, 1], [2, 2, 2], [3, 3, 3], [2, 3, 1], [3, 4, 2], [4, 5, 3]],
+                    "Compose from bottom, complete distance (2)"
+                );
+                assertEqual(
+                    simplePolyhedronPoints(
+                        top = [[1, 1, 1], [2, 2, 2], [3, 3, 3]],
+                        distance = 1
+                    ),
+                    [[1, 1, 1], [2, 2, 2], [3, 3, 3], [2, 2, 2], [3, 3, 3], [4, 4, 4]],
+                    "Compose from top, convert distance"
+                );
+                assertEqual(
+                    simplePolyhedronPoints(
+                        top = [[1, 1, 1], [2, 2, 2], [3, 3, 3]],
+                        distance = [1, 2, 3]
+                    ),
+                    [[1, 1, 1], [2, 2, 2], [3, 3, 3], [2, 3, 4], [3, 4, 5], [4, 5, 6]],
+                    "Compose from top, add distance"
+                );
+                assertEqual(
+                    simplePolyhedronPoints(
+                        top = [[1, 1, 1], [2, 2, 2], [3, 3, 3]],
+                        distance = [1]
+                    ),
+                    [[1, 1, 1], [2, 2, 2], [3, 3, 3], [2, 1, 1], [3, 2, 2], [4, 3, 3]],
+                    "Compose from top, complete distance (1)"
+                );
+                assertEqual(
+                    simplePolyhedronPoints(
+                        top = [[1, 1, 1], [2, 2, 2], [3, 3, 3]],
+                        distance = [1, 2]
+                    ),
+                    [[1, 1, 1], [2, 2, 2], [3, 3, 3], [2, 3, 1], [3, 4, 2], [4, 5, 3]],
+                    "Compose from top, complete distance (2)"
+                );
+                assertEqual(
+                    simplePolyhedronPoints(
+                        bottom = [[1, 1, 1], [2, 2, 2], [3, 3, 3]],
+                        top = [[4, 4, 4], [5, 5, 5], [6, 6, 6]],
+                        distance = 1,
+                        x = 2
+                    ),
+                    [[1, 1, 1], [2, 2, 2], [3, 3, 3], [6, 5, 5], [7, 6, 6], [8, 7, 7]],
+                    "Concat bottom and top, add distance as a number and set x"
+                );
+                assertEqual(
+                    simplePolyhedronPoints(
+                        bottom = [[1, 1, 1], [2, 2, 2], [3, 3, 3]],
+                        top = [[4, 4, 4], [5, 5, 5], [6, 6, 6]],
+                        distance = 1,
+                        y = 2
+                    ),
+                    [[1, 1, 1], [2, 2, 2], [3, 3, 3], [5, 6, 5], [6, 7, 6], [7, 8, 7]],
+                    "Concat bottom and top, add distance as a number and set y"
+                );
+                assertEqual(
+                    simplePolyhedronPoints(
+                        bottom = [[1, 1, 1], [2, 2, 2], [3, 3, 3]],
+                        top = [[4, 4, 4], [5, 5, 5], [6, 6, 6]],
+                        distance = 1,
+                        z = 2
+                    ),
+                    [[1, 1, 1], [2, 2, 2], [3, 3, 3], [5, 5, 6], [6, 6, 7], [7, 7, 8]],
+                    "Concat bottom and top, add distance as a number and set z"
+                );
+                assertEqual(
+                    simplePolyhedronPoints(
+                        bottom = [[1, 1, 1], [2, 2, 2], [3, 3, 3]],
+                        top = [[4, 4, 4], [5, 5, 5], [6, 6, 6]],
+                        distance = [1, 2, 3],
+                        x = 4
+                    ),
+                    [[1, 1, 1], [2, 2, 2], [3, 3, 3], [8, 6, 7], [9, 7, 8], [10, 8, 9]],
+                    "Concat bottom and top, add distance as a vector and set x"
+                );
+                assertEqual(
+                    simplePolyhedronPoints(
+                        bottom = [[1, 1, 1], [2, 2, 2], [3, 3, 3]],
+                        top = [[4, 4, 4], [5, 5, 5], [6, 6, 6]],
+                        distance = [1, 2, 3],
+                        y = 4
+                    ),
+                    [[1, 1, 1], [2, 2, 2], [3, 3, 3], [5, 8, 7], [6, 9, 8], [7, 10, 9]],
+                    "Concat bottom and top, add distance as a vector and set y"
+                );
+                assertEqual(
+                    simplePolyhedronPoints(
+                        bottom = [[1, 1, 1], [2, 2, 2], [3, 3, 3]],
+                        top = [[4, 4, 4], [5, 5, 5], [6, 6, 6]],
+                        distance = [1, 2, 3],
+                        z = 4
+                    ),
+                    [[1, 1, 1], [2, 2, 2], [3, 3, 3], [5, 6, 8], [6, 7, 9], [7, 8, 10]],
+                    "Concat bottom and top, add distance as a vector and set z"
+                );
+                assertEqual(
+                    simplePolyhedronPoints(
+                        bottom = [[1, 1, 1], [2, 2, 2], [3, 3, 3]],
+                        top = [[4, 4, 4], [5, 5, 5], [6, 6, 6]],
+                        distance = [1],
+                        x = 2
+                    ),
+                    [[1, 1, 1], [2, 2, 2], [3, 3, 3], [6, 4, 4], [7, 5, 5], [8, 6, 6]],
+                    "Concat bottom and top, complete and add distance (1), set x"
+                );
+                assertEqual(
+                    simplePolyhedronPoints(
+                        bottom = [[1, 1, 1], [2, 2, 2], [3, 3, 3]],
+                        top = [[4, 4, 4], [5, 5, 5], [6, 6, 6]],
+                        distance = [1],
+                        y = 2
+                    ),
+                    [[1, 1, 1], [2, 2, 2], [3, 3, 3], [5, 6, 4], [6, 7, 5], [7, 8, 6]],
+                    "Concat bottom and top, complete and add distance (1), set y"
+                );
+                assertEqual(
+                    simplePolyhedronPoints(
+                        bottom = [[1, 1, 1], [2, 2, 2], [3, 3, 3]],
+                        top = [[4, 4, 4], [5, 5, 5], [6, 6, 6]],
+                        distance = [1],
+                        z = 2
+                    ),
+                    [[1, 1, 1], [2, 2, 2], [3, 3, 3], [5, 4, 6], [6, 5, 7], [7, 6, 8]],
+                    "Concat bottom and top, complete and add distance (1), set z"
+                );
+                assertEqual(
+                    simplePolyhedronPoints(
+                        bottom = [[1, 1, 1], [2, 2, 2], [3, 3, 3]],
+                        top = [[4, 4, 4], [5, 5, 5], [6, 6, 6]],
+                        distance = [1, 2],
+                        x = 4
+                    ),
+                    [[1, 1, 1], [2, 2, 2], [3, 3, 3], [8, 6, 4], [9, 7, 5], [10, 8, 6]],
+                    "Concat bottom and top, complete and add distance (2), set x"
+                );
+                assertEqual(
+                    simplePolyhedronPoints(
+                        bottom = [[1, 1, 1], [2, 2, 2], [3, 3, 3]],
+                        top = [[4, 4, 4], [5, 5, 5], [6, 6, 6]],
+                        distance = [1, 2],
+                        y = 4
+                    ),
+                    [[1, 1, 1], [2, 2, 2], [3, 3, 3], [5, 8, 4], [6, 9, 5], [7, 10, 6]],
+                    "Concat bottom and top, complete and add distance (2), set y"
+                );
+                assertEqual(
+                    simplePolyhedronPoints(
+                        bottom = [[1, 1, 1], [2, 2, 2], [3, 3, 3]],
+                        top = [[4, 4, 4], [5, 5, 5], [6, 6, 6]],
+                        distance = [1, 2],
+                        z = 4
+                    ),
+                    [[1, 1, 1], [2, 2, 2], [3, 3, 3], [5, 6, 8], [6, 7, 9], [7, 8, 10]],
+                    "Concat bottom and top, complete and add distance (2), set z"
+                );
+                assertEqual(
+                    simplePolyhedronPoints(
+                        points = [[1, 1, 1], [2, 2, 2], [3, 3, 3]],
+                        distance = 1,
+                        x = 2
+                    ),
+                    [[1, 1, 1], [2, 2, 2], [3, 3, 3], [3, 2, 2], [4, 3, 3], [5, 4, 4]],
+                    "Compose from points, convert distance and set x"
+                );
+                assertEqual(
+                    simplePolyhedronPoints(
+                        points = [[1, 1, 1], [2, 2, 2], [3, 3, 3]],
+                        distance = 1,
+                        y = 2
+                    ),
+                    [[1, 1, 1], [2, 2, 2], [3, 3, 3], [2, 3, 2], [3, 4, 3], [4, 5, 4]],
+                    "Compose from points, convert distance and set y"
+                );
+                assertEqual(
+                    simplePolyhedronPoints(
+                        points = [[1, 1, 1], [2, 2, 2], [3, 3, 3]],
+                        distance = 1,
+                        z = 2
+                    ),
+                    [[1, 1, 1], [2, 2, 2], [3, 3, 3], [2, 2, 3], [3, 3, 4], [4, 4, 5]],
+                    "Compose from points, convert distance and set z"
+                );
+                assertEqual(
+                    simplePolyhedronPoints(
+                        points = [[1, 1, 1], [2, 2, 2], [3, 3, 3]],
+                        distance = [1, 2, 3],
+                        x = 4
+                    ),
+                    [[1, 1, 1], [2, 2, 2], [3, 3, 3], [5, 3, 4], [6, 4, 5], [7, 5, 6]],
+                    "Compose from points, add distance, set x"
+                );
+                assertEqual(
+                    simplePolyhedronPoints(
+                        points = [[1, 1, 1], [2, 2, 2], [3, 3, 3]],
+                        distance = [1, 2, 3],
+                        y = 4
+                    ),
+                    [[1, 1, 1], [2, 2, 2], [3, 3, 3], [2, 5, 4], [3, 6, 5], [4, 7, 6]],
+                    "Compose from points, add distance, set y"
+                );
+                assertEqual(
+                    simplePolyhedronPoints(
+                        points = [[1, 1, 1], [2, 2, 2], [3, 3, 3]],
+                        distance = [1, 2, 3],
+                        z = 4
+                    ),
+                    [[1, 1, 1], [2, 2, 2], [3, 3, 3], [2, 3, 5], [3, 4, 6], [4, 5, 7]],
+                    "Compose from points, add distance, set z"
+                );
+                assertEqual(
+                    simplePolyhedronPoints(
+                        points = [[1, 1, 1], [2, 2, 2], [3, 3, 3]],
+                        distance = [1],
+                        x = 2
+                    ),
+                    [[1, 1, 1], [2, 2, 2], [3, 3, 3], [3, 1, 1], [4, 2, 2], [5, 3, 3]],
+                    "Compose from points, complete distance (1), set x"
+                );
+                assertEqual(
+                    simplePolyhedronPoints(
+                        points = [[1, 1, 1], [2, 2, 2], [3, 3, 3]],
+                        distance = [1],
+                        y = 2
+                    ),
+                    [[1, 1, 1], [2, 2, 2], [3, 3, 3], [2, 3, 1], [3, 4, 2], [4, 5, 3]],
+                    "Compose from points, complete distance (1), set y"
+                );
+                assertEqual(
+                    simplePolyhedronPoints(
+                        points = [[1, 1, 1], [2, 2, 2], [3, 3, 3]],
+                        distance = [1],
+                        z = 2
+                    ),
+                    [[1, 1, 1], [2, 2, 2], [3, 3, 3], [2, 1, 3], [3, 2, 4], [4, 3, 5]],
+                    "Compose from points, complete distance (1), set z"
+                );
+                assertEqual(
+                    simplePolyhedronPoints(
+                        points = [[1, 1, 1], [2, 2, 2], [3, 3, 3]],
+                        distance = [1, 2],
+                        x = 3
+                    ),
+                    [[1, 1, 1], [2, 2, 2], [3, 3, 3], [4, 3, 1], [5, 4, 2], [6, 5, 3]],
+                    "Compose from points, complete distance (2), set x"
+                );
+                assertEqual(
+                    simplePolyhedronPoints(
+                        points = [[1, 1, 1], [2, 2, 2], [3, 3, 3]],
+                        distance = [1, 2],
+                        y = 3
+                    ),
+                    [[1, 1, 1], [2, 2, 2], [3, 3, 3], [2, 4, 1], [3, 5, 2], [4, 6, 3]],
+                    "Compose from points, complete distance (2), set y"
+                );
+                assertEqual(
+                    simplePolyhedronPoints(
+                        points = [[1, 1, 1], [2, 2, 2], [3, 3, 3]],
+                        distance = [1, 2],
+                        z = 3
+                    ),
+                    [[1, 1, 1], [2, 2, 2], [3, 3, 3], [2, 3, 4], [3, 4, 5], [4, 5, 6]],
+                    "Compose from points, complete distance (2), set z"
+                );
+                assertEqual(
+                    simplePolyhedronPoints(
+                        bottom = [[1, 1, 1], [2, 2, 2], [3, 3, 3]],
+                        distance = 1,
+                        x = 2
+                    ),
+                    [[1, 1, 1], [2, 2, 2], [3, 3, 3], [3, 2, 2], [4, 3, 3], [5, 4, 4]],
+                    "Compose from bottom, convert distance and set x"
+                );
+                assertEqual(
+                    simplePolyhedronPoints(
+                        bottom = [[1, 1, 1], [2, 2, 2], [3, 3, 3]],
+                        distance = 1,
+                        y = 2
+                    ),
+                    [[1, 1, 1], [2, 2, 2], [3, 3, 3], [2, 3, 2], [3, 4, 3], [4, 5, 4]],
+                    "Compose from bottom, convert distance and set y"
+                );
+                assertEqual(
+                    simplePolyhedronPoints(
+                        bottom = [[1, 1, 1], [2, 2, 2], [3, 3, 3]],
+                        distance = 1,
+                        z = 2
+                    ),
+                    [[1, 1, 1], [2, 2, 2], [3, 3, 3], [2, 2, 3], [3, 3, 4], [4, 4, 5]],
+                    "Compose from bottom, convert distance and set z"
+                );
+                assertEqual(
+                    simplePolyhedronPoints(
+                        bottom = [[1, 1, 1], [2, 2, 2], [3, 3, 3]],
+                        distance = [1, 2, 3],
+                        x = 4
+                    ),
+                    [[1, 1, 1], [2, 2, 2], [3, 3, 3], [5, 3, 4], [6, 4, 5], [7, 5, 6]],
+                    "Compose from bottom, add distance, set x"
+                );
+                assertEqual(
+                    simplePolyhedronPoints(
+                        bottom = [[1, 1, 1], [2, 2, 2], [3, 3, 3]],
+                        distance = [1, 2, 3],
+                        y = 4
+                    ),
+                    [[1, 1, 1], [2, 2, 2], [3, 3, 3], [2, 5, 4], [3, 6, 5], [4, 7, 6]],
+                    "Compose from bottom, add distance, set y"
+                );
+                assertEqual(
+                    simplePolyhedronPoints(
+                        bottom = [[1, 1, 1], [2, 2, 2], [3, 3, 3]],
+                        distance = [1, 2, 3],
+                        z = 4
+                    ),
+                    [[1, 1, 1], [2, 2, 2], [3, 3, 3], [2, 3, 5], [3, 4, 6], [4, 5, 7]],
+                    "Compose from bottom, add distance, set z"
+                );
+                assertEqual(
+                    simplePolyhedronPoints(
+                        bottom = [[1, 1, 1], [2, 2, 2], [3, 3, 3]],
+                        distance = [1],
+                        x = 2
+                    ),
+                    [[1, 1, 1], [2, 2, 2], [3, 3, 3], [3, 1, 1], [4, 2, 2], [5, 3, 3]],
+                    "Compose from bottom, complete distance (1), set x"
+                );
+                assertEqual(
+                    simplePolyhedronPoints(
+                        bottom = [[1, 1, 1], [2, 2, 2], [3, 3, 3]],
+                        distance = [1],
+                        y = 2
+                    ),
+                    [[1, 1, 1], [2, 2, 2], [3, 3, 3], [2, 3, 1], [3, 4, 2], [4, 5, 3]],
+                    "Compose from bottom, complete distance (1), set y"
+                );
+                assertEqual(
+                    simplePolyhedronPoints(
+                        bottom = [[1, 1, 1], [2, 2, 2], [3, 3, 3]],
+                        distance = [1],
+                        z = 2
+                    ),
+                    [[1, 1, 1], [2, 2, 2], [3, 3, 3], [2, 1, 3], [3, 2, 4], [4, 3, 5]],
+                    "Compose from bottom, complete distance (1), set z"
+                );
+                assertEqual(
+                    simplePolyhedronPoints(
+                        bottom = [[1, 1, 1], [2, 2, 2], [3, 3, 3]],
+                        distance = [1, 2],
+                        x = 3
+                    ),
+                    [[1, 1, 1], [2, 2, 2], [3, 3, 3], [4, 3, 1], [5, 4, 2], [6, 5, 3]],
+                    "Compose from bottom, complete distance (2), set x"
+                );
+                assertEqual(
+                    simplePolyhedronPoints(
+                        bottom = [[1, 1, 1], [2, 2, 2], [3, 3, 3]],
+                        distance = [1, 2],
+                        y = 3
+                    ),
+                    [[1, 1, 1], [2, 2, 2], [3, 3, 3], [2, 4, 1], [3, 5, 2], [4, 6, 3]],
+                    "Compose from bottom, complete distance (2), set y"
+                );
+                assertEqual(
+                    simplePolyhedronPoints(
+                        bottom = [[1, 1, 1], [2, 2, 2], [3, 3, 3]],
+                        distance = [1, 2],
+                        z = 3
+                    ),
+                    [[1, 1, 1], [2, 2, 2], [3, 3, 3], [2, 3, 4], [3, 4, 5], [4, 5, 6]],
+                    "Compose from bottom, complete distance (2), set z"
+                );
+                assertEqual(
+                    simplePolyhedronPoints(
+                        top = [[1, 1, 1], [2, 2, 2], [3, 3, 3]],
+                        distance = 1,
+                        x = 2
+                    ),
+                    [[1, 1, 1], [2, 2, 2], [3, 3, 3], [3, 2, 2], [4, 3, 3], [5, 4, 4]],
+                    "Compose from top, convert distance and set x"
+                );
+                assertEqual(
+                    simplePolyhedronPoints(
+                        top = [[1, 1, 1], [2, 2, 2], [3, 3, 3]],
+                        distance = 1,
+                        y = 2
+                    ),
+                    [[1, 1, 1], [2, 2, 2], [3, 3, 3], [2, 3, 2], [3, 4, 3], [4, 5, 4]],
+                    "Compose from top, convert distance and set y"
+                );
+                assertEqual(
+                    simplePolyhedronPoints(
+                        top = [[1, 1, 1], [2, 2, 2], [3, 3, 3]],
+                        distance = 1,
+                        z = 2
+                    ),
+                    [[1, 1, 1], [2, 2, 2], [3, 3, 3], [2, 2, 3], [3, 3, 4], [4, 4, 5]],
+                    "Compose from top, convert distance and set z"
+                );
+                assertEqual(
+                    simplePolyhedronPoints(
+                        top = [[1, 1, 1], [2, 2, 2], [3, 3, 3]],
+                        distance = [1, 2, 3],
+                        x = 4
+                    ),
+                    [[1, 1, 1], [2, 2, 2], [3, 3, 3], [5, 3, 4], [6, 4, 5], [7, 5, 6]],
+                    "Compose from top, add distance, set x"
+                );
+                assertEqual(
+                    simplePolyhedronPoints(
+                        top = [[1, 1, 1], [2, 2, 2], [3, 3, 3]],
+                        distance = [1, 2, 3],
+                        y = 4
+                    ),
+                    [[1, 1, 1], [2, 2, 2], [3, 3, 3], [2, 5, 4], [3, 6, 5], [4, 7, 6]],
+                    "Compose from top, add distance, set y"
+                );
+                assertEqual(
+                    simplePolyhedronPoints(
+                        top = [[1, 1, 1], [2, 2, 2], [3, 3, 3]],
+                        distance = [1, 2, 3],
+                        z = 4
+                    ),
+                    [[1, 1, 1], [2, 2, 2], [3, 3, 3], [2, 3, 5], [3, 4, 6], [4, 5, 7]],
+                    "Compose from top, add distance, set z"
+                );
+                assertEqual(
+                    simplePolyhedronPoints(
+                        top = [[1, 1, 1], [2, 2, 2], [3, 3, 3]],
+                        distance = [1],
+                        x = 2
+                    ),
+                    [[1, 1, 1], [2, 2, 2], [3, 3, 3], [3, 1, 1], [4, 2, 2], [5, 3, 3]],
+                    "Compose from top, complete distance (1), set x"
+                );
+                assertEqual(
+                    simplePolyhedronPoints(
+                        top = [[1, 1, 1], [2, 2, 2], [3, 3, 3]],
+                        distance = [1],
+                        y = 2
+                    ),
+                    [[1, 1, 1], [2, 2, 2], [3, 3, 3], [2, 3, 1], [3, 4, 2], [4, 5, 3]],
+                    "Compose from top, complete distance (1), set y"
+                );
+                assertEqual(
+                    simplePolyhedronPoints(
+                        top = [[1, 1, 1], [2, 2, 2], [3, 3, 3]],
+                        distance = [1],
+                        z = 2
+                    ),
+                    [[1, 1, 1], [2, 2, 2], [3, 3, 3], [2, 1, 3], [3, 2, 4], [4, 3, 5]],
+                    "Compose from top, complete distance (1), set z"
+                );
+                assertEqual(
+                    simplePolyhedronPoints(
+                        top = [[1, 1, 1], [2, 2, 2], [3, 3, 3]],
+                        distance = [1, 2],
+                        x = 3
+                    ),
+                    [[1, 1, 1], [2, 2, 2], [3, 3, 3], [4, 3, 1], [5, 4, 2], [6, 5, 3]],
+                    "Compose from top, complete distance (2), set x"
+                );
+                assertEqual(
+                    simplePolyhedronPoints(
+                        top = [[1, 1, 1], [2, 2, 2], [3, 3, 3]],
+                        distance = [1, 2],
+                        y = 3
+                    ),
+                    [[1, 1, 1], [2, 2, 2], [3, 3, 3], [2, 4, 1], [3, 5, 2], [4, 6, 3]],
+                    "Compose from top, complete distance (2), set y"
+                );
+                assertEqual(
+                    simplePolyhedronPoints(
+                        top = [[1, 1, 1], [2, 2, 2], [3, 3, 3]],
+                        distance = [1, 2],
+                        z = 3
+                    ),
+                    [[1, 1, 1], [2, 2, 2], [3, 3, 3], [2, 3, 4], [3, 4, 5], [4, 5, 6]],
+                    "Compose from top, complete distance (2), set z"
+                );
             }
         }
     }
