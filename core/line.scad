@@ -207,3 +207,85 @@ function outline(points, distance) =
             )
     ] : points
 ;
+
+/**
+ * Adds a value to each point of a line.
+ *
+ * @param Vector[] points - The points defining the line.
+ * @param Number|Vector value - The value to add to the line.
+ * @returns Vector[]
+ */
+function lineAdd(points, value) =
+    let(
+        l = max(
+            float(len(value)),
+            float(len(points[0]))
+        ),
+        value = vector3D(value)
+    )
+    l > 2 ? [ for (p = points) vector3D(p) + value ]
+          : [ for (p = points) vector2D(p) + value ]
+;
+
+/**
+ * Builds a vector of faces to be used in a polyhedron. The function accepts the
+ * number of points defining one main face of the polyhedron, then returns the
+ * faces vector that contains the indices of each face enclosing the solid. This
+ * only apply on simple polyhedron where two opposite faces share the same
+ * number of points.
+ *
+ * @param Number length - The number of points for one main face of the polyhedron
+ * @returns Vector[]
+ */
+function simplePolyhedronFaces(length) =
+    let(
+        length = integer(length)
+    )
+    length < 3 ? []
+   :let(
+       r1 = 0,
+       r2 = length - 1,
+       r3 = length,
+       r4 = length * 2 - 1
+   )
+    concat([
+        range(r1, r2),
+        range(r3, r4)
+    ], [
+        for (i = [r1 : r2]) [
+            r1 + i,
+            (r1 + i + 1) % length,
+            r3 + (i + 1) % length,
+            r3 + i
+        ]
+    ])
+;
+
+/**
+ * Composes a list of points to be used in a simple polyhedron.
+ *
+ * @param Vector[] [bottom] - The list of points for the bottom face.
+ * @param Vector[] [top] - The list of points for the top face.
+ * @param Vector[] [points] - The list of points for a main face.
+ * @param Vector [distane] - The distance between two main faces.
+ * @param Number [x] - The distance between two main faces on the X-axis.
+ * @param Number [y] - The distance between two main faces on the Y-axis.
+ * @param Number [z] - The distance between two main faces on the Z-axis.
+ * @returns Vector[]
+ */
+function simplePolyhedronPoints(bottom, top, points, distance, x, y, z) =
+    let(
+       distance = apply3D(v=distance, x=x, y=y, z=z)
+    )
+    top && bottom ? concat(
+        [ for (p = bottom) vector3D(p) ],
+        [ for (p = top) vector3D(p) + distance ]
+    )
+   :let(
+       points = [ for (p = (points ? points : (top ? top : bottom))) vector3D(p) ]
+   )
+   concat(
+       points,
+       [ for (p = points) p + distance ]
+   )
+;

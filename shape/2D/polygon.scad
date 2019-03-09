@@ -146,7 +146,29 @@ function sizeStar(size, core, edges, l, w, cl, cw) =
 ;
 
 /**
- * Computes the points that draw the sketch of a rectangle shape.
+ * Computes the size of a cross shape.
+ *
+ * @param Number|Vector [size] - The outer size of the cross.
+ * @param Number|Vector [core] - The size of the core.
+ * @param Number [l] - The overall length.
+ * @param Number [w] - The overall width.
+ * @param Number [cl] - The core length.
+ * @param Number [cw] - The core width.
+ * @returns Vector[] - Returns two vectors containing the outer and core size of the cross
+ */
+function sizeCross(size, core, l, w, cl, cw) =
+    let(
+        size = divisor2D(apply2D(size, l, w)),
+        core = apply2D(core, cl, cw)
+    )
+    [
+        size,
+        core
+    ]
+;
+
+/**
+ * Computes the points that draws the sketch of a rectangle shape.
  *
  * @param Number|Vector [size] - The size of the rectangle.
  * @param Number [l] - The overall length.
@@ -155,19 +177,18 @@ function sizeStar(size, core, edges, l, w, cl, cw) =
  */
 function drawRectangle(size, l, w) =
     let(
-        size = sizeRectangle(size=size, l=l, w=w),
-        half = size / 2
+        size = sizeRectangle(size=size, l=l, w=w) / 2
     )
     [
-        [ half[0],  half[1]],
-        [-half[0],  half[1]],
-        [-half[0], -half[1]],
-        [ half[0], -half[1]]
+        [ size[0],  size[1]],
+        [-size[0],  size[1]],
+        [-size[0], -size[1]],
+        [ size[0], -size[1]]
     ]
 ;
 
 /**
- * Computes the points that draw the sketch of a chamfered rectangle shape.
+ * Computes the points that draws the sketch of a chamfered rectangle shape.
  *
  * @param Number|Vector [size] - The size of the chamfered rectangle.
  * @param Number|Vector [chamfer] - The size of the chamfers.
@@ -180,31 +201,30 @@ function drawRectangle(size, l, w) =
 function drawChamferedRectangle(size, chamfer, l, w, cl, cw) =
     let(
         specs = sizeChamferedRectangle(size=size, chamfer=chamfer, l=l, w=w, cl=cl, cw=cw),
-        size = specs[0],
-        chamfer = specs[1],
-        half = size / 2
+        size = specs[0] / 2,
+        chamfer = specs[1]
     )
     chamfer[0]
    ?[
-        [ half[0],  half[1] - chamfer[1]],
-        [ half[0] - chamfer[0],  half[1]],
-        [-half[0] + chamfer[0],  half[1]],
-        [-half[0],  half[1] - chamfer[1]],
-        [-half[0], -half[1] + chamfer[1]],
-        [-half[0] + chamfer[0], -half[1]],
-        [ half[0] - chamfer[0], -half[1]],
-        [ half[0], -half[1] + chamfer[1]]
+        [ size[0],  size[1] - chamfer[1]],
+        [ size[0] - chamfer[0],  size[1]],
+        [-size[0] + chamfer[0],  size[1]],
+        [-size[0],  size[1] - chamfer[1]],
+        [-size[0], -size[1] + chamfer[1]],
+        [-size[0] + chamfer[0], -size[1]],
+        [ size[0] - chamfer[0], -size[1]],
+        [ size[0], -size[1] + chamfer[1]]
     ]
    :[
-        [ half[0],  half[1]],
-        [-half[0],  half[1]],
-        [-half[0], -half[1]],
-        [ half[0], -half[1]]
+        [ size[0],  size[1]],
+        [-size[0],  size[1]],
+        [-size[0], -size[1]],
+        [ size[0], -size[1]]
     ]
 ;
 
 /**
- * Computes the points that draw the sketch of a trapezium shape.
+ * Computes the points that draws the sketch of a trapezium shape.
  *
  * @param Number|Vector [size] - The size of the trapezium.
  * @param Number [a] - The length of the bottom base.
@@ -214,19 +234,18 @@ function drawChamferedRectangle(size, chamfer, l, w, cl, cw) =
  */
 function drawTrapezium(size, a, b, w) =
     let(
-        size = sizeTrapezium(size=size, a=a, b=b, w=w),
-        half = size / 2
+        size = sizeTrapezium(size=size, a=a, b=b, w=w) / 2
     )
     [
-        [ half[1],  half[2]],
-        [-half[1],  half[2]],
-        [-half[0], -half[2]],
-        [ half[0], -half[2]]
+        [ size[1],  size[2]],
+        [-size[1],  size[2]],
+        [-size[0], -size[2]],
+        [ size[0], -size[2]]
     ]
 ;
 
 /**
- * Computes the points that draw the sketch of a regular polygon.
+ * Computes the points that draws the sketch of a regular polygon.
  *
  * @param Number|Vector [size] - The size of the polygon.
  * @param Number [n] - The number of facets (min. 3).
@@ -249,7 +268,7 @@ function drawRegularPolygon(size, n, l, w, s) =
 ;
 
 /**
- * Computes the points that draw the sketch of an hexagon.
+ * Computes the points that draws the sketch of an hexagon.
  *
  * @param Number|Vector [size] - The size of the hexagon.
  * @param Boolean [pointy] - Tells if the hexagon must be pointy topped (default: false, Flat topped).
@@ -289,7 +308,7 @@ function drawHexagon(size, pointy, adjust, l, w, s) =
 ;
 
 /**
- * Computes the points that draw the sketch of a star shape.
+ * Computes the points that draws the sketch of a star shape.
  *
  * @param Number|Vector [size] - The outer size of the star.
  * @param Number|Vector [core] - The size of the core.
@@ -320,6 +339,46 @@ function drawStar(size, core, edges, l, w, cl, cw) =
                 cos(a) * (m ? inner[0] : outer[0]),
                 sin(a) * (m ? inner[1] : outer[1])
             ]
+    ]
+;
+
+/**
+ * Computes the points that draws the sketch of a cross shape.
+ *
+ * @param Number|Vector [size] - The outer size of the cross.
+ * @param Number|Vector [core] - The size of the core.
+ * @param Number [l] - The overall length.
+ * @param Number [w] - The overall width.
+ * @param Number [cl] - The core length.
+ * @param Number [cw] - The core width.
+ * @returns Vector[]
+ */
+function drawCross(size, core, l, w, cl, cw) =
+    let(
+        size = sizeCross(size=size, core=core, l=l, w=w, cl=cl, cw=cw),
+        outer = size[0] / 2,
+        inner = size[1] / 2
+    )
+    inner == [0, 0] ?
+    [
+        [ outer[0],  outer[1]],
+        [-outer[0],  outer[1]],
+        [-outer[0], -outer[1]],
+        [ outer[0], -outer[1]]
+    ]
+   :[
+        [ inner[0],  inner[1]],
+        [ inner[0],  outer[1]],
+        [-inner[0],  outer[1]],
+        [-inner[0],  inner[1]],
+        [-outer[0],  inner[1]],
+        [-outer[0], -inner[1]],
+        [-inner[0], -inner[1]],
+        [-inner[0], -outer[1]],
+        [ inner[0], -outer[1]],
+        [ inner[0], -inner[1]],
+        [ outer[0], -inner[1]],
+        [ outer[0],  inner[1]]
     ]
 ;
 
@@ -416,6 +475,23 @@ module hexagon(size, pointy, adjust, l, w, s) {
 module star(size, core, edges, l, w, cl, cw) {
     polygon(
         points = drawStar(size=size, core=core, edges=edges, l=l, w=w, cl=cl, cw=cw),
+        convexity = 10
+    );
+}
+
+/**
+ * Creates a cross at the origin.
+ *
+ * @param Number|Vector [size] - The outer size of the cross.
+ * @param Number|Vector [core] - The size of the core.
+ * @param Number [l] - The overall length.
+ * @param Number [w] - The overall width.
+ * @param Number [cl] - The core length.
+ * @param Number [cw] - The core width.
+ */
+module regularCross(size, core, l, w, cl, cw) {
+    polygon(
+        points = drawCross(size=size, core=core, l=l, w=w, cl=cl, cw=cw),
         convexity = 10
     );
 }

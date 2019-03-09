@@ -156,6 +156,29 @@ function sizeStarBox(size, core, edges, l, w, h, cl, cw) =
 ;
 
 /**
+ * Computes the size of a cross shape.
+ *
+ * @param Number|Vector [size] - The outer size of the cross.
+ * @param Number|Vector [core] - The size of the core.
+ * @param Number [l] - The overall length.
+ * @param Number [w] - The overall width.
+ * @param Number [h] - The height of the box.
+ * @param Number [cl] - The core length.
+ * @param Number [cw] - The core width.
+ * @returns Vector[] - Returns two vectors containing the outer and core size of the cross
+ */
+function sizeCrossBox(size, core, l, w, h, cl, cw) =
+    let(
+        size = divisor3D(apply3D(size, l, w, h)),
+        core = apply2D(core, cl, cw)
+    )
+    [
+        size,
+        core
+    ]
+;
+
+/**
  * Creates a box at the origin.
  *
  * @param Number|Vector [size] - The size of the box.
@@ -252,7 +275,7 @@ module hexagonBox(size, pointy, adjust, l, w, h, s, center) {
  * @param Number [edges] - The number of star edges (min. 3).
  * @param Number [l] - The overall length.
  * @param Number [w] - The overall width
- * @param Number [h] - The overall height..
+ * @param Number [h] - The overall height.
  * @param Number [cl] - The core length.
  * @param Number [cw] - The core width.
  * @param Boolean [center] - Whether or not center the box on the vertical axis.
@@ -261,6 +284,25 @@ module starBox(size, core, edges, l, w, h, cl, cw, center) {
     size = sizeStarBox(size=size, core=core, edges=edges, l=l, w=w, h=h, cl=cl, cw=cw);
     linear_extrude(height=size[0][2], center=center, convexity=10) {
         star(size[0], size[1], size[2]);
+    }
+}
+
+/**
+ * Creates a cross box at the origin.
+ *
+ * @param Number|Vector [size] - The outer size of the cross.
+ * @param Number|Vector [core] - The size of the core.
+ * @param Number [l] - The overall length.
+ * @param Number [w] - The overall width.
+ * @param Number [h] - The overall height.
+ * @param Number [cl] - The core length.
+ * @param Number [cw] - The core width.
+ * @param Boolean [center] - Whether or not center the box on the vertical axis.
+ */
+module regularCrossBox(size, core, l, w, h, cl, cw, center) {
+    size = sizeCrossBox(size=size, core=core, l=l, w=w, h=h, cl=cl, cw=cw);
+    linear_extrude(height=size[0][2], center=center, convexity=10) {
+        regularCross(size[0], size[1]);
     }
 }
 
@@ -287,4 +329,31 @@ module meshBox(size, count, gap, pointy, linear, even, l, w, h, cx, cy, gx, gy, 
     linear_extrude(height=size[2], center=center, convexity=10) {
         mesh(size=size, count=count, gap=gap, pointy=pointy, linear=linear, even=even, cx=cx, cy=cy, gx=gx, gy=gy);
     }
+}
+
+/**
+ * Creates a simple polyhedron, where only two opposite faces are defined by a
+ * list of points. Several possibilities are available:
+ * - provides the points for one face, then set a distance for the opposite face
+ * - provides the points for two opposite faces
+ * - provides the points for two opposite faces, then set a distance between them
+ *
+ * Note: both faces should have the same number of points.
+ *
+ * @param Vector[] [bottom] - The list of points for the bottom face.
+ * @param Vector[] [top] - The list of points for the top face.
+ * @param Vector[] [points] - The list of points for a main face.
+ * @param Vector [distane] - The distance between two main faces.
+ * @param Number [x] - The distance between two main faces on the X-axis.
+ * @param Number [y] - The distance between two main faces on the Y-axis.
+ * @param Number [z] - The distance between two main faces on the Z-axis.
+ * @returns Vector[]
+ */
+module simplePolyhedron(bottom, top, points, distance, x, y, z) {
+    points = simplePolyhedronPoints(bottom=bottom, top=top, points=points, distance=distance, x=x, y=y, z=z);
+    polyhedron(
+        points = points,
+        faces = simplePolyhedronFaces(len(points) / 2),
+        convexity = 10
+    );
 }
