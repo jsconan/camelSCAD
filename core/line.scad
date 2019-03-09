@@ -232,7 +232,7 @@ function lineAdd(points, value) =
  * number of points defining one main face of the polyhedron, then returns the
  * faces vector that contains the indices of each face enclosing the solid. This
  * only apply on simple polyhedron where two opposite faces share the same
- * number of points?.
+ * number of points.
  *
  * @param Number length - The number of points for one main face of the polyhedron
  * @returns Vector[]
