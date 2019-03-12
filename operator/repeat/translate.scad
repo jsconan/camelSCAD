@@ -107,12 +107,13 @@ module repeat3D(countX    = 2,
  * Repeats horizontally a shape in two directions, the interval is set by the size of the shape.
  * @param Vector size - The size of the shape
  * @param Vector [count] - The number of shapes on each axis
+ * @param Boolean [center] - Whether or not center the repeated shapes
  */
-module repeatShape2D(size, count = 1) {
+module repeatShape2D(size, count = 1, center) {
     size = vector2D(size);
     count = vector2D(count);
 
-    translate(-vmul(size, count - [1, 1]) / 2) {
+    translate(center ? -vmul(size, count - [1, 1]) / 2 : 0) {
         repeat2D(
             countX = count[0],
             countY = count[1],
@@ -128,12 +129,13 @@ module repeatShape2D(size, count = 1) {
  * Repeats a shape in three directions, the interval is set by the size of the shape.
  * @param Vector size - The size of the shape
  * @param Vector [count] - The number of shapes on each axis
+ * @param Boolean [center] - Whether or not center the repeated shapes
  */
-module repeatShape3D(size, count = 1) {
+module repeatShape3D(size, count = 1, center) {
     size = vector3D(size);
     count = vector3D(count);
 
-    translate(-vmul(size, count - [1, 1, 1]) / 2) {
+    translate(center ? -vmul(size, count - [1, 1, 1]) / 2 : 0) {
         repeat3D(
             countX = count[0],
             countY = count[1],
