@@ -104,7 +104,7 @@ module repeat3D(countX    = 2,
 }
 
 /**
- * Repeats horizontally a shape on two directions.
+ * Repeats horizontally a shape in two directions, the interval is set by the size of the shape.
  * @param Vector size - The size of the shape
  * @param Vector [count] - The number of shapes on each axis
  */
@@ -125,7 +125,7 @@ module repeatShape2D(size, count = 1) {
 }
 
 /**
- * Repeats a shape on three directions.
+ * Repeats a shape in three directions, the interval is set by the size of the shape.
  * @param Vector size - The size of the shape
  * @param Vector [count] - The number of shapes on each axis
  */
