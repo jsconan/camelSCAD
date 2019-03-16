@@ -34,7 +34,7 @@ use <../../full.scad>
  * @author jsconan
  */
 module testCoreVector2D() {
-    testPackage("core/vector-2d.scad", 34) {
+    testPackage("core/vector-2d.scad", 35) {
         // test core/vector-2d/vector2D()
         testModule("vector2D()", 3) {
             testUnit("no parameter", 1) {
@@ -114,6 +114,59 @@ module testCoreVector2D() {
                 assertEqual(apply2D([1, 2], y=5, d=3), [3, 5], "Should apply the diameter as coordinates of the 2D vector, but the Y");
                 assertEqual(apply2D(r=5), [10, 10], "Should create the vector from the provided radius");
                 assertEqual(apply2D(d=6), [6, 6], "Should create the vector from the provided diameter");
+            }
+        }
+        // test core/vector-2d/quadrant()
+        testModule("quadrant()", 3) {
+            testUnit("no parameter", 1) {
+                assertEqual(quadrant(), [0, 0], "Should always produce a 2D vector, even if input is missing");
+            }
+            testUnit("not vector", 23) {
+                assertEqual(quadrant(1), [1, 1], "Should produce a 2D vector from a single number");
+                assertEqual(quadrant(1, 2), [-1, -1], "Should produce a 2D vector from a single number and a quadrant");
+                assertEqual(quadrant(1, 2, 3), [-3, -1], "Should produce a 2D vector from a single number, a quadrant and X-coordinate");
+                assertEqual(quadrant(1, 2, 3, 4), [-3, -4], "Should produce a 2D vector from a single number, a quadrant and XY coordinates");
+
+                assertEqual(quadrant(1, true), [1, 1], "Should produce a 2D vector from a single number and a bad quadrant");
+                assertEqual(quadrant(1, true, true), [0, 1], "Should produce a 2D vector from a single number, a bad quadrant and bad X-coordinate");
+                assertEqual(quadrant(1, true, true, true), [0, 0], "Should produce a 2D vector from a single number, a bad quadrant and bad XY coordinates");
+
+                assertEqual(quadrant(true), [0, 0], "Should produce a default 2D vector from a boolean");
+                assertEqual(quadrant(true, 1), [0, 0], "Should produce a default 2D vector from a boolean and a quadrant");
+                assertEqual(quadrant(true, 1, 2), [-2, 0], "Should produce a default 2D vector from a boolean, a quadrant and X-coordinate");
+                assertEqual(quadrant(true, 1, 2, 3), [-2, 3], "Should produce a default 2D vector from a boolean, a quadrant and XY coordinates");
+
+                assertEqual(quadrant("1"), [0, 0], "Should produce a default 2D vector from a string");
+                assertEqual(quadrant("1", 1), [0, 0], "Should produce a default 2D vector from a string and a quadrant");
+                assertEqual(quadrant("1", 1, 2), [-2, 0], "Should produce a default 2D vector from a string, a quadrant and X-coordinate");
+                assertEqual(quadrant("1", 1, 2, 3), [-2, 3], "Should produce a default 2D vector from a string, a quadrant and XY coordinates");
+
+                assertEqual(quadrant(["1"]), [0, 0], "Should produce a default 2D vector from an array");
+                assertEqual(quadrant(["1"], 1), [0, 0], "Should produce a default 2D vector from an array and a quadrant");
+                assertEqual(quadrant(["1"], 1, 2), [-2, 0], "Should produce a default 2D vector from an array, a quadrant and X-coordinate");
+                assertEqual(quadrant(["1"], 1, 2, 3), [-2, 3], "Should produce a default 2D vector from an array, a quadrant and XY coordinates");
+
+                assertEqual(quadrant(["1", 1]), [0, 1], "Should produce a default 2D vector from a bad vector");
+                assertEqual(quadrant(["1", 1], 1), [0, 1], "Should produce a default 2D vector from a bad vector and a quadrant");
+                assertEqual(quadrant(["1", 1], 1, 2), [-2, 1], "Should produce a default 2D vector from a bad vector, a quadrant and X-coordinate");
+                assertEqual(quadrant(["1", 1], 1, 2, 3), [-2, 3], "Should produce a default 2D vector from a bad vector, a quadrant and XY coordinates");
+            }
+            testUnit("vector", 15) {
+                assertEqual(quadrant([1]), [1, 0], "Should complete incomplete 2D vector");
+                assertEqual(quadrant([1], y=2), [1, 2], "Should complete incomplete 2D vector, Y provided");
+                assertEqual(quadrant([1], 2, 3), [-3, 0], "Should complete incomplete 2D vector, quadrant and X provided");
+                assertEqual(quadrant([1, 2]), [1, 2], "Should set quadrant 1 when no one is given");
+                assertEqual(quadrant([1, 2], 0), [1, 2], "Should set quadrant 1");
+                assertEqual(quadrant([1, 2], 1), [-1, 2], "Should set quadrant 2");
+                assertEqual(quadrant([1, 2], 2), [-1, -2], "Should set quadrant 3");
+                assertEqual(quadrant([1, 2], 3), [1, -2], "Should set quadrant 4");
+                assertEqual(quadrant([1, 2], 3, 4, 5), [4, -5], "Should set coordinates");
+                assertEqual(quadrant([1, 2, 3]), [1, 2], "Should truncate too big vector");
+                assertEqual(quadrant([1, 2, 3], x=5, y=6), [5, 6], "Should truncate too big vector but still set coordinate when given");
+                assertEqual(quadrant(x=5), [5, 0], "Should create the vector from the provided X coordinate");
+                assertEqual(quadrant(y=6), [0, 6], "Should create the vector from the provided Y coordinate)");
+                assertEqual(quadrant(x=5, y=6), [5, 6], "Should create the vector from the provided coordinates");
+                assertEqual(quadrant(x=5, y=6, i=2), [-5, -6], "Should create the vector from the provided coordinates and quadrant");
             }
         }
         // test core/vector-2d/norm2D()
