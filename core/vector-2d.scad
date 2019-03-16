@@ -86,6 +86,28 @@ function apply2D(v, x, y, r, d) =
 ;
 
 /**
+ * Gets a point on a particular quadrant.
+ * @param Vector v - The original point
+ * @param Number i - The index of the quadrant (from 0 to 3)
+ * @param Number [x] - The X-coordinate to apply.
+ * @param Number [y] - The Y-coordinate to apply.
+ * @returns Vector - Always returns a 2D vector that gives the point on the
+ *                   requested quadrant.
+ */
+function quadrant(v, i, x, y) =
+    let(
+        n = isNumber(v),
+        i = integer(i) % 4,
+        x = abs(float(uor(x, n ? v : v[0]))),
+        y = abs(float(uor(y, n ? v : v[1])))
+    )
+    i == 1 ? [-x,  y]
+   :i == 2 ? [-x, -y]
+   :i == 3 ? [ x, -y]
+           : [ x,  y]
+;
+
+/**
  * Gets the length of a 2D vector.
  * Ensures the value is a 2D vector. Incomplete vectors will be completed with 0,
  * while too big vectors will be truncated. If a single number is provided instead
