@@ -219,7 +219,7 @@ function center2D(a, b, r, negative) =
     move2D(
         middle2D(a, b),
         normal(ab),
-        pythagore(0, norm(ab) / 2, float(r))
+        pythagoras(0, norm(ab) / 2, float(r))
     )
 ;
 
@@ -296,7 +296,7 @@ function tangent2D(p, c, r) =
     )
     d > r ? (
         let(
-            t = pythagore(0, r, d),
+            t = pythagoras(0, r, d),
             a = getAngle(v[0], v[1]) + asin(r / d)
         )
         p + arcPoint(t, a)
@@ -334,7 +334,7 @@ function circleLineIntersect2D(i, j, c, r) =
         )
         a <= r ? (
             let(
-                b = pythagore(a, 0, r)
+                b = pythagoras(a, 0, r)
             )
             [
                 [i[0], c[1] - b],
@@ -350,7 +350,7 @@ function circleLineIntersect2D(i, j, c, r) =
        )
        a <= r ? (
            let(
-               b = pythagore(a, 0, r)
+               b = pythagoras(a, 0, r)
            )
            [
                [c[0] - b, i[1]],
@@ -489,7 +489,7 @@ function isosceles2D(a, b, h, angle) =
     h != undef ? (
         let(
             h = float(h),
-            r = pythagore(h, d),
+            r = pythagoras(h, d),
             angle = getAngle(d, h)
         )
         a + arcPoint(r, w + angle)

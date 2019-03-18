@@ -128,14 +128,14 @@ function getPolygonAngle(index, count = 4) =
 ;
 
 /**
- * Computes a length based on the Pythagore's theorem.
+ * Computes a length based on the Pythagoras's theorem.
  *
  * @param Number a - The A side of the rectangle (0 or undef to compute this value).
  * @param Number b - The B side of the rectangle (0 or undef to compute this value).
  * @param Number c - The hypotenuse of the rectangle (0 or undef to compute this value).
  * @returns Number
  */
-function pythagore(a, b, c) =
+function pythagoras(a, b, c) =
     sqrt(c ? pow(float(c), 2) - pow(a ? float(a) : float(b), 2)
            : pow(float(a), 2) + pow(float(b), 2))
 ;

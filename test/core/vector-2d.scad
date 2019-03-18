@@ -566,13 +566,13 @@ module testCoreVector2D() {
                 assertEqual(isosceles2D(["1"], ["2"], ["3"]), [0, 0], "Cannot compute edge of arrays, should return the origin");
             }
             testUnit("height", 7) {
-                assertApproxEqual(isosceles2D(1, 2, 3), [1, 1] + arcPoint(pythagore(3, norm2D([1, 1]) / 2), 45 + atan2(3, norm2D([1, 1]) / 2)), "Numbers should be converted to vectors");
-                assertApproxEqual(isosceles2D([10, 5], [20, 5], 10), [10, 5] + arcPoint(pythagore(10, 5), atan2(10, 5)), "Horizontal triangle, edge on the top");
-                assertApproxEqual(isosceles2D([20, 5], [10, 5], 10), [20, 5] - arcPoint(pythagore(10, 5), atan2(10, 5)), "Horizontal triangle, edge on the bottom");
-                assertApproxEqual(isosceles2D([5, 10], [5, 20], 10), [5, 10] + arcPoint(pythagore(10, 5), atan2(5, -10)), "Vertical triangle, edge on the left");
-                assertApproxEqual(isosceles2D([5, 20], [5, 10], 10), [5, 20] - arcPoint(pythagore(10, 5), atan2(5, -10)), "Vertical triangle, edge on the right");
-                assertApproxEqual(isosceles2D([10, 10], [18, 16], 10), [10, 10] + arcPoint(pythagore(10, 5), atan2(10, 5) + atan2(6, 8)), "Tilted triangle, edge on the top");
-                assertApproxEqual(isosceles2D([18, 16], [10, 10], 10), [18, 16] - arcPoint(pythagore(10, 5), atan2(10, 5) + atan2(6, 8)), "Tilted triangle, edge on the bottom");
+                assertApproxEqual(isosceles2D(1, 2, 3), [1, 1] + arcPoint(pythagoras(3, norm2D([1, 1]) / 2), 45 + atan2(3, norm2D([1, 1]) / 2)), "Numbers should be converted to vectors");
+                assertApproxEqual(isosceles2D([10, 5], [20, 5], 10), [10, 5] + arcPoint(pythagoras(10, 5), atan2(10, 5)), "Horizontal triangle, edge on the top");
+                assertApproxEqual(isosceles2D([20, 5], [10, 5], 10), [20, 5] - arcPoint(pythagoras(10, 5), atan2(10, 5)), "Horizontal triangle, edge on the bottom");
+                assertApproxEqual(isosceles2D([5, 10], [5, 20], 10), [5, 10] + arcPoint(pythagoras(10, 5), atan2(5, -10)), "Vertical triangle, edge on the left");
+                assertApproxEqual(isosceles2D([5, 20], [5, 10], 10), [5, 20] - arcPoint(pythagoras(10, 5), atan2(5, -10)), "Vertical triangle, edge on the right");
+                assertApproxEqual(isosceles2D([10, 10], [18, 16], 10), [10, 10] + arcPoint(pythagoras(10, 5), atan2(10, 5) + atan2(6, 8)), "Tilted triangle, edge on the top");
+                assertApproxEqual(isosceles2D([18, 16], [10, 10], 10), [18, 16] - arcPoint(pythagoras(10, 5), atan2(10, 5) + atan2(6, 8)), "Tilted triangle, edge on the bottom");
             }
             testUnit("angle", 7) {
                 assertApproxEqual(isosceles2D(1, 2, angle=45), [1, 2], "Numbers should be converted to vectors");
