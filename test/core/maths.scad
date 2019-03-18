@@ -346,30 +346,30 @@ module testCoreMaths() {
                 assertEqual(getPolygonAngle(13, 8), 360 / 8 * 5, "Octogon, index 13");
             }
         }
-        // test core/maths/pythagore()
-        testModule("pythagore()") {
+        // test core/maths/pythagoras()
+        testModule("pythagoras()") {
             testUnit("no parameter", 1) {
-                assertEqual(pythagore(), 0, "Without parameter the function should return 0");
+                assertEqual(pythagoras(), 0, "Without parameter the function should return 0");
             }
             testUnit("wrong type", 5) {
-                assertEqual(pythagore("10", "10"), 0, "Strings should be converted to 0");
-                assertEqual(pythagore(true, true), 0, "Booleans should be converted to 0");
-                assertEqual(pythagore([], []), 0, "Empty arrays should be converted to 0");
-                assertEqual(pythagore(["1"], ["2"]), 0, "Arrays should be converted to 0");
-                assertEqual(pythagore([1], [2]), 0, "Vectors should be converted to 0");
+                assertEqual(pythagoras("10", "10"), 0, "Strings should be converted to 0");
+                assertEqual(pythagoras(true, true), 0, "Booleans should be converted to 0");
+                assertEqual(pythagoras([], []), 0, "Empty arrays should be converted to 0");
+                assertEqual(pythagoras(["1"], ["2"]), 0, "Arrays should be converted to 0");
+                assertEqual(pythagoras([1], [2]), 0, "Vectors should be converted to 0");
             }
             testUnit("number", 9) {
-                assertEqual(pythagore(0), 0, "If the only one parameter is 0, the function should not fail, but should return 0");
-                assertEqual(pythagore(0, 0, 0), 0, "If all parameters are 0 the function should not fail, but should return 0");
+                assertEqual(pythagoras(0), 0, "If the only one parameter is 0, the function should not fail, but should return 0");
+                assertEqual(pythagoras(0, 0, 0), 0, "If all parameters are 0 the function should not fail, but should return 0");
 
-                assertEqual(pythagore(a=10), 10, "If only one parameter is provided, the function cannot compute the result, but it should return the provided value");
-                assertEqual(pythagore(b=20), 20, "If only one parameter is provided, the function cannot compute the result, but it should return the provided value");
-                assertEqual(pythagore(c=30), 30, "If only one parameter is provided, the function cannot compute the result, but it should return the provided value");
+                assertEqual(pythagoras(a=10), 10, "If only one parameter is provided, the function cannot compute the result, but it should return the provided value");
+                assertEqual(pythagoras(b=20), 20, "If only one parameter is provided, the function cannot compute the result, but it should return the provided value");
+                assertEqual(pythagoras(c=30), 30, "If only one parameter is provided, the function cannot compute the result, but it should return the provided value");
 
-                assertEqual(pythagore(a=2, b=3), sqrt(4+9), "If A and B are provided the function should compute C");
-                assertEqual(pythagore(a=5, c=7), sqrt(49-25), "If A and C are provided the function should compute B");
-                assertEqual(pythagore(a=3, c=8), sqrt(64-9), "If B and C are provided the function should compute A");
-                assertEqual(pythagore(a=3, b=5, c=8), sqrt(64-9), "If A, B and C are provided the function should compute B");
+                assertEqual(pythagoras(a=2, b=3), sqrt(4+9), "If A and B are provided the function should compute C");
+                assertEqual(pythagoras(a=5, c=7), sqrt(49-25), "If A and C are provided the function should compute B");
+                assertEqual(pythagoras(a=3, c=8), sqrt(64-9), "If B and C are provided the function should compute A");
+                assertEqual(pythagoras(a=3, b=5, c=8), sqrt(64-9), "If A, B and C are provided the function should compute B");
 
             }
         }
