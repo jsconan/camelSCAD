@@ -86,6 +86,28 @@ function apply2D(v, x, y, r, d) =
 ;
 
 /**
+ * Gets a point on a particular quadrant.
+ * @param Vector v - The original point
+ * @param Number i - The index of the quadrant (from 0 to 3)
+ * @param Number [x] - The X-coordinate to apply.
+ * @param Number [y] - The Y-coordinate to apply.
+ * @returns Vector - Always returns a 2D vector that gives the point on the
+ *                   requested quadrant.
+ */
+function quadrant(v, i, x, y) =
+    let(
+        n = isNumber(v),
+        i = integer(i) % 4,
+        x = abs(float(uor(x, n ? v : v[0]))),
+        y = abs(float(uor(y, n ? v : v[1])))
+    )
+    i == 1 ? [-x,  y]
+   :i == 2 ? [-x, -y]
+   :i == 3 ? [ x, -y]
+           : [ x,  y]
+;
+
+/**
  * Gets the length of a 2D vector.
  * Ensures the value is a 2D vector. Incomplete vectors will be completed with 0,
  * while too big vectors will be truncated. If a single number is provided instead
@@ -197,7 +219,7 @@ function center2D(a, b, r, negative) =
     move2D(
         middle2D(a, b),
         normal(ab),
-        pythagore(0, norm(ab) / 2, float(r))
+        pythagoras(0, norm(ab) / 2, float(r))
     )
 ;
 
@@ -274,8 +296,8 @@ function tangent2D(p, c, r) =
     )
     d > r ? (
         let(
-            t = pythagore(0, r, d),
-            a = atan2(v[1], v[0]) + asin(r / d)
+            t = pythagoras(0, r, d),
+            a = getAngle(v[0], v[1]) + asin(r / d)
         )
         p + arcPoint(t, a)
     )
@@ -312,7 +334,7 @@ function circleLineIntersect2D(i, j, c, r) =
         )
         a <= r ? (
             let(
-                b = pythagore(a, 0, r)
+                b = pythagoras(a, 0, r)
             )
             [
                 [i[0], c[1] - b],
@@ -328,7 +350,7 @@ function circleLineIntersect2D(i, j, c, r) =
        )
        a <= r ? (
            let(
-               b = pythagore(a, 0, r)
+               b = pythagoras(a, 0, r)
            )
            [
                [c[0] - b, i[1]],
@@ -462,13 +484,13 @@ function isosceles2D(a, b, h, angle) =
         b = vector2D(b),
         v = b - a,
         d = norm2D(v) / 2,
-        w = atan2(v[1], v[0])
+        w = getAngle(v[0], v[1])
     )
     h != undef ? (
         let(
             h = float(h),
-            r = pythagore(h, d),
-            angle = atan2(h, d)
+            r = pythagoras(h, d),
+            angle = getAngle(d, h)
         )
         a + arcPoint(r, w + angle)
     )
@@ -497,8 +519,7 @@ function protractor(a, b) =
     let(
         v = vector2D(b) - vector2D(a)
     )
-    v[0] || v[1] ? atan2(v[1], v[0])
-                 : 0
+    getAngle(v[0], v[1])
 ;
 
 /**
@@ -513,7 +534,50 @@ function angle2D(a, b) =
         a = vector2D(a),
         b = vector2D(b)
     )
-    float(acos((a * b) / (norm(a) * norm(b))))
+    vangle(a, b)
+;
+
+/**
+ * Computes the vertex angle given three 2D points.
+ *
+ * @param Vector [a] - The first point
+ * @param Vector [b] - The second point
+ * @param Vector [v] - The vertex point
+ * @returns Number
+ */
+function vertexAngle2D(a, b, v) =
+    let(
+        v = vector2D(v),
+        a = vector2D(a) - v,
+        b = vector2D(b) - v
+    )
+    vangle(a, b)
+;
+
+/**
+ * Computes the outline of a vertex at the given distance from the edges.
+ * The vertex is defined by three points.
+ * The distance from the edges is placed on a normal vector from each edge,
+ * and the outline point should be at the intersect of those vectors
+ *
+ * @param Vector [a] - The first point
+ * @param Vector [b] - The second point
+ * @param Vector [v] - The vertex point
+ * @param Number [distance] - The distance from the edges,
+ *                            on a perpendicular line from each edge
+ * @returns Vector
+ */
+function vertexOutline2D(a, b, v, distance) =
+    let(
+        v = vector2D(v),
+        a = vector2D(a) - v,
+        b = vector2D(b) - v,
+        angleA = getAngle(a[0], a[1]),
+        angleB = getAngle(b[0], b[1]),
+        angle = (angleB - angleA) / 2,
+        length = float(distance) / divisor(abs(sin(angle)))
+    )
+    v + arcp([length, length], angle < 0 ? angleB - angle + STRAIGHT : angleA + angle)
 ;
 
 /**

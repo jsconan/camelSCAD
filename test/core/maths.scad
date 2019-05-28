@@ -34,7 +34,7 @@ use <../../full.scad>
  * @author jsconan
  */
 module testCoreMaths() {
-    testPackage("core/maths.scad", 16) {
+    testPackage("core/maths.scad", 18) {
         // test core/maths/deg()
         testModule("deg()", 3) {
             testUnit("no parameter", 1) {
@@ -295,30 +295,81 @@ module testCoreMaths() {
                 assertEqual(astep(d=200, a=0.1, $fn=0, $fa=0.5, $fs=0.5), 0.1, "When the $fn value is not set, the number of fragments should be computed using $fa and $fs. A circle with a diameter of 100 should be fragmented in 63 facets with $fa=1 $fs=1, but the returned angle should be the provided one if lesser");
             }
         }
-        // test core/maths/pythagore()
-        testModule("pythagore()") {
+        // test core/maths/getAngle()
+        testModule("getAngle()", 2) {
+            testUnit("default value", 5) {
+                assertEqual(getAngle(), 0, "Should return 0 if no parameter was provided");
+                assertEqual(getAngle([], []), 0, "Cannot compute angle of arrays");
+                assertEqual(getAngle([1, 2], [3, 4]), 0, "Cannot compute angle of vectors");
+                assertEqual(getAngle("1", "2"), 0, "Cannot compute angle of strings");
+                assertEqual(getAngle(true, true), 0, "Cannot compute angle of booleans");
+            }
+            testUnit("compute angle", 12) {
+                assertEqual(getAngle(0, 0), 0, "Angle of vector [0,0]");
+                assertEqual(getAngle(0, 1), 90, "Angle of vector [0,1]");
+                assertEqual(getAngle(0, -1), 270, "Angle of vector [0,-1]");
+                assertEqual(getAngle(1, 0), 0, "Angle of vector [1,0]");
+                assertEqual(getAngle(-1, 0), 180, "Angle of vector [-1,0]");
+                assertEqual(getAngle(1, 1), 45, "Angle of vector [1,1]");
+                assertEqual(getAngle(-1, -1), 225, "Angle of vector [-1,-1]");
+                assertEqual(getAngle(1, 2), atan2(2, 1), "Angle of vector [1,2]");
+                assertEqual(getAngle(2, 1), atan2(1, 2), "Angle of vector [2,1]");
+                assertEqual(getAngle(-2, 1), atan2(1, -2), "Angle of vector [-2,1]");
+                assertEqual(getAngle(2, -1), 360 + atan2(-1, 2), "Angle of vector [2,-1]");
+                assertEqual(getAngle(-2, -1), 360 + atan2(-1, -2), "Angle of vector [-2,-1]");
+            }
+        }
+        // test core/maths/getPolygonAngle()
+        testModule("getPolygonAngle()", 2) {
+            testUnit("default value", 5) {
+                assertEqual(getPolygonAngle(), 0, "Should return 0 if no parameter was provided");
+                assertEqual(getPolygonAngle([], []), 0, "Cannot compute angle of arrays");
+                assertEqual(getPolygonAngle([1, 2], [3, 4]), 0, "Cannot compute angle of vectors");
+                assertEqual(getPolygonAngle("1", "2"), 0, "Cannot compute angle of strings");
+                assertEqual(getPolygonAngle(true, true), 0, "Cannot compute angle of booleans");
+            }
+            testUnit("compute angle", 15) {
+                assertEqual(getPolygonAngle(0, 0), 0, "Angle at index 0, should be 0");
+                assertEqual(getPolygonAngle(5, 0), 0, "Null count should be defaulted to 1");
+                assertEqual(getPolygonAngle(0), 0, "Default polygon, index 0");
+                assertEqual(getPolygonAngle(1), 90, "Default polygon, index 1");
+                assertEqual(getPolygonAngle(2), 180, "Default polygon, index 2");
+                assertEqual(getPolygonAngle(3), 270, "Default polygon, index 3");
+                assertEqual(getPolygonAngle(4), 0, "Default polygon, index 4");
+                assertEqual(getPolygonAngle(0, 6), 0, "Hexagon, index 0");
+                assertEqual(getPolygonAngle(1, 6), 360 / 6, "Hexagon, index 1");
+                assertEqual(getPolygonAngle(3, 6), 360 / 6 * 3, "Hexagon, index 3");
+                assertEqual(getPolygonAngle(10, 6), 360 / 6 * 4, "Hexagon, index 10");
+                assertEqual(getPolygonAngle(0, 8), 0, "Octogon, index 0");
+                assertEqual(getPolygonAngle(1, 8), 360 / 8, "Octogon, index 1");
+                assertEqual(getPolygonAngle(3, 8), 360 / 8 * 3, "Octogon, index 3");
+                assertEqual(getPolygonAngle(13, 8), 360 / 8 * 5, "Octogon, index 13");
+            }
+        }
+        // test core/maths/pythagoras()
+        testModule("pythagoras()") {
             testUnit("no parameter", 1) {
-                assertEqual(pythagore(), 0, "Without parameter the function should return 0");
+                assertEqual(pythagoras(), 0, "Without parameter the function should return 0");
             }
             testUnit("wrong type", 5) {
-                assertEqual(pythagore("10", "10"), 0, "Strings should be converted to 0");
-                assertEqual(pythagore(true, true), 0, "Booleans should be converted to 0");
-                assertEqual(pythagore([], []), 0, "Empty arrays should be converted to 0");
-                assertEqual(pythagore(["1"], ["2"]), 0, "Arrays should be converted to 0");
-                assertEqual(pythagore([1], [2]), 0, "Vectors should be converted to 0");
+                assertEqual(pythagoras("10", "10"), 0, "Strings should be converted to 0");
+                assertEqual(pythagoras(true, true), 0, "Booleans should be converted to 0");
+                assertEqual(pythagoras([], []), 0, "Empty arrays should be converted to 0");
+                assertEqual(pythagoras(["1"], ["2"]), 0, "Arrays should be converted to 0");
+                assertEqual(pythagoras([1], [2]), 0, "Vectors should be converted to 0");
             }
             testUnit("number", 9) {
-                assertEqual(pythagore(0), 0, "If the only one parameter is 0, the function should not fail, but should return 0");
-                assertEqual(pythagore(0, 0, 0), 0, "If all parameters are 0 the function should not fail, but should return 0");
+                assertEqual(pythagoras(0), 0, "If the only one parameter is 0, the function should not fail, but should return 0");
+                assertEqual(pythagoras(0, 0, 0), 0, "If all parameters are 0 the function should not fail, but should return 0");
 
-                assertEqual(pythagore(a=10), 10, "If only one parameter is provided, the function cannot compute the result, but it should return the provided value");
-                assertEqual(pythagore(b=20), 20, "If only one parameter is provided, the function cannot compute the result, but it should return the provided value");
-                assertEqual(pythagore(c=30), 30, "If only one parameter is provided, the function cannot compute the result, but it should return the provided value");
+                assertEqual(pythagoras(a=10), 10, "If only one parameter is provided, the function cannot compute the result, but it should return the provided value");
+                assertEqual(pythagoras(b=20), 20, "If only one parameter is provided, the function cannot compute the result, but it should return the provided value");
+                assertEqual(pythagoras(c=30), 30, "If only one parameter is provided, the function cannot compute the result, but it should return the provided value");
 
-                assertEqual(pythagore(a=2, b=3), sqrt(4+9), "If A and B are provided the function should compute C");
-                assertEqual(pythagore(a=5, c=7), sqrt(49-25), "If A and C are provided the function should compute B");
-                assertEqual(pythagore(a=3, c=8), sqrt(64-9), "If B and C are provided the function should compute A");
-                assertEqual(pythagore(a=3, b=5, c=8), sqrt(64-9), "If A, B and C are provided the function should compute B");
+                assertEqual(pythagoras(a=2, b=3), sqrt(4+9), "If A and B are provided the function should compute C");
+                assertEqual(pythagoras(a=5, c=7), sqrt(49-25), "If A and C are provided the function should compute B");
+                assertEqual(pythagoras(a=3, c=8), sqrt(64-9), "If B and C are provided the function should compute A");
+                assertEqual(pythagoras(a=3, b=5, c=8), sqrt(64-9), "If A, B and C are provided the function should compute B");
 
             }
         }

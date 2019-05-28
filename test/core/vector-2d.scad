@@ -34,7 +34,7 @@ use <../../full.scad>
  * @author jsconan
  */
 module testCoreVector2D() {
-    testPackage("core/vector-2d.scad", 32) {
+    testPackage("core/vector-2d.scad", 35) {
         // test core/vector-2d/vector2D()
         testModule("vector2D()", 3) {
             testUnit("no parameter", 1) {
@@ -114,6 +114,59 @@ module testCoreVector2D() {
                 assertEqual(apply2D([1, 2], y=5, d=3), [3, 5], "Should apply the diameter as coordinates of the 2D vector, but the Y");
                 assertEqual(apply2D(r=5), [10, 10], "Should create the vector from the provided radius");
                 assertEqual(apply2D(d=6), [6, 6], "Should create the vector from the provided diameter");
+            }
+        }
+        // test core/vector-2d/quadrant()
+        testModule("quadrant()", 3) {
+            testUnit("no parameter", 1) {
+                assertEqual(quadrant(), [0, 0], "Should always produce a 2D vector, even if input is missing");
+            }
+            testUnit("not vector", 23) {
+                assertEqual(quadrant(1), [1, 1], "Should produce a 2D vector from a single number");
+                assertEqual(quadrant(1, 2), [-1, -1], "Should produce a 2D vector from a single number and a quadrant");
+                assertEqual(quadrant(1, 2, 3), [-3, -1], "Should produce a 2D vector from a single number, a quadrant and X-coordinate");
+                assertEqual(quadrant(1, 2, 3, 4), [-3, -4], "Should produce a 2D vector from a single number, a quadrant and XY coordinates");
+
+                assertEqual(quadrant(1, true), [1, 1], "Should produce a 2D vector from a single number and a bad quadrant");
+                assertEqual(quadrant(1, true, true), [0, 1], "Should produce a 2D vector from a single number, a bad quadrant and bad X-coordinate");
+                assertEqual(quadrant(1, true, true, true), [0, 0], "Should produce a 2D vector from a single number, a bad quadrant and bad XY coordinates");
+
+                assertEqual(quadrant(true), [0, 0], "Should produce a default 2D vector from a boolean");
+                assertEqual(quadrant(true, 1), [0, 0], "Should produce a default 2D vector from a boolean and a quadrant");
+                assertEqual(quadrant(true, 1, 2), [-2, 0], "Should produce a default 2D vector from a boolean, a quadrant and X-coordinate");
+                assertEqual(quadrant(true, 1, 2, 3), [-2, 3], "Should produce a default 2D vector from a boolean, a quadrant and XY coordinates");
+
+                assertEqual(quadrant("1"), [0, 0], "Should produce a default 2D vector from a string");
+                assertEqual(quadrant("1", 1), [0, 0], "Should produce a default 2D vector from a string and a quadrant");
+                assertEqual(quadrant("1", 1, 2), [-2, 0], "Should produce a default 2D vector from a string, a quadrant and X-coordinate");
+                assertEqual(quadrant("1", 1, 2, 3), [-2, 3], "Should produce a default 2D vector from a string, a quadrant and XY coordinates");
+
+                assertEqual(quadrant(["1"]), [0, 0], "Should produce a default 2D vector from an array");
+                assertEqual(quadrant(["1"], 1), [0, 0], "Should produce a default 2D vector from an array and a quadrant");
+                assertEqual(quadrant(["1"], 1, 2), [-2, 0], "Should produce a default 2D vector from an array, a quadrant and X-coordinate");
+                assertEqual(quadrant(["1"], 1, 2, 3), [-2, 3], "Should produce a default 2D vector from an array, a quadrant and XY coordinates");
+
+                assertEqual(quadrant(["1", 1]), [0, 1], "Should produce a default 2D vector from a bad vector");
+                assertEqual(quadrant(["1", 1], 1), [0, 1], "Should produce a default 2D vector from a bad vector and a quadrant");
+                assertEqual(quadrant(["1", 1], 1, 2), [-2, 1], "Should produce a default 2D vector from a bad vector, a quadrant and X-coordinate");
+                assertEqual(quadrant(["1", 1], 1, 2, 3), [-2, 3], "Should produce a default 2D vector from a bad vector, a quadrant and XY coordinates");
+            }
+            testUnit("vector", 15) {
+                assertEqual(quadrant([1]), [1, 0], "Should complete incomplete 2D vector");
+                assertEqual(quadrant([1], y=2), [1, 2], "Should complete incomplete 2D vector, Y provided");
+                assertEqual(quadrant([1], 2, 3), [-3, 0], "Should complete incomplete 2D vector, quadrant and X provided");
+                assertEqual(quadrant([1, 2]), [1, 2], "Should set quadrant 1 when no one is given");
+                assertEqual(quadrant([1, 2], 0), [1, 2], "Should set quadrant 1");
+                assertEqual(quadrant([1, 2], 1), [-1, 2], "Should set quadrant 2");
+                assertEqual(quadrant([1, 2], 2), [-1, -2], "Should set quadrant 3");
+                assertEqual(quadrant([1, 2], 3), [1, -2], "Should set quadrant 4");
+                assertEqual(quadrant([1, 2], 3, 4, 5), [4, -5], "Should set coordinates");
+                assertEqual(quadrant([1, 2, 3]), [1, 2], "Should truncate too big vector");
+                assertEqual(quadrant([1, 2, 3], x=5, y=6), [5, 6], "Should truncate too big vector but still set coordinate when given");
+                assertEqual(quadrant(x=5), [5, 0], "Should create the vector from the provided X coordinate");
+                assertEqual(quadrant(y=6), [0, 6], "Should create the vector from the provided Y coordinate)");
+                assertEqual(quadrant(x=5, y=6), [5, 6], "Should create the vector from the provided coordinates");
+                assertEqual(quadrant(x=5, y=6, i=2), [-5, -6], "Should create the vector from the provided coordinates and quadrant");
             }
         }
         // test core/vector-2d/norm2D()
@@ -513,13 +566,13 @@ module testCoreVector2D() {
                 assertEqual(isosceles2D(["1"], ["2"], ["3"]), [0, 0], "Cannot compute edge of arrays, should return the origin");
             }
             testUnit("height", 7) {
-                assertApproxEqual(isosceles2D(1, 2, 3), [1, 1] + arcPoint(pythagore(3, norm2D([1, 1]) / 2), 45 + atan2(3, norm2D([1, 1]) / 2)), "Numbers should be converted to vectors");
-                assertApproxEqual(isosceles2D([10, 5], [20, 5], 10), [10, 5] + arcPoint(pythagore(10, 5), atan2(10, 5)), "Horizontal triangle, edge on the top");
-                assertApproxEqual(isosceles2D([20, 5], [10, 5], 10), [20, 5] - arcPoint(pythagore(10, 5), atan2(10, 5)), "Horizontal triangle, edge on the bottom");
-                assertApproxEqual(isosceles2D([5, 10], [5, 20], 10), [5, 10] + arcPoint(pythagore(10, 5), atan2(5, -10)), "Vertical triangle, edge on the left");
-                assertApproxEqual(isosceles2D([5, 20], [5, 10], 10), [5, 20] - arcPoint(pythagore(10, 5), atan2(5, -10)), "Vertical triangle, edge on the right");
-                assertApproxEqual(isosceles2D([10, 10], [18, 16], 10), [10, 10] + arcPoint(pythagore(10, 5), atan2(10, 5) + atan2(6, 8)), "Tilted triangle, edge on the top");
-                assertApproxEqual(isosceles2D([18, 16], [10, 10], 10), [18, 16] - arcPoint(pythagore(10, 5), atan2(10, 5) + atan2(6, 8)), "Tilted triangle, edge on the bottom");
+                assertApproxEqual(isosceles2D(1, 2, 3), [1, 1] + arcPoint(pythagoras(3, norm2D([1, 1]) / 2), 45 + atan2(3, norm2D([1, 1]) / 2)), "Numbers should be converted to vectors");
+                assertApproxEqual(isosceles2D([10, 5], [20, 5], 10), [10, 5] + arcPoint(pythagoras(10, 5), atan2(10, 5)), "Horizontal triangle, edge on the top");
+                assertApproxEqual(isosceles2D([20, 5], [10, 5], 10), [20, 5] - arcPoint(pythagoras(10, 5), atan2(10, 5)), "Horizontal triangle, edge on the bottom");
+                assertApproxEqual(isosceles2D([5, 10], [5, 20], 10), [5, 10] + arcPoint(pythagoras(10, 5), atan2(5, -10)), "Vertical triangle, edge on the left");
+                assertApproxEqual(isosceles2D([5, 20], [5, 10], 10), [5, 20] - arcPoint(pythagoras(10, 5), atan2(5, -10)), "Vertical triangle, edge on the right");
+                assertApproxEqual(isosceles2D([10, 10], [18, 16], 10), [10, 10] + arcPoint(pythagoras(10, 5), atan2(10, 5) + atan2(6, 8)), "Tilted triangle, edge on the top");
+                assertApproxEqual(isosceles2D([18, 16], [10, 10], 10), [18, 16] - arcPoint(pythagoras(10, 5), atan2(10, 5) + atan2(6, 8)), "Tilted triangle, edge on the bottom");
             }
             testUnit("angle", 7) {
                 assertApproxEqual(isosceles2D(1, 2, angle=45), [1, 2], "Numbers should be converted to vectors");
@@ -539,27 +592,112 @@ module testCoreVector2D() {
                 assertEqual(protractor(true, true), 0, "Cannot compute angle of booleans");
             }
             testUnit("compute angle", 6) {
-                assertEqual(protractor(1, 2), 45, "When single numbers are provided, they should be translated to vector.");
+                assertEqual(protractor(1, 2), 45, "When single numbers are provided, they should be translated to vector");
                 assertEqual(protractor([3, 5], [3, 9]), 90, "Positive straight angle");
-                assertEqual(protractor([3, 9], [3, 5]), -90, "Negative straight angle");
+                assertEqual(protractor([3, 9], [3, 5]), 270, "Negative straight angle");
                 assertEqual(protractor([3, 2], [6, 7]), atan2(5, 3), "Angle of a positive line");
-                assertEqual(protractor([6, 7], [3, 2]), atan2(-5, -3), "Angle of a negative line");
+                assertEqual(protractor([6, 7], [3, 2]), 360 + atan2(-5, -3), "Angle of a negative line");
                 assertEqual(protractor([3, 2], [3, 2]), 0, "Angle of a point");
             }
         }
         // test core/vector-2d/angle2D()
         testModule("angle2D()", 2) {
             testUnit("default value", 3) {
-                assertEqual(angle2D(), 0, "Should return 0 if no vector was provided");
+                assertEqual(angle2D(), 0, "Should return 0 if no parameter was provided");
                 assertEqual(angle2D("1", "2"), 0, "Cannot compute angle of strings");
                 assertEqual(angle2D(true, true), 0, "Cannot compute angle of booleans");
             }
-            testUnit("compute angle", 5) {
-                assertEqual(round(angle2D(1, 2)), 0, "When single numbers are provided, they should be translated to vector. Vectors with same direction does not have angle.");
+            testUnit("compute angle", 6) {
+                assertEqual(round(angle2D(1, 2)), 0, "When single numbers are provided, they should be translated to vector");
                 assertEqual(angle2D([1, 0], [0, 1]), 90, "Orthogonal vectors have an angle of 90°");
                 assertEqual(angle2D([1, 0], [0, -1]), 90, "Orthogonal vectors have an angle of 90°, whatever their direction");
                 assertEqual(angle2D([1, 0], [-1, 0]), 180, "Vectors with opposite direction have an angle of 180°");
-                assertEqual(round(angle2D([1, 2], rotp([1, 2], 75))), 75, "Should have an angle of 75°");
+                assertEqual(round(angle2D([1, 2], rotp([1, 2], 75))), 75, "Rotated vector should produce the expected angle");
+                assertEqual(round(angle2D([1, 2], rotp([1, 2], -75))), 75, "Vector rotated with a negative angle should produce the expected angle");
+            }
+        }
+        // test core/vector-2d/vertexAngle2D()
+        testModule("vertexAngle2D()", 2) {
+            testUnit("default value", 3) {
+                assertEqual(vertexAngle2D(), 0, "Should return 0 if no parameter was provided");
+                assertEqual(vertexAngle2D("1", "2", "3"), 0, "Cannot compute angle of strings");
+                assertEqual(vertexAngle2D(true, true, true), 0, "Cannot compute angle of booleans");
+            }
+            testUnit("compute angle", 7) {
+                assertEqual(round(vertexAngle2D(1, 2, 3)), 0, "When single numbers are provided, they should be translated to vector (0° case)");
+                assertEqual(round(vertexAngle2D(a=1, v=2, b=3)), 180, "When single numbers are provided, they should be translated to vector (180° case)");
+                assertEqual(vertexAngle2D([2, 1], [1, 2], [1, 1]), 90, "Orthogonal vectors have an angle of 90°");
+                assertEqual(vertexAngle2D([2, 1], [1, 0], [1, 1]), 90, "Orthogonal vectors have an angle of 90°, whatever their direction");
+                assertEqual(vertexAngle2D([2, 1], [0, 1], [1, 1]), 180, "Vectors with opposite direction have an angle of 180°");
+                assertEqual(round(vertexAngle2D([5, 7], rotp([1, 2], -75) + [4, 5], [4, 5])), 75, "Rotated vector should produce the expected angle");
+                assertEqual(round(vertexAngle2D([5, 7], rotp([1, 2], 75) + [4, 5], [4, 5])), 75, "Vector rotated with a negative angle should produce the expected angle");
+            }
+        }
+        // test core/vector-2d/vertexOutline2D()
+        testModule("vertexOutline2D()", 5) {
+            testUnit("default value", 5) {
+                assertEqual(vertexOutline2D(), [0, 0], "Should return [0, 0] if no parameter was provided");
+                assertEqual(vertexOutline2D("1", "2", "3", "4"),  [0, 0], "Cannot compute angle of strings");
+                assertEqual(vertexOutline2D(true, true, true, true),  [0, 0], "Cannot compute angle of booleans");
+                assertEqual(vertexOutline2D([], [], [], 0),  [0, 0], "Empty arrays should produce 0° angle");
+                assertEqual(vertexOutline2D([], [], [], 1),  [1, 0], "Empty arrays should produce 0° angle, the distance is then projected in this direction");
+            }
+            testUnit("single number", 2) {
+                assertApproxEqual(vertexOutline2D(a=3, v=2, b=1, distance=1), arcp([1, 1], 135) + [2, 2], "Single numbers, point above");
+                assertApproxEqual(vertexOutline2D(a=1, v=2, b=3, distance=1), arcp([1, 1], 315) + [2, 2], "Single numbers, point below");
+            }
+            testUnit("flat line", 8) {
+                assertApproxEqual(vertexOutline2D(a=[-1, 0], v=[0, 0], b=[1, 0], distance=1), [0, -1], "horizontal, left to right");
+                assertApproxEqual(vertexOutline2D(a=[1, 0], v=[0, 0], b=[-1, 0], distance=1), [0, 1], "horizontal, right to left");
+                assertApproxEqual(vertexOutline2D(a=[0, 1], v=[0, 0], b=[0, -1], distance=1), [-1, 0], "vertical, top to bottom");
+                assertApproxEqual(vertexOutline2D(a=[0, -1], v=[0, 0], b=[0, 1], distance=1), [1, 0], "vertical, bottom to top");
+
+                assertApproxEqual(vertexOutline2D(a=[1, -1], v=[0, 0], b=[-1, 1], distance=1), arcp([1, 1], 45), "bottom right to top left");
+                assertApproxEqual(vertexOutline2D(a=[1, 1], v=[0, 0], b=[-1, -1], distance=1), arcp([1, 1], 135), "top right to bottom left");
+                assertApproxEqual(vertexOutline2D(a=[-1, 1], v=[0, 0], b=[1, -1], distance=1), arcp([1, 1], 225), "top left to bottom right");
+                assertApproxEqual(vertexOutline2D(a=[-1, -1], v=[0, 0], b=[1, 1], distance=1), arcp([1, 1], 315), "bottom left to top right");
+            }
+            testUnit("inside vertex", 16) {
+                assertApproxEqual(vertexOutline2D(a=[2, 1], v=[1, 1], b=[1, 2], distance=1), [2, 2], "quadrant 1 [1,1], top right");
+                assertApproxEqual(vertexOutline2D(a=[2, 2], v=[2, 1], b=[1, 1], distance=1), [1, 2], "quadrant 1 [1,1], top left");
+                assertApproxEqual(vertexOutline2D(a=[1, 2], v=[2, 2], b=[2, 1], distance=1), [1, 1], "quadrant 1 [1,1], bottom left");
+                assertApproxEqual(vertexOutline2D(a=[1, 1], v=[1, 2], b=[2, 2], distance=1), [2, 1], "quadrant 1 [1,1], bottom right");
+
+                assertApproxEqual(vertexOutline2D(a=[-1, 1], v=[-2, 1], b=[-2, 2], distance=1), [-1, 2], "quadrant 2 [-1,1], top right");
+                assertApproxEqual(vertexOutline2D(a=[-1, 2], v=[-1, 1], b=[-2, 1], distance=1), [-2, 2], "quadrant 2 [-1,1], top left");
+                assertApproxEqual(vertexOutline2D(a=[-2, 2], v=[-1, 2], b=[-1, 1], distance=1), [-2, 1], "quadrant 2 [-1,1], bottom left");
+                assertApproxEqual(vertexOutline2D(a=[-2, 1], v=[-2, 2], b=[-1, 2], distance=1), [-1, 1], "quadrant 2 [-1,1], bottom right");
+
+                assertApproxEqual(vertexOutline2D(a=[-1, -2], v=[-2, -2], b=[-2, -1], distance=1), [-1, -1], "quadrant 3 [-1,-1], top right");
+                assertApproxEqual(vertexOutline2D(a=[-1, -1], v=[-1, -2], b=[-2, -2], distance=1), [-2, -1], "quadrant 3 [-1,-1], top left");
+                assertApproxEqual(vertexOutline2D(a=[-2, -1], v=[-1, -1], b=[-1, -2], distance=1), [-2, -2], "quadrant 3 [-1,-1], bottom left");
+                assertApproxEqual(vertexOutline2D(a=[-2, -2], v=[-2, -1], b=[-1, -1], distance=1), [-1, -2], "quadrant 3 [-1,-1], bottom right");
+
+                assertApproxEqual(vertexOutline2D(a=[2, -2], v=[1, -2], b=[1, -1], distance=1), [2, -1], "quadrant 4 [1,-1], top right");
+                assertApproxEqual(vertexOutline2D(a=[2, -1], v=[2, -2], b=[1, -2], distance=1), [1, -1], "quadrant 4 [1,-1], top left");
+                assertApproxEqual(vertexOutline2D(a=[1, -1], v=[2, -1], b=[2, -2], distance=1), [1, -2], "quadrant 4 [1,-1], bottom left");
+                assertApproxEqual(vertexOutline2D(a=[1, -2], v=[1, -1], b=[2, -1], distance=1), [2, -2], "quadrant 4 [1,-1], bottom right");
+            }
+            testUnit("outside vertex", 16) {
+                assertApproxEqual(vertexOutline2D(a=[2, 1], v=[2, 2], b=[1, 2], distance=1), [3, 3], "quadrant 1 [1,1], top right");
+                assertApproxEqual(vertexOutline2D(a=[2, 2], v=[1, 2], b=[1, 1], distance=1), [0, 3], "quadrant 1 [1,1], top left");
+                assertApproxEqual(vertexOutline2D(a=[1, 2], v=[1, 1], b=[2, 1], distance=1), [0, 0], "quadrant 1 [1,1], bottom left");
+                assertApproxEqual(vertexOutline2D(a=[1, 1], v=[2, 1], b=[2, 2], distance=1), [3, 0], "quadrant 1 [1,1], bottom right");
+
+                assertApproxEqual(vertexOutline2D(a=[-1, 1], v=[-1, 2], b=[-2, 2], distance=1), [0, 3], "quadrant 2 [-1,1], top right");
+                assertApproxEqual(vertexOutline2D(a=[-1, 2], v=[-2, 2], b=[-2, 1], distance=1), [-3, 3], "quadrant 2 [-1,1], top left");
+                assertApproxEqual(vertexOutline2D(a=[-2, 2], v=[-2, 1], b=[-1, 1], distance=1), [-3, 0], "quadrant 2 [-1,1], bottom left");
+                assertApproxEqual(vertexOutline2D(a=[-2, 1], v=[-1, 1], b=[-1, 2], distance=1), [0, 0], "quadrant 2 [-1,1], bottom right");
+
+                assertApproxEqual(vertexOutline2D(a=[-1, -2], v=[-1, -1], b=[-2, -1], distance=1), [0, 0], "quadrant 3 [-1,-1], top right");
+                assertApproxEqual(vertexOutline2D(a=[-1, -1], v=[-2, -1], b=[-2, -2], distance=1), [-3, 0], "quadrant 3 [-1,-1], top left");
+                assertApproxEqual(vertexOutline2D(a=[-2, -1], v=[-2, -2], b=[-1, -2], distance=1), [-3, -3], "quadrant 3 [-1,-1], bottom left");
+                assertApproxEqual(vertexOutline2D(a=[-2, -2], v=[-1, -2], b=[-1, -1], distance=1), [0, -3], "quadrant 3 [-1,-1], bottom right");
+
+                assertApproxEqual(vertexOutline2D(a=[2, -2], v=[2, -1], b=[1, -1], distance=1), [3, 0], "quadrant 4 [1,-1], top right");
+                assertApproxEqual(vertexOutline2D(a=[2, -1], v=[1, -1], b=[1, -2], distance=1), [0, 0], "quadrant 4 [1,-1], top left");
+                assertApproxEqual(vertexOutline2D(a=[1, -1], v=[1, -2], b=[2, -2], distance=1), [0, -3], "quadrant 4 [1,-1], bottom left");
+                assertApproxEqual(vertexOutline2D(a=[1, -2], v=[2, -2], b=[2, -1], distance=1), [3, -3], "quadrant 4 [1,-1], bottom right");
             }
         }
         // test core/vector-2d/sinp()

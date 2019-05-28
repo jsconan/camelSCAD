@@ -34,7 +34,7 @@ use <../../full.scad>
  * @author jsconan
  */
 module testCoreVector3D() {
-    testPackage("core/vector-3d.scad", 14) {
+    testPackage("core/vector-3d.scad", 15) {
         // test core/vector-3d/vector3D()
         testModule("vector3D()", 3) {
             testUnit("no parameter", 1) {
@@ -276,16 +276,33 @@ module testCoreVector3D() {
         // test core/vector-3d/angle3D()
         testModule("angle3D()", 2) {
             testUnit("default value", 3) {
-                assertEqual(angle3D(), 0, "Should return 0 if no vector was provided");
+                assertEqual(angle3D(), 0, "Should return 0 if no parameter was provided");
                 assertEqual(angle3D("1", "2"), 0, "Cannot compute angle of strings");
                 assertEqual(angle3D(true, true), 0, "Cannot compute angle of booleans");
             }
-            testUnit("compute angle", 5) {
-                assertEqual(round(angle3D(1, 2)), 0, "When single numbers are provided, they should be translated to vector. Vectors with same direction does not have angle.");
+            testUnit("compute angle", 6) {
+                assertEqual(round(angle3D(1, 2)), 0, "When single numbers are provided, they should be translated to vector");
                 assertEqual(angle3D([1, 0, 0], [0, 1, 0]), 90, "Orthogonal vectors have an angle of 90°");
                 assertEqual(angle3D([1, 0, 0], [0, -1, 0]), 90, "Orthogonal vectors have an angle of 90°, whatever their direction");
                 assertEqual(angle3D([1, 1, 1], [-1, -1, -1]), 0, "Vectors with opposite direction have an angle of 0°");
-                assertEqual(round(angle3D([1, 2, 3], rotate3DX([1, 2, 3], 10))), 10, "Should have an angle of 10");
+                assertEqual(round(angle3D([1, 2, 3], rotate3DX([1, 2, 3], 10))), 10, "Rotated vector should produce the expected angle");
+                assertEqual(round(angle3D([1, 2, 3], rotate3DX([1, 2, 3], -10))), 10, "Vector rotated with a negative angle should produce the expected angle");
+            }
+        }
+        // test core/vector-3d/vertexAngle3D()
+        testModule("vertexAngle3D()", 2) {
+            testUnit("default value", 3) {
+                assertEqual(vertexAngle3D(), 0, "Should return 0 if no parameter was provided");
+                assertEqual(vertexAngle3D("1", "2", "3"), 0, "Cannot compute angle of strings");
+                assertEqual(vertexAngle3D(true, true, true), 0, "Cannot compute angle of booleans");
+            }
+            testUnit("compute angle", 6) {
+                assertEqual(round(vertexAngle3D(1, 2, 3)), 0, "When single numbers are provided, they should be translated to vector");
+                assertEqual(vertexAngle3D([2, 1, 1], [1, 2, 1], [1, 1, 1]), 90, "Orthogonal vectors have an angle of 90°");
+                assertEqual(vertexAngle3D([2, 1, 1], [1, 0, 1], [1, 1, 1]), 90, "Orthogonal vectors have an angle of 90°, whatever their direction");
+                assertEqual(vertexAngle3D([2, 2, 2], [0, 0, 0], [1, 1, 1]), 0, "Vectors with opposite direction have an angle of 0°");
+                assertEqual(round(vertexAngle3D([5, 7, 9], rotate3DX([1, 2, 3], 10) + [4, 5, 6], [4, 5, 6])), 10, "Rotated vector should produce the expected angle");
+                assertEqual(round(vertexAngle3D([5, 7, 9], rotate3DX([1, 2, 3], -10) + [4, 5, 6], [4, 5, 6])), 10, "Vector rotated with a negative angle should produce the expected angle");
             }
         }
         // test core/vector-3d/rotate3DX()

@@ -34,7 +34,7 @@ use <../../../full.scad>
  * @author jsconan
  */
 module testShape3dPolyhedron() {
-    testPackage("shape/3D/polyhedron.scad", 5) {
+    testPackage("shape/3D/polyhedron.scad", 6) {
         // test shape/3D/polyhedron/sizeBox()
         testModule("sizeBox()", 2) {
             testUnit("default values", 3) {
@@ -151,6 +151,31 @@ module testShape3dPolyhedron() {
 
                 assertEqual(sizeStarBox(l=4, w=3, h=6, edges=5), [[4, 3, 6], [4, 3] * (1 - 3 / 5), 5], "Should accept separate length, width and height");
                 assertEqual(sizeStarBox(l=4, w=3, h=6, cl=2, cw=1, edges=5), [[4, 3, 6], [2, 1], 5], "Should accept separate core length and width");
+            }
+        }
+        // test shape/3D/polygon/sizeCrossBox()
+        testModule("sizeCrossBox()", 2) {
+            testUnit("default values", 3) {
+                assertEqual(sizeCrossBox(), [[1, 1, 1], [0, 0]], "Should always return a size even if not parameter has been provided");
+                assertEqual(sizeCrossBox("12", "12", "12"), [[1, 1, 1], [0, 0]], "Should always return a size even if wrong parameter has been provided (string)");
+                assertEqual(sizeCrossBox(true, true, true), [[1, 1, 1], [0, 0]], "Should always return a size even if wrong parameter has been provided (boolean)");
+            }
+            testUnit("compute size", 11) {
+                assertEqual(sizeCrossBox(3), [[3, 3, 3], [0, 0]], "Should produce a size vector from a single number size");
+                assertEqual(sizeCrossBox(3, 2), [[3, 3, 3], [2, 2]], "Should produce a size vector from a single number sizes");
+
+                assertEqual(sizeCrossBox([3, 2, 4], 1), [[3, 2, 4], [1, 1]], "Should accept vector for the outer size");
+                assertEqual(sizeCrossBox(3, [1, 2]), [[3, 3, 3], [1, 2]], "Should accept vector for the core size");
+
+                assertEqual(sizeCrossBox([3, 2, 1], 1, l=4), [[4, 2, 1], [1, 1]], "Should accept to override the length");
+                assertEqual(sizeCrossBox([3, 2, 1], 1, w=4), [[3, 4, 1], [1, 1]], "Should accept to override the width");
+                assertEqual(sizeCrossBox([3, 2, 1], 1, h=4), [[3, 2, 4], [1, 1]], "Should accept to override the height");
+
+                assertEqual(sizeCrossBox(3, [1, 1], cl=2), [[3, 3, 3], [2, 1]], "Should accept to override the core length");
+                assertEqual(sizeCrossBox(4, [1, 1], cw=2), [[4, 4, 4], [1, 2]], "Should accept to override the core width");
+
+                assertEqual(sizeCrossBox(l=4, w=3, h=2), [[4, 3, 2], [0, 0]], "Should accept separate length, width and height");
+                assertEqual(sizeCrossBox(l=4, w=3, h=2, cl=2, cw=1), [[4, 3, 2], [2, 1]], "Should accept separate core length and width");
             }
         }
     }
