@@ -2,9 +2,10 @@
 *.log
 
 # Results
-scripts/output
+output
 *.csg
 *.csv
+*.stl
 
 # Runtime data
 *.pid
