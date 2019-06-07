@@ -2,7 +2,7 @@
 #
 # MIT License
 #
-# Copyright (c) 2017 Jean-Sebastien CONAN
+# Copyright (c) 2017-2019 Jean-Sebastien CONAN
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -28,78 +28,16 @@
 #
 # Parses and displays the results of the unit tests.
 #
-# @package util/test
+# @package scripts
 # @author jsconan
 #
 
-name=suite
-if [ "$1" != "" ]; then
-    folder=$(dirname $1)
-    basename=$(basename $1 .scad)
-    if [ "${folder}" != "." ]; then
-        name="${folder}/${basename}"
-    else
-        name="${basename}"
-    fi
-fi
+scriptpath=$(dirname $0)
+project=$(pwd)
+srcpath=${project}/test
+dstpath=${project}/output
 
-scriptPath=$(dirname $0)
-project=$(dirname ${scriptPath})
-dstpath=${project}/scripts/output
-dstname=${dstpath}/${name//\//_}
-src=${project}/test/${name}.scad
-dst=${dstname}.csg
-output=${dstname}.log
-result=${dstname}.csv
+source "${scriptpath}/utils.sh"
 
-echo -e "\033[0m"
-
-echo "Checking path..."
-if [ ! -f "${src}" ]; then
-    echo -e "\033[31m"
-    echo "There is nothing to test!"
-    echo "${src} was not found!"
-    echo -e "\033[0m"
-    exit 1
-fi
-
-if [ ! -d "${dstpath}" ]; then
-    echo -e "\033[32mCreate output folder.\033[0m"
-    mkdir -p "${dstpath}" >/dev/null
-
-    if [ ! -d "${dstpath}" ]; then
-        echo -e "\033[31m"
-        echo "Cannot create output folder!"
-        echo -e "\033[0m"
-        exit 1
-    fi
-fi
-
-echo "Detecting OpenSCAD..."
-openscad -v >/dev/null 2>&1
-if [ "$?" != "0" ]; then
-    echo -e "\033[31m"
-    echo "It seems OpenSCAD has not been installed on your system."
-    echo "Or perhaps is it just not reachable..."
-    echo "Have you placed it in your environment PATH variable?"
-    echo -e "\033[0m"
-    exit 3
-fi
-
-echo "OpenSCAD has been detected."
-echo "Processing Unit Tests from ${src}..."
-
-openscad -o "${dst}" "${src}" -D CSV=true >"${output}" 2>&1
-
-if [ "$?" != "0" ]; then
-    echo -e "\033[31m"
-    echo "$(<${output})"
-else
-    sed -e 's/^ECHO: "\(.*\)"$/\1/g' "${output}" >"${result}"
-    awk -f "${scriptPath}/parse-test.awk" "${result}"
-fi
-
-rm "${dst}" "${output}" > /dev/null 2>&1
-
-echo -e "\033[0m"
-echo "Done!"
+scadcheck
+scadunittest "$1" "${srcpath}" "${dstpath}" "suite"
