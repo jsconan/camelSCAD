@@ -33,20 +33,20 @@
 #
 
 # List of color codes
-C_ERR="\033[31m"
-C_SEL="\033[32m"
-C_SPE="\033[33m"
-C_CTX="\033[36m"
-C_RST="\033[0m"
-C_MSG="\033[1m"
-C_INF="\033[32m"
+export C_ERR="\033[31m"
+export C_SEL="\033[32m"
+export C_SPE="\033[33m"
+export C_CTX="\033[36m"
+export C_RST="\033[0m"
+export C_MSG="\033[1m"
+export C_INF="\033[32m"
 
 # List of error codes
-E_ERROR=-1      # Generic error
-E_OPENSCAD=1    # OpenSCAD not installed
-E_NOTFOUND=2    # Path does not exist or is not reachable
-E_CREATE=3      # Cannot create the folder
-E_EMPTY=4       # Empty folder
+export E_ERROR=-1      # Generic error
+export E_OPENSCAD=1    # OpenSCAD not installed
+export E_NOTFOUND=2    # Path does not exist or is not reachable
+export E_CREATE=3      # Cannot create the folder
+export E_EMPTY=4       # Empty folder
 
 # Prints a colored message.
 #

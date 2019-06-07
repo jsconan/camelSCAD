@@ -33,7 +33,7 @@
 #
 
 # Path to the lib script
-libpath=$(dirname ${BASH_SOURCE[0]})
+export libpath=$(dirname ${BASH_SOURCE[0]})
 
 # Loads the lib files
 for lib in $(find "${libpath}/utils" -maxdepth 1 -name "*.sh"); do

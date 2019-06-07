@@ -33,13 +33,13 @@
 #
 
 # Defines the command for the OpenSCAD engine
-scadcmd="openscad"
+export scadcmd="openscad"
 
 # Defines the minimal required version for OpenSCAD
-scadver="2015.03"
+export scadver="2015.03"
 
 # Defines the file extension for OpenSCAD files
-scadext=".scad"
+export scadext=".scad"
 
 # Prints the name of an OpenSCAD module (file name without the extension).
 #
