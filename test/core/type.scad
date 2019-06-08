@@ -24,6 +24,7 @@
  */
 
 use <../../full.scad>
+include <../../core/constants.scad>
 
 /**
  * Part of the camelSCAD library.
@@ -34,7 +35,7 @@ use <../../full.scad>
  * @author jsconan
  */
 module testCoreType() {
-    testPackage("core/type.scad", 19) {
+    testPackage("core/type.scad", 21) {
         // test core/type/isUndef()
         testModule("isUndef()", 2) {
             testUnit("no parameter", 1) {
@@ -48,6 +49,41 @@ module testCoreType() {
                 assertEqual(isUndef("abc"), false, "A string is defined");
                 assertEqual(isUndef([]), false, "An empty array is defined");
                 assertEqual(isUndef([0]), false, "A vector is defined");
+            }
+        }
+        // test core/type/isNAN()
+        testModule("isNAN()", 2) {
+            testUnit("no parameter", 1) {
+                assertEqual(isNAN(), false, "No parameter, not NAN");
+            }
+            testUnit("parameter", 8) {
+                assertEqual(isNAN(undef), false, "Undef is not NAN");
+                assertEqual(isNAN(false), false, "A boolean is not NAN");
+                assertEqual(isNAN(0), false, "A number is not NAN");
+                assertEqual(isNAN(""), false, "An empty string is not NAN");
+                assertEqual(isNAN("abc"), false, "A string is not NAN");
+                assertEqual(isNAN([]), false, "An empty array is not NAN");
+                assertEqual(isNAN([0]), false, "A vector is not NAN");
+                assertEqual(isNAN(0/0), true, "A divisioon by zero produces NAN");
+            }
+        }
+        // test core/type/isInfinity()
+        testModule("isInfinity()", 2) {
+            testUnit("no parameter", 1) {
+                assertEqual(isInfinity(), false, "No parameter, not infinity");
+            }
+            testUnit("parameter", 11) {
+                assertEqual(isInfinity(undef), false, "Undef is not infinity");
+                assertEqual(isInfinity(false), false, "A boolean is not infinity");
+                assertEqual(isInfinity(42), false, "A finite number is not infinity");
+                assertEqual(isInfinity(""), false, "An empty string is not infinity");
+                assertEqual(isInfinity("abc"), false, "A string is not infinity");
+                assertEqual(isInfinity([]), false, "An empty array is not infinity");
+                assertEqual(isInfinity([0]), false, "A vector is not infinity");
+                assertEqual(isInfinity(INFINITY), true, "Positive constant");
+                assertEqual(isInfinity(-INFINITY), true, "Negative constant");
+                assertEqual(isInfinity(1e308*100), true, "Positive infinity");
+                assertEqual(isInfinity(-1e308*100), true, "Negative infinity");
             }
         }
         // test core/type/isNumber()

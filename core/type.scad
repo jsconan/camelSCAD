@@ -41,6 +41,22 @@
 function isUndef(value) = (value == undef);
 
 /**
+ * Checks if the value is NAN (Not A Number).
+ *
+ * @param * value - The value to check.
+ * @returns Boolean - Returns `true` whether the value is NAN.
+ */
+function isNAN(value) = (value != value);
+
+/**
+ * Checks if the value is infinite.
+ *
+ * @param * value - The value to check.
+ * @returns Boolean - Returns `true` whether the value is infinite.
+ */
+function isInfinity(value) = (value >= INFINITY || value <= -INFINITY);
+
+/**
  * Checks if the value is numeric.
  *
  * @param * value - The value to check.
