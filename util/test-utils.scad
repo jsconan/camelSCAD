@@ -58,11 +58,10 @@ CSV = false;
  * Default to HTML
  * @type String
  */
-$outputMode = $outputMode ? $outputMode
-             :CSV         ? "csv"
-             :ANSI        ? "ansi"
-             :CONSOLE     ? "text"
-                          : "html"
+outputMode = CSV        ? "csv"
+            :ANSI       ? "ansi"
+            :CONSOLE    ? "text"
+                        : "html"
 ;
 
 /**
@@ -75,9 +74,9 @@ $outputMode = $outputMode ? $outputMode
  * @returns String
  */
 function formatTestTitle(title, type, big) =
-    $outputMode == "html" ? formatTestTitleHTML(title, type, big)
-   :$outputMode == "ansi" ? formatTestTitleANSI(title, type, big)
-   :$outputMode == "csv"  ? formatTestTitleCSV(title, type, big)
+    outputMode == "html" ? formatTestTitleHTML(title, type, big)
+   :outputMode == "ansi" ? formatTestTitleANSI(title, type, big)
+   :outputMode == "csv"  ? formatTestTitleCSV(title, type, big)
                           : formatTestTitleText(title, type, big)
 ;
 
@@ -92,9 +91,9 @@ function formatTestTitle(title, type, big) =
  */
 function formatAssertResult(result, message, details) =
     let(details = assertDetails(details))
-    $outputMode == "html" ? formatAssertResultHTML(result, message, details)
-   :$outputMode == "ansi" ? formatAssertResultANSI(result, message, details)
-   :$outputMode == "csv"  ? formatAssertResultCSV(result, message, details)
+    outputMode == "html" ? formatAssertResultHTML(result, message, details)
+   :outputMode == "ansi" ? formatAssertResultANSI(result, message, details)
+   :outputMode == "csv"  ? formatAssertResultCSV(result, message, details)
                           : formatAssertResultText(result, message, details)
 ;
 
@@ -108,9 +107,9 @@ function formatAssertResult(result, message, details) =
  * @returns String
  */
 function formatExpectedAsserts(actual, expected, type) =
-    $outputMode == "html" ? formatExpectedAssertsHTML(actual, expected, type)
-   :$outputMode == "ansi" ? formatExpectedAssertsANSI(actual, expected, type)
-   :$outputMode == "csv"  ? formatExpectedAssertsCSV(actual, expected, type)
+    outputMode == "html" ? formatExpectedAssertsHTML(actual, expected, type)
+   :outputMode == "ansi" ? formatExpectedAssertsANSI(actual, expected, type)
+   :outputMode == "csv"  ? formatExpectedAssertsCSV(actual, expected, type)
                           : formatExpectedAssertsText(actual, expected, type)
 ;
 
