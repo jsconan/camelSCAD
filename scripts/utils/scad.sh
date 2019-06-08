@@ -134,8 +134,10 @@ scadcall() {
     local outputpath="$1"; shift
     local params=()
     for var in "$@"; do
-        params+=("-D")
-        params+=("${var}")
+        if [ "${var}" != "" ]; then
+            params+=("-D")
+            params+=("${var}")
+        fi
     done
     ${scadcmd} --render -o "${outputpath}" "${sourcepath}" "${params[@]}"
 }
