@@ -406,7 +406,7 @@ module testCoreMaths() {
                 assertEqual(apothem(6, 8), 8 * cos(30), "Apothem of an hexagon, using the default order of parameters");
                 assertEqual(apothem(6, 8, 10), 8 * cos(30), "Apothem of an hexagon, using the default order of parameters with all provided (radius should predomin)");
 
-                assertEqual(apothem(n=4, r=sqrt(32) / 2), apothem(n=4, l=4), "Apothem of a square, comparing results using radius and side");
+                assertApproxEqual(apothem(n=4, r=sqrt(32) / 2), apothem(n=4, l=4), "Apothem of a square, comparing results using radius and side");
                 assertApproxEqual(apothem(n=4, l=4), 2, "Apothem of a square, comparing results and side");
                 assertApproxEqual(apothem(n=6, r=4), apothem(n=6, l=4), "Apothem of an hexagon, comparing results using radius and side");
             }
