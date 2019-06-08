@@ -88,7 +88,8 @@ function sinusoid(l, w, h, p, o, a) =
         h = divisor(h),
         step = l / (fragments(h) * l / w)
     )
-    [
+    !l ? []
+   :[
         for (x = [0 : step : l])
             let( p = sinp(x=x, w=w, h=h, p=p, o=o) )
             a ? rotp(p, a) : p
@@ -115,7 +116,8 @@ function cosinusoid(l, w, h, p, o, a) =
         h = divisor(h),
         step = l / (fragments(h) * l / w)
     )
-    [
+    !l ? []
+   :[
         for (y = [0 : step : l])
             let( p = cosp(y=y, w=w, h=h, p=p, o=o) )
             a ? rotp(p, a) : p
