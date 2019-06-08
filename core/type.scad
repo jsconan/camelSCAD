@@ -62,7 +62,7 @@ function isInfinity(value) = (value >= INFINITY || value <= -INFINITY);
  * @param * value - The value to check.
  * @returns Boolean - Returns `true` whether the value is numeric.
  */
-function isNumber(value) = (sign(value) != undef);
+function isNumber(value) = (value == value && sign(value) != undef);
 
 /**
  * Checks if the value is integer.
@@ -78,7 +78,7 @@ function isInteger(value) = (value != undef && floor(value) == value);
  * @param * value - The value to check.
  * @returns Boolean - Returns `true` whether the value is equal to 0 or near enough.
  */
-function isZero(value) = (sign(value) != undef && value > -EPSILON && value < EPSILON);
+function isZero(value) = (isNumber(value) && value > -EPSILON && value < EPSILON);
 
 /**
  * Checks if the value is boolean.
@@ -151,7 +151,7 @@ function number(value) = value == true ? 1 : float(value);
  * @param * value - The value to cast.
  * @returns Number - Returns a number. If the value cannot be casted, 0 will be returned.
  */
-function float(value) = sign(value) ? value : 0;
+function float(value) = value && isNumber(value) ? value : 0;
 
 /**
  * Typecasts the value to a float, and ensures it is a safe divisor.
@@ -160,7 +160,7 @@ function float(value) = sign(value) ? value : 0;
  * @param * value - The value to cast.
  * @returns Number - Returns a number. If the value cannot be casted, of if the value is 0, 1 will be returned.
  */
-function divisor(value) = sign(value) ? value : 1;
+function divisor(value) = value && isNumber(value) ? value : 1;
 
 /**
  * Typecasts the value to an integer.
@@ -169,9 +169,10 @@ function divisor(value) = sign(value) ? value : 1;
  * @returns Number - Returns a number. If the value cannot be casted, 0 will be returned.
  */
 function integer(value) =
-    let( s = sign(value) )
-    s > 0 ? floor(value)
-   :s < 0 ? ceil(value)
+    !value ? 0
+   :let( value = float(value) )
+    value > 0 ? floor(value)
+   :value < 0 ? ceil(value)
    :0
 ;
 

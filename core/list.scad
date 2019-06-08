@@ -99,7 +99,7 @@ function reverse(collection) =
  * @param Array collection - The array to flatten.
  * @returns Array
  */
-function flatten(collection) = [ for (a = arrayOr(collection, [])) for (b = a) b ];
+function flatten(collection) = [ for (a = arrayOr(collection, [])) for (b = isString(a) ? [a] : a) b ];
 
 /**
  * Finds the index of a key in a collection.
