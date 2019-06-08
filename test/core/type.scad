@@ -34,7 +34,7 @@ use <../../full.scad>
  * @author jsconan
  */
 module testCoreType() {
-    testPackage("core/type.scad", 19) {
+    testPackage("core/type.scad", 20) {
         // test core/type/isUndef()
         testModule("isUndef()", 2) {
             testUnit("no parameter", 1) {
@@ -48,6 +48,22 @@ module testCoreType() {
                 assertEqual(isUndef("abc"), false, "A string is defined");
                 assertEqual(isUndef([]), false, "An empty array is defined");
                 assertEqual(isUndef([0]), false, "A vector is defined");
+            }
+        }
+        // test core/type/isNAN()
+        testModule("isNAN()", 2) {
+            testUnit("no parameter", 1) {
+                assertEqual(isNAN(), false, "No parameter, not NAN");
+            }
+            testUnit("parameter", 8) {
+                assertEqual(isNAN(undef), false, "Undef is not NAN");
+                assertEqual(isNAN(false), false, "A boolean is not NAN");
+                assertEqual(isNAN(0), false, "A number is not NAN");
+                assertEqual(isNAN(""), false, "An empty string is not NAN");
+                assertEqual(isNAN("abc"), false, "A string is not NAN");
+                assertEqual(isNAN([]), false, "An empty array is not NAN");
+                assertEqual(isNAN([0]), false, "A vector is not NAN");
+                assertEqual(isNAN(0/0), true, "A divisioon by zero produces NAN");
             }
         }
         // test core/type/isNumber()
