@@ -40,6 +40,8 @@
  */
 module testPackage(title, expected) {
     $testPackage = string(title);
+    $testModule = "";
+    $testUnit = "";
 
     displayTestTitle(title, "package", true);
     children();
