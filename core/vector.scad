@@ -40,9 +40,13 @@
  * @returns Vector
  */
 function vadd(v, value) =
-    len(v) ?
-    let( value = float(value) )
-    [ for (i = v) float(i) + value ]
+    len(v) ? (
+        let(
+            v = array(v),
+            value = float(value)
+        )
+        [ for (i = v) float(i) + value ]
+    )
    :[]
 ;
 
@@ -54,9 +58,13 @@ function vadd(v, value) =
  * @returns Vector
  */
 function vsub(v, value) =
-    len(v) ?
-    let( value = float(value) )
-    [ for (i = v) float(i) - value ]
+    len(v) ? (
+        let(
+            v = array(v),
+            value = float(value)
+        )
+        [ for (i = v) float(i) - value ]
+    )
    :[]
 ;
 
@@ -106,8 +114,13 @@ function vdiv(a, b) =
  * @returns Vector
  */
 function vmin(v, value) =
-    len(v) ? let( value = float(value) )
-    [ for (i = v) min(float(i), value) ]
+    len(v) ? (
+        let(
+            v = array(v),
+            value = float(value)
+        )
+        [ for (i = v) min(float(i), value) ]
+    )
    :[]
 ;
 
@@ -119,8 +132,13 @@ function vmin(v, value) =
  * @returns Vector
  */
 function vmax(v, value) =
-    len(v) ? let( value = float(value) )
-    [ for (i = v) max(float(i), value) ]
+    len(v) ? (
+        let(
+            v = array(v),
+            value = float(value)
+        )
+        [ for (i = v) max(float(i), value) ]
+    )
    :[]
 ;
 
@@ -132,8 +150,13 @@ function vmax(v, value) =
  * @returns Vector
  */
 function vpow(v, power=2) =
-    len(v) ? let( power = float(power) )
-    [ for (i = v) pow(float(i), power) ]
+    len(v) ? (
+        let(
+            v = array(v),
+            power = float(power)
+        )
+        [ for (i = v) pow(float(i), power) ]
+    )
    :[]
 ;
 
@@ -144,8 +167,11 @@ function vpow(v, power=2) =
  * @returns Vector
  */
 function vabs(v) =
-    len(v) ? [ for (i = v) abs(float(i)) ]
-           : []
+    len(v) ? (
+        let( v = array(v) )
+        [ for (i = v) abs(float(i)) ]
+    )
+   :[]
 ;
 
 /**
@@ -155,8 +181,11 @@ function vabs(v) =
  * @returns Vector
  */
 function vsign(v) =
-    len(v) ? [ for (i = v) float(sign(i)) ]
-           : []
+    len(v) ? (
+        let( v = array(v) )
+        [ for (i = v) float(sign(i)) ]
+    )
+   :[]
 ;
 
 /**
