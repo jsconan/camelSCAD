@@ -141,6 +141,12 @@ MAX_DECIMALS = 7;
 MAX_RECURSE = 32;
 
 /**
+ * A value representing the Infinity.
+ * @type Number
+ */
+INFINITY = 1e200 * 1e200;
+
+/**
  * A value utilized to align wall and ensure proper cuts on one side.
  * @type Number
  */
