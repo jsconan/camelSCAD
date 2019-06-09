@@ -399,9 +399,9 @@ function drawPeg(size, r, d, l, w, h, rx, ry, dx, dy) =
  * @param Number [dy] - The vertical diameter.
  * @returns Vector[]
  */
-function drawPlate(size, r, d, w, h, rx, ry, dx, dy) =
+function drawPlate(size, r, d, l, w, h, rx, ry, dx, dy) =
     let(
-        specs = sizePlate(size=size, r=r, d=d, w=w, h=h, rx=rx, ry=ry, dx=dx, dy=dy),
+        specs = sizePlate(size=size, r=r, d=d, l=l, w=w, h=h, rx=rx, ry=ry, dx=dx, dy=dy),
         size = specs[0],
         radius = specs[1],
         center = [
