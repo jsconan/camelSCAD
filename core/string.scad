@@ -2,7 +2,7 @@
  * @license
  * MIT License
  *
- * Copyright (c) 2017 Jean-Sebastien CONAN
+ * Copyright (c) 2017-2019 Jean-Sebastien CONAN
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -60,7 +60,7 @@ function wrap(prefix, content, suffix) =
  */
 function substr(s, start, length) =
     let(
-        s = stringOr(s, ""),
+        s = string(s),
         l = len(s),
         start = start < 0 ? max(0, start + l) : integer(start),
         end = min(start + numberOr(length, l), l) - 1
@@ -94,6 +94,7 @@ function indexOf(s, value, offset) =
  */
 function lastIndexOf(s, value, offset) =
     let(
+        s = string(s),
         offset = numberOr(offset, len(s) - 1),
         index = [ for (p = occurences(s, value, true)) if (p <= offset) p ]
     )
@@ -110,7 +111,8 @@ function lastIndexOf(s, value, offset) =
  */
 function join(terms, glue, offset=0) =
     let(
-        glue = uor(glue, ""),
+        glue = string(glue),
+        terms = array(terms),
         count = len(terms),
         next = offset + 1
     )
@@ -165,7 +167,7 @@ function replace(s, from, to,
                  positions, offset=0, i=0) =
     isUndef(positions) ?
         let(
-            s = stringOr(s, ""),
+            s = string(s),
             from = string(from),
             to = string(to),
             positions = occurences(s, from)
@@ -197,7 +199,7 @@ function replace(s, from, to,
  */
 function occurences(s, value, reverse) =
     let(
-        s = stringOr(s, ""),
+        s = string(s),
         value = string(value),
         length = len(value),
         lastInString = len(s) - 1,
