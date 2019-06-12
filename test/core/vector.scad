@@ -2,7 +2,7 @@
  * @license
  * MIT License
  *
- * Copyright (c) 2017 Jean-Sebastien CONAN
+ * Copyright (c) 2017-2019 Jean-Sebastien CONAN
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -41,9 +41,9 @@ module testCoreVector() {
                 assertEmptyArray(vadd());
             }
             testUnit("not array", 3) {
-                assertEmptyArray(vadd(0, 1), "A number is not an array");
-                assertEmptyArray(vadd(true, false), "A boolean is not an array");
-                assertEqual(vadd("foo", "bar"), [0], "A string is not an array, but Should be casted");
+                assertEqual(vadd(1, 1), [2], "Number should be casted to array");
+                assertEqual(vadd(true, false), [0], "Boolean should be casted to number and then array");
+                assertEqual(vadd("foo", "bar"), [0], "String should be casted to number and then array");
             }
             testUnit("not vector", 1) {
                 assertEqual(vadd([1, "2", 3], 2), [3, 2, 5], "Add 2 to each terms");
@@ -64,9 +64,9 @@ module testCoreVector() {
                 assertEmptyArray(vsub());
             }
             testUnit("not array", 3) {
-                assertEmptyArray(vsub(0, 1), "A number is not an array");
-                assertEmptyArray(vsub(true, false), "A boolean is not an array");
-                assertEqual(vsub("foo", "bar"), [0], "A string is not an array, but Should be casted");
+                assertEqual(vsub(1, 1), [0], "Number should be casted to array");
+                assertEqual(vsub(true, false), [0], "Boolean should be casted to number and then array");
+                assertEqual(vsub("foo", "bar"), [0], "String should be casted to number and then array");
             }
             testUnit("not vector", 1) {
                 assertEqual(vsub([1, "2", 3], 2), [-1, -2, 1], "Subtract 2 from each terms");
@@ -87,11 +87,11 @@ module testCoreVector() {
                 assertEmptyArray(vmul());
             }
             testUnit("not array", 5) {
-                assertEmptyArray(vmul(0, 1), "A number is not an array");
-                assertEmptyArray(vmul(true, false), "A boolean is not an array");
-                assertEqual(vmul("foo", "bar"), [0, 0, 0], "A string is not an array, but Should be casted");
-                assertEqual(vmul("foo", [1, 2]), [0, 0, 0], "A string is not an array, but Should be casted");
-                assertEqual(vmul([1, 2], "bar"), [0, 0, 0], "A string is not an array, but Should be casted");
+                assertEqual(vmul(6, 2), [12], "Number should be casted to array");
+                assertEqual(vmul(true, false), [0], "Boolean should be casted to number and then array");
+                assertEqual(vmul("foo", "bar"), [0], "String should be casted to number and then array");
+                assertEqual(vmul("foo", [1, 2]), [0, 0], "String should be casted to number and then array");
+                assertEqual(vmul([1, 2], "bar"), [0, 0], "String should be casted to number and then array");
             }
             testUnit("not vector", 3) {
                 assertEqual(vmul([1, "2", 3], [2, 2, 2]), [2, 0, 6], "Multiply 2 arrays");
@@ -110,11 +110,11 @@ module testCoreVector() {
                 assertEmptyArray(vdiv());
             }
             testUnit("not array", 5) {
-                assertEmptyArray(vdiv(0, 1), "A number is not an array");
-                assertEmptyArray(vdiv(true, false), "A boolean is not an array");
-                assertEqual(vdiv("foo", "bar"), [0, 0, 0], "A string is not an array, but Should be casted");
-                assertEqual(vdiv("foo", [1, 2]), [0, 0, 0], "A string is not an array, but Should be casted");
-                assertEqual(vdiv([1, 2], "bar"), [1, 2, 0], "A string is not an array, but Should be casted");
+                assertEqual(vdiv(6, 2), [3], "Number should be casted to array");
+                assertEqual(vdiv(true, false), [0], "Boolean should be casted to number and then array");
+                assertEqual(vdiv("foo", "bar"), [0], "String should be casted to number and then array");
+                assertEqual(vdiv("foo", [1, 2]), [0, 0], "String should be casted to number and then array");
+                assertEqual(vdiv([1, 2], "bar"), [1, 2], "String should be casted to number and then array");
             }
             testUnit("not vector", 3) {
                 assertEqual(vdiv([1, "2", 3], [2, 2, 2]), [0.5, 0, 1.5], "Divide 2 arrays");
@@ -134,9 +134,9 @@ module testCoreVector() {
                 assertEmptyArray(vmin());
             }
             testUnit("not array", 3) {
-                assertEmptyArray(vmin(0, 1), "A number is not an array");
-                assertEmptyArray(vmin(true, false), "A boolean is not an array");
-                assertEqual(vmin("foo", "bar"), [0], "A string is not an array, but Should be casted");
+                assertEqual(vmin(2, 1), [1], "Number should be casted to array");
+                assertEqual(vmin(true, false), [0], "Boolean should be casted to number and then array");
+                assertEqual(vmin("foo", "bar"), [0], "String should be casted to number and then array");
             }
             testUnit("not vector", 1) {
                 assertEqual(vmin([1, "2", 3], 2), [1, 0, 2], "Gets the values under 2 from an array");
@@ -157,9 +157,9 @@ module testCoreVector() {
                 assertEmptyArray(vmax());
             }
             testUnit("not array", 3) {
-                assertEmptyArray(vmax(0, 1), "A number is not an array");
-                assertEmptyArray(vmax(true, false), "A boolean is not an array");
-                assertEqual(vmax("foo", "bar"), [0], "A string is not an array, but Should be casted");
+                assertEqual(vmax(2, 1), [2], "Number should be casted to array");
+                assertEqual(vmax(true, false), [0], "Boolean should be casted to number and then array");
+                assertEqual(vmax("foo", "bar"), [0], "String should be casted to number and then array");
             }
             testUnit("not vector", 1) {
                 assertEqual(vmax([1, "2", 3], 2), [2, 2, 3], "Gets the values above 2 from an array");
@@ -180,9 +180,9 @@ module testCoreVector() {
                 assertEmptyArray(vpow());
             }
             testUnit("not array", 3) {
-                assertEmptyArray(vpow(0, 1), "A number is not an array");
-                assertEmptyArray(vpow(true, false), "A boolean is not an array");
-                assertEqual(vpow("foo", "bar"), [1], "A string is not an array, but Should be casted");
+                assertEqual(vpow(2, 2), [4], "Number should be casted to array");
+                assertEqual(vpow(true, false), [1], "Boolean should be casted to number and then array");
+                assertEqual(vpow("foo", "bar"), [1], "String should be casted to number and then array");
             }
             testUnit("not vector", 1) {
                 assertEqual(vpow([1, "2", 3], 2), [1, 0, 9], "Gets the power of 2 for each values from an array");
@@ -204,9 +204,9 @@ module testCoreVector() {
                 assertEmptyArray(vabs());
             }
             testUnit("not array", 3) {
-                assertEmptyArray(vabs(0), "A number is not an array");
-                assertEmptyArray(vabs(true), "A boolean is not an array");
-                assertEqual(vabs("foo"), [0], "A string is not an array, but Should be casted");
+                assertEqual(vabs(1), [1], "Number should be casted to array");
+                assertEqual(vabs(true), [0], "Boolean should be casted to number and then array");
+                assertEqual(vabs("foo"), [0], "String should be casted to number and then array");
             }
             testUnit("not vector", 1) {
                 assertEqual(vabs([-1, "2", 3]), [1, 0, 3], "Gets positive values from an array");
@@ -222,9 +222,9 @@ module testCoreVector() {
                 assertEmptyArray(vsign());
             }
             testUnit("not array", 3) {
-                assertEmptyArray(vsign(0), "A number is not an array");
-                assertEmptyArray(vsign(true), "A boolean is not an array");
-                assertEqual(vsign("foo"), [0], "A string is not an array, but Should be casted");
+                assertEqual(vsign(1), [1], "Number should be casted to array");
+                assertEqual(vsign(true), [0], "Boolean should be casted to number and then array");
+                assertEqual(vsign("foo"), [0], "String should be casted to number and then array");
             }
             testUnit("not vector", 1) {
                 assertEqual(vsign([-1, "2", 3]), [-1, 0, 1], "Gets sign from an array");
@@ -240,7 +240,7 @@ module testCoreVector() {
                 assertEqual(vsum(), 0, "The sum of a missing array");
             }
             testUnit("not array", 3) {
-                assertEqual(vsum(0), 0, "A number is not an array");
+                assertEqual(vsum(1), 1, "Number should be casted to array");
                 assertEqual(vsum(true), 0, "A boolean is not an array");
                 assertEqual(vsum("foo"), 0, "A string is not an array");
             }
@@ -263,7 +263,7 @@ module testCoreVector() {
                 assertEqual(vaverage(), 0, "The sum of a missing array");
             }
             testUnit("not array", 3) {
-                assertEqual(vaverage(0), 0, "A number is not an array");
+                assertEqual(vaverage(1), 1, "Number should be casted to array");
                 assertEqual(vaverage(true), 0, "A boolean is not an array");
                 assertEqual(vaverage("foo"), 0, "A string is not an array");
             }

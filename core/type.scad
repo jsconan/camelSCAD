@@ -2,7 +2,7 @@
  * @license
  * MIT License
  *
- * Copyright (c) 2017 Jean-Sebastien CONAN
+ * Copyright (c) 2017-2019 Jean-Sebastien CONAN
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -62,7 +62,7 @@ function isInfinity(value) = (value >= INFINITY || value <= -INFINITY);
  * @param * value - The value to check.
  * @returns Boolean - Returns `true` whether the value is numeric.
  */
-function isNumber(value) = (value == value && sign(value) != undef);
+function isNumber(value) = (value != undef && value == value && value * 1 == value && concat(value) != value);
 
 /**
  * Checks if the value is integer.
@@ -70,7 +70,7 @@ function isNumber(value) = (value == value && sign(value) != undef);
  * @param * value - The value to check.
  * @returns Boolean - Returns `true` whether the value is integer.
  */
-function isInteger(value) = (value != undef && floor(value) == value);
+function isInteger(value) = (isNumber(value) && floor(value) == value);
 
 /**
  * Checks if the value is small enough to be considered equal to 0.
@@ -94,7 +94,7 @@ function isBoolean(value) = (value == true || value == false);
  * @param * value - The value to check.
  * @returns Boolean - Returns `true` whether the value is a string.
  */
-function isString(value) = (len(value) != undef && concat(value) != value);
+function isString(value) = (str(value) == value);
 
 /**
  * Checks if the value is an array or a vector.
@@ -102,7 +102,7 @@ function isString(value) = (len(value) != undef && concat(value) != value);
  * @param * value - The value to check.
  * @returns Boolean - Returns `true` whether the value is an array or a vector.
  */
-function isArray(value) = (len(value) != undef && concat(value) == value);
+function isArray(value) = (concat(value) == value);
 
 /**
  * Checks if the value is a vector.
@@ -110,7 +110,7 @@ function isArray(value) = (len(value) != undef && concat(value) == value);
  * @param * value - The value to check.
  * @returns Boolean - Returns `true` whether the value is a vector.
  */
-function isVector(value) = (len(value) != undef && value * 1 == value);
+function isVector(value) = (concat(value) == value && value * 1 == value);
 
 /**
  * Checks if the value is a N-dimensions vector.
@@ -119,7 +119,7 @@ function isVector(value) = (len(value) != undef && value * 1 == value);
  * @param Number length - The required length of the vector.
  * @returns Boolean - Returns `true` whether the value is a vector and has the required length.
  */
-function isVectorN(value, length) = (len(value) == float(length) && value * 1 == value);
+function isVectorN(value, length) = (concat(value) == value && len(value) == float(length) && value * 1 == value);
 
 /**
  * Checks if the value is a 2D vector.
@@ -127,7 +127,7 @@ function isVectorN(value, length) = (len(value) == float(length) && value * 1 ==
  * @param * value - The value to check.
  * @returns Boolean - Returns `true` whether the value is a 2D vector.
  */
-function isVector2D(value) = (len(value) == 2 && value * 1 == value);
+function isVector2D(value) = (concat(value) == value && len(value) == 2 && value * 1 == value);
 
 /**
  * Checks if the value is a 3D vector.
@@ -135,7 +135,7 @@ function isVector2D(value) = (len(value) == 2 && value * 1 == value);
  * @param * value - The value to check.
  * @returns Boolean - Returns `true` whether the value is a 3D vector.
  */
-function isVector3D(value) = (len(value) == 3 && value * 1 == value);
+function isVector3D(value) = (concat(value) == value && len(value) == 3 && value * 1 == value);
 
 /**
  * Typecasts the value to a number.
@@ -215,8 +215,10 @@ function array(value) = isUndef(value) ? [] : concat(value);
 function vector(value, length) =
     let(
         array = isArray(value),
-        l = array ? len(value) : 0,
-        length = float(isUndef(length) ? l : length)
+        length = float(
+            isUndef(length) ? (array ? len(value) : 0)
+                            : length
+        )
     )
     !array ? fill(float(value), length)
     :length ? [ for (i = [0 : length - 1]) float(value[i]) ]

@@ -2,7 +2,7 @@
  * @license
  * MIT License
  *
- * Copyright (c) 2017 Jean-Sebastien CONAN
+ * Copyright (c) 2017-2019 Jean-Sebastien CONAN
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -56,7 +56,7 @@ module testCoreType() {
             testUnit("no parameter", 1) {
                 assertEqual(isNAN(), false, "No parameter, not NAN");
             }
-            testUnit("parameter", 8) {
+            testUnit("parameter", 9) {
                 assertEqual(isNAN(undef), false, "Undef is not NAN");
                 assertEqual(isNAN(false), false, "A boolean is not NAN");
                 assertEqual(isNAN(0), false, "A number is not NAN");
@@ -64,7 +64,8 @@ module testCoreType() {
                 assertEqual(isNAN("abc"), false, "A string is not NAN");
                 assertEqual(isNAN([]), false, "An empty array is not NAN");
                 assertEqual(isNAN([0]), false, "A vector is not NAN");
-                assertEqual(isNAN(0/0), true, "A divisioon by zero produces NAN");
+                assertEqual(isNAN(0/0), true, "A division by zero produces NAN");
+                assertEqual(isNAN(NAN), true, "The constant NAN is NAN");
             }
         }
         // test core/type/isInfinity()
@@ -91,7 +92,7 @@ module testCoreType() {
             testUnit("no parameter", 1) {
                 assertEqual(isNumber(), false, "No parameter, not a number");
             }
-            testUnit("parameter", 13) {
+            testUnit("parameter", 15) {
                 assertEqual(isNumber(undef), false, "Undef is not a numeric");
                 assertEqual(isNumber(false), false, "False is not a number");
                 assertEqual(isNumber(true), false, "True is not a number");
@@ -105,6 +106,8 @@ module testCoreType() {
                 assertEqual(isNumber("0"), false, "A string is not a number");
                 assertEqual(isNumber([]), false, "An empty array is not a number");
                 assertEqual(isNumber([0]), false, "A vector is not a number");
+                assertEqual(isNumber(0/0), false, "A division by zero produces NAN");
+                assertEqual(isNumber(NAN), false, "The constant NAN is not a number");
             }
         }
         // test core/type/isInteger()

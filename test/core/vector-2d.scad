@@ -2,7 +2,7 @@
  * @license
  * MIT License
  *
- * Copyright (c) 2017 Jean-Sebastien CONAN
+ * Copyright (c) 2017-2019 Jean-Sebastien CONAN
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -480,10 +480,10 @@ module testCoreVector2D() {
                     vmul(vector2D((100 / 9 - sqrt(40)) / (20 / 9)), [1, -1 / 3]) + [0, 17 / 3],
                     vmul(vector2D((100 / 9 + sqrt(40)) / (20 / 9)), [1, -1 / 3]) + [0, 17 / 3]
                 ], "Leaned line");
-                assertApproxEqual(circleLineIntersect2D([2, 5], [8, 3], [10, 15], 3), [], "Leaned line, no intersection");
-                assertApproxEqual(circleLineIntersect2D([1, 1], [5, 1], [3, 3], 1), [], "Horizontal line, no intersection");
-                assertApproxEqual(circleLineIntersect2D([1, 1], [1, 5], [3, 3], 1), [], "Vertical line, no intersection");
-                assertApproxEqual(circleLineIntersect2D([1, 1], [1, 1], [3, 3], 1), [], "Point, no intersection");
+                assertEmptyArray(circleLineIntersect2D([2, 5], [8, 3], [10, 15], 3), "Leaned line, no intersection");
+                assertEmptyArray(circleLineIntersect2D([1, 1], [5, 1], [3, 3], 1), "Horizontal line, no intersection");
+                assertEmptyArray(circleLineIntersect2D([1, 1], [1, 5], [3, 3], 1), "Vertical line, no intersection");
+                assertEmptyArray(circleLineIntersect2D([1, 1], [1, 1], [3, 3], 1), "Point, no intersection");
             }
             testUnit("negative", 15) {
                 assertApproxEqual(circleLineIntersect2D(-1, -2, -3, -4), [vector2D((-12 - sqrt(128)) / 4), vector2D((-12 + sqrt(128)) / 4)], "Numbers should be converted to vectors");
@@ -500,10 +500,10 @@ module testCoreVector2D() {
                     vmul(vector2D((-100 / 9 - sqrt(40)) / (20 / 9)), [1, -1 / 3]) - [0, 17 / 3],
                     vmul(vector2D((-100 / 9 + sqrt(40)) / (20 / 9)), [1, -1 / 3]) - [0, 17 / 3]
                 ], "Leaned line");
-                assertApproxEqual(circleLineIntersect2D([-2, -5], [-8, -3], [-10, -15], -3), [], "Leaned line, no intersection");
-                assertApproxEqual(circleLineIntersect2D([-1, -1], [-5, -1], [-3, -3], -1), [], "Horizontal line, no intersection");
-                assertApproxEqual(circleLineIntersect2D([-1, -1], [-1, -5], [-3, -3], -1), [], "Vertical line, no intersection");
-                assertApproxEqual(circleLineIntersect2D([-1, -1], [-1, -1], [-3, -3], -1), [], "Point, no intersection");
+                assertEmptyArray(circleLineIntersect2D([-2, -5], [-8, -3], [-10, -15], -3), "Leaned line, no intersection");
+                assertEmptyArray(circleLineIntersect2D([-1, -1], [-5, -1], [-3, -3], -1), "Horizontal line, no intersection");
+                assertEmptyArray(circleLineIntersect2D([-1, -1], [-1, -5], [-3, -3], -1), "Vertical line, no intersection");
+                assertEmptyArray(circleLineIntersect2D([-1, -1], [-1, -1], [-3, -3], -1), "Point, no intersection");
             }
         }
         // test core/vector-2d/circleIntersect2D()
@@ -512,10 +512,10 @@ module testCoreVector2D() {
                 assertEqual(circleIntersect2D(), [], "Without parameter the function cannot compute the intersection");
             }
             testUnit("wrong type", 4) {
-                assertEqual(circleIntersect2D("10", "10", "10", "10"), [], "Cannot compute intersection of strings");
-                assertEqual(circleIntersect2D(true, true, true, true), [], "Cannot compute intersection of booleans");
-                assertEqual(circleIntersect2D([], [], [], []), [], "Cannot compute intersection of empty arrays");
-                assertEqual(circleIntersect2D(["10"], ["10"], ["10"], ["10"]), [], "Cannot compute intersection of arrays");
+                assertEmptyArray(circleIntersect2D("10", "10", "10", "10"), "Cannot compute intersection of strings");
+                assertEmptyArray(circleIntersect2D(true, true, true, true), "Cannot compute intersection of booleans");
+                assertEmptyArray(circleIntersect2D([], [], [], []), "Cannot compute intersection of empty arrays");
+                assertEmptyArray(circleIntersect2D(["10"], ["10"], ["10"], ["10"]), "Cannot compute intersection of arrays");
             }
             testUnit("positive", 13) {
                 assertApproxEqual(circleIntersect2D(1, 2, 3, 4), [[(2 - sqrt(28)) / 4, 1 - (2 - sqrt(28)) / 4], [(2 + sqrt(28)) / 4, 1 - (2 + sqrt(28)) / 4]], "Numbers should be converted to vectors");
@@ -529,11 +529,11 @@ module testCoreVector2D() {
                 assertApproxEqual(circleIntersect2D([1, 1], 2, [5, 1], 2), [[3, 1], [3, 1]], "Tangent circles on horizontal axis");
                 assertApproxEqual(circleIntersect2D([1, 1], 2, [1, 5], 2), [[1, 3], [1, 3]], "Tangent circles on vertical axis");
                 assertApproxEqual(circleIntersect2D([1, 1], 2, [1, 1] + [4 * cos(45), 4 * sin(45)], 2), [[1, 1] + [2 * cos(45), 2 * sin(45)], [1, 1] + [2 * cos(45), 2 * sin(45)]], "Tangent circles");
-                assertApproxEqual(circleIntersect2D([1, 1], 2, [6, 1], 2), [], "Not intersecting circles aligned on horizontal axis");
-                assertApproxEqual(circleIntersect2D([1, 1], 2, [1, 6], 2), [], "Not intersecting circles aligned on vertical axis");
-                assertApproxEqual(circleIntersect2D([1, 1], 2, [1, 1], 3), [], "Concentric circles");
-                assertApproxEqual(circleIntersect2D([1, 1], 2, [1, 1], 2), [], "Concentric and equal circles");
-                assertApproxEqual(circleIntersect2D([1, 4], 2, [8, 3], 2), [], "Not intersecting circles");
+                assertEmptyArray(circleIntersect2D([1, 1], 2, [6, 1], 2), "Not intersecting circles aligned on horizontal axis");
+                assertEmptyArray(circleIntersect2D([1, 1], 2, [1, 6], 2), "Not intersecting circles aligned on vertical axis");
+                assertEmptyArray(circleIntersect2D([1, 1], 2, [1, 1], 3), "Concentric circles");
+                assertEmptyArray(circleIntersect2D([1, 1], 2, [1, 1], 2), "Concentric and equal circles");
+                assertEmptyArray(circleIntersect2D([1, 4], 2, [8, 3], 2), "Not intersecting circles");
             }
             testUnit("negative", 13) {
                 assertApproxEqual(circleIntersect2D(-1, -2, -3, -4), [[(-2 - sqrt(28)) / 4, -1 - (-2 - sqrt(28)) / 4], [(-2 + sqrt(28)) / 4, -1 - (-2 + sqrt(28)) / 4]], "Numbers should be converted to vectors");
@@ -547,11 +547,11 @@ module testCoreVector2D() {
                 assertApproxEqual(circleIntersect2D([-1, -1], -2, [-5, -1], -2), [[-3, -1], [-3, -1]], "Tangent circles on horizontal axis");
                 assertApproxEqual(circleIntersect2D([-1, -1], -2, [-1, -5], -2), [[-1, -3], [-1, -3]], "Tangent circles on vertical axis");
                 assertApproxEqual(circleIntersect2D([-1, -1], -2, [-1, -1] - [4 * cos(45), 4 * sin(45)], 2), [[-1, -1] - [2 * cos(45), 2 * sin(45)], [-1, -1] - [2 * cos(45), 2 * sin(45)]], "Tangent circles");
-                assertApproxEqual(circleIntersect2D([-1, -1], -2, [-6, -1], -2), [], "Not intersecting circles aligned on horizontal axis");
-                assertApproxEqual(circleIntersect2D([-1, -1], -2, [-1, -6], -2), [], "Not intersecting circles aligned on vertical axis");
-                assertApproxEqual(circleIntersect2D([-1, -1], -2, [-1, -1], -3), [], "Concentric circles");
-                assertApproxEqual(circleIntersect2D([-1, -1], -2, [-1, -1], -2), [], "Concentric and equal circles");
-                assertApproxEqual(circleIntersect2D([-1, -4], -2, [-8, -3], -2), [], "Not intersecting circles");
+                assertEmptyArray(circleIntersect2D([-1, -1], -2, [-6, -1], -2), "Not intersecting circles aligned on horizontal axis");
+                assertEmptyArray(circleIntersect2D([-1, -1], -2, [-1, -6], -2), "Not intersecting circles aligned on vertical axis");
+                assertEmptyArray(circleIntersect2D([-1, -1], -2, [-1, -1], -3), "Concentric circles");
+                assertEmptyArray(circleIntersect2D([-1, -1], -2, [-1, -1], -2), "Concentric and equal circles");
+                assertEmptyArray(circleIntersect2D([-1, -4], -2, [-8, -3], -2), "Not intersecting circles");
             }
         }
         // test core/vector-2d/isosceles2D()
@@ -787,7 +787,7 @@ module testCoreVector2D() {
             testUnit("vector", 6) {
                 assertEqual(arcp([]), [undef, undef], "Cannot compute the point from empty vector");
                 assertEqual(arcp([], 30), [undef, undef], "Cannot compute the point from empty vector, event if angle is provided");
-                assertEqual(arcp([10, 10]), [undef, undef], "Cannot compute the point without angle");
+                assertEqual(arcp([10, 10]), [10, 0], "Default angle is 0");
                 assertEqual(arcp([10, 10], 45), [cos(45)*10, sin(45)*10], "Angle of 45 degrees");
                 assertEqual(arcp([20, 10], 30), [cos(30)*20, sin(30)*10], "Angle of 30 degrees");
                 assertEqual(arcp([10, 20], 60), [cos(60)*10, sin(60)*20], "Angle of 60 degrees");
@@ -824,9 +824,9 @@ module testCoreVector2D() {
                 assertEmptyArray(rotate2D(), "Cannot rotate an empty list of points");
             }
             testUnit("wrong types", 3) {
-                assertEqual(rotate2D("1", "2"), [[0, 0]], "Cannot rotate a string");
-                assertEmptyArray(rotate2D(1, 1), [], "Cannot rotate a number");
-                assertEmptyArray(rotate2D(true, true), [], "Cannot rotate a boolean");
+                assertEmptyArray(rotate2D("1", "2"), "Cannot rotate a string");
+                assertEmptyArray(rotate2D(1, 1), "Cannot rotate a number");
+                assertEmptyArray(rotate2D(true, true), "Cannot rotate a boolean");
             }
             testUnit("points", 6) {
                 assertEqual(rotate2D([23, 67]), [[23, 23], [67, 67]], "Should upscale the numbers to vector 2D");
@@ -844,9 +844,9 @@ module testCoreVector2D() {
                 assertEmptyArray(scale2D(), "Should return an empty list of points");
             }
             testUnit("wrong types", 3) {
-                assertEqual(scale2D("1", "2"), [[0, 0]], "Cannot scale strings");
+                assertEmptyArray(scale2D("1", "2"), "Cannot scale strings");
                 assertEqual(scale2D([1], [2]), [[0, 0]], "Incomplete vectors should be adjusted");
-                assertEqual(scale2D(true, true), [], "Cannot scale booleans");
+                assertEmptyArray(scale2D(true, true), "Cannot scale booleans");
             }
             testUnit("points", 4) {
                 assertEqual(scale2D([[1, 1], [2, 2]]), [[1, 1], [2, 2]], "A default scale factor should be utilized if none is provided");
@@ -861,9 +861,9 @@ module testCoreVector2D() {
                 assertEmptyArray(resize2D(), "Should return an empty list of points");
             }
             testUnit("wrong types", 3) {
-                assertEqual(resize2D("1", "2"), [[0, 0]], "Cannot resize strings");
+                assertEmptyArray(resize2D("1", "2"), "Cannot resize strings");
                 assertEqual(resize2D([1], [2]), [[0, 0]], "Incomplete vectors should be adjusted");
-                assertEqual(resize2D(true, true), [], "Cannot resize booleans");
+                assertEmptyArray(resize2D(true, true), "Cannot resize booleans");
             }
             testUnit("points", 4) {
                 assertEqual(resize2D([[1, 3], [5, 9]]), [[1, 3], [5, 9]], "No change will be made if no size is provided");
@@ -878,7 +878,7 @@ module testCoreVector2D() {
                 assertEmptyArray(mirror2D(), "Should return an empty list of points");
             }
             testUnit("wrong types", 3) {
-                assertEqual(mirror2D("1", "2"), [[0, 0]], "Cannot mirror strings");
+                assertEmptyArray(mirror2D("1", "2"), "Cannot mirror strings");
                 assertApproxEqual(mirror2D([1]), [[-1, 1]], "Incomplete vectors should be adjusted");
                 assertEmptyArray(mirror2D(true, true), "Cannot mirror booleans");
             }

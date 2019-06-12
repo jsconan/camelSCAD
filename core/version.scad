@@ -2,7 +2,7 @@
  * @license
  * MIT License
  *
- * Copyright (c) 2017 Jean-Sebastien CONAN
+ * Copyright (c) 2017-2019 Jean-Sebastien CONAN
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -77,9 +77,5 @@ module validateRequirements() {
         echo("****");
         echo("** PLEASE UPDATE IT, OTHERWISE CAMELSCAD WON'T WORK PROPERLY!");
         echo("****");
-
-        // should work since version 2017.01
-        // otherwise will throw a compiler error, that is another (roughly) way to notify the user
-        assert(false);
     }
 }
