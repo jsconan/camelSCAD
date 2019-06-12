@@ -2,7 +2,7 @@
  * @license
  * MIT License
  *
- * Copyright (c) 2017 Jean-Sebastien CONAN
+ * Copyright (c) 2017-2019 Jean-Sebastien CONAN
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -191,11 +191,9 @@ module testUtilTestUtils() {
                 assertEqual(assertContext(), "assertContext():current context", "The current context should be returned");
             }
             testUnit("assertContext():empty context", 1) {
-                backupUnit = $testUnit;
                 $testModule = "";
                 $testUnit = "";
                 context = assertContext();
-                $testUnit = backupUnit;
                 assertEqual(context, "", "An empty content should be returned");
             }
         }
