@@ -2,7 +2,7 @@
  * @license
  * MIT License
  *
- * Copyright (c) 2017 Jean-Sebastien CONAN
+ * Copyright (c) 2017-2019 Jean-Sebastien CONAN
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -156,9 +156,12 @@ function vector3DOr(a, b) = isVector3D(a) ? a : b;
  * @returns Boolean
  */
 function allTrue(a) =
-    let( l = len(a) )
-    l && !isString(a) ? len([ for (i = a) if (i) i ]) == l
-                      : !!a
+    let(
+        a = array(a),
+        l = len(a)
+    )
+    l ? len([ for (i = a) if (i) i ]) == l
+      : false
 ;
 
 /**
@@ -168,9 +171,12 @@ function allTrue(a) =
  * @returns Boolean
  */
 function allFalse(a) =
-    let( l = len(a) )
-    l && !isString(a) ? len([ for (i = a) if (!i) i ]) == l
-                      : !a
+    let(
+        a = array(a),
+        l = len(a)
+    )
+    l ? len([ for (i = a) if (!i) i ]) == l
+      : true
 ;
 
 /**
@@ -180,9 +186,12 @@ function allFalse(a) =
  * @returns Boolean
  */
 function allSame(a) =
-    let( l = len(a) )
-    l > 1 && !isString(a) ? !len([ for (i = [1 : l - 1]) if (a[i - 1] != a[i]) i ])
-                          : true
+    let(
+        a = array(a),
+        l = len(a)
+    )
+    l > 1 ? !len([ for (i = [1 : l - 1]) if (a[i - 1] != a[i]) i ])
+          : true
 ;
 
 /**
@@ -209,7 +218,12 @@ function between(value, low, high) =
  * @param * value - The value to search for.
  * @returns Boolean
  */
-function contains(a, value) = len([ for (i = a) if (i == value) i ]) > 0;
+function contains(a, value) =
+    let(
+        a = array(a)
+    )
+    len([ for (i = a) if (i == value) i ]) > 0
+;
 
 /**
  * Checks if the provided values are approximately equal. Number will be rounded with the wanted decimal precision.
@@ -223,13 +237,8 @@ function contains(a, value) = len([ for (i = a) if (i == value) i ]) > 0;
 function approx(a, b, precision=5,
                 // internal
                 p, l) =
-    let(
-        sa = sign(a),
-        sb = sign(b)
-    )
-    sa != sb ? false
-   :!sa ? (
-       sa == 0 ? a == b
+    isArray(a) ? (
+       !isArray(b) ? false
        :(
             let(
                 la = len(a),
@@ -266,10 +275,22 @@ function approx(a, b, precision=5,
             approx(a, b, precision, p, half) && approx(a, b, precision, p + half, l - half)
         )
     )
-   :let(
-        precision = pow(10, float(precision)),
-        a = round(a * precision) / precision,
-        b = round(b * precision) / precision
+   :isNumber(a) ? (
+        !isNumber(b) ? false
+       :(
+            let(
+                sa = sign(a),
+                sb = sign(b)
+            )
+            sa != sb ? false
+           :sa == 0 ? a == b
+           :let(
+                precision = pow(10, float(precision)),
+                a = round(a * precision) / precision,
+                b = round(b * precision) / precision
+            )
+            a == b
+        )
     )
-    a == b
+   :a == b
 ;
