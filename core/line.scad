@@ -2,7 +2,7 @@
  * @license
  * MIT License
  *
- * Copyright (c) 2017 Jean-Sebastien CONAN
+ * Copyright (c) 2017-2019 Jean-Sebastien CONAN
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -156,7 +156,7 @@ function path(p, points, i) =
         points = array(points),
         length = len(points),
         point = vector2D(points[length - 1]),
-        cur = p[i],
+        cur = array(p[i]),
         cmd = cur[0],
         l = len(cur)
     )
@@ -219,9 +219,10 @@ function outline(points, distance) =
  */
 function lineAdd(points, value) =
     let(
+        points = array(points),
         l = max(
-            float(len(value)),
-            float(len(points[0]))
+            len(arrayOr(value, [])),
+            len(arrayOr(points[0], []))
         ),
         value = vector3D(value)
     )

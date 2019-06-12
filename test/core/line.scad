@@ -2,7 +2,7 @@
  * @license
  * MIT License
  *
- * Copyright (c) 2017 Jean-Sebastien CONAN
+ * Copyright (c) 2017-2019 Jean-Sebastien CONAN
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -192,9 +192,9 @@ module testCoreLine() {
                 assertEqual(path(), [], "Cannot build a line without parameters, should return an empty array");
             }
             testUnit("wrong type", 3) {
-                assertEqual(path("1", "1"), [[0, 0]], "Cannot build a line using strings");
-                assertEqual(path(true, true), [true], "Cannot build a line using booleans");
-                assertEqual(path(1, 1), [1], "Cannot build a line using numbers");
+                assertEqual(path("1", "1"), [[0, 0]], "Strings should be casted to array");
+                assertEqual(path(true, true), [[0, 0]], "Booleans should be casted to array");
+                assertEqual(path(1, 1), [[1, 1]], "Numbers should be casted to array");
             }
             testUnit("path only", 55) {
                 // point
