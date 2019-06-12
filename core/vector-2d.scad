@@ -2,7 +2,7 @@
  * @license
  * MIT License
  *
- * Copyright (c) 2017 Jean-Sebastien CONAN
+ * Copyright (c) 2017-2019 Jean-Sebastien CONAN
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -370,7 +370,7 @@ function circleLineIntersect2D(i, j, c, r) =
                 c[0] * c[0] + c[1] * c[1] + (c[1] * -2 + b) * b - r * r
             )
         )
-        len(x) ? (
+        x ? (
             [
                 [x[0], a * x[0] + b],
                 [x[1], a * x[1] + b]
@@ -456,7 +456,7 @@ function circleIntersect2D(c1, r1, c2, r2) =
                 (2 * -c1[1] + a) * a + x12 + y12 - r12
             )
         )
-        len(x) ? (
+        x ? (
             [
                 [x[0], a - x[0] * b],
                 [x[1], a - x[1] * b]
@@ -635,10 +635,13 @@ function cosp(y, w, h, p, o) =
  * @param Number a - The rotate angle.
  * @returns Vector
  */
-function rotp(v, a) = [
-    v[0] * cos(a) - v[1] * sin(a),
-    v[1] * cos(a) + v[0] * sin(a)
-];
+function rotp(v, a) =
+    let( a = float(a) )
+    [
+        v[0] * cos(a) - v[1] * sin(a),
+        v[1] * cos(a) + v[0] * sin(a)
+    ]
+;
 
 /**
  * Mirrors a 2D vector around a particular axis.
@@ -667,10 +670,13 @@ function mirp(v, a) =
  * @param Number [a] - The radius angle.
  * @returns Vector
  */
-function arcp(r, a) = [
-    r[0] * cos(a),
-    r[1] * sin(a)
-];
+function arcp(r, a) =
+    let( a = float(a) )
+    [
+        r[0] * cos(a),
+        r[1] * sin(a)
+    ]
+;
 
 /**
  * Computes the coordinates of a point on a circle given an angle and a radius.
@@ -691,7 +697,7 @@ function arcPoint(r, a, x, y) = arcp(apply2D(r, x, y), deg(a));
  * @returns Vector[]
  */
 function rotate2D(points, a) =
-    !len(points) ? []
+    !isArray(points) || !len(points) ? []
    :let(
         a = deg(a)
     )
@@ -706,7 +712,7 @@ function rotate2D(points, a) =
  * @returns Vector[]
  */
 function scale2D(points, factor) =
-    !len(points) ? []
+    !isArray(points) || !len(points) ? []
    :let(
         factor = divisor2D(factor)
     )
@@ -734,7 +740,7 @@ function resize2D(points, size) = scale2D(points, scaleFactor2D(points, size));
  * @returns Vector[]
  */
 function mirror2D(points, axis) =
-    !len(points) ? []
+    !isArray(points) || !len(points) ? []
    :let(
         a = undef == axis ? [0, 1] : vector2D(axis),
         ax2 = a[0] * a[0],
@@ -792,7 +798,7 @@ function boundaries2D(points,
                       p, l) =
     let(
         p = float(p),
-        l = numberOr(l, float(len(points)))
+        l = numberOr(l, len(arrayOr(points, [])))
     )
     l <= 4 ? (
         let(
