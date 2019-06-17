@@ -187,7 +187,7 @@ module testCoreLine() {
             }
         }
         // test core/line/path()
-        testModule("path()", 14) {
+        testModule("path()", 15) {
             testUnit("no parameter", 1) {
                 assertEqual(path(), [], "Cannot build a line without parameters, should return an empty array");
             }
@@ -328,6 +328,90 @@ module testCoreLine() {
                     ["C", 20, 80, 40],
                     ["V", 2]
                 ]), "Deep nested path");
+            }
+            testUnit("repeat path", 3) {
+                assertEqual(path([
+                    ["P", 0, 0],
+                    ["R", 3, [
+                        ["H", 5],
+                        ["V", 2]
+                    ]]
+                ]), [[0, 0], [5, 0], [5, 2], [10, 2], [10, 4], [15, 4], [15, 6]], "Repeat 3 times the sub path of H and V");
+
+                assertEqual(path([
+                    ["P", 0, 0],
+                    ["H", 3],
+                    ["R", 3, [
+                        ["H", 5],
+                        ["V", 2]
+                    ]],
+                    ["V", 3],
+                    ["H", -2],
+                    ["R", 3, [
+                        ["V", -2],
+                        ["H", -5]
+                    ]]
+                ]), path([
+                    ["P", 0, 0],
+                    ["H", 3],
+                    ["H", 5],
+                    ["V", 2],
+                    ["H", 5],
+                    ["V", 2],
+                    ["H", 5],
+                    ["V", 2],
+                    ["V", 3],
+                    ["H", -2],
+                    ["V", -2],
+                    ["H", -5],
+                    ["V", -2],
+                    ["H", -5],
+                    ["V", -2],
+                    ["H", -5]
+                ]), "Several repeat");
+
+                assertEqual(path([
+                    ["P", 0, 0],
+                    ["H", 3],
+                    ["R", 4, [
+                        ["V", 5],
+                        ["R", 3, [
+                            ["H", 5],
+                            ["V", 2]
+                        ]]
+                    ]]
+                ]), path([
+                    ["P", 0, 0],
+                    ["H", 3],
+                    ["V", 5],
+                    ["H", 5],
+                    ["V", 2],
+                    ["H", 5],
+                    ["V", 2],
+                    ["H", 5],
+                    ["V", 2],
+                    ["V", 5],
+                    ["H", 5],
+                    ["V", 2],
+                    ["H", 5],
+                    ["V", 2],
+                    ["H", 5],
+                    ["V", 2],
+                    ["V", 5],
+                    ["H", 5],
+                    ["V", 2],
+                    ["H", 5],
+                    ["V", 2],
+                    ["H", 5],
+                    ["V", 2],
+                    ["V", 5],
+                    ["H", 5],
+                    ["V", 2],
+                    ["H", 5],
+                    ["V", 2],
+                    ["H", 5],
+                    ["V", 2]
+                ]), "Nested repeat");
             }
         }
         // test core/line/outline()
