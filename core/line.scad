@@ -143,6 +143,8 @@ function cosinusoid(l, w, h, p, o, a) =
  * - A, Angle: ["A", <angle>, <length>] - Adds a leaned line from the last point with the given angle and the given length. The sign of the length determines the direction.
  * - C, Circle: ["C", <radius>, <start angle>, <end angle>] - Adds a circle arc from the last point with the given radius and with the given angle.
  * - B, Bezier curve: ["B", <P1>, <P2>, <P3>] - Adds a cubic bezier curve from the last point with the given control points (up to 3, the first beeing the last existing point).
+ * - N, Nested: ["N", [<SubPath>]] - Nested path to execute.
+ * - R, Repeat: ["R", <N>, [<SubPath>]] - Repeat N times the sub path.
  *
  * @param Array p - The path from which build the line
  * @param Vector[] points - The existing points to start the line from.
@@ -176,6 +178,21 @@ function path(p, points, i) =
                 l >= 4 ? concat([point], cubicBezierCurve(point, point + vector2D(cur[1]), point + vector2D(cur[2]), point + vector2D(cur[3])))
                :l == 3 ? concat([point], quadraticBezierCurve(point, point + vector2D(cur[1]), point + vector2D(cur[2])))
                :[point, point + vector2D(cur[1])]
+            )
+            :cmd == "N" || cmd == "n" ? (
+                path(p=cur[1], points=[point])
+            )
+            :cmd == "R" || cmd == "r" ? (
+                let(
+                    times = integer(cur[1]),
+                    sub = array(cur[2]),
+                    l = len(sub),
+                    count = l * times,
+                    p = [
+                        for(i = [0 : count - 1]) sub[i % l]
+                    ]
+                )
+                path(p=p, points=[point])
             )
             :[]
         )
