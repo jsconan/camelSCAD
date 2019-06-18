@@ -34,7 +34,7 @@ use <../../full.scad>
  * @author jsconan
  */
 module testCoreList() {
-    testPackage("core/list.scad", 19) {
+    testPackage("core/list.scad", 20) {
         // test core/list/fill()
         testModule("fill()", 4) {
             testUnit("no parameter", 1) {
@@ -56,6 +56,29 @@ module testCoreList() {
                 assertEqual(fill("10", 1), ["10"], "Should produce an array filled with \"10\" and a length of 1");
                 assertEqual(fill("foo", 5), ["foo", "foo", "foo", "foo", "foo"], "Should produce an array filled with \"foo\" and a length of 5");
                 assertEqual(fill([1, 2], 3), [[1, 2], [1, 2], [1, 2]], "Should produce an array filled with [1, 2] and a length of 3");
+            }
+        }
+        // test core/list/times()
+        testModule("times()", 4) {
+            testUnit("no parameter", 1) {
+                assertEmptyArray(times(), "Without parameters it should produce an empty array");
+            }
+            testUnit("missing length", 1) {
+                assertEmptyArray(times(1), "Without the length it should produce an empty array");
+            }
+            testUnit("not a number length", 3) {
+                assertEmptyArray(times(1, true), "The length should be a number not a boolean");
+                assertEmptyArray(times(1, "1"), "The length should be a number not a string");
+                assertEmptyArray(times(1, [1]), "The length should be a number not an array");
+            }
+            testUnit("number length", 7) {
+                assertEmptyArray(times(1, 0), "With 0 as length it should produce an empty array");
+                assertEmptyArray(times(1, -2), "With a negative value as length it should produce an empty array");
+                assertEqual(times(1, 1), [1], "Should produce a vector filled with 1 and a length of 1");
+                assertEqual(times(3, 5), [3, 3, 3, 3, 3], "Should produce a vector filled with 3 and a length of 5");
+                assertEqual(times("10", 1), ["10"], "Should produce an array filled with \"10\" and a length of 1");
+                assertEqual(times("foo", 5), ["foo", "foo", "foo", "foo", "foo"], "Should produce an array filled with \"foo\" and a length of 5");
+                assertEqual(times([1, 2], 3), [1, 2, 1, 2, 1, 2], "Should produce an array filled with [1, 2] and a length of 6");
             }
         }
         // test core/list/range()
