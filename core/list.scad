@@ -46,6 +46,24 @@ function fill(value, length) =
 ;
 
 /**
+ * Fills an array by repeating a value N times. Arrays will be concatained.
+ * The result will be a flatten array.
+ *
+ * @param * value - The value to fill with. Can be of any type.
+ * @param Number count - The number of times to repeat.
+ * @returns Array
+ */
+function times(value, count) =
+    let(
+        value = array(value),
+        l = len(value),
+        length = float(count) * l
+    )
+    length > 0 ? [ for (i = [0 : length - 1]) value[i % l] ]
+               : []
+;
+
+/**
  * Fills an array with a range of values.
  *
  * @param Number start - The start of the range, or the length of the range
