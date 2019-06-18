@@ -179,21 +179,8 @@ function path(p, points, i) =
                :l == 3 ? concat([point], quadraticBezierCurve(point, point + vector2D(cur[1]), point + vector2D(cur[2])))
                :[point, point + vector2D(cur[1])]
             )
-            :cmd == "N" || cmd == "n" ? (
-                path(p=cur[1], points=[point])
-            )
-            :cmd == "R" || cmd == "r" ? (
-                let(
-                    times = integer(cur[1]),
-                    sub = array(cur[2]),
-                    l = len(sub),
-                    count = l * times,
-                    p = [
-                        for(i = [0 : count - 1]) sub[i % l]
-                    ]
-                )
-                path(p=p, points=[point])
-            )
+            :cmd == "N" || cmd == "n" ? path(p=cur[1], points=[point])
+            :cmd == "R" || cmd == "r" ? path(p=times(cur[2], cur[1]), points=[point])
             :[]
         )
     )
