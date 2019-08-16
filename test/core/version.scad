@@ -2,7 +2,7 @@
  * @license
  * MIT License
  *
- * Copyright (c) 2017 Jean-Sebastien CONAN
+ * Copyright (c) 2017-2019 Jean-Sebastien CONAN
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -45,10 +45,10 @@ module testCoreVersion() {
         // test camelSCAD()
         testModule("camelSCAD()", 2) {
             testUnit("as vector", 1) {
-                assertEqual(camelSCAD(), [0, 6, 0], "The current version of the library is 0.6.0");
+                assertEqual(camelSCAD(), [0, 7, 0], "The current version of the library is 0.6.0");
             }
             testUnit("as string", 1) {
-                assertEqual(camelSCAD(true), "0.6.0", "The current version of the library is 0.6.0");
+                assertEqual(camelSCAD(true), "0.7.0", "The current version of the library is 0.6.0");
             }
         }
     }

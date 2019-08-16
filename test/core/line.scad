@@ -2,7 +2,7 @@
  * @license
  * MIT License
  *
- * Copyright (c) 2017 Jean-Sebastien CONAN
+ * Copyright (c) 2017-2019 Jean-Sebastien CONAN
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -187,63 +187,62 @@ module testCoreLine() {
             }
         }
         // test core/line/path()
-        testModule("path()", 3) {
+        testModule("path()", 15) {
             testUnit("no parameter", 1) {
                 assertEqual(path(), [], "Cannot build a line without parameters, should return an empty array");
             }
             testUnit("wrong type", 3) {
-                assertEqual(path("1", "1"), [[0, 0]], "Cannot build a line using strings");
-                assertEqual(path(true, true), [true], "Cannot build a line using booleans");
-                assertEqual(path(1, 1), [1], "Cannot build a line using numbers");
+                assertEqual(path("1", "1"), [[0, 0]], "Strings should be casted to array");
+                assertEqual(path(true, true), [[0, 0]], "Booleans should be casted to array");
+                assertEqual(path(1, 1), [[1, 1]], "Numbers should be casted to array");
             }
-            testUnit("path only", 55) {
-                // point
+            testUnit("point", 6) {
                 assertEqual(path([["P"]]), [[0, 0]], "Path with 1 empty point");
                 assertEqual(path([["P", 10, 20]]), [[10, 20]], "Path with 1 absolute point, using coordinates");
                 assertEqual(path([["P", [10, 20]]]), [[10, 20]], "Path with 1 absolute point, using point value");
                 assertEqual(path([["P", 10, 20], ["P"]]), [[10, 20]], "Path with 1 absolute point and 1 empty point");
                 assertEqual(path([["P", 10, 20], ["P", 0, 5]]), [[10, 20], [0, 5]], "Path with 2 absolute points");
                 assertEqual(path([["P", 10, 20], ["P", 0, 5], ["P", 7, 4]]), [[10, 20], [0, 5], [7, 4]], "Path with 3 absolute points");
-
-                // line
+            }
+            testUnit("line", 5) {
                 assertEqual(path([["L"]]), [[0, 0]], "Path with 1 empty line");
                 assertEqual(path([["L", 10, 20]]), [[0, 0], [10, 20]], "Path with 1 line, using coordinates");
                 assertEqual(path([["L", [10, 20]]]), [[0, 0], [10, 20]], "Path with 1 line, using point value");
                 assertEqual(path([["P", 5, 6], ["L", 10, 20]]), [[5, 6], [15, 26]], "Path with 1 line from an absolute point");
                 assertEqual(path([["P", 5, 6], ["L"]]), [[5, 6]], "Path with 1 empty line from an absolute point");
-
-                // horizontal line
+            }
+            testUnit("horizontal line", 4) {
                 assertEqual(path([["H"]]), [[0, 0]], "Path with 1 empty horizontal line");
                 assertEqual(path([["H", 10]]), [[0, 0], [10, 0]], "Path with 1 horizontal line");
                 assertEqual(path([["P", 5, 6], ["H", 10]]), [[5, 6], [15, 6]], "Path with 1 horizontal line from an absolute point");
                 assertEqual(path([["P", 5, 6], ["H"]]), [[5, 6]], "Path with 1 empty horizontal line from an absolute point");
-
-                // vertical line
+            }
+            testUnit("vertical line", 4) {
                 assertEqual(path([["V"]]), [[0, 0]], "Path with 1 empty vertical line");
                 assertEqual(path([["V", 10]]), [[0, 0], [0, 10]], "Path with 1 vertical line");
                 assertEqual(path([["P", 5, 6], ["V", 10]]), [[5, 6], [5, 16]], "Path with 1 vertical line from an absolute point");
                 assertEqual(path([["P", 5, 6], ["V"]]), [[5, 6]], "Path with 1 empty vertical line from an absolute point");
-
-                // intersection line
+            }
+            testUnit("intersection line", 4) {
                 assertEqual(path([["I"]]), [[0, 0]], "Path with 1 empty intersection line");
                 assertEqual(path([["I", [3, 3], [1, 3], [6, -2]]]), [[0, 0], [2, 2]], "Path with 1 intersection line");
                 assertEqual(path([["P", 5, 6], ["I", [8, 9], [6, 9], [11, 4]]]), [[5, 6], [7, 8]], "Path with 1 intersection line from an absolute point");
                 assertEqual(path([["P", 5, 6], ["I"]]), [[5, 6]], "Path with 1 empty intersection line from an absolute point");
-
-                // tangent line
+            }
+            testUnit("tangent line", 5) {
                 assertEqual(path([["T"]]), [[0, 0]], "Path with 1 empty tangent line");
                 assertEqual(path([["T", 8, 6, 2]]), [[0, 0], arcPoint(sqrt(96), atan2(6, 8) + asin(2 / 10))], "Path with 1 tangent line, using coordinates");
                 assertEqual(path([["T", [8, 6], 2]]), [[0, 0], arcPoint(sqrt(96), atan2(6, 8) + asin(2 / 10))], "Path with 1 tangent line, using point value");
                 assertEqual(path([["P", 11, 5], ["T", 19, 11, 2]]), [[11, 5], [11, 5] + arcPoint(sqrt(96), atan2(6, 8) + asin(2 / 10))], "Path with 1 tangent line from an absolute point");
                 assertEqual(path([["P", 5, 6], ["T"]]), [[5, 6]], "Path with 1 empty tangent line from an absolute point");
-
-                // leaned line
+            }
+            testUnit("leaned line", 4) {
                 assertEqual(path([["A"]]), [[0, 0]], "Path with 1 empty leaned line");
                 assertEqual(path([["A", 50, 20]]), [[0, 0], _rotP(50, 20, 20)], "Path with 1 leaned line");
                 assertEqual(path([["P", 5, 6], ["A", 40, 15]]), [[5, 6], [5, 6] + _rotP(40, 15, 15)], "Path with 1 leaned line from an absolute point");
                 assertEqual(path([["P", 5, 6], ["A"]]), [[5, 6]], "Path with 1 empty leaned line from an absolute point");
-
-                // circle
+            }
+            testUnit("circle", 7) {
                 assertEqual(path([["C"]]), [[0, 0]], "Path with 1 empty circle arc");
                 assertEqual(path([["C", 20]]), [ for (a = [astep(360) : astep(360) : 360]) _rotP(180, 20, 20) + _rotP(a, 20, 20) ], "Path with 1 full circle");
                 assertEqual(path([["C", 20, 40, 80]]), concat([ for (a = [40 : astep(20) : 80]) _rotP(220, 20, 20) + _rotP(a, 20, 20) ], [_rotP(220, 20, 20) + _rotP(80, 20, 20)]), "Path with 1 circle arc");
@@ -251,15 +250,15 @@ module testCoreLine() {
                 assertEqual(path([["P", 5, 6], ["C", 20, 40, 80]]), concat([ for (a = [40 : astep(20) : 80]) [5, 6] + _rotP(220, 20, 20) + _rotP(a, 20, 20) ], [[5, 6] + _rotP(220, 20, 20) + _rotP(80, 20, 20)]), "Path with 1 circle arc from an absolute point");
                 assertEqual(path([["P", 5, 6], ["C", 20, 80, 40]]), concat([ for (a = [80 : -astep(20) : 40]) [5, 6] + _rotP(260, 20, 20) + _rotP(a, 20, 20) ], [[5, 6] + _rotP(260, 20, 20) + _rotP(40, 20, 20)]), "Path with 1 negative circle arc from an absolute point");
                 assertEqual(path([["P", 5, 6], ["C"]]), [[5, 6]], "Path with 1 empty circle arc from an absolute point");
-
-                // bezier point
+            }
+            testUnit("bezier point", 4) {
                 assertEqual(path([["B"]]), [[0, 0]], "Path with 1 empty bezier");
                 assertEqual(path([["P", 5, 6], ["B"]]), [[5, 6]], "Path with 1 empty bezier from an absolute point");
 
                 assertEqual(path([["B", [7, 8]]]), [[0, 0], [7, 8]], "Path with 1 bezier point");
                 assertEqual(path([["P", 5, 6], ["B", [7, 8]]]), [[5, 6], [12, 14]], "Path with 1 bezier point from an absolute point");
-
-                // quadratic bezier
+            }
+            testUnit("quadratic bezier", 6) {
                 quadratic1 = path([["B", [7, 8], [9, 10]]]);
                 assertEqual(len(quadratic1), 5, "Path with 1 quadratic bezier should produce a list of points");
                 assertEqual(quadratic1[0], [0, 0], "Path with 1 quadratic bezier should start at the origin");
@@ -269,8 +268,8 @@ module testCoreLine() {
                 assertEqual(len(quadratic2), 5, "Path with 1 quadratic bezier from an absolute point should produce a list of points");
                 assertEqual(quadratic2[0], [5, 6], "Path with 1 quadratic bezier from an absolute point should start at the provided point");
                 assertEqual(quadratic2[4], [14, 16], "Path with 1 quadratic bezier from an absolute point should end with the last control point");
-
-                // cubic bezier
+            }
+            testUnit("cubic bezier", 6) {
                 cubic1 = path([["B", [7, 8], [9, 10], [11, 12]]]);
                 assertEqual(len(cubic1), 5, "Path with 1 cubic bezier should produce a list of points");
                 assertEqual(cubic1[0], [0, 0], "Path with 1 cubic bezier should start at the origin");
@@ -280,6 +279,139 @@ module testCoreLine() {
                 assertEqual(len(cubic2), 5, "Path with 1 cubic bezier from an absolute point should produce a list of points");
                 assertEqual(cubic2[0], [5, 6], "Path with 1 cubic bezier from an absolute point should start at the provided point");
                 assertEqual(cubic2[4], [16, 18], "Path with 1 cubic bezier from an absolute point should end with the last control point");
+            }
+            testUnit("nested path", 3) {
+                assertEqual(path([
+                    ["P", 0, 0],
+                    ["N", [
+                        ["H", 5],
+                        ["V", 2]
+                    ]]
+                ]), [[0, 0], [5, 0], [5, 2]], "Simple nested path");
+
+                assertEqual(path([
+                    ["P", 0, 0],
+                    ["N", [
+                        ["L", 10, 20],
+                        ["H", 5],
+                        ["V", 2],
+                        ["C", 20, 80, 40]
+                    ]]
+                ]), path([
+                    ["P", 0, 0],
+                    ["L", 10, 20],
+                    ["H", 5],
+                    ["V", 2],
+                    ["C", 20, 80, 40]
+                ]), "Complex nested path");
+
+                assertEqual(path([
+                    ["P", 0, 0],
+                    ["H", 3],
+                    ["N", [
+                        ["H", 5],
+                        ["N", [
+                            ["L", 10, 20],
+                            ["H", 5],
+                            ["V", 2],
+                            ["C", 20, 80, 40]
+                        ]],
+                        ["V", 2]
+                    ]]
+                ]), path([
+                    ["P", 0, 0],
+                    ["H", 3],
+                    ["H", 5],
+                    ["L", 10, 20],
+                    ["H", 5],
+                    ["V", 2],
+                    ["C", 20, 80, 40],
+                    ["V", 2]
+                ]), "Deep nested path");
+            }
+            testUnit("repeat path", 3) {
+                assertEqual(path([
+                    ["P", 0, 0],
+                    ["R", 3, [
+                        ["H", 5],
+                        ["V", 2]
+                    ]]
+                ]), [[0, 0], [5, 0], [5, 2], [10, 2], [10, 4], [15, 4], [15, 6]], "Repeat 3 times the sub path of H and V");
+
+                assertEqual(path([
+                    ["P", 0, 0],
+                    ["H", 3],
+                    ["R", 3, [
+                        ["H", 5],
+                        ["V", 2]
+                    ]],
+                    ["V", 3],
+                    ["H", -2],
+                    ["R", 3, [
+                        ["V", -2],
+                        ["H", -5]
+                    ]]
+                ]), path([
+                    ["P", 0, 0],
+                    ["H", 3],
+                    ["H", 5],
+                    ["V", 2],
+                    ["H", 5],
+                    ["V", 2],
+                    ["H", 5],
+                    ["V", 2],
+                    ["V", 3],
+                    ["H", -2],
+                    ["V", -2],
+                    ["H", -5],
+                    ["V", -2],
+                    ["H", -5],
+                    ["V", -2],
+                    ["H", -5]
+                ]), "Several repeat");
+
+                assertEqual(path([
+                    ["P", 0, 0],
+                    ["H", 3],
+                    ["R", 4, [
+                        ["V", 5],
+                        ["R", 3, [
+                            ["H", 5],
+                            ["V", 2]
+                        ]]
+                    ]]
+                ]), path([
+                    ["P", 0, 0],
+                    ["H", 3],
+                    ["V", 5],
+                    ["H", 5],
+                    ["V", 2],
+                    ["H", 5],
+                    ["V", 2],
+                    ["H", 5],
+                    ["V", 2],
+                    ["V", 5],
+                    ["H", 5],
+                    ["V", 2],
+                    ["H", 5],
+                    ["V", 2],
+                    ["H", 5],
+                    ["V", 2],
+                    ["V", 5],
+                    ["H", 5],
+                    ["V", 2],
+                    ["H", 5],
+                    ["V", 2],
+                    ["H", 5],
+                    ["V", 2],
+                    ["V", 5],
+                    ["H", 5],
+                    ["V", 2],
+                    ["H", 5],
+                    ["V", 2],
+                    ["H", 5],
+                    ["V", 2]
+                ]), "Nested repeat");
             }
         }
         // test core/line/outline()

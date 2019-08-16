@@ -2,7 +2,7 @@
  * @license
  * MIT License
  *
- * Copyright (c) 2017 Jean-Sebastien CONAN
+ * Copyright (c) 2017-2019 Jean-Sebastien CONAN
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -34,7 +34,7 @@ use <../../full.scad>
  * @author jsconan
  */
 module testCoreList() {
-    testPackage("core/list.scad", 19) {
+    testPackage("core/list.scad", 20) {
         // test core/list/fill()
         testModule("fill()", 4) {
             testUnit("no parameter", 1) {
@@ -56,6 +56,29 @@ module testCoreList() {
                 assertEqual(fill("10", 1), ["10"], "Should produce an array filled with \"10\" and a length of 1");
                 assertEqual(fill("foo", 5), ["foo", "foo", "foo", "foo", "foo"], "Should produce an array filled with \"foo\" and a length of 5");
                 assertEqual(fill([1, 2], 3), [[1, 2], [1, 2], [1, 2]], "Should produce an array filled with [1, 2] and a length of 3");
+            }
+        }
+        // test core/list/times()
+        testModule("times()", 4) {
+            testUnit("no parameter", 1) {
+                assertEmptyArray(times(), "Without parameters it should produce an empty array");
+            }
+            testUnit("missing length", 1) {
+                assertEmptyArray(times(1), "Without the length it should produce an empty array");
+            }
+            testUnit("not a number length", 3) {
+                assertEmptyArray(times(1, true), "The length should be a number not a boolean");
+                assertEmptyArray(times(1, "1"), "The length should be a number not a string");
+                assertEmptyArray(times(1, [1]), "The length should be a number not an array");
+            }
+            testUnit("number length", 7) {
+                assertEmptyArray(times(1, 0), "With 0 as length it should produce an empty array");
+                assertEmptyArray(times(1, -2), "With a negative value as length it should produce an empty array");
+                assertEqual(times(1, 1), [1], "Should produce a vector filled with 1 and a length of 1");
+                assertEqual(times(3, 5), [3, 3, 3, 3, 3], "Should produce a vector filled with 3 and a length of 5");
+                assertEqual(times("10", 1), ["10"], "Should produce an array filled with \"10\" and a length of 1");
+                assertEqual(times("foo", 5), ["foo", "foo", "foo", "foo", "foo"], "Should produce an array filled with \"foo\" and a length of 5");
+                assertEqual(times([1, 2], 3), [1, 2, 1, 2, 1, 2], "Should produce an array filled with [1, 2] and a length of 6");
             }
         }
         // test core/list/range()
@@ -115,15 +138,33 @@ module testCoreList() {
                 assertEqual(steps(end=-18, count=4), [0:-6:-18], "Should build the range [0:-6:-18]");
             }
         }
+
+        // test core/list/reverse()
+        testModule("reverse()", 3) {
+            testUnit("no parameter", 1) {
+                assertEmptyArray(reverse(), "Without parameters it should produce an empty array");
+            }
+            testUnit("not array", 3) {
+                assertEqual(reverse(1), [1], "Number should be casted to array");
+                assertEqual(reverse("foo"), ["foo"], "String should be casted to array");
+                assertEqual(reverse(true), [true], "Boolean should be casted to array");
+            }
+            testUnit("array", 4) {
+                assertEqual(reverse([1, 2, 3]), [3, 2, 1], "The vector should be reversed");
+                assertEqual(reverse(["foo", "bar"]), ["bar", "foo"], "The array should be reversed");
+                assertEqual(reverse([1]), [1], "Should return the vector");
+                assertEqual(reverse(["foo"]), ["foo"], "Should return the array");
+            }
+        }
         // test core/list/flatten()
         testModule("flatten()", 3) {
             testUnit("no parameter", 1) {
                 assertEmptyArray(flatten(), "Without parameters it should produce an empty array");
             }
             testUnit("not array", 3) {
-                assertEmptyArray(flatten(1), "Cannot flatten a number, it should produce an empty array");
-                assertEmptyArray(flatten("foo"), "Cannot flatten a string, it should produce an empty array");
-                assertEmptyArray(flatten(true), "Cannot flatten a boolean, it should produce an empty array");
+                assertEqual(flatten(1), [1], "Number should be casted to array");
+                assertEqual(flatten("foo"), ["foo"], "String should be casted to array");
+                assertEqual(flatten(true), [true], "Boolean should be casted to array");
             }
             testUnit("array", 5) {
                 assertEqual(flatten([1, 2, 3]), [1, 2, 3], "An already flat vector cannot be flattened more");
@@ -131,23 +172,6 @@ module testCoreList() {
                 assertEqual(flatten([[1, 2, 3], [4, 5, 6]]), [1, 2, 3, 4, 5, 6], "Should flatten an array of vectors to a vector");
                 assertEqual(flatten([["foo", "abc"], ["bar", "cde"]]), ["foo", "abc", "bar", "cde"], "Should flatten an array of arrays to an array");
                 assertEqual(flatten([[[1, 2], 3], [[4, 5], 6]]), [[1, 2], 3, [4, 5], 6], "Should only flatten the first level of a multi-dimensional array of vectors");
-            }
-        }
-        // test core/list/reverse()
-        testModule("reverse()", 3) {
-            testUnit("no parameter", 1) {
-                assertEmptyArray(reverse(), "Without parameters it should produce an empty array");
-            }
-            testUnit("not array", 3) {
-                assertEmptyArray(reverse(1), "Cannot reverse a number, it should produce an empty array");
-                assertEmptyArray(reverse("foo"), "Cannot reverse a string, it should produce an empty array");
-                assertEmptyArray(reverse(true), "Cannot reverse a boolean, it should produce an empty array");
-            }
-            testUnit("array", 4) {
-                assertEqual(reverse([1, 2, 3]), [3, 2, 1], "The vector should be reversed");
-                assertEqual(reverse(["foo", "bar"]), ["bar", "foo"], "The array should be reversed");
-                assertEqual(reverse([1]), [1], "Should return the vector");
-                assertEqual(reverse(["foo"]), ["foo"], "Should return the array");
             }
         }
         // test core/list/find()
@@ -300,9 +324,9 @@ module testCoreList() {
                 assertEqual(complete(), [], "Cannot complete an inexistin list, should return an empty array");
             }
             testUnit("wrong type", 4) {
-                assertEqual(complete("1"), [], "Cannot complete a string, should return an empty array");
-                assertEqual(complete(true), [], "Cannot complete a boolean, should return an empty array");
-                assertEqual(complete("1", "foo", "bar"), ["foo", "bar"], "Cannot complete a string, but should return an array containing the provided start and end points");
+                assertEqual(complete("1"), ["1"], "String should be casted to array");
+                assertEqual(complete(true), [true], "Boolean should be casted to array");
+                assertEqual(complete("1", "foo", "bar"), ["foo", "1", "bar"], "String should be casted to array, should return an array containing the provided start and end points");
                 assertEqual(complete(true, true, false), [true], "Cannot complete a boolean, but should return an array containing the provided start and end points");
             }
             testUnit("array", 5) {
@@ -319,9 +343,9 @@ module testCoreList() {
                 assertEmptyArray(slice(), "Parameters are needed to produce a sliced array, otherwise return []");
             }
             testUnit("not array", 3) {
-                assertEmptyArray(slice(1, 1, 1), "Cannot slice a number, should return []");
-                assertEmptyArray(slice("123", 1, 2), "Cannot slice a string, should return []");
-                assertEmptyArray(slice(true, false, true), "Cannot slice a boolean, should return []");
+                assertEmptyArray(slice(1, 1, 1), "Number should be casted to array");
+                assertEmptyArray(slice("123", 1, 2), "String should be casted to array");
+                assertEqual(slice(true, false, true), [true], "Boolean should be casted to array");
             }
             testUnit("array", 10) {
                 assertEqual(slice([1, 2, 3, 4, 5]), [1, 2, 3, 4, 5], "Without the boundaries it should return the full array");
@@ -342,9 +366,9 @@ module testCoreList() {
                 assertEmptyArray(splice(), "Parameters are needed to produce a sliced array, otherwise return []");
             }
             testUnit("not array", 3) {
-                assertEmptyArray(splice(1, 1, 1), "Cannot slice a number, should return []");
-                assertEmptyArray(splice("123", 1, 2), "Cannot slice a string, should return []");
-                assertEmptyArray(splice(true, false, true), "Cannot slice a boolean, should return []");
+                assertEqual(splice(1, 1, 1), [1], "Number should be casted to array");
+                assertEqual(splice("123", 1, 2), ["123"], "String should be casted to array");
+                assertEmptyArray(splice(true, false, true), "Boolean should be casted to array");
             }
             testUnit("array", 12) {
                 assertEqual(splice([1, 2, 3, 4, 5]), [], "If only the array is provided, should return an empty array");
@@ -367,9 +391,9 @@ module testCoreList() {
                 assertUndef(first(), "Without parameter it should return undef");
             }
             testUnit("not array", 3) {
-                assertUndef(first(1), "Cannot return the first element of a number, it should return undef");
-                assertUndef(first("123"), "Cannot return the first element of a string, it should return undef");
-                assertUndef(first(true), "Cannot return the first element of a boolean, it should return undef");
+                assertEqual(first(1), 1, "Number should be casted to array");
+                assertEqual(first("123"), "123", "String should be casted to array");
+                assertEqual(first(true), true, "Boolean should be casted to array");
             }
             testUnit("array", 7) {
                 assertUndef(first([]), "Cannot return the first element of an empty array, it should return undef");
@@ -387,9 +411,9 @@ module testCoreList() {
                 assertUndef(last(), "Without parameter it should return undef");
             }
             testUnit("not array", 3) {
-                assertUndef(last(1), "Cannot return the last element of a number, it should return undef");
-                assertUndef(last("123"), "Cannot return the last element of a string, it should return undef");
-                assertUndef(last(true), "Cannot return the last element of a boolean, it should return undef");
+                assertEqual(last(1), 1, "Number should be casted to array");
+                assertEqual(last("123"), "123", "String should be casted to array");
+                assertEqual(last(true), true, "Boolean should be casted to array");
             }
             testUnit("array", 7) {
                 assertUndef(last([]), "Cannot return the last element of an empty array, it should return undef");
@@ -441,9 +465,9 @@ module testCoreList() {
                 assertEqual(push(), [undef], "Without parameter it should return an array containing an undef");
             }
             testUnit("not array", 3) {
-                assertEqual(push(1, 1), [1], "Cannot add element to a number, should return an array that only contains the added element");
-                assertEqual(push("123", "a"), ["a"], "Cannot add element to a string, should return an array that only contains the added element");
-                assertEqual(push(true, false), [false], "Cannot add element to a boolean, should return an array that only contains the added element");
+                assertEqual(push(1, 2), [1, 2], "Number should be casted to array");
+                assertEqual(push("123", "a"), ["123", "a"], "String should be casted to array");
+                assertEqual(push(true, false), [true, false], "Boolean should be casted to array");
             }
             testUnit("array", 5) {
                 assertEqual(push([]), [undef], "An element to add should be provided, otherwise an undef will be pushed");
@@ -459,9 +483,9 @@ module testCoreList() {
                 assertEqual(unshift(), [undef], "Without parameter it should return an array containing an undef");
             }
             testUnit("not array", 3) {
-                assertEqual(unshift(1, 1), [1], "Cannot add element to a number, should return an array that only contains the added element");
-                assertEqual(unshift("123", "a"), ["a"], "Cannot add element to a string, should return an array that only contains the added element");
-                assertEqual(unshift(true, false), [false], "Cannot add element to a boolean, should return an array that only contains the added element");
+                assertEqual(unshift(1, 2), [2, 1], "Number should be casted to array");
+                assertEqual(unshift("123", "a"), ["a", "123"], "String should be casted to array");
+                assertEqual(unshift(true, false), [false, true], "Boolean should be casted to array");
             }
             testUnit("array", 5) {
                 assertEqual(unshift([]), [undef], "An element to add should be provided, otherwise an undef will be pushed");
@@ -496,9 +520,9 @@ module testCoreList() {
                 assertEmptyArray(sort(), "Without parameter it should return an empty array");
             }
             testUnit("not array", 3) {
-                assertEmptyArray(sort(1), "Cannot sort a number, should return an empty array");
-                assertEmptyArray(sort("123"), "Cannot sort a string, should return an empty array");
-                assertEmptyArray(sort(true), "Cannot sort a boolean, should return an empty array");
+                assertEqual(sort(1), [1], "Number should be casted to array");
+                assertEqual(sort("123"), ["123"], "String should be casted to array");
+                assertEqual(sort(true), [true], "Boolean should be casted to array");
             }
             testUnit("array", 7) {
                 assertEqual(sort([]), [], "Empty array remain empty array");

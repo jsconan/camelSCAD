@@ -2,7 +2,7 @@
  * @license
  * MIT License
  *
- * Copyright (c) 2017 Jean-Sebastien CONAN
+ * Copyright (c) 2017-2019 Jean-Sebastien CONAN
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -139,6 +139,18 @@ MAX_DECIMALS = 7;
  * @type Number
  */
 MAX_RECURSE = 32;
+
+/**
+ * A value representing the Infinity.
+ * @type Number
+ */
+INFINITY = 1e200 * 1e200;
+
+/**
+ * Not A Number.
+ * @type Number
+ */
+NAN = 0/0;
 
 /**
  * A value utilized to align wall and ensure proper cuts on one side.

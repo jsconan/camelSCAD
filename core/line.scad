@@ -2,7 +2,7 @@
  * @license
  * MIT License
  *
- * Copyright (c) 2017 Jean-Sebastien CONAN
+ * Copyright (c) 2017-2019 Jean-Sebastien CONAN
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -88,7 +88,8 @@ function sinusoid(l, w, h, p, o, a) =
         h = divisor(h),
         step = l / (fragments(h) * l / w)
     )
-    [
+    !l ? []
+   :[
         for (x = [0 : step : l])
             let( p = sinp(x=x, w=w, h=h, p=p, o=o) )
             a ? rotp(p, a) : p
@@ -115,7 +116,8 @@ function cosinusoid(l, w, h, p, o, a) =
         h = divisor(h),
         step = l / (fragments(h) * l / w)
     )
-    [
+    !l ? []
+   :[
         for (y = [0 : step : l])
             let( p = cosp(y=y, w=w, h=h, p=p, o=o) )
             a ? rotp(p, a) : p
@@ -141,6 +143,8 @@ function cosinusoid(l, w, h, p, o, a) =
  * - A, Angle: ["A", <angle>, <length>] - Adds a leaned line from the last point with the given angle and the given length. The sign of the length determines the direction.
  * - C, Circle: ["C", <radius>, <start angle>, <end angle>] - Adds a circle arc from the last point with the given radius and with the given angle.
  * - B, Bezier curve: ["B", <P1>, <P2>, <P3>] - Adds a cubic bezier curve from the last point with the given control points (up to 3, the first beeing the last existing point).
+ * - N, Nested: ["N", [<SubPath>]] - Nested path to execute.
+ * - R, Repeat: ["R", <N>, [<SubPath>]] - Repeat N times the sub path.
  *
  * @param Array p - The path from which build the line
  * @param Vector[] points - The existing points to start the line from.
@@ -154,7 +158,7 @@ function path(p, points, i) =
         points = array(points),
         length = len(points),
         point = vector2D(points[length - 1]),
-        cur = p[i],
+        cur = array(p[i]),
         cmd = cur[0],
         l = len(cur)
     )
@@ -175,6 +179,8 @@ function path(p, points, i) =
                :l == 3 ? concat([point], quadraticBezierCurve(point, point + vector2D(cur[1]), point + vector2D(cur[2])))
                :[point, point + vector2D(cur[1])]
             )
+            :cmd == "N" || cmd == "n" ? path(p=cur[1], points=[point])
+            :cmd == "R" || cmd == "r" ? path(p=times(cur[2], cur[1]), points=[point])
             :[]
         )
     )
@@ -217,9 +223,10 @@ function outline(points, distance) =
  */
 function lineAdd(points, value) =
     let(
+        points = array(points),
         l = max(
-            float(len(value)),
-            float(len(points[0]))
+            len(arrayOr(value, [])),
+            len(arrayOr(points[0], []))
         ),
         value = vector3D(value)
     )

@@ -2,7 +2,7 @@
 #
 # MIT License
 #
-# Copyright (c) 2017-2019 Jean-Sebastien CONAN
+# Copyright (c) 2019 Jean-Sebastien CONAN
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -26,7 +26,7 @@
 #
 # Part of the camelSCAD library.
 #
-# Parses and displays the results of the unit tests.
+# Generates STL files from the current directory.
 #
 # @package scripts
 # @author jsconan
@@ -34,10 +34,10 @@
 
 scriptpath=$(dirname $0)
 project=$(pwd)
-srcpath=${project}/test
+srcpath=${project}
 dstpath=${project}/output
 
 source "${scriptpath}/utils.sh"
 
 scadcheck
-scadunittest "$1" "${srcpath}" "${dstpath}" "suite"
+scadtostlall "${srcpath}" "${dstpath}" "$@"

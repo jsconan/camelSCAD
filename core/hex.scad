@@ -2,7 +2,7 @@
  * @license
  * MIT License
  *
- * Copyright (c) 2017 Jean-Sebastien CONAN
+ * Copyright (c) 2017-2019 Jean-Sebastien CONAN
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -38,7 +38,10 @@
  * @param Vector|Number count - The number of cells.
  * @returns Number - The number of ranges.
  */
-function radialHexRange(count) = floor((abs(divisor(min(count))) - 1) / 2);
+function radialHexRange(count) =
+    let( number = isArray(count) && len(count) ? min(count) : float(count) )
+    floor((abs(divisor(number)) - 1) / 2)
+;
 
 /**
  * Computes the number of cells in a radial hex grid based on the number of ranges.

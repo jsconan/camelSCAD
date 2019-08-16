@@ -2,7 +2,7 @@
  * @license
  * MIT License
  *
- * Copyright (c) 2017 Jean-Sebastien CONAN
+ * Copyright (c) 2017-2019 Jean-Sebastien CONAN
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -42,6 +42,24 @@
 function fill(value, length) =
     let( length = float(length) )
     length > 0 ? [ for (i = [0 : length - 1]) value ]
+               : []
+;
+
+/**
+ * Fills an array by repeating a value N times. Arrays will be concatained.
+ * The result will be a flatten array.
+ *
+ * @param * value - The value to fill with. Can be of any type.
+ * @param Number count - The number of times to repeat.
+ * @returns Array
+ */
+function times(value, count) =
+    let(
+        value = array(value),
+        l = len(value),
+        length = float(count) * l
+    )
+    length > 0 ? [ for (i = [0 : length - 1]) value[i % l] ]
                : []
 ;
 
@@ -89,7 +107,7 @@ function steps(start, count, end) =
  * @returns Array
  */
 function reverse(collection) =
-    let( collection = arrayOr(collection, []) )
+    let( collection = array(collection) )
     [ for (i = [len(collection) - 1 : -1 : 0]) collection[i] ]
 ;
 
@@ -99,7 +117,7 @@ function reverse(collection) =
  * @param Array collection - The array to flatten.
  * @returns Array
  */
-function flatten(collection) = [ for (a = arrayOr(collection, [])) for (b = a) b ];
+function flatten(collection) = [ for (a = array(collection)) for (b = isString(a) ? [a] : a) b ];
 
 /**
  * Finds the index of a key in a collection.
@@ -138,7 +156,7 @@ function inArray(collection, elem) = find(collection, elem) > -1;
  */
 function complete(collection, start, end) =
     let(
-        collection = arrayOr(collection, []),
+        collection = array(collection),
         first = start && start != collection[0] && start != collection[len(collection) - 1] ? concat([start], collection) : collection,
         second = end && end != first[0] && end != first[len(first) - 1] ? concat(first, [end]) : first
     )
@@ -155,7 +173,7 @@ function complete(collection, start, end) =
  */
 function slice(collection, start, end) =
     let(
-        collection = arrayOr(collection, []),
+        collection = array(collection),
         length = len(collection),
         start = start < 0 ? max(0, length + start) : integer(start),
         end = (end < 0 ? max(start, length + end) : numberOr(end, length)) - 1
@@ -175,7 +193,7 @@ function slice(collection, start, end) =
  */
 function splice(collection, start, remove, elems) =
     let(
-        collection = arrayOr(collection, []),
+        collection = array(collection),
         elems = arrayOr(elems, []),
         length = len(collection),
         start = min(start < 0 ? max(0, length + start) : integer(start), length),
@@ -199,7 +217,10 @@ function splice(collection, start, remove, elems) =
  * @returns Array|*
  */
 function first(collection, count) =
-    let( count = numberOr(count, 1) )
+    let(
+        collection = array(collection),
+        count = numberOr(count, 1)
+    )
     count > 1 ? slice(collection, 0, count)
           : arrayOr(collection, [])[0]
 ;
@@ -212,7 +233,10 @@ function first(collection, count) =
  * @returns *
  */
 function last(collection, count) =
-    let( count = numberOr(count, 1) )
+    let(
+        collection = array(collection),
+        count = numberOr(count, 1)
+    )
     count > 1 ? slice(collection, -count)
           : arrayOr(collection, [])[len(collection) - 1]
 ;
@@ -240,7 +264,7 @@ function shift(collection) = slice(collection, 1);
  * @param * elem - The element to add.
  * @returns Array
  */
-function push(collection, elem) = concat(arrayOr(collection, []), [elem]);
+function push(collection, elem) = concat(array(collection), [elem]);
 
 /**
  * Adds an element at the beginning of an array.
@@ -249,7 +273,7 @@ function push(collection, elem) = concat(arrayOr(collection, []), [elem]);
  * @param * elem - The element to add.
  * @returns Array
  */
-function unshift(collection, elem) = concat([elem], arrayOr(collection, []));
+function unshift(collection, elem) = concat([elem], array(collection));
 
 /**
  * Picks elements in an array to build another array.
@@ -260,7 +284,7 @@ function unshift(collection, elem) = concat([elem], arrayOr(collection, []));
  */
 function pick(collection, what) =
     let(
-        collection = arrayOr(collection, []),
+        collection = array(collection),
         length = len(collection),
         what = arrayOr(what, [])
     )
@@ -276,8 +300,11 @@ function pick(collection, what) =
 function sort(collection,
               // internal
               nocheck=false) =
-    let( length = len(collection) )
-    !length || !nocheck && isString(collection) ? []            // not array or empty
+    let(
+        collection = nocheck ? collection : array(collection),
+        length = len(collection)
+    )
+    length < 2 ? collection                                     // empty or not enough element
    :let( middle = collection[floor(length / 2)] )
     concat(
         sort([ for (i = collection) if (i < middle) i ], true), // lesser

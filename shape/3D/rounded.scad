@@ -2,7 +2,7 @@
  * @license
  * MIT License
  *
- * Copyright (c) 2017 Jean-Sebastien CONAN
+ * Copyright (c) 2017-2019 Jean-Sebastien CONAN
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -399,9 +399,9 @@ function drawPeg(size, r, d, l, w, h, rx, ry, dx, dy) =
  * @param Number [dy] - The vertical diameter.
  * @returns Vector[]
  */
-function drawPlate(size, r, d, w, h, rx, ry, dx, dy) =
+function drawPlate(size, r, d, l, w, h, rx, ry, dx, dy) =
     let(
-        specs = sizePlate(size=size, r=r, d=d, w=w, h=h, rx=rx, ry=ry, dx=dx, dy=dy),
+        specs = sizePlate(size=size, r=r, d=d, l=l, w=w, h=h, rx=rx, ry=ry, dx=dx, dy=dy),
         size = specs[0],
         radius = specs[1],
         center = [

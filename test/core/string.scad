@@ -2,7 +2,7 @@
  * @license
  * MIT License
  *
- * Copyright (c) 2017 Jean-Sebastien CONAN
+ * Copyright (c) 2017-2019 Jean-Sebastien CONAN
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -65,9 +65,9 @@ module testCoreString() {
                 assertEmptyString(substr(), "Without parameters it should produce an empty string");
             }
             testUnit("not string", 3) {
-                assertEmptyString(substr(1, 0, 2), "Cannot slice a number, it should return an empty string");
-                assertEmptyString(substr(true, 0, 2), "Cannot slice a boolean, it should return an empty string");
-                assertEmptyString(substr(["a", "b", "c"], 0, 2), "Cannot slice an array, it should return an empty string");
+                assertEqual(substr(1, 0, 2), "1", "Number should be casted to string");
+                assertEqual(substr(true, 0, 2), "tr", "Boolean should be casted to string");
+                assertEqual(substr(["a", "b", "c"], 0, 2), "[\"", "Array should be casted to string");
             }
             testUnit("string", 8) {
                 assertEqual(substr("this is a test"), "this is a test", "Should return the exact string if no boundaries are provided");
@@ -86,9 +86,9 @@ module testCoreString() {
                 assertEqual(indexOf(), -1, "Without parameters it should return -1");
             }
             testUnit("not string", 3) {
-                assertEqual(indexOf(1, 1), -1, "Cannot search in a number, it should return -1");
-                assertEqual(indexOf(true, true), -1, "Cannot search in a boolean, it should return -1");
-                assertEqual(indexOf([1], [1]), -1, "Cannot search in an array, it should return -1");
+                assertEqual(indexOf(123, 2), 1, "Number should be casted to string");
+                assertEqual(indexOf(true, true), 0, "Boolean should be casted to string");
+                assertEqual(indexOf([1], [1]), 0, "Array should be casted to string");
             }
             testUnit("string", 6) {
                 assertEqual(indexOf("foo", "bar"), -1, "Should not find an inexisting substring");
@@ -105,9 +105,9 @@ module testCoreString() {
                 assertEqual(lastIndexOf(), -1, "Without parameters it should return -1");
             }
             testUnit("not string", 3) {
-                assertEqual(lastIndexOf(1, 1), -1, "Cannot search in a number, it should return -1");
-                assertEqual(lastIndexOf(true, true), -1, "Cannot search in a boolean, it should return -1");
-                assertEqual(lastIndexOf([1], [1]), -1, "Cannot search in an array, it should return -1");
+                assertEqual(lastIndexOf(1, 1), 0, "Number should be casted to string");
+                assertEqual(lastIndexOf(true, true), 0, "Boolean should be casted to string");
+                assertEqual(lastIndexOf([1], [1]), 0, "Array should be casted to string");
             }
             testUnit("string", 6) {
                 assertEqual(lastIndexOf("foo", "bar"), -1, "Should not find an inexisting substring");
@@ -143,7 +143,7 @@ module testCoreString() {
                 assertEqual(join("123"), "123", "Should return a string without any glue");
             }
             testUnit("glue and string as array", 1) {
-                assertEqual(join("123", "-"), "1-2-3", "Should return a string with the provided glue between terms");
+                assertEqual(join("123", "-"), "123", "String cannot be joined as it is already a string");
             }
         }
         // test core/string/split()
@@ -172,9 +172,9 @@ module testCoreString() {
                 assertEmptyString(replace(), "Without parameters it should produce an empty string");
             }
             testUnit("not string", 3) {
-                assertEmptyString(replace(1, 2, 3), "Cannot make replacement in a number, it should return an empty string");
-                assertEmptyString(replace(true, false, true), "Cannot make replacement in a boolean, it should return an empty string");
-                assertEmptyString(replace(["1", "2", "3"], 1, 2), "Cannot make replacement in an array, it should return an empty string");
+                assertEqual(replace(123, 2, 3), "133", "Number should be casted to string");
+                assertEqual(replace(true, true, false), "false", "Boolean should be casted to string");
+                assertEqual(replace([1, 2, 3], 1, 2), "[2, 2, 3]", "Array should be casted to string");
             }
             testUnit("string", 10) {
                 assertEqual(replace("abcd"), "abcd", "Should return the original string if there is nothing to replace");
@@ -195,9 +195,9 @@ module testCoreString() {
                 assertEmptyArray(occurences(), "Without parameters it should return an empty array");
             }
             testUnit("not string", 3) {
-                assertEmptyArray(occurences(1, 1), "Cannot search in a number, it should return an empty array");
-                assertEmptyArray(occurences(true, true), "Cannot search in a boolean, it should return an empty array");
-                assertEmptyArray(occurences([1], [1]), "Cannot search in an array, it should return an empty array");
+                assertEqual(occurences(1, 1), [0], "Number should be casted to string");
+                assertEqual(occurences(true, true), [0], "Boolean should be casted to string");
+                assertEqual(occurences([1], [1]), [0], "Array should be casted to string");
             }
             testUnit("string", 6) {
                 assertEmptyArray(occurences("foo", "bar"), "Should not find an inexisting substring");

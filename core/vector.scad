@@ -2,7 +2,7 @@
  * @license
  * MIT License
  *
- * Copyright (c) 2017 Jean-Sebastien CONAN
+ * Copyright (c) 2017-2019 Jean-Sebastien CONAN
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -40,10 +40,11 @@
  * @returns Vector
  */
 function vadd(v, value) =
-    len(v) ?
-    let( value = float(value) )
+    let(
+        v = array(v),
+        value = float(value)
+    )
     [ for (i = v) float(i) + value ]
-   :[]
 ;
 
 /**
@@ -54,10 +55,11 @@ function vadd(v, value) =
  * @returns Vector
  */
 function vsub(v, value) =
-    len(v) ?
-    let( value = float(value) )
+    let(
+        v = array(v),
+        value = float(value)
+    )
     [ for (i = v) float(i) - value ]
-   :[]
 ;
 
 /**
@@ -69,11 +71,12 @@ function vsub(v, value) =
  */
 function vmul(a, b) =
     let(
-        lenA = len(a),
-        lenB = len(b)
+        a = array(a),
+        b = array(b),
+        l = max(len(a), len(b))
     )
-    lenA && lenB ? [
-        for (i = [0 : max(lenA, lenB) - 1])
+    l ? [
+        for (i = [0 : l - 1])
             float(a[i]) * float(b[i])
     ]
    :[]
@@ -88,11 +91,12 @@ function vmul(a, b) =
  */
 function vdiv(a, b) =
     let(
-        lenA = len(a),
-        lenB = len(b)
+        a = array(a),
+        b = array(b),
+        l = max(len(a), len(b))
     )
-    lenA && lenB ? [
-        for (i = [0 : max(lenA, lenB) - 1])
+    l ? [
+        for (i = [0 : l - 1])
             float(a[i]) / divisor(b[i])
     ]
    :[]
@@ -106,9 +110,11 @@ function vdiv(a, b) =
  * @returns Vector
  */
 function vmin(v, value) =
-    len(v) ? let( value = float(value) )
+    let(
+        v = array(v),
+        value = float(value)
+    )
     [ for (i = v) min(float(i), value) ]
-   :[]
 ;
 
 /**
@@ -119,9 +125,11 @@ function vmin(v, value) =
  * @returns Vector
  */
 function vmax(v, value) =
-    len(v) ? let( value = float(value) )
+    let(
+        v = array(v),
+        value = float(value)
+    )
     [ for (i = v) max(float(i), value) ]
-   :[]
 ;
 
 /**
@@ -132,9 +140,11 @@ function vmax(v, value) =
  * @returns Vector
  */
 function vpow(v, power=2) =
-    len(v) ? let( power = float(power) )
+    let(
+        v = array(v),
+        power = float(power)
+    )
     [ for (i = v) pow(float(i), power) ]
-   :[]
 ;
 
 /**
@@ -143,10 +153,7 @@ function vpow(v, power=2) =
  * @param Vector v - The vector to absolute.
  * @returns Vector
  */
-function vabs(v) =
-    len(v) ? [ for (i = v) abs(float(i)) ]
-           : []
-;
+function vabs(v) = [ for (i = array(v)) abs(float(i)) ];
 
 /**
  * Computes the sign of each vector elements.
@@ -154,10 +161,7 @@ function vabs(v) =
  * @param Vector v - The vector to sign.
  * @returns Vector
  */
-function vsign(v) =
-    len(v) ? [ for (i = v) float(sign(i)) ]
-           : []
-;
+function vsign(v) = [ for (i = array(v)) sign(float(i)) ];
 
 /**
  * Computes the sum of all elements from a vector.
@@ -169,8 +173,9 @@ function vsum(v,
                // internal
                p, l) =
     let(
+        v = array(v),
         p = float(p),
-        l = numberOr(l, float(len(v)))
+        l = numberOr(l, len(v))
     )
     l <= 4 ? (
         l <= 1 ? float(v[p])
@@ -193,7 +198,10 @@ function vsum(v,
  * @returns Number
  */
 function vaverage(v) =
-    let( count = len(v) )
+    let(
+        v = array(v),
+        count = len(v)
+    )
     count ? vsum(v) / count
           : 0
 ;
@@ -254,8 +262,8 @@ function vboolean(a, bool) =
  */
 function vangle(a, b) =
     let(
-        a = a ? a : [0, 0, 0],
-        b = b ? b : [0, 0, 0]
+        a = a ? vector(a, 3) : [0, 0, 0],
+        b = b ? vector(b, 3) : [0, 0, 0]
     )
     float(acos((a * b) / (norm(a) * norm(b))))
 ;
