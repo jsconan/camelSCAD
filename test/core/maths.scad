@@ -34,7 +34,7 @@ use <../../full.scad>
  * @author jsconan
  */
 module testCoreMaths() {
-    testPackage("core/maths.scad", 18) {
+    testPackage("core/maths.scad", 19) {
         // test core/maths/deg()
         testModule("deg()", 3) {
             testUnit("no parameter", 1) {
@@ -317,6 +317,25 @@ module testCoreMaths() {
                 assertEqual(getAngle(-2, 1), atan2(1, -2), "Angle of vector [-2,1]");
                 assertEqual(getAngle(2, -1), 360 + atan2(-1, 2), "Angle of vector [2,-1]");
                 assertEqual(getAngle(-2, -1), 360 + atan2(-1, -2), "Angle of vector [-2,-1]");
+            }
+        }
+        // test core/maths/getArcLength()
+        testModule("getArcLength()", 2) {
+            testUnit("default value", 5) {
+                assertEqual(getArcLength(), 0, "Should return 0 if no parameter was provided");
+                assertEqual(getArcLength([], []), 0, "Cannot compute length of arc from arrays");
+                assertEqual(getArcLength([1, 2], [3, 4]), 0, "Cannot compute length of arc from vectors");
+                assertEqual(getArcLength("1", "2"), 0, "Cannot compute length of arc from strings");
+                assertEqual(getArcLength(true, true), 0, "Cannot compute length of arc from booleans");
+            }
+            testUnit("compute length", 7) {
+                assertEqual(getArcLength(0, 0), 0, "Length of arc from 0");
+                assertEqual(getArcLength(0, 1), 0, "Length of arc from angle 0");
+                assertEqual(getArcLength(90, 100), PI * 200 / 4, "Length of arc from from radius 100, angle 90");
+                assertEqual(getArcLength(angle=90, radius=100), PI * 200 / 4, "Length of arc from from radius 100, angle 90");
+                assertEqual(getArcLength(angle=90, diameter=200), PI * 200 / 4, "Length of arc from from diameter 200, angle 90");
+                assertEqual(getArcLength(angle=66, diameter=193), PI * 193 * (66 / 360), "Length of arc from from diameter 193, angle 66");
+                assertEqual(getArcLength(angle=66, radius=193), PI * 386 * (66 / 360), "Length of arc from from radius 193, angle 66");
             }
         }
         // test core/maths/getPolygonAngle()
