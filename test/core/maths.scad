@@ -34,7 +34,7 @@ use <../../full.scad>
  * @author jsconan
  */
 module testCoreMaths() {
-    testPackage("core/maths.scad", 20) {
+    testPackage("core/maths.scad", 21) {
         // test core/maths/deg()
         testModule("deg()", 3) {
             testUnit("no parameter", 1) {
@@ -355,6 +355,25 @@ module testCoreMaths() {
                 assertEqual(getArcAngle(length=90, diameter=200), 32400 / (PI * 200), "Angle of arc from from diameter 200, length 90");
                 assertEqual(getArcAngle(length=66, diameter=193), 23760 / (PI * 193), "Angle of arc from from diameter 193, length 66");
                 assertEqual(getArcAngle(length=66, radius=193), 23760 / (PI * 386), "Angle of arc from from radius 193, length 66");
+            }
+        }
+        // test core/maths/getChordLength()
+        testModule("getChordLength()", 2) {
+            testUnit("default value", 5) {
+                assertEqual(getChordLength(), 0, "Should return 0 if no parameter was provided");
+                assertEqual(getChordLength([], []), 0, "Cannot compute length of chord from arrays");
+                assertEqual(getChordLength([1, 2], [3, 4]), 0, "Cannot compute length of chord from vectors");
+                assertEqual(getChordLength("1", "2"), 0, "Cannot compute length of chord from strings");
+                assertEqual(getChordLength(true, true), 0, "Cannot compute length of chord from booleans");
+            }
+            testUnit("compute length", 7) {
+                assertEqual(getChordLength(0, 0), 0, "Length of chord from 0");
+                assertEqual(getChordLength(0, 1), 0, "Length of chord from angle 0");
+                assertEqual(getChordLength(90, 100), 200 * sin(45), "Length of chord from from radius 100, angle 90");
+                assertEqual(getChordLength(angle=90, radius=100), 200 * sin(45), "Length of chord from from radius 100, angle 90");
+                assertEqual(getChordLength(angle=90, diameter=200), 200 * sin(45), "Length of chord from from diameter 200, angle 90");
+                assertEqual(getChordLength(angle=66, diameter=193), 193 * sin(33), "Length of chord from from diameter 193, angle 66");
+                assertEqual(getChordLength(angle=66, radius=193), 386 * sin(33), "Length of chord from from radius 193, angle 66");
             }
         }
         // test core/maths/getPolygonAngle()
