@@ -34,7 +34,7 @@ use <../../full.scad>
  * @author jsconan
  */
 module testCoreMaths() {
-    testPackage("core/maths.scad", 19) {
+    testPackage("core/maths.scad", 20) {
         // test core/maths/deg()
         testModule("deg()", 3) {
             testUnit("no parameter", 1) {
@@ -336,6 +336,25 @@ module testCoreMaths() {
                 assertEqual(getArcLength(angle=90, diameter=200), PI * 200 / 4, "Length of arc from from diameter 200, angle 90");
                 assertEqual(getArcLength(angle=66, diameter=193), PI * 193 * (66 / 360), "Length of arc from from diameter 193, angle 66");
                 assertEqual(getArcLength(angle=66, radius=193), PI * 386 * (66 / 360), "Length of arc from from radius 193, angle 66");
+            }
+        }
+        // test core/maths/getArcAngle()
+        testModule("getArcAngle()", 2) {
+            testUnit("default value", 5) {
+                assertEqual(getArcAngle(), 0, "Should return 0 if no parameter was provided");
+                assertEqual(getArcAngle([], []), 0, "Cannot compute angle of arc from arrays");
+                assertEqual(getArcAngle([1, 2], [3, 4]), 0, "Cannot compute angle of arc from vectors");
+                assertEqual(getArcAngle("1", "2"), 0, "Cannot compute angle of arc from strings");
+                assertEqual(getArcAngle(true, true), 0, "Cannot compute angle of arc from booleans");
+            }
+            testUnit("compute length", 7) {
+                assertEqual(getArcAngle(0, 0), 0, "Angle of arc from 0");
+                assertEqual(getArcAngle(0, 1), 0, "Angle of arc from length 0");
+                assertEqual(getArcAngle(90, 100), 32400 / (PI * 200), "Angle of arc from from radius 100, length 90");
+                assertEqual(getArcAngle(length=90, radius=100), 32400 / (PI * 200), "Angle of arc from from radius 100, length 90");
+                assertEqual(getArcAngle(length=90, diameter=200), 32400 / (PI * 200), "Angle of arc from from diameter 200, length 90");
+                assertEqual(getArcAngle(length=66, diameter=193), 23760 / (PI * 193), "Angle of arc from from diameter 193, length 66");
+                assertEqual(getArcAngle(length=66, radius=193), 23760 / (PI * 386), "Angle of arc from from radius 193, length 66");
             }
         }
         // test core/maths/getPolygonAngle()
