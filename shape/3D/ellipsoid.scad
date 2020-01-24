@@ -142,6 +142,28 @@ module pipe(r, h, w=0.1, d, rx, ry, dx, dy, wx, wy, center) {
 }
 
 /**
+ * Creates a pipe segment at the origin.
+ *
+ * @param Number|Vector [r] - The radius of the pipe or a vector that contains horizontal and vertical radius.
+ * @param Number|Vector [w] - The thickness of the pipe.
+ * @param Number [h] - The height of the pipe.
+ * @param Number|Vector [d] - The diameter of the pipe or a vector that contains horizontal and vertical diameters.
+ * @param Number [rx] - The horizontal radius.
+ * @param Number [ry] - The vertical radius.
+ * @param Number [dx] - The horizontal diameter.
+ * @param Number [dy] - The vertical diameter.
+ * @param Number [wx] - The horizontal thickness of the pipe hole.
+ * @param Number [wy] - The vertical thickness of the pipe hole.
+ * @param Boolean [center] - Whether or not center the pipe on the vertical axis.
+ */
+module pipeSegment(r, h, w=0.1, a=90, d, a1, a2, rx, ry, dx, dy, wx, wy, center) {
+    size = sizeEllipsoid(r=r, d=d, rx=rx, ry=ry, rz=h, dx=dx, dy=dy);
+    linear_extrude(height=size[2], center=center, convexity=10) {
+        ringSegment(r=size, a=a, a1=a1, a2=a2, w=w, wx=wx, wy=wy);
+    }
+}
+
+/**
  * Creates a torus at the origin.
  * Note: the tore can be deformed if the ring is not perfectly circular.
  *
