@@ -145,6 +145,37 @@ function getArcAngle(length, radius, diameter) =
 ;
 
 /**
+ * Gets the length of a chord given the radius and the angle
+ * @param Number angle - The angle of the chord
+ * @param Number [radius] - The radius of the circle
+ * @param Number [diameter] - The diameter of the circle
+ * @returns Number
+ */
+function getChordLength(angle, radius, diameter) =
+    let(
+        diameter = numberOr(diameter, float(radius) * 2),
+        angle = float(angle)
+    )
+    diameter * sin(angle / 2)
+;
+
+/**
+ * Gets the angle of a chord given the radius and the length
+ * @param Number length - The length of the chord
+ * @param Number [radius] - The radius of the circle
+ * @param Number [diameter] - The diameter of the circle
+ * @returns Number
+ */
+function getChordAngle(length, radius, diameter) =
+    let(
+        diameter = numberOr(diameter, float(radius) * 2),
+        length = float(length)
+    )
+    !length ? 0
+   :asin(length / diameter) * 2
+;
+
+/**
  * Gets the angle value at a particular index in a regular polygon.
  * @param Number index - The index of the angle
  * @param Number [count] - The number of sides in the polygon
