@@ -114,6 +114,37 @@ function getAngle(x, y) =
 ;
 
 /**
+ * Gets the length of an arc given the radius and the angle
+ * @param Number angle - The angle of the arc
+ * @param Number [radius] - The radius of the circle
+ * @param Number [diameter] - The diameter of the circle
+ * @returns Number
+ */
+function getArcLength(angle, radius, diameter) =
+    let(
+        diameter = numberOr(diameter, float(radius) * 2),
+        angle = float(angle)
+    )
+    PI * diameter * angle / DEGREES
+;
+
+/**
+ * Gets the angle of an arc given the radius and the length
+ * @param Number length - The length of the arc
+ * @param Number [radius] - The radius of the circle
+ * @param Number [diameter] - The diameter of the circle
+ * @returns Number
+ */
+function getArcAngle(length, radius, diameter) =
+    let(
+        diameter = numberOr(diameter, float(radius) * 2),
+        length = float(length)
+    )
+    !diameter ? 0
+   :(length * DEGREES) / (PI * diameter)
+;
+
+/**
  * Gets the angle value at a particular index in a regular polygon.
  * @param Number index - The index of the angle
  * @param Number [count] - The number of sides in the polygon
