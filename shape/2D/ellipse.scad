@@ -176,7 +176,7 @@ module pie(r, a=RIGHT, d, a1, a2, rx, ry, dx, dy) {
  */
 module chord(r, a=RIGHT, d, a1, a2, rx, ry, dx, dy) {
     polygon(
-        points = arc(v=sizeEllipse(r=r, d=d, rx=rx, ry=ry, dx=dx, dy=dy), a=a, a1=a1, a2=a2),
+        points = arc(r=sizeEllipse(r=r, d=d, rx=rx, ry=ry, dx=dx, dy=dy), a=a, a1=a1, a2=a2),
         convexity = 10
     );
 }
@@ -201,4 +201,31 @@ module ring(r, w, d, rx, ry, dx, dy, wx, wy) {
         ellipse(r=size[0]);
         ellipse(r=size[1]);
     }
+}
+
+/**
+ * Creates a ring segment at the origin.
+ *
+ * @param Number|Vector [r] - The radius or a vector that contains horizontal and vertical radius.
+ * @param Number|Vector [w] - The thickness of the ring.
+ * @param Number|Vector [d] - The diameter or a vector that contains horizontal and vertical diameters.
+ * @param Number [a] - The angle of the segment
+ * @param Number [a1] - The start angle of the segment
+ * @param Number [a2] - The end angle of the segment
+ * @param Number [rx] - The horizontal radius.
+ * @param Number [ry] - The vertical radius.
+ * @param Number [dx] - The horizontal diameter.
+ * @param Number [dy] - The vertical diameter.
+ * @param Number [wx] - The horizontal thickness of the ring hole.
+ * @param Number [wy] - The vertical thickness of the ring hole.
+ */
+module ringSegment(r, w, a=RIGHT, d, a1, a2, rx, ry, dx, dy, wx, wy) {
+    size = sizeRing(r=r, w=w, d=d, rx=rx, ry=ry, dx=dx, dy=dy, wx=wx, wy=wy);
+    polygon(
+        points = concat(
+            arc(r=size[0], a=a, a1=a1, a2=a2),
+            reverse(arc(r=size[1], a=a, a1=a1, a2=a2))
+        ),
+        convexity = 10
+    );
 }

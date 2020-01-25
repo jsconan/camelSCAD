@@ -34,7 +34,7 @@ use <../../full.scad>
  * @author jsconan
  */
 module testCoreMaths() {
-    testPackage("core/maths.scad", 18) {
+    testPackage("core/maths.scad", 22) {
         // test core/maths/deg()
         testModule("deg()", 3) {
             testUnit("no parameter", 1) {
@@ -317,6 +317,82 @@ module testCoreMaths() {
                 assertEqual(getAngle(-2, 1), atan2(1, -2), "Angle of vector [-2,1]");
                 assertEqual(getAngle(2, -1), 360 + atan2(-1, 2), "Angle of vector [2,-1]");
                 assertEqual(getAngle(-2, -1), 360 + atan2(-1, -2), "Angle of vector [-2,-1]");
+            }
+        }
+        // test core/maths/getArcLength()
+        testModule("getArcLength()", 2) {
+            testUnit("default value", 5) {
+                assertEqual(getArcLength(), 0, "Should return 0 if no parameter was provided");
+                assertEqual(getArcLength([], []), 0, "Cannot compute length of arc from arrays");
+                assertEqual(getArcLength([1, 2], [3, 4]), 0, "Cannot compute length of arc from vectors");
+                assertEqual(getArcLength("1", "2"), 0, "Cannot compute length of arc from strings");
+                assertEqual(getArcLength(true, true), 0, "Cannot compute length of arc from booleans");
+            }
+            testUnit("compute length", 7) {
+                assertEqual(getArcLength(0, 0), 0, "Length of arc from 0");
+                assertEqual(getArcLength(0, 1), 0, "Length of arc from angle 0");
+                assertEqual(getArcLength(90, 100), PI * 200 / 4, "Length of arc from radius 100, angle 90");
+                assertEqual(getArcLength(angle=90, radius=100), PI * 200 / 4, "Length of arc from radius 100, angle 90");
+                assertEqual(getArcLength(angle=90, diameter=200), PI * 200 / 4, "Length of arc from diameter 200, angle 90");
+                assertEqual(getArcLength(angle=66, diameter=193), PI * 193 * (66 / 360), "Length of arc from diameter 193, angle 66");
+                assertEqual(getArcLength(angle=66, radius=193), PI * 386 * (66 / 360), "Length of arc from radius 193, angle 66");
+            }
+        }
+        // test core/maths/getArcAngle()
+        testModule("getArcAngle()", 2) {
+            testUnit("default value", 5) {
+                assertEqual(getArcAngle(), 0, "Should return 0 if no parameter was provided");
+                assertEqual(getArcAngle([], []), 0, "Cannot compute angle of arc from arrays");
+                assertEqual(getArcAngle([1, 2], [3, 4]), 0, "Cannot compute angle of arc from vectors");
+                assertEqual(getArcAngle("1", "2"), 0, "Cannot compute angle of arc from strings");
+                assertEqual(getArcAngle(true, true), 0, "Cannot compute angle of arc from booleans");
+            }
+            testUnit("compute length", 7) {
+                assertEqual(getArcAngle(0, 0), 0, "Angle of arc from 0");
+                assertEqual(getArcAngle(0, 1), 0, "Angle of arc from length 0");
+                assertEqual(getArcAngle(90, 100), 32400 / (PI * 200), "Angle of arc from radius 100, length 90");
+                assertEqual(getArcAngle(length=90, radius=100), 32400 / (PI * 200), "Angle of arc from radius 100, length 90");
+                assertEqual(getArcAngle(length=90, diameter=200), 32400 / (PI * 200), "Angle of arc from diameter 200, length 90");
+                assertEqual(getArcAngle(length=66, diameter=193), 23760 / (PI * 193), "Angle of arc from diameter 193, length 66");
+                assertEqual(getArcAngle(length=66, radius=193), 23760 / (PI * 386), "Angle of arc from radius 193, length 66");
+            }
+        }
+        // test core/maths/getChordLength()
+        testModule("getChordLength()", 2) {
+            testUnit("default value", 5) {
+                assertEqual(getChordLength(), 0, "Should return 0 if no parameter was provided");
+                assertEqual(getChordLength([], []), 0, "Cannot compute length of chord from arrays");
+                assertEqual(getChordLength([1, 2], [3, 4]), 0, "Cannot compute length of chord from vectors");
+                assertEqual(getChordLength("1", "2"), 0, "Cannot compute length of chord from strings");
+                assertEqual(getChordLength(true, true), 0, "Cannot compute length of chord from booleans");
+            }
+            testUnit("compute length", 7) {
+                assertEqual(getChordLength(0, 0), 0, "Length of chord from 0");
+                assertEqual(getChordLength(0, 1), 0, "Length of chord from angle 0");
+                assertEqual(getChordLength(90, 100), 200 * sin(45), "Length of chord from radius 100, angle 90");
+                assertEqual(getChordLength(angle=90, radius=100), 200 * sin(45), "Length of chord from radius 100, angle 90");
+                assertEqual(getChordLength(angle=90, diameter=200), 200 * sin(45), "Length of chord from diameter 200, angle 90");
+                assertEqual(getChordLength(angle=66, diameter=193), 193 * sin(33), "Length of chord from diameter 193, angle 66");
+                assertEqual(getChordLength(angle=66, radius=193), 386 * sin(33), "Length of chord from radius 193, angle 66");
+            }
+        }
+        // test core/maths/getChordAngle()
+        testModule("getChordAngle()", 2) {
+            testUnit("default value", 5) {
+                assertEqual(getChordAngle(), 0, "Should return 0 if no parameter was provided");
+                assertEqual(getChordAngle([], []), 0, "Cannot compute angle of chord from arrays");
+                assertEqual(getChordAngle([1, 2], [3, 4]), 0, "Cannot compute angle of chord from vectors");
+                assertEqual(getChordAngle("1", "2"), 0, "Cannot compute angle of chord from strings");
+                assertEqual(getChordAngle(true, true), 0, "Cannot compute angle of chord from booleans");
+            }
+            testUnit("compute length", 7) {
+                assertEqual(getChordAngle(0, 0), 0, "Angle of chord from 0");
+                assertEqual(getChordAngle(0, 1), 0, "Angle of chord from length 0");
+                assertEqual(getChordAngle(200 * sin(45), 100), 90, "Angle of chord from radius 100, length 90");
+                assertEqual(getChordAngle(length=200 * sin(45), radius=100), 90, "Angle of chord from radius 100, length 90");
+                assertEqual(getChordAngle(length=200 * sin(45), diameter=200), 90, "Angle of chord from diameter 200, length 90");
+                assertEqual(getChordAngle(length=193 * sin(33), diameter=193), 66, "Angle of chord from diameter 193, length 66");
+                assertEqual(getChordAngle(length=386 * sin(33), radius=193), 66, "Angle of chord from radius 193, length 66");
             }
         }
         // test core/maths/getPolygonAngle()
