@@ -2,7 +2,7 @@
  * @license
  * MIT License
  *
- * Copyright (c) 2017-2019 Jean-Sebastien CONAN
+ * Copyright (c) 2017-2020 Jean-Sebastien CONAN
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -37,6 +37,7 @@
  *
  * @param Number [count] - The number of times the children must be repeated.
  * @param Vector [interval] - The interval between each repeated children.
+ * @param Boolean [center] - Whether or not center the repeated shapes.
  * @param Number [intervalX] - The X interval between each repeated children
  *                             (will overwrite the X coordinate in the `interval` vector).
  * @param Number [intervalY] - The Y interval between each repeated children
@@ -46,12 +47,14 @@
  */
 module repeat(count    = 2,
               interval = [0, 0, 0],
+              center   = false,
               intervalX, intervalY, intervalZ) {
 
     interval = apply3D(interval, intervalX, intervalY, intervalZ);
+    offset = center ? -interval * (count - 1) / 2 : [0, 0, 0];
 
     for (i = [0 : count - 1]) {
-        translate(interval * i) {
+        translate(offset + interval * i) {
             children();
         }
     }
@@ -64,14 +67,16 @@ module repeat(count    = 2,
  * @param Number [countY] - The number of times the children must be repeated along the Y axis.
  * @param Vector [intervalX] - The interval between each repeated children along the X axis.
  * @param Vector [intervalY] - The interval between each repeated children along the Y axis.
+ * @param Boolean [center] - Whether or not center the repeated shapes.
  */
 module repeat2D(countX    = 2,
                 countY    = 2,
                 intervalX = [0, 0, 0],
-                intervalY = [0, 0, 0]) {
+                intervalY = [0, 0, 0],
+                center    = false) {
 
-    repeat(count=countY, interval=vector3D(intervalY)) {
-        repeat(count=countX, interval=vector3D(intervalX)) {
+    repeat(count=countY, interval=vector3D(intervalY), center=center) {
+        repeat(count=countX, interval=vector3D(intervalX), center=center) {
             children();
         }
     }
@@ -86,17 +91,19 @@ module repeat2D(countX    = 2,
  * @param Vector [intervalX] - The interval between each repeated children along the X axis.
  * @param Vector [intervalY] - The interval between each repeated children along the Y axis.
  * @param Vector [intervalZ] - The interval between each repeated children along the Z axis.
+ * @param Boolean [center] - Whether or not center the repeated shapes.
  */
 module repeat3D(countX    = 2,
                 countY    = 2,
                 countZ    = 2,
                 intervalX = [0, 0, 0],
                 intervalY = [0, 0, 0],
-                intervalZ = [0, 0, 0]) {
+                intervalZ = [0, 0, 0],
+                center    = false) {
 
-    repeat(count=countZ, interval=vector3D(intervalZ)) {
-        repeat(count=countY, interval=vector3D(intervalY)) {
-            repeat(count=countX, interval=vector3D(intervalX)) {
+    repeat(count=countZ, interval=vector3D(intervalZ), center=center) {
+        repeat(count=countY, interval=vector3D(intervalY), center=center) {
+            repeat(count=countX, interval=vector3D(intervalX), center=center) {
                 children();
             }
         }
@@ -105,46 +112,44 @@ module repeat3D(countX    = 2,
 
 /**
  * Repeats horizontally a shape in two directions, the interval is set by the size of the shape.
- * @param Vector size - The size of the shape
- * @param Vector [count] - The number of shapes on each axis
- * @param Boolean [center] - Whether or not center the repeated shapes
+ * @param Vector size - The size of the shape.
+ * @param Vector [count] - The number of shapes on each axis.
+ * @param Boolean [center] - Whether or not center the repeated shapes.
  */
 module repeatShape2D(size, count = 1, center) {
     size = vector2D(size);
     count = vector2D(count);
 
-    translate(center ? -vmul(size, count - [1, 1]) / 2 : 0) {
-        repeat2D(
-            countX = count[0],
-            countY = count[1],
-            intervalX = [size[0], 0, 0],
-            intervalY = [0, size[1], 0]
-        ) {
-            children();
-        }
+    repeat2D(
+        countX = count[0],
+        countY = count[1],
+        intervalX = [size[0], 0, 0],
+        intervalY = [0, size[1], 0],
+        center = center
+    ) {
+        children();
     }
 }
 
 /**
  * Repeats a shape in three directions, the interval is set by the size of the shape.
- * @param Vector size - The size of the shape
- * @param Vector [count] - The number of shapes on each axis
- * @param Boolean [center] - Whether or not center the repeated shapes
+ * @param Vector size - The size of the shape.
+ * @param Vector [count] - The number of shapes on each axis.
+ * @param Boolean [center] - Whether or not center the repeated shapes.
  */
 module repeatShape3D(size, count = 1, center) {
     size = vector3D(size);
     count = vector3D(count);
 
-    translate(center ? -vmul(size, count - [1, 1, 1]) / 2 : 0) {
-        repeat3D(
-            countX = count[0],
-            countY = count[1],
-            countZ = count[2],
-            intervalX = [size[0], 0, 0],
-            intervalY = [0, size[1], 0],
-            intervalZ = [0, 0, size[2]]
-        ) {
-            children();
-        }
+    repeat3D(
+        countX = count[0],
+        countY = count[1],
+        countZ = count[2],
+        intervalX = [size[0], 0, 0],
+        intervalY = [0, size[1], 0],
+        intervalZ = [0, 0, size[2]],
+        center = center
+    ) {
+        children();
     }
 }

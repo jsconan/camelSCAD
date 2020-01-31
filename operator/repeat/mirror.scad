@@ -2,7 +2,7 @@
  * @license
  * MIT License
  *
- * Copyright (c) 2017 Jean-Sebastien CONAN
+ * Copyright (c) 2017-2020 Jean-Sebastien CONAN
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -39,6 +39,7 @@
  * @param Number [count] - The number of times the children must be repeated.
  * @param Vector [interval] - The interval between each repeated children.
  * @param Vector [axis] - The normal vector of the mirroring plan around which mirror the children.
+ * @param Boolean [center] - Whether or not center the repeated shapes.
  * @param Number [intervalX] - The X interval between each repeated children
  *                             (will overwrite the X coordinate in the `interval` vector).
  * @param Number [intervalY] - The Y interval between each repeated children
@@ -55,14 +56,16 @@
 module repeatMirror(count    = 2,
                     interval = [0, 0, 0],
                     axis     = [1, 0, 0],
+                    center   = false,
                     intervalX, intervalY, intervalZ,
                     axisX, axisY, axisZ) {
 
     interval = apply3D(interval, intervalX, intervalY, intervalZ);
     axis = apply3D(axis, axisX, axisY, axisZ);
+    offset = center ? -interval * (count - 1) / 2 : [0, 0, 0];
 
     for (i = [0 : count - 1]) {
-        translate(interval * i) {
+        translate(offset + interval * i) {
             if (i % 2) {
                 mirror(axis) {
                     children();
@@ -84,16 +87,18 @@ module repeatMirror(count    = 2,
  * @param Vector [axisY] - The rotation axis around which rotate the children along the Y axis.
  * @param Vector [intervalX] - The interval between each repeated children along the X axis.
  * @param Vector [intervalY] - The interval between each repeated children along the Y axis.
+ * @param Boolean [center] - Whether or not center the repeated shapes.
  */
 module repeatMirror2D(countX    = 2,
                       countY    = 2,
                       axisX     = [1, 0, 0],
                       axisY     = [0, 1, 0],
                       intervalX = [0, 0, 0],
-                      intervalY = [0, 0, 0]) {
+                      intervalY = [0, 0, 0],
+                      center    = false) {
 
-    repeatMirror(count=countY, interval=vector3D(intervalY), axis=vector3D(axisY)) {
-        repeatMirror(count=countX, interval=vector3D(intervalX), axis=vector3D(axisX)) {
+    repeatMirror(count=countY, interval=vector3D(intervalY), axis=vector3D(axisY), center=center) {
+        repeatMirror(count=countX, interval=vector3D(intervalX), axis=vector3D(axisX), center=center) {
             children();
         }
     }
@@ -112,6 +117,7 @@ module repeatMirror2D(countX    = 2,
  * @param Vector [intervalX] - The interval between each repeated children along the X axis.
  * @param Vector [intervalY] - The interval between each repeated children along the Y axis.
  * @param Vector [intervalZ] - The interval between each repeated children along the Z axis.
+ * @param Boolean [center] - Whether or not center the repeated shapes.
  */
 module repeatMirror3D(countX    = 2,
                       countY    = 2,
@@ -121,11 +127,12 @@ module repeatMirror3D(countX    = 2,
                       axisZ     = [0, 0, 1],
                       intervalX = [0, 0, 0],
                       intervalY = [0, 0, 0],
-                      intervalZ = [0, 0, 0]) {
+                      intervalZ = [0, 0, 0],
+                      center    = false) {
 
-    repeatMirror(count=countZ, interval=vector3D(intervalZ), axis=vector3D(axisZ)) {
-        repeatMirror(count=countY, interval=vector3D(intervalY), axis=vector3D(axisY)) {
-            repeatMirror(count=countX, interval=vector3D(intervalX), axis=vector3D(axisX)) {
+    repeatMirror(count=countZ, interval=vector3D(intervalZ), axis=vector3D(axisZ), center=center) {
+        repeatMirror(count=countY, interval=vector3D(intervalY), axis=vector3D(axisY), center=center) {
+            repeatMirror(count=countX, interval=vector3D(intervalX), axis=vector3D(axisX), center=center) {
                 children();
             }
         }

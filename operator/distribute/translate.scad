@@ -36,6 +36,7 @@
  * Distributes the children modules with the provided `interval`.
  *
  * @param Vector [interval] - The interval between each elements.
+ * @param Boolean [center] - Whether or not center the repeated shapes.
  * @param Number [intervalX] - The X interval between each repeated children
  *                             (will overwrite the X coordinate in the `interval` vector).
  * @param Number [intervalY] - The Y interval between each repeated children
@@ -44,12 +45,14 @@
  *                             (will overwrite the Z coordinate in the `interval` vector).
  */
 module distribute(interval = [0, 0, 0],
+                  center   = false,
                   intervalX, intervalY, intervalZ) {
 
     interval = apply3D(interval, intervalX, intervalY, intervalZ);
+    offset = center ? -interval * ($children - 1) / 2 : [0, 0, 0];
 
     for (i = [0 : $children - 1]) {
-        translate(interval * i) {
+        translate(offset + interval * i) {
             children(i);
         }
     }

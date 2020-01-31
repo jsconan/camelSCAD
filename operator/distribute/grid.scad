@@ -38,17 +38,21 @@
  * @param Vector [intervalX] - The interval between each columns.
  * @param Vector [intervalY] - The interval between each lines.
  * @param Number [line] - The max number of elements per lines.
+ * @param Boolean [center] - Whether or not center the repeated shapes.
  */
 module distributeGrid(intervalX = [1, 0, 0],
                       intervalY = [0, 1, 0],
-                      line      = 2) {
+                      line      = 2,
+                      center    = false) {
 
     intervalX = vector3D(intervalX);
     intervalY = vector3D(intervalY);
     line = max(floor(abs(float(line))), 1);
+    offsetX = center ? -intervalX * (line - 1) / 2 : [0, 0, 0];
+    offsetY = center ? -intervalY * floor($children / line) / 2 : [0, 0, 0];
 
     for (i = [0 : $children - 1]) {
-        translate(intervalX * (i % line) + intervalY * floor(i / line)) {
+        translate(offsetX + intervalX * (i % line) + offsetY + intervalY * floor(i / line)) {
             children(i);
         }
     }
