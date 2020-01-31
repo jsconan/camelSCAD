@@ -40,6 +40,7 @@
  * @param Vector [axis] - The rotation axis around which rotate the elements.
  * @param Vector [interval] - The interval between each elements.
  * @param Vector [origin] - The rotate origin.
+ * @param Boolean [center] - Whether or not center the repeated shapes.
  * @param Number [intervalX] - The X interval between each repeated children
  *                             (will overwrite the X coordinate in the `interval` vector).
  * @param Number [intervalY] - The Y interval between each repeated children
@@ -57,6 +58,7 @@ module distributeRotate(angle    = DEGREES,
                         axis     = [0, 0, 1],
                         interval = [0, 0, 0],
                         origin   = [0, 0, 0],
+                        center   = false,
                         intervalX, intervalY, intervalZ,
                         axisX, axisY, axisZ,
                         originX, originY, originZ) {
@@ -66,9 +68,10 @@ module distributeRotate(angle    = DEGREES,
     angle = deg(angle);
     partAngle = angle / (angle % DEGREES ? $children - 1 : $children);
     axis = apply3D(axis, axisX, axisY, axisZ) * partAngle;
+    offset = center ? -interval * ($children - 1) / 2 : [0, 0, 0];
 
     for (i = [0 : $children - 1]) {
-        translate(interval * i) {
+        translate(offset + interval * i) {
             rotateOrigin(a=axis * i, o=origin) {
                 children(i);
             }
