@@ -58,6 +58,7 @@ module repeatRotate(count    = 2,
                     axis     = [0, 0, 1],
                     interval = [0, 0, 0],
                     origin   = [0, 0, 0],
+                    center   = false,
                     intervalX, intervalY, intervalZ,
                     axisX, axisY, axisZ,
                     originX, originY, originZ) {
@@ -67,9 +68,10 @@ module repeatRotate(count    = 2,
     angle = deg(angle);
     partAngle = angle / (angle % DEGREES ? count - 1 : count);
     axis = apply3D(axis, axisX, axisY, axisZ) * partAngle;
+    offset = center ? -interval * (count - 1) / 2 : [0, 0, 0];
 
     for (i = [0 : count - 1]) {
-        translate(interval * i) {
+        translate(offset + interval * i) {
             rotateOrigin(a=axis * i, o=origin) {
                 children();
             }
@@ -90,6 +92,7 @@ module repeatRotate(count    = 2,
  * @param Vector [intervalY] - The interval between each repeated children along the Y axis.
  * @param Vector [originX] - The rotate origin along the X axis.
  * @param Vector [originY] - The rotate origin along the Y axis.
+ * @param Boolean [center] - Whether or not center the repeated shapes.
  */
 module repeatRotate2D(countX    = 2,
                       countY    = 2,
@@ -100,10 +103,11 @@ module repeatRotate2D(countX    = 2,
                       intervalX = [0, 0, 0],
                       intervalY = [0, 0, 0],
                       originX   = [0, 0, 0],
-                      originY   = [0, 0, 0]) {
+                      originY   = [0, 0, 0],
+                      center    = false) {
 
-    repeatRotate(count=countY, interval=vector3D(intervalY), angle=angleY, axis=vector3D(axisY), origin=originY) {
-        repeatRotate(count=countX, interval=vector3D(intervalX), angle=angleX, axis=vector3D(axisX), origin=originX) {
+    repeatRotate(count=countY, interval=vector3D(intervalY), angle=angleY, axis=vector3D(axisY), origin=originY, center=center) {
+        repeatRotate(count=countX, interval=vector3D(intervalX), angle=angleX, axis=vector3D(axisX), origin=originX, center=center) {
             children();
         }
     }
@@ -127,6 +131,7 @@ module repeatRotate2D(countX    = 2,
  * @param Vector [originX] - The rotate origin along the X axis.
  * @param Vector [originY] - The rotate origin along the Y axis.
  * @param Vector [originZ] - The rotate origin along the Z axis.
+ * @param Boolean [center] - Whether or not center the repeated shapes.
  */
 module repeatRotate3D(countX    = 2,
                       countY    = 2,
@@ -142,11 +147,12 @@ module repeatRotate3D(countX    = 2,
                       intervalZ = [0, 0, 0],
                       originX   = [0, 0, 0],
                       originY   = [0, 0, 0],
-                      originZ   = [0, 0, 0]) {
+                      originZ   = [0, 0, 0],
+                      center    = false) {
 
-    repeatRotate(count=countZ, interval=vector3D(intervalZ), angle=angleZ, axis=vector3D(axisZ), origin=originZ) {
-        repeatRotate(count=countY, interval=vector3D(intervalY), angle=angleY, axis=vector3D(axisY), origin=originY) {
-            repeatRotate(count=countX, interval=vector3D(intervalX), angle=angleX, axis=vector3D(axisX), origin=originX) {
+    repeatRotate(count=countZ, interval=vector3D(intervalZ), angle=angleZ, axis=vector3D(axisZ), origin=originZ, center=center) {
+        repeatRotate(count=countY, interval=vector3D(intervalY), angle=angleY, axis=vector3D(axisY), origin=originY, center=center) {
+            repeatRotate(count=countX, interval=vector3D(intervalX), angle=angleX, axis=vector3D(axisX), origin=originX, center=center) {
                 children();
             }
         }
