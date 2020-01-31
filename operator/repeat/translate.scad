@@ -153,3 +153,22 @@ module repeatShape3D(size, count = 1, center) {
         children();
     }
 }
+
+/**
+ * Repeats the children modules on every position given in the `map`.
+ *
+ * @param Vector[] map - The list of position at which place the children.
+ * @param Vector [offset] - An offset to add on each position.
+ * @param Number [x] - The X-coordinate to apply on the offset.
+ * @param Number [y] - The Y-coordinate to apply on the offset.
+ * @param Number [z] - The Z-coordinate to apply on the offset.
+ */
+module repeatMap(map, offset, x, y, z) {
+    offset = apply3D(offset, x, y, z);
+
+    for (at = map) {
+        translate(offset + vector3D(at)) {
+            children();
+        }
+    }
+}
