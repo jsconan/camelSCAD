@@ -62,7 +62,7 @@ module repeatMirror(count    = 2,
 
     interval = apply3D(interval, intervalX, intervalY, intervalZ);
     axis = apply3D(axis, axisX, axisY, axisZ);
-    offset = center ? -interval * (count - 1) / 2 : 0;
+    offset = center ? -interval * (count - 1) / 2 : [0, 0, 0];
 
     for (i = [0 : count - 1]) {
         translate(offset + interval * i) {

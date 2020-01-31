@@ -51,7 +51,7 @@ module repeat(count    = 2,
               intervalX, intervalY, intervalZ) {
 
     interval = apply3D(interval, intervalX, intervalY, intervalZ);
-    offset = center ? -interval * (count - 1) / 2 : 0;
+    offset = center ? -interval * (count - 1) / 2 : [0, 0, 0];
 
     for (i = [0 : count - 1]) {
         translate(offset + interval * i) {
