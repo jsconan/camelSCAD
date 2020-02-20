@@ -164,16 +164,16 @@ scadformat() {
 # Renders a module.
 #
 # @example
-# scadtostl "bar.scad" "foo/bar"             # will render a STL file at foo/bar/bar.stl
-# scadtostl "bar.scad" "foo/bar" "foo"       # will render a STL file at foo/bar/foo-bar.stl
-# scadtostl "bar.scad" "foo/bar" "foo" "baz" # will render a STL file at foo/bar/foo-bar-baz.stl
+# scadrender "bar.scad" "foo/bar"             # will render a STL file at foo/bar/bar.stl
+# scadrender "bar.scad" "foo/bar" "foo"       # will render a STL file at foo/bar/foo-bar.stl
+# scadrender "bar.scad" "foo/bar" "foo" "baz" # will render a STL file at foo/bar/foo-bar-baz.stl
 #
 # @param filepath - The path of the SCAD file to render.
 # @param destpath - The path to the output file.
 # @param prefix - A prefix to add to the output file.
 # @param suffix - A suffix to add to the output file.
 # @param ... - A list of pre-defined variables.
-scadtostl() {
+scadrender() {
     local filepath="$1"; shift
     local destpath="$1"; shift
     local prefix=$(suffixif "$1" "-"); shift
@@ -190,16 +190,16 @@ scadtostl() {
 # Exits with error code E_CREATE if the output folder cannot be created.
 #
 # @example
-# scadtostlall "bar" "foo/bar"              # will render STL files at foo/bar/*.stl
-# scadtostlall "bar" "foo/bar" "foo"        # will render STL files at foo/bar/foo-*.stl
-# scadtostlall "bar" "foo/bar" "foo" "baz"  # will render STL files at foo/bar/foo-*-baz.stl
+# scadrenderall "bar" "foo/bar"              # will render STL files at foo/bar/*.stl
+# scadrenderall "bar" "foo/bar" "foo"        # will render STL files at foo/bar/foo-*.stl
+# scadrenderall "bar" "foo/bar" "foo" "baz"  # will render STL files at foo/bar/foo-*-baz.stl
 #
 # @param sourcepath - The path of the folder containing the SCAD files to render.
 # @param destpath - The path to the output folder.
 # @param prefix - A prefix to add to each output file.
 # @param suffix - A suffix to add to the output file.
 # @param ... - A list of pre-defined variables.
-scadtostlall() {
+scadrenderall() {
     local sourcepath="$1"; shift
     local destpath="$1"; shift
     local prefix="$1"; shift
@@ -210,7 +210,7 @@ scadtostlall() {
     createpath "${destpath}" "output"
     local list=($(find "${sourcepath}" -maxdepth 1 -name "${mask}"))
     for filename in "${list[@]}"; do
-        scadtostl "${filename}" "${destpath}" "${prefix}" "${suffix}" "$@"
+        scadrender "${filename}" "${destpath}" "${prefix}" "${suffix}" "$@"
     done
     printmessage "Done!"
 }

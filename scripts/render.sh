@@ -2,7 +2,7 @@
 #
 # MIT License
 #
-# Copyright (c) 2019 Jean-Sebastien CONAN
+# Copyright (c) 2019-2020 Jean-Sebastien CONAN
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -40,4 +40,5 @@ dstpath=${project}/output
 source "${scriptpath}/utils.sh"
 
 scadcheck
-scadtostlall "${srcpath}" "${dstpath}" "$@"
+scadformat
+scadrenderall "${srcpath}" "${dstpath}" "$@"
