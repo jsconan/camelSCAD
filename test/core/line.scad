@@ -241,7 +241,7 @@ module testCoreLine() {
             }
         }
         // test core/line/path()
-        testModule("path()", 15) {
+        testModule("path()", 16) {
             testUnit("no parameter", 1) {
                 assertEqual(path(), [], "Cannot build a line without parameters, should return an empty array");
             }
@@ -304,6 +304,16 @@ module testCoreLine() {
                 assertEqual(path([["P", 5, 6], ["C", 20, 40, 80]]), concat([ for (a = [40 : astep(20) : 80]) [5, 6] + _rotP(220, 20, 20) + _rotP(a, 20, 20) ], [[5, 6] + _rotP(220, 20, 20) + _rotP(80, 20, 20)]), "Path with 1 circle arc from an absolute point");
                 assertEqual(path([["P", 5, 6], ["C", 20, 80, 40]]), concat([ for (a = [80 : -astep(20) : 40]) [5, 6] + _rotP(260, 20, 20) + _rotP(a, 20, 20) ], [[5, 6] + _rotP(260, 20, 20) + _rotP(40, 20, 20)]), "Path with 1 negative circle arc from an absolute point");
                 assertEqual(path([["P", 5, 6], ["C"]]), [[5, 6]], "Path with 1 empty circle arc from an absolute point");
+            }
+            testUnit("sinusoid", 8) {
+                assertEqual(path([["S"]]), [[0, 0]], "Path with 1 empty sinusoid");
+                assertEqual(path([["S", 20]]), [ for (a = [0 : 20 / (fragments(1) * 20) : 20]) [a, sin(360 * a)] ], "Should build a simple sinusoid with a length of 20");
+                assertEqual(path([["S", 20, 40]]), [ for (a = [0 : 20 / (fragments(1) * 0.5) : 20]) [a, sin(360 * a / 40)] ], "Should build a sinusoid with a length of 20 and a period of 40");
+                assertEqual(path([["S", 20, 40, 80]]), [ for (a = [0 : 20 / (fragments(80) * 0.5) : 20]) [a, 80 * sin(360 * a / 40)] ], "Should build a sinusoid with a length of 20, a period of 40, and an amplitude of 80");
+                assertEqual(path([["S", 20, 40, 80, 10]]), [ for (a = [0 : 20 / (fragments(80) * 0.5) : 20]) [a, 80 * sin(360 * a / 40 + 10)] ], "Should build a sinusoid with a length of 20, a period of 40, an amplitude of 80, and a delay of 10°");
+                assertEqual(path([["P", 10, 10], ["S", 20, 40, 80, 10]]), concat([[10, 10]], [ for (a = [0 : 20 / (fragments(80) * 0.5) : 20]) [a, 80 * sin(360 * a / 40 + 10)] + [10, 10] ]), "Should build a sinusoid with a length of 20, a period of 40, an amplitude of 80, a delay of 10°, and an offset of [10, 10]");
+                assertEqual(path([["P", 10, 10], ["S", 20, 40, 80, 10, 45]]), concat([[10, 10]], [ for (a = [0 : 20 / (fragments(80) * 0.5) : 20]) _rot2([a, 80 * sin(360 * a / 40 + 10)], 45) + [10, 10] ]), "Should build a sinusoid with a length of 20, a period of 40, an amplitude of 80, a delay of 10°, an offset of [10, 10], and 45° rotated");
+                assertEqual(path([["P", 10, 10], ["S", -20, 40, 80, 10, 45]]), concat([[10, 10]], [ for (a = [0 : -20 / (fragments(80) * 0.5) : -20]) _rot2([a, 80 * sin(360 * a / 40 + 10)], 45) + [10, 10] ]), "Should build a sinusoid, to the left, with a length of 20, a period of 40, an amplitude of 80, a delay of 10°, an offset of [10, 10], and 45° rotated");
             }
             testUnit("bezier point", 4) {
                 assertEqual(path([["B"]]), [[0, 0]], "Path with 1 empty bezier");

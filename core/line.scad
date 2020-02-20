@@ -148,6 +148,7 @@ function cosinusoid(l, w, h, p, o, a, t) =
  * - T, Tangent: ["T", <x>, <y>, <radius>] | ["T", <point>, <radius>] - Adds a line from the last point, that ends at the tangent point with the defined circle. The sign of the radius determines the direction
  * - A, Angle: ["A", <angle>, <length>] - Adds a leaned line from the last point with the given angle and the given length. The sign of the length determines the direction.
  * - C, Circle: ["C", <radius>, <start angle>, <end angle>] - Adds a circle arc from the last point with the given radius and with the given angle.
+ * - S, Sinusoid curve: ["S", <length>, <wave>, <height>, <phase>, <angle>] - Adds a sinusoid curve from the last point with the given parameters.
  * - B, Bezier curve: ["B", <P1>, <P2>, <P3>] - Adds a cubic bezier curve from the last point with the given control points (up to 3, the first beeing the last existing point).
  * - N, Nested: ["N", [<SubPath>]] - Nested path to execute.
  * - R, Repeat: ["R", <N>, [<SubPath>]] - Repeat N times the sub path.
@@ -180,6 +181,7 @@ function path(p, points, i) =
             :cmd == "T" || cmd == "t" ? let(isv = isVector(cur[1])) [point, tangent2D(point, isv ? cur[1] : apply2D(x=cur[1], y=cur[2]), isv ? cur[2] : cur[3])]
             :cmd == "A" || cmd == "a" ? [point, point + arcPoint(a=cur[1], r=cur[2])]
             :cmd == "C" || cmd == "c" ? arc(r=cur[1], a1=cur[2], a2=cur[3], o=point + arcPoint(a=float(cur[2]) + STRAIGHT, r=cur[1]))
+            :cmd == "S" || cmd == "s" ? sinusoid(l=cur[1], w=cur[2], h=cur[3], p=cur[4], a=cur[5], t=point)
             :cmd == "B" || cmd == "b" ? (
                 l >= 4 ? concat([point], cubicBezierCurve(point, point + vector2D(cur[1]), point + vector2D(cur[2]), point + vector2D(cur[3])))
                :l == 3 ? concat([point], quadraticBezierCurve(point, point + vector2D(cur[1]), point + vector2D(cur[2])))
