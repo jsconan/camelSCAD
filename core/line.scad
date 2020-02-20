@@ -89,7 +89,7 @@ function sinusoid(l, w, h, p, o, a, t) =
         h = divisor(h),
         t = vector2D(t),
         s = sign(l),
-        step = s * abs(l / (fragments(h) * l / w))
+        step = s * abs(l / (fragments(w) * l / w))
     )
     !l ? []
    :[
@@ -120,7 +120,7 @@ function cosinusoid(l, w, h, p, o, a, t) =
         h = divisor(h),
         t = vector2D(t),
         s = sign(l),
-        step = s * l / (fragments(h) * l / w)
+        step = s * l / (fragments(w) * l / w)
     )
     !l ? []
    :[
