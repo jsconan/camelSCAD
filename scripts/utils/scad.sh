@@ -41,6 +41,9 @@ export scadver="2015.03"
 # Defines the file extension for OpenSCAD files
 export scadext=".scad"
 
+# Defines the file format for the rendering output
+export scadout="stl"
+
 # Prints the name of an OpenSCAD module (file name without the extension).
 #
 # @example
@@ -142,6 +145,22 @@ scadcall() {
     ${scadcmd} --render -o "${outputpath}" "${sourcepath}" "${params[@]}"
 }
 
+# Set the format of the ouput files.
+#
+#
+# @example
+# scadformat "stl"         # Set the output format to STL
+#
+# scadformat "3mf"         # Set the output format to 3MF
+#
+# @param format - The format of the output files.
+scadformat() {
+    if [ "$1" != "" ]; then
+        export scadout=$(tolower $1)
+    fi
+    printmessage "${C_RST}Will render the files using ${C_SEL}$(toupper ${scadout}) ${C_RST}format"
+}
+
 # Renders a module.
 #
 # @example
@@ -161,7 +180,7 @@ scadtostl() {
     local suffix=$(prefixif "-" "$1"); shift
     local filename=$(basename "${filepath}")
     local name=$(scadmodulename "${filepath}")
-    local outputpath="${destpath}/${prefix}${name}${suffix}.stl"
+    local outputpath="${destpath}/${prefix}${name}${suffix}.${scadout}"
     printmessage "${C_RST}Rendering of ${C_SEL}${filename}${C_RST} to ${C_SEL}${outputpath}"
     scadcall "${filepath}" "${outputpath}" "renderMode=\"prod\"" "$@"
 }
