@@ -2,7 +2,7 @@
 #
 # GPLv3 License
 #
-# Copyright (c) 2019 Jean-Sebastien CONAN
+# Copyright (c) 2019-2020 Jean-Sebastien CONAN
 #
 # This file is part of jsconan/things.
 #
@@ -145,20 +145,23 @@ scadcall() {
 # Renders a module.
 #
 # @example
-# scadtostl "bar.scad" "foo/bar"       # will render a STL file at foo/bar/bar.stl
-# scadtostl "bar.scad" "foo/bar" "foo" # will render a STL file at foo/bar/foo-bar.stl
+# scadtostl "bar.scad" "foo/bar"             # will render a STL file at foo/bar/bar.stl
+# scadtostl "bar.scad" "foo/bar" "foo"       # will render a STL file at foo/bar/foo-bar.stl
+# scadtostl "bar.scad" "foo/bar" "foo" "baz" # will render a STL file at foo/bar/foo-bar-baz.stl
 #
 # @param filepath - The path of the SCAD file to render.
 # @param destpath - The path to the output file.
 # @param prefix - A prefix to add to the output file.
+# @param suffix - A suffix to add to the output file.
 # @param ... - A list of pre-defined variables.
 scadtostl() {
     local filepath="$1"; shift
     local destpath="$1"; shift
     local prefix=$(suffixif "$1" "-"); shift
+    local suffix=$(prefixif "-" "$1"); shift
     local filename=$(basename "${filepath}")
     local name=$(scadmodulename "${filepath}")
-    local outputpath="${destpath}/${prefix}${name}.stl"
+    local outputpath="${destpath}/${prefix}${name}${suffix}.stl"
     printmessage "${C_RST}Rendering of ${C_SEL}${filename}${C_RST} to ${C_SEL}${outputpath}"
     scadcall "${filepath}" "${outputpath}" "renderMode=\"prod\"" "$@"
 }
@@ -168,24 +171,27 @@ scadtostl() {
 # Exits with error code E_CREATE if the output folder cannot be created.
 #
 # @example
-# scadtostlall "bar" "foo/bar"         # will render STL files at foo/bar/*.stl
-# scadtostlall "bar" "foo/bar" "foo"   # will render STL files at foo/bar/foo-*.stl
+# scadtostlall "bar" "foo/bar"              # will render STL files at foo/bar/*.stl
+# scadtostlall "bar" "foo/bar" "foo"        # will render STL files at foo/bar/foo-*.stl
+# scadtostlall "bar" "foo/bar" "foo" "baz"  # will render STL files at foo/bar/foo-*-baz.stl
 #
 # @param sourcepath - The path of the folder containing the SCAD files to render.
 # @param destpath - The path to the output folder.
 # @param prefix - A prefix to add to each output file.
+# @param suffix - A suffix to add to the output file.
 # @param ... - A list of pre-defined variables.
 scadtostlall() {
     local sourcepath="$1"; shift
     local destpath="$1"; shift
     local prefix="$1"; shift
+    local suffix="$1"; shift
     local mask="*${scadext}"
     printmessage "Processing rendering from ${C_SEL}${sourcepath}${C_RST}..."
     foldermustcontain "${sourcepath}" "${mask}" "render"
     createpath "${destpath}" "output"
     local list=($(find "${sourcepath}" -maxdepth 1 -name "${mask}"))
     for filename in "${list[@]}"; do
-        scadtostl "${filename}" "${destpath}" "${prefix}" "$@"
+        scadtostl "${filename}" "${destpath}" "${prefix}" "${suffix}" "$@"
     done
     printmessage "Done!"
 }
