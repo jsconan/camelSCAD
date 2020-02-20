@@ -2,7 +2,7 @@
  * @license
  * MIT License
  *
- * Copyright (c) 2017-2019 Jean-Sebastien CONAN
+ * Copyright (c) 2017-2020 Jean-Sebastien CONAN
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -78,21 +78,24 @@ function arc(r, a=DEGREES, o, a1, a2) =
  * @param Number p - The phase of the sinusoid (the start angle).
  * @param Number o - The offset of the sinusoid.
  * @param Number a - A rotation angle.
+ * @param Vector t - A translation offset.
  * @returns Vector[]
  */
-function sinusoid(l, w, h, p, o, a) =
+function sinusoid(l, w, h, p, o, a, t) =
     let(
         a = deg(a),
         l = float(l),
         w = divisor(w),
         h = divisor(h),
-        step = l / (fragments(h) * l / w)
+        t = vector2D(t),
+        s = sign(l),
+        step = s * abs(l / (fragments(w) * l / w))
     )
     !l ? []
    :[
         for (x = [0 : step : l])
             let( p = sinp(x=x, w=w, h=h, p=p, o=o) )
-            a ? rotp(p, a) : p
+            t + (a ? rotp(p, a) : p)
     ]
 ;
 
@@ -106,21 +109,24 @@ function sinusoid(l, w, h, p, o, a) =
  * @param Number p - The phase of the cosinusoid (the start angle).
  * @param Number o - The offset of the cosinusoid.
  * @param Number a - A rotation angle.
+ * @param Vector t - A translation offset.
  * @returns Vector[]
  */
-function cosinusoid(l, w, h, p, o, a) =
+function cosinusoid(l, w, h, p, o, a, t) =
     let(
         a = deg(a),
         l = float(l),
         w = divisor(w),
         h = divisor(h),
-        step = l / (fragments(h) * l / w)
+        t = vector2D(t),
+        s = sign(l),
+        step = s * l / (fragments(w) * l / w)
     )
     !l ? []
    :[
         for (y = [0 : step : l])
             let( p = cosp(y=y, w=w, h=h, p=p, o=o) )
-            a ? rotp(p, a) : p
+            t + (a ? rotp(p, a) : p)
     ]
 ;
 
@@ -142,6 +148,7 @@ function cosinusoid(l, w, h, p, o, a) =
  * - T, Tangent: ["T", <x>, <y>, <radius>] | ["T", <point>, <radius>] - Adds a line from the last point, that ends at the tangent point with the defined circle. The sign of the radius determines the direction
  * - A, Angle: ["A", <angle>, <length>] - Adds a leaned line from the last point with the given angle and the given length. The sign of the length determines the direction.
  * - C, Circle: ["C", <radius>, <start angle>, <end angle>] - Adds a circle arc from the last point with the given radius and with the given angle.
+ * - S, Sinusoid curve: ["S", <length>, <wave>, <height>, <phase>, <angle>] - Adds a sinusoid curve from the last point with the given parameters.
  * - B, Bezier curve: ["B", <P1>, <P2>, <P3>] - Adds a cubic bezier curve from the last point with the given control points (up to 3, the first beeing the last existing point).
  * - N, Nested: ["N", [<SubPath>]] - Nested path to execute.
  * - R, Repeat: ["R", <N>, [<SubPath>]] - Repeat N times the sub path.
@@ -174,6 +181,7 @@ function path(p, points, i) =
             :cmd == "T" || cmd == "t" ? let(isv = isVector(cur[1])) [point, tangent2D(point, isv ? cur[1] : apply2D(x=cur[1], y=cur[2]), isv ? cur[2] : cur[3])]
             :cmd == "A" || cmd == "a" ? [point, point + arcPoint(a=cur[1], r=cur[2])]
             :cmd == "C" || cmd == "c" ? arc(r=cur[1], a1=cur[2], a2=cur[3], o=point + arcPoint(a=float(cur[2]) + STRAIGHT, r=cur[1]))
+            :cmd == "S" || cmd == "s" ? sinusoid(l=cur[1], w=cur[2], h=cur[3], p=cur[4], a=cur[5], t=point)
             :cmd == "B" || cmd == "b" ? (
                 l >= 4 ? concat([point], cubicBezierCurve(point, point + vector2D(cur[1]), point + vector2D(cur[2]), point + vector2D(cur[3])))
                :l == 3 ? concat([point], quadraticBezierCurve(point, point + vector2D(cur[1]), point + vector2D(cur[2])))

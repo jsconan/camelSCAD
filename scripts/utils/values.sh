@@ -2,7 +2,7 @@
 #
 # GPLv3 License
 #
-# Copyright (c) 2019 Jean-Sebastien CONAN
+# Copyright (c) 2019-2020 Jean-Sebastien CONAN
 #
 # This file is part of jsconan/things.
 #
@@ -146,4 +146,26 @@ joinby() {
     echo -n "$1"
     shift
     printf "%s" "${@/#/$d}"
+}
+
+# Prints the value to upper case.
+#
+# @example
+# var=$(toupper "value")    # will get "VALUE"
+# var=$(toupper "FooBar")   # will get "FOOBAR"
+#
+# @param ... - The values to print in upper case.
+toupper() {
+    echo "$*" | awk '{print toupper($0)}'
+}
+
+# Prints the value to lower case.
+#
+# @example
+# var=$(tolower "VALUE")    # will get "value"
+# var=$(tolower "FooBar")   # will get "foobar"
+#
+# @param ... - The values to print in lower case.
+tolower() {
+    echo "$*" | awk '{print tolower($0)}'
 }
