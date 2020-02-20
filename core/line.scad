@@ -78,21 +78,24 @@ function arc(r, a=DEGREES, o, a1, a2) =
  * @param Number p - The phase of the sinusoid (the start angle).
  * @param Number o - The offset of the sinusoid.
  * @param Number a - A rotation angle.
+ * @param Vector t - A translation offset.
  * @returns Vector[]
  */
-function sinusoid(l, w, h, p, o, a) =
+function sinusoid(l, w, h, p, o, a, t) =
     let(
         a = deg(a),
         l = float(l),
         w = divisor(w),
         h = divisor(h),
-        step = l / (fragments(h) * l / w)
+        t = vector2D(t),
+        s = sign(l),
+        step = s * abs(l / (fragments(h) * l / w))
     )
     !l ? []
    :[
         for (x = [0 : step : l])
             let( p = sinp(x=x, w=w, h=h, p=p, o=o) )
-            a ? rotp(p, a) : p
+            t + (a ? rotp(p, a) : p)
     ]
 ;
 
@@ -106,21 +109,24 @@ function sinusoid(l, w, h, p, o, a) =
  * @param Number p - The phase of the cosinusoid (the start angle).
  * @param Number o - The offset of the cosinusoid.
  * @param Number a - A rotation angle.
+ * @param Vector t - A translation offset.
  * @returns Vector[]
  */
-function cosinusoid(l, w, h, p, o, a) =
+function cosinusoid(l, w, h, p, o, a, t) =
     let(
         a = deg(a),
         l = float(l),
         w = divisor(w),
         h = divisor(h),
-        step = l / (fragments(h) * l / w)
+        t = vector2D(t),
+        s = sign(l),
+        step = s * l / (fragments(h) * l / w)
     )
     !l ? []
    :[
         for (y = [0 : step : l])
             let( p = cosp(y=y, w=w, h=h, p=p, o=o) )
-            a ? rotp(p, a) : p
+            t + (a ? rotp(p, a) : p)
     ]
 ;
 
