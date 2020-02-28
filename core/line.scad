@@ -270,6 +270,11 @@ function simplePolyhedronFaces(length) =
         for (i = [r1 : r2]) [
             r3 + i,
             r3 + (i + 1) % length,
+            (r1 + i + 1) % length
+        ]
+    ], [
+        for (i = [r1 : r2]) [
+            r3 + i,
             (r1 + i + 1) % length,
             r1 + i
         ]
@@ -282,7 +287,7 @@ function simplePolyhedronFaces(length) =
  * @param Vector[] [bottom] - The list of points for the bottom face.
  * @param Vector[] [top] - The list of points for the top face.
  * @param Vector[] [points] - The list of points for a main face.
- * @param Vector [distane] - The distance between two main faces.
+ * @param Vector [distance] - The distance between two main faces.
  * @param Number [x] - The distance between two main faces on the X-axis.
  * @param Number [y] - The distance between two main faces on the Y-axis.
  * @param Number [z] - The distance between two main faces on the Z-axis.
