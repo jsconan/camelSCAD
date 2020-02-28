@@ -2,7 +2,7 @@
  * @license
  * MIT License
  *
- * Copyright (c) 2017-2019 Jean-Sebastien CONAN
+ * Copyright (c) 2017-2020 Jean-Sebastien CONAN
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -343,7 +343,7 @@ module meshBox(size, count, gap, pointy, linear, even, l, w, h, cx, cy, gx, gy, 
  * @param Vector[] [bottom] - The list of points for the bottom face.
  * @param Vector[] [top] - The list of points for the top face.
  * @param Vector[] [points] - The list of points for a main face.
- * @param Vector [distane] - The distance between two main faces.
+ * @param Vector [distance] - The distance between two main faces.
  * @param Number [x] - The distance between two main faces on the X-axis.
  * @param Number [y] - The distance between two main faces on the Y-axis.
  * @param Number [z] - The distance between two main faces on the Z-axis.
