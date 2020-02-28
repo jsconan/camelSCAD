@@ -270,6 +270,11 @@ function simplePolyhedronFaces(length) =
         for (i = [r1 : r2]) [
             r3 + i,
             r3 + (i + 1) % length,
+            (r1 + i + 1) % length
+        ]
+    ], [
+        for (i = [r1 : r2]) [
+            r3 + i,
             (r1 + i + 1) % length,
             r1 + i
         ]
