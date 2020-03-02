@@ -2,7 +2,7 @@
  * @license
  * MIT License
  *
- * Copyright (c) 2017-2019 Jean-Sebastien CONAN
+ * Copyright (c) 2017-2020 Jean-Sebastien CONAN
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -34,7 +34,7 @@ use <../../full.scad>
  * @author jsconan
  */
 module testCoreMaths() {
-    testPackage("core/maths.scad", 22) {
+    testPackage("core/maths.scad", 23) {
         // test core/maths/deg()
         testModule("deg()", 3) {
             testUnit("no parameter", 1) {
@@ -374,6 +374,25 @@ module testCoreMaths() {
                 assertEqual(getChordLength(angle=90, diameter=200), 200 * sin(45), "Length of chord from diameter 200, angle 90");
                 assertEqual(getChordLength(angle=66, diameter=193), 193 * sin(33), "Length of chord from diameter 193, angle 66");
                 assertEqual(getChordLength(angle=66, radius=193), 386 * sin(33), "Length of chord from radius 193, angle 66");
+            }
+        }
+        // test core/maths/getChordHeight()
+        testModule("getChordHeight()", 2) {
+            testUnit("default value", 5) {
+                assertEqual(getChordHeight(), 0, "Should return 0 if no parameter was provided");
+                assertEqual(getChordHeight([], []), 0, "Cannot compute length of chord from arrays");
+                assertEqual(getChordHeight([1, 2], [3, 4]), 0, "Cannot compute length of chord from vectors");
+                assertEqual(getChordHeight("1", "2"), 0, "Cannot compute length of chord from strings");
+                assertEqual(getChordHeight(true, true), 0, "Cannot compute length of chord from booleans");
+            }
+            testUnit("compute Height", 7) {
+                assertEqual(getChordHeight(0, 0), 0, "Height of chord from 0");
+                assertEqual(getChordHeight(0, 1), 0, "Height of chord from angle 0");
+                assertEqual(getChordHeight(90, 100), 100 - 100 * cos(45), "Height of chord from radius 100, angle 90");
+                assertEqual(getChordHeight(angle=90, radius=100), 100 - 100 * cos(45), "Height of chord from radius 100, angle 90");
+                assertEqual(getChordHeight(angle=90, diameter=200), 100 - 100 * cos(45), "Height of chord from diameter 200, angle 90");
+                assertEqual(getChordHeight(angle=66, diameter=193), 96.5 - 96.5 * cos(33), "Height of chord from diameter 193, angle 66");
+                assertEqual(getChordHeight(angle=66, radius=193), 193 - 193 * cos(33), "Height of chord from radius 193, angle 66");
             }
         }
         // test core/maths/getChordAngle()
