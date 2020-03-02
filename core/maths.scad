@@ -175,6 +175,21 @@ function getChordHeight(angle, radius, diameter) =
 ;
 
 /**
+ * Gets the distance to a chord given the radius and the angle
+ * @param Number angle - The angle of the chord
+ * @param Number [radius] - The radius of the circle
+ * @param Number [diameter] - The diameter of the circle
+ * @returns Number
+ */
+function getChordDistance(angle, radius, diameter) =
+    let(
+        radius = numberOr(radius, float(diameter) / 2),
+        angle = float(angle)
+    )
+    radius * cos(angle / 2)
+;
+
+/**
  * Gets the angle of a chord given the radius and the length
  * @param Number length - The length of the chord
  * @param Number [radius] - The radius of the circle

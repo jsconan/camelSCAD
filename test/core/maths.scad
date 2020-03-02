@@ -34,7 +34,7 @@ use <../../full.scad>
  * @author jsconan
  */
 module testCoreMaths() {
-    testPackage("core/maths.scad", 23) {
+    testPackage("core/maths.scad", 24) {
         // test core/maths/deg()
         testModule("deg()", 3) {
             testUnit("no parameter", 1) {
@@ -393,6 +393,25 @@ module testCoreMaths() {
                 assertEqual(getChordHeight(angle=90, diameter=200), 100 - 100 * cos(45), "Height of chord from diameter 200, angle 90");
                 assertEqual(getChordHeight(angle=66, diameter=193), 96.5 - 96.5 * cos(33), "Height of chord from diameter 193, angle 66");
                 assertEqual(getChordHeight(angle=66, radius=193), 193 - 193 * cos(33), "Height of chord from radius 193, angle 66");
+            }
+        }
+        // test core/maths/getChordDistance()
+        testModule("getChordDistance()", 2) {
+            testUnit("default value", 5) {
+                assertEqual(getChordDistance(), 0, "Should return 0 if no parameter was provided");
+                assertEqual(getChordDistance([], []), 0, "Cannot compute length of chord from arrays");
+                assertEqual(getChordDistance([1, 2], [3, 4]), 0, "Cannot compute length of chord from vectors");
+                assertEqual(getChordDistance("1", "2"), 0, "Cannot compute length of chord from strings");
+                assertEqual(getChordDistance(true, true), 0, "Cannot compute length of chord from booleans");
+            }
+            testUnit("compute Distance", 7) {
+                assertEqual(getChordDistance(0, 0), 0, "Distance of chord from 0");
+                assertEqual(getChordDistance(0, 1), 1, "Distance of chord from angle 0");
+                assertEqual(getChordDistance(90, 100), 100 * cos(45), "Distance of chord from radius 100, angle 90");
+                assertEqual(getChordDistance(angle=90, radius=100), 100 * cos(45), "Distance of chord from radius 100, angle 90");
+                assertEqual(getChordDistance(angle=90, diameter=200), 100 * cos(45), "Distance of chord from diameter 200, angle 90");
+                assertEqual(getChordDistance(angle=66, diameter=193), 96.5 * cos(33), "Distance of chord from diameter 193, angle 66");
+                assertEqual(getChordDistance(angle=66, radius=193), 193 * cos(33), "Distance of chord from radius 193, angle 66");
             }
         }
         // test core/maths/getChordAngle()
