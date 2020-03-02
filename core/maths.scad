@@ -2,7 +2,7 @@
  * @license
  * MIT License
  *
- * Copyright (c) 2017-2019 Jean-Sebastien CONAN
+ * Copyright (c) 2017-2020 Jean-Sebastien CONAN
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -157,6 +157,36 @@ function getChordLength(angle, radius, diameter) =
         angle = float(angle)
     )
     diameter * sin(angle / 2)
+;
+
+/**
+ * Gets the height of a chord given the radius and the angle
+ * @param Number angle - The angle of the chord
+ * @param Number [radius] - The radius of the circle
+ * @param Number [diameter] - The diameter of the circle
+ * @returns Number
+ */
+function getChordHeight(angle, radius, diameter) =
+    let(
+        radius = numberOr(radius, float(diameter) / 2),
+        angle = float(angle)
+    )
+    radius - (radius * cos(angle / 2))
+;
+
+/**
+ * Gets the distance to a chord given the radius and the angle
+ * @param Number angle - The angle of the chord
+ * @param Number [radius] - The radius of the circle
+ * @param Number [diameter] - The diameter of the circle
+ * @returns Number
+ */
+function getChordDistance(angle, radius, diameter) =
+    let(
+        radius = numberOr(radius, float(diameter) / 2),
+        angle = float(angle)
+    )
+    radius * cos(angle / 2)
 ;
 
 /**
