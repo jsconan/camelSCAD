@@ -44,6 +44,9 @@ export scadext=".scad"
 # Defines the file format for the rendering output
 export scadout="stl"
 
+# Defines the number of parallel processes spawned when rendering
+export scadproc=4
+
 # Prints the name of an OpenSCAD module (file name without the extension).
 #
 # @example
@@ -158,7 +161,23 @@ scadformat() {
     if [ "$1" != "" ]; then
         export scadout=$(tolower $1)
     fi
-    printmessage "${C_RST}Will render the files using ${C_SEL}$(toupper ${scadout}) ${C_RST}format"
+    printmessage "${C_RST}Will render the files using ${C_SEL}$(toupper ${scadout})${C_RST} format"
+}
+
+# Set the number of parallel processes spawned when rendering.
+#
+#
+# @example
+# scadprocesses 4         # Will spawn 4 renderers at once
+#
+# scadprocesses 1         # Will spawn only 1 renderer at once
+#
+# @param number - The number of parallel processes.
+scadprocesses() {
+    if [ "$1" != "" ]; then
+        export scadproc=$1
+    fi
+    printmessage "${C_RST}Will render the files spawning ${C_SEL}${scadproc}${C_RST} processes at a time"
 }
 
 # Renders a module.
@@ -185,7 +204,7 @@ scadrender() {
     scadcall "${filepath}" "${outputpath}" "renderMode=\"prod\"" "$@"
 }
 
-# Renders the files from a path.
+# Renders the files from a path. Several processes will be spawned at a time to parallelize the rendering and speeds it up.
 # Exits with error code E_EMPTY if it is empty.
 # Exits with error code E_CREATE if the output folder cannot be created.
 #
@@ -209,9 +228,12 @@ scadrenderall() {
     foldermustcontain "${sourcepath}" "${mask}" "render"
     createpath "${destpath}" "output"
     local list=($(find "${sourcepath}" -maxdepth 1 -name "${mask}"))
+    local i=0
     for filename in "${list[@]}"; do
-        scadrender "${filename}" "${destpath}" "${prefix}" "${suffix}" "$@"
+        scadrender "${filename}" "${destpath}" "${prefix}" "${suffix}" "$@" &
+        (( ++i%scadproc==0 )) && wait
     done
+    wait
     printmessage "Done!"
 }
 

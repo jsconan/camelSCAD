@@ -41,4 +41,5 @@ source "${scriptpath}/utils.sh"
 
 scadcheck
 scadformat
+scadprocesses
 scadrenderall "${srcpath}" "${dstpath}" "$@"
