@@ -21,9 +21,11 @@ height = 12.85;
 diameter = 6;
 fillet = ceil(min(length, width) / 10);
 
-// Sets the minimum facet angle and size using the defined render mode.
 // Displays a build box visualization to preview the printer area.
-buildBox(mode=renderMode) {
+buildBox(center=true);
+
+// Sets the minimum facet angle and size using the defined render mode.
+applyMode(mode=renderMode) {
     difference() {
         cushion([length, width, height], r=fillet);
         translateZ(-ALIGN) {
