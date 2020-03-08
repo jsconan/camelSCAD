@@ -29,9 +29,11 @@ armWidth = ringWidth / 2;
 armLength = targetDiameter * 1.1;
 cornerRadius = socleWidth / 4;
 
-// Sets the minimum facet angle and size using the defined render mode.
 // Displays a build box visualization to preview the printer area.
-buildBox(mode=renderMode) {
+buildBox(center=true);
+
+// Sets the minimum facet angle and size using the defined render mode.
+applyMode(mode=renderMode) {
     // First draw the rings
     cylinder(d=ringDiameter, h=thickness);
     if (rings > 1) {

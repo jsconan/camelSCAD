@@ -58,6 +58,6 @@ applyMode(renderMode) {
         translate([0, -size[1] / 2, height]) {
             controlPoints(controls, size=2);
         }
-        buildPlate();
+        buildPlate(center=true);
     }
 }
