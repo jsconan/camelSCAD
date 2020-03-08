@@ -2,7 +2,7 @@
  * @license
  * MIT License
  *
- * Copyright (c) 2017 Jean-Sebastien CONAN
+ * Copyright (c) 2017-2020 Jean-Sebastien CONAN
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -72,8 +72,9 @@ function sizeBuildPlate(size, cell, l, w, cl, cw) =
  * @param Number [w] - The overall width.
  * @param Number [cl] - The length of a cell.
  * @param Number [cw] - The width of cell.
+ * @param Boolean [center] - The shape is centered vertically.
  */
-module buildPlate(size=DEFAULT_BUILD_PLATE_SIZE, cell=DEFAULT_BUILD_PLATE_CELL, l, w, cl, cw) {
+module buildPlate(size=DEFAULT_BUILD_PLATE_SIZE, cell=DEFAULT_BUILD_PLATE_CELL, l, w, cl, cw, center=false) {
     size = sizeBuildPlate(size=size, cell=cell, l=l, w=w, cl=cl, cw=cw);
     plateSize = size[0];
     cellSize = size[1];
@@ -85,17 +86,19 @@ module buildPlate(size=DEFAULT_BUILD_PLATE_SIZE, cell=DEFAULT_BUILD_PLATE_CELL, 
 
     %color([1, 1, 1, .2]) {
         negativeExtrude(height=-plateHeight, direction=0) {
-            rectangle(plateSize);
+            translate(center ? -plateSize / 2 : [0, 0]) {
+                square(plateSize);
+            }
         }
         negativeExtrude(height=-plateHeight, direction=2) {
-            translateX(cellOffset[0]) {
+            translate(center ? [cellOffset[0], -plateSize[1] / 2, 0] : [0, 0, 0]) {
                 repeat(count=cellCount[0], intervalX=cellSize[0]) {
-                    rectangle([lineWidth, plateSize[1]]);
+                    square([lineWidth, plateSize[1]]);
                 }
             }
-            translateY(cellOffset[1]) {
+            translate(center ? [-plateSize[0] / 2, cellOffset[1], 0] : [0, 0, 0]) {
                 repeat(count=cellCount[1], intervalY=cellSize[1]) {
-                    rectangle([plateSize[0], lineWidth]);
+                    square([plateSize[0], lineWidth]);
                 }
             }
         }
@@ -109,33 +112,33 @@ module buildPlate(size=DEFAULT_BUILD_PLATE_SIZE, cell=DEFAULT_BUILD_PLATE_CELL, 
  * @param Number [l] - The overall length.
  * @param Number [w] - The overall width.
  * @param Number [h] - The overall height.
+ * @param Boolean [center] - The shape is centered vertically.
  */
-module buildVolume(size=DEFAULT_BUILD_VOLUME_SIZE, l, w, h) {
+module buildVolume(size=DEFAULT_BUILD_VOLUME_SIZE, l, w, h, center=false) {
     %color([1, 1, 1, .1]) {
-        box(size=size, l=l, w=w, h=w);
+        size = apply3D(size, l, w, w);
+        translate(center ? apply3D(-size / 2, z=0) : [0, 0, 0]) {
+            cube(size);
+        }
     }
 }
 
 /**
  * Creates a build box visualization at the origin.
  * A build box contains visualizations for a build plate and a build volume.
- * It also applies a render mode.
+ *
  * @param Number|Vector [size] - The size of the build volume.
  * @param Number|Vector [cell] - The size of each cell on the build plate.
- * @param String [mode] - The mode to apply on the children modules.
  * @param Number [l] - The overall length.
  * @param Number [w] - The overall width.
  * @param Number [h] - The overall height.
  * @param Number [cl] - The length of a cell.
  * @param Number [cw] - The width of cell.
+ * @param Boolean [center] - The shape is centered vertically.
  */
-module buildBox(size, cell, mode, l, w, h, cl, cw) {
-    size = apply3D(uor(size, DEFAULT_BUILD_PLATE_SIZE), l, w, h);
+module buildBox(size=DEFAULT_BUILD_VOLUME_SIZE, cell=DEFAULT_BUILD_PLATE_CELL, l, w, h, cl, cw, center=false) {
+    buildPlate(size=size, cell=cell, l=l, w=w, cl=cl, cw=cw, center=center);
+    buildVolume(size=size, l=l, w=w, h=h, center=center);
 
-    buildPlate(size=size, cell=cell, l=l, w=w, cl=cl, cw=cw);
-    buildVolume(size=size, l=l, w=w, h=h);
-
-    applyMode(mode) {
-        children();
-    }
+    children();
 }
