@@ -35,8 +35,11 @@
 # Defines the command for the Slic3r software
 export slic3rcmd="slic3r"
 
+# Defines the displayed name for the Slic3r software
+export slic3rname="Slic3r"
+
 # Defines the minimal required version for Slic3r
-export slic3rver="2.1"
+export slic3rver="1.3"
 
 # Defines the config path
 export slic3rconfigpath=
@@ -46,6 +49,50 @@ export slic3rproc=4
 
 # Defines the file extension for model files
 export modelext=".stl"
+
+# Use another slicer instead of Slic3r
+#
+# @example
+# slic3ruse PrusaSlicer 2.0     # will use "PrusaSlicer" instead of "Slic3r"
+#                               # the minimal version is set to 2.0
+#
+# slic3ruse PrusaSlicer 2.0 PE  # will use "PrusaSlicer" instead of "Slic3r"
+#                               # the minimal version is set to "2.0"
+#                               # the displayed name will be "PE"
+#
+# @param [command] - The command for the slicer to use
+# @param [version] - The minimal version expected
+# @param [name] - The displayed name
+slic3ruse() {
+    local command=$1
+    local version=$2
+    local name=$3
+    if [ "${command}" != "" ]; then
+        export slic3rcmd="${command}"
+    fi
+    if [ "${version}" != "" ]; then
+        export slic3rver="${version}"
+    fi
+    if [ "${name}" != "" ]; then
+        export slic3rname="${name}"
+    else
+        export slic3rname="${slic3rcmd}"
+    fi
+    printmessage "${C_RST}Will use ${C_SPE}${slic3rname}${C_RST}, minimal version ${C_SPE}${version}${C_RST}"
+}
+
+# Use PrusaSlicer instead of Slic3r
+#
+# @example
+# useprusaslicer     # will use PrusaSlicer instead of Slic3r
+#
+# useprusaslicer 2.0 # will use PrusaSlicer instead of Slic3r
+#                    # the minimal version is set to 2.0
+#
+# @param [version] - The minimal version expected
+useprusaslicer() {
+    slic3ruse "PrusaSlicer" "2.1"
+}
 
 # Checks if Slic3r is installed.
 # Exits with error code E_SLIC3R if not installed.
@@ -66,16 +113,16 @@ slic3rcheck() {
         slic3rcmd="$1"
         info=" [from ${C_SEL}${slic3rcmd}${C_RST}]"
     fi
-    printmessage "Detecting ${C_SPE}Slic3r${C_RST}${info}..."
+    printmessage "Detecting ${C_SPE}${slic3rname}${C_RST}${info}..."
     local slic3rpath=$(which ${slic3rcmd} 2>&1)
     if [ "${slic3rpath}" == "" ]; then
-        printerror "It seems Slic3r has not been installed on your system.\nOr perhaps is it just not reachable...\nHave you placed it in your environment PATH variable?" ${E_SLIC3R}
+        printerror "It seems ${slic3rname} has not been installed on your system.\nOr perhaps is it just not reachable...\nHave you placed it in your environment PATH variable?" ${E_SLIC3R}
     else
-        printmessage "${C_SPE}Slic3r${C_RST} has been detected."
+        printmessage "${C_SPE}${slic3rname}${C_RST} has been detected."
     fi
     local version="$(${slic3rcmd} --help | egrep -o '[0-9].[0-9]' | head -1 2>&1)"
     if [[ "${version}" < "${slic3rver}" ]]; then
-        printerror "The installed version of Slic3r does not meet the requirement.\n\tInstalled: ${version}\n\tRequired: ${slic3rver}" ${E_SLIC3R}
+        printerror "The installed version of ${slic3rname} does not meet the requirement.\n\tInstalled: ${version}\n\tRequired: ${slic3rver}" ${E_SLIC3R}
     fi
 }
 
