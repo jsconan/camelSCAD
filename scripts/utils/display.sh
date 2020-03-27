@@ -47,6 +47,7 @@ export E_OPENSCAD=1    # OpenSCAD not installed
 export E_NOTFOUND=2    # Path does not exist or is not reachable
 export E_CREATE=3      # Cannot create the folder
 export E_EMPTY=4       # Empty folder
+export E_SLIC3R=5      # Slic3r not installed
 
 # Prints a colored message.
 #
