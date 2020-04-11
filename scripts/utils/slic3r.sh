@@ -48,7 +48,7 @@ export slic3rconfigpath=
 export slic3rproc=4
 
 # Defines the file extension for model files
-export slic3rext=".stl"
+export slic3rext="stl"
 
 # Use another slicer instead of Slic3r
 #
@@ -236,7 +236,7 @@ slic3rslice() {
 slic3rsliceall() {
     local sourcepath="$1"; shift
     local destpath="$1"; shift
-    local mask="*${slic3rext}"
+    local mask="*.${slic3rext}"
     printmessage "Processing slicing from ${C_SEL}${sourcepath}${C_RST}..."
     foldermustcontain "${sourcepath}" "${mask}" "slice"
     createpath "${destpath}" "output"
