@@ -48,7 +48,7 @@ export slic3rconfigpath=
 export slic3rproc=4
 
 # Defines the file extension for model files
-export modelext=".stl"
+export slic3rext=".stl"
 
 # Use another slicer instead of Slic3r
 #
@@ -130,16 +130,16 @@ slic3rcheck() {
 #
 #
 # @example
-# sclic3rmodel "stl"         # Set the model format to STL
+# slic3rformat "stl"         # Set the model format to STL
 #
-# sclic3rmodel "3mf"         # Set the model format to 3MF
+# slic3rformat "3mf"         # Set the model format to 3MF
 #
-# @param model - The format of the model files.
-slic3rmodel() {
+# @param format - The format of the model files.
+slic3rformat() {
     if [ "$1" != "" ]; then
-        export modelext=$(tolower $1)
+        export slic3rext=$(tolower $1)
     fi
-    printmessage "${C_RST}Will slice the models corresponding to the ${C_SEL}$(toupper ${modelext})${C_RST} format"
+    printmessage "${C_RST}Will slice the models corresponding to the ${C_SEL}$(toupper ${slic3rext})${C_RST} format"
 }
 
 # Set the path the config file.
@@ -236,7 +236,7 @@ slic3rslice() {
 slic3rsliceall() {
     local sourcepath="$1"; shift
     local destpath="$1"; shift
-    local mask="*${modelext}"
+    local mask="*${slic3rext}"
     printmessage "Processing slicing from ${C_SEL}${sourcepath}${C_RST}..."
     foldermustcontain "${sourcepath}" "${mask}" "slice"
     createpath "${destpath}" "output"
