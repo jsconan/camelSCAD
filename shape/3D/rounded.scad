@@ -601,3 +601,33 @@ module roundedCornerWedge(size, r, h, d, p, convex, adjust, center) {
         roundedCorner(size=size, r=r, d=d, p=p, convex=convex, adjust=adjust);
     }
 }
+
+/**
+ * Draws a link.
+ * @param Vector|Number neck - The size of the link neck.
+ * @param Vector|Number bulk - The size of the link bulb.
+ * @param Number Height - The thickness of the link.
+ * @param Number [w] - The width of the neck.
+ * @param Number [h] - The height of the neck.
+ * @param Number [rx] - The horizontal radius of the bulb.
+ * @param Number [ry] - The vertical radius of the bulb.
+ * @param Number [dx] - The horizontal diameter of the bulb.
+ * @param Number [dy] - The vertical diameter of the bulb.
+ * @param Number [distance] - An additional distance added to the outline of the profile.
+ * @param Boolean [center] - Whether or not center the solid on the vertical axis.
+ */
+module link(neck, bulb, height, w, h, rx, ry, dx, dy, distance = 0, center=false) {
+    linear_extrude(height=height, center=center, convexity=10) {
+        linkProfile(
+            neck = neck,
+            bulb = bulb,
+            w = w,
+            h = h,
+            rx = rx,
+            ry = ry,
+            dx = dx,
+            dy = dy,
+            distance = distance
+        );
+    }
+}
