@@ -24,6 +24,7 @@
  */
 
 use <../../../full.scad>
+include <../../../core/constants.scad>
 
 /**
  * Part of the camelSCAD library.
@@ -34,7 +35,7 @@ use <../../../full.scad>
  * @author jsconan
  */
 module testShape2dRounded() {
-    testPackage("shape/2D/rounded.scad", 9) {
+    testPackage("shape/2D/rounded.scad", 11) {
         // test shape/2D/rounded/sizeRounded2D()
         testModule("sizeRounded2D()", 2) {
             testUnit("default values", 3) {
@@ -363,6 +364,47 @@ module testShape2dRounded() {
                     sizeRoundedCorner(size=s, r=r, p="se", convex=1),
                     [S, R, C2, 270, start2, angle2],
                     "Should produce a size in order to draw an upper right rounded convex corner, when the radius is bigger than the size, the center should be computed");
+            }
+        }
+        // test shape/2D/rounded/sizeLinkProfile()
+        testModule("sizeLinkProfile()", 2) {
+            testUnit("default values", 3) {
+                assertEqual(sizeLinkProfile(), [[1, 1], [1, 1]], "Should always return a size even if not parameter has been provided");
+                assertEqual(sizeLinkProfile("12", "12", "12", "12", "12", "12", "12", "12"), [[1, 1], [1, 1]], "Should always return a size even if wrong parameter has been provided (string)");
+                assertEqual(sizeLinkProfile(true, true, true, true, true, true, true, true), [[1, 1], [1, 1]], "Should always return a size even if wrong parameter has been provided (boolean)");
+            }
+            testUnit("compute size", 23) {
+                assertEqual(sizeLinkProfile(3), [[3, 3], [1.5, 1.5]], "Should produce a size from a single size number");
+                assertEqual(sizeLinkProfile(bulb=3), [[3, 3], [1.5, 1.5]], "Should produce a size from a the bulb diameter number");
+                assertEqual(sizeLinkProfile(neck=3, bulb=2), [[3, 3], [1, 1]], "Should produce the size and the radius from single numbers");
+                assertEqual(sizeLinkProfile(neck=[3, 4], bulb=[2, 2]), [[3, 4], [1, 1]], "Should keep the size and adjust the radius if vectors are provided");
+                assertEqual(sizeLinkProfile(neck=[3, 4]), [[3, 4], [1.5, 2]], "Should keep the provided size vector and should produce the radius accordingly");
+
+                assertEqual(sizeLinkProfile(neck=[3, 4], w=5), [[5, 4], [2.5, 2]], "Should set the provided width in the provided size vector");
+                assertEqual(sizeLinkProfile(neck=[3, 4], h=5), [[3, 5], [1.5, 2.5]], "Should set the provided height in the provided size vector");
+
+                assertEqual(sizeLinkProfile(bulb=[3, 4], rx=5), [[3, 4], [5, 2]], "Should set the provided X radius in the provided radius vector and should produce the size accordingly");
+                assertEqual(sizeLinkProfile(bulb=[3, 4], ry=5), [[3, 4], [1.5, 5]], "Should set the provided Y radius in the provided radius vector and should produce the size accordingly");
+
+                assertEqual(sizeLinkProfile(bulb=[3, 4], dx=5), [[3, 4], [2.5, 2]], "Should set the provided X diameter in the provided radius vector and should produce the size accordingly");
+                assertEqual(sizeLinkProfile(bulb=[3, 4], dy=5), [[3, 4], [1.5, 2.5]], "Should set the provided Y diameter in the provided radius vector and should produce the size accordingly");
+
+                assertEqual(sizeLinkProfile(bulb=[3, 4], rx=5), [[3, 4], [5, 2]], "Should set the provided X radius in the provided diameter vector and should produce the size accordingly");
+                assertEqual(sizeLinkProfile(bulb=[3, 4], ry=5), [[3, 4], [1.5, 5]], "Should set the provided Y radius in the provided diameter vector and should produce the size accordingly");
+
+                assertEqual(sizeLinkProfile(bulb=[3, 4], dx=5), [[3, 4], [2.5, 2]], "Should set the provided X diameter in the provided diameter vector and should produce the size accordingly");
+                assertEqual(sizeLinkProfile(bulb=[3, 4], dy=5), [[3, 4], [1.5, 2.5]], "Should set the provided Y diameter in the provided diameter vector and should produce the size accordingly");
+
+                assertEqual(sizeLinkProfile(w=3), [[3, 1], [1.5, 1]], "Should set the provided width in the size vector and use the default for the height");
+                assertEqual(sizeLinkProfile(h=4), [[1, 4], [1, 2]], "Should set the provided height in the size vector and use the default for the width");
+                assertEqual(sizeLinkProfile(w=3, h=4), [[3, 4], [1.5, 2]], "Should set the provided width and height in the size vector");
+
+                assertEqual(sizeLinkProfile(rx=3), [[1, 1], [3, 1]], "Should set the provided X radius in the radius vector and use the default for the Y radius");
+                assertEqual(sizeLinkProfile(ry=4), [[1, 1], [1, 4]], "Should set the provided Y radius in the radius vector and use the default for the X radius");
+                assertEqual(sizeLinkProfile(rx=3, ry=4), [[1, 1], [3, 4]], "Should set the provided radius in the radius vector");
+
+                assertEqual(sizeLinkProfile(h=4, rx=3), [[1, 4], [3, 2]], "Should set the provided height in the size vector and set the provide X radius in the radius vector");
+                assertEqual(sizeLinkProfile(w=4, ry=3), [[4, 1], [2, 3]], "Should set the provided width in the size vector and set the provide Y radius in the radius vector");
             }
         }
         // test shape/2D/rounded/drawArch()
@@ -764,6 +806,56 @@ module testShape2dRounded() {
                 assertEqual(drawRoundedCorner(s, r, p="nw", convex=1, adjust=1, $fa=12, $fs=2), concat([[-s, -1], [1, -1], [1, s]], arc(r=r, o=rotp(C2, 90), a1=start + 90, a=angle)), "Should produce a list of points in order to draw an upper left rounded convex corner");
                 assertEqual(drawRoundedCorner(s, r, p="sw", convex=1, adjust=1, $fa=12, $fs=2), concat([[1, -s], [1, 1], [-s, 1]], arc(r=r, o=rotp(C2, 180), a1=start + 180, a=angle)), "Should produce a list of points in order to draw a lower left rounded convex corner");
                 assertEqual(drawRoundedCorner(s, r, p="se", convex=1, adjust=1, $fa=12, $fs=2), concat([[s, 1], [-1, 1], [-1, -s]], arc(r=r, o=rotp(C2, 270), a1=start + 270, a=angle)), "Should produce a list of points in order to draw a lower right rounded convex corner");
+            }
+        }
+        // test shape/2D/rounded/drawLinkProfile()
+        testModule("drawLinkProfile()", 2) {
+            testUnit("default values", 1) {
+                assertEqual(drawLinkProfile(), path([
+                    ["P", ALIGN, 0.5],
+                    ["H", -1 - ALIGN],
+                    ["C", 1, 0, 180],
+                    ["V", -1],
+                    ["C", 1, 180, 360],
+                    ["H", 1 + ALIGN]
+                ]), "Should return a list of points to draw a link with a radius of 1 and a neck of 1");
+            }
+            testUnit("neck and bulb values", 4) {
+                assertEqual(drawLinkProfile(neck=3, bulb=2), path([
+                    ["P", ALIGN, 1.5],
+                    ["H", -3 - ALIGN],
+                    ["C", 1, 0, 180],
+                    ["V", -3],
+                    ["C", 1, 180, 360],
+                    ["H", 3 + ALIGN]
+                ]), "Should return a list of points to draw a link with a radius of 2 and a neck of 3");
+
+                assertEqual(drawLinkProfile(neck=3, bulb=2, distance=1), outline(path([
+                    ["P", ALIGN, 1.5],
+                    ["H", -3 - ALIGN],
+                    ["C", 1, 0, 180],
+                    ["V", -3],
+                    ["C", 1, 180, 360],
+                    ["H", 3 + ALIGN]
+                ]), 1), "Should return a list of points to draw a link with a radius of 2 and a neck of 3, and an additional outline of 1");
+
+                assertEqual(drawLinkProfile(neck=3, bulb=2, w=4, h=5, rx=2, ry=3), path([
+                    ["P", ALIGN, 2.5],
+                    ["H", -4 - ALIGN],
+                    ["C", [2,3], 0, 180],
+                    ["V", -5],
+                    ["C", [2,3], 180, 360],
+                    ["H", 4 + ALIGN]
+                ]), "Should return a list of points to draw a link with a radius of [2,3] and a neck of [4,5]");
+
+                assertEqual(drawLinkProfile(neck=3, bulb=2, distance=1, w=4, h=5, rx=2, ry=3), outline(path([
+                    ["P", ALIGN, 2.5],
+                    ["H", -4 - ALIGN],
+                    ["C", [2,3], 0, 180],
+                    ["V", -5],
+                    ["C", [2,3], 180, 360],
+                    ["H", 4 + ALIGN]
+                ]), 1), "Should return a list of points to draw a link with a radius of [2,3] and a neck of [4,5], and an additional outline of 1");
             }
         }
     }

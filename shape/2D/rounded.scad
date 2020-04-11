@@ -178,6 +178,27 @@ function sizeRoundedCorner(size, r, d, p, convex) =
 ;
 
 /**
+ * Computes the size of a link.
+ *
+ * @param Vector|Number neck - The size of the link neck.
+ * @param Vector|Number bulk - The size of the link bulb.
+ * @param Number [w] - The width of the neck.
+ * @param Number [h] - The height of the neck.
+ * @param Number [rx] - The horizontal radius of the bulb.
+ * @param Number [ry] - The vertical radius of the bulb.
+ * @param Number [dx] - The horizontal diameter of the bulb.
+ * @param Number [dy] - The vertical diameter of the bulb.
+ * @returns Vector[] - Returns an array containing the size of the nect and the radius of the bulb.
+ */
+function sizeLinkProfile(neck, bulb, w, h, rx, ry, dx, dy) =
+    let(
+        neck = apply2D(uor(neck, bulb), w, h),
+        bulb = sizeRounded2D(d=uor(bulb, neck), rx=rx, ry=ry, dx=dx, dy=dy)
+    )
+    [ divisor2D(neck), divisor2D(bulb) ]
+;
+
+/**
  * Computes the points that draw the sketch of an arch shape.
  *
  * @param Number|Vector [size] - The size of the arch.
@@ -299,6 +320,39 @@ function drawRoundedCorner(size, r, d, p, convex, adjust) =
 ;
 
 /**
+ * Draws the profile of a link.
+ * @param Vector|Number neck - The size of the link neck.
+ * @param Vector|Number bulk - The size of the link bulb.
+ * @param Number [w] - The width of the neck.
+ * @param Number [h] - The height of the neck.
+ * @param Number [rx] - The horizontal radius of the bulb.
+ * @param Number [ry] - The vertical radius of the bulb.
+ * @param Number [dx] - The horizontal diameter of the bulb.
+ * @param Number [dy] - The vertical diameter of the bulb.
+ * @param Number [distance] - An additional distance added to the outline of the profile.
+ */
+function drawLinkProfile(neck, bulb, w, h, rx, ry, dx, dy, distance = 0) =
+    let(
+        size = sizeLinkProfile(neck=neck, bulb=bulb, w=w, h=h, rx=rx, ry=ry, dx=dx, dy=dy),
+        neck = size[0],
+        bulb = size[1],
+        startX = ALIGN,
+        startY = neck[1] / 2
+    )
+    outline(
+        points = path([
+            ["P", startX, startY],
+            ["H", -neck[0] - startX],
+            ["C", bulb, 0, 180],
+            ["V", -neck[1]],
+            ["C", bulb, 180, 360],
+            ["H", neck[0] + startX],
+        ]),
+        distance = distance
+    )
+;
+
+/**
  * Creates an arch shape at the origin.
  *
  * @param Number|Vector [size] - The size of the arch.
@@ -372,6 +426,35 @@ module roundedRectangle(size, r, d, w, h, rx, ry, dx, dy) {
 module roundedCorner(size, r, d, p, convex, adjust) {
     polygon(
         points = drawRoundedCorner(size=size, r=r, d=d, p=p, convex=convex, adjust=adjust),
+        convexity = 10
+    );
+}
+
+/**
+ * Draws the profile of a link.
+ * @param Vector|Number neck - The size of the link neck.
+ * @param Vector|Number bulk - The size of the link bulb.
+ * @param Number [w] - The width of the neck.
+ * @param Number [h] - The height of the neck.
+ * @param Number [rx] - The horizontal radius of the bulb.
+ * @param Number [ry] - The vertical radius of the bulb.
+ * @param Number [dx] - The horizontal diameter of the bulb.
+ * @param Number [dy] - The vertical diameter of the bulb.
+ * @param Number [distance] - An additional distance added to the outline of the profile.
+ */
+module linkProfile(neck, bulb, w, h, rx, ry, dx, dy, distance = 0) {
+    polygon(
+        points = drawLinkProfile(
+            neck = neck,
+            bulb = bulb,
+            w = w,
+            h = h,
+            rx = rx,
+            ry = ry,
+            dx = dx,
+            dy = dy,
+            distance = distance
+        ),
         convexity = 10
     );
 }
