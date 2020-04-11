@@ -40,7 +40,7 @@ dstpath=${project}/dist
 source "${scriptpath}/utils.sh"
 
 slic3rcheck
-slic3rmodel
+slic3rformat
 slic3rconfig
 slic3rprocesses
 slic3rsliceall "${srcpath}" "${dstpath}" "$@"
