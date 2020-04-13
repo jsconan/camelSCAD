@@ -47,34 +47,6 @@ recurse=
 # include libs
 source "${scriptpath}/utils.sh"
 
-# Renders all the files from the folder.
-#
-# @param sourcepath - The path of the folder containing the files to render.
-# @param destpath - The path to the output folder.
-renderpath() {
-    local src=$1; shift
-    local dst=$1; shift
-    scadrenderall "${src}" "${dst}" "$@"
-}
-
-# Renders all the files including the sub-folders.
-#
-# @param sourcepath - The path of the folder containing the files to render.
-# @param destpath - The path to the output folder.
-renderall() {
-    local src=$1; shift
-    local dst=$1; shift
-    local folders=($(find ${src} -type d -print))
-    local i=0
-    for folderpath in "${folders[@]}"; do
-        folder=$(echo ${folderpath#${src}})
-        local files=($(find ${folderpath} -maxdepth 1 -type f -print))
-        if [ "${files}" != "" ]; then
-            renderpath "${src}${folder}" "${dst}${folder}" "$@"
-        fi
-    done
-}
-
 # load parameters
 while (( "$#" )); do
     case $1 in
@@ -161,7 +133,7 @@ fi
 # render the files
 printmessage "${C_MSG}Rendering the files"
 if [ "${recurse}" != "" ]; then
-    renderall "${srcpath}" "${dstpath}" "$@"
+    scadrenderallrecurse "${srcpath}" "${dstpath}" "$@"
 else
-    renderpath "${srcpath}" "${dstpath}" "$@"
+    scadrenderall "${srcpath}" "${dstpath}" "$@"
 fi
