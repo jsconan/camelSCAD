@@ -49,34 +49,6 @@ recurse=
 # include libs
 source "${scriptpath}/utils.sh"
 
-# Slice all the files from the folder.
-#
-# @param sourcepath - The path of the folder containing the model files to slice.
-# @param destpath - The path to the output folder.
-slicepath() {
-    local src=$1; shift
-    local dst=$1; shift
-    slic3rsliceall "${src}" "${dst}" --align-xy 0,0 "$@"
-}
-
-# Slice all the files including the sub-folders.
-#
-# @param sourcepath - The path of the folder containing the model files to slice.
-# @param destpath - The path to the output folder.
-sliceall() {
-    local src=$1; shift
-    local dst=$1; shift
-    local folders=($(find ${src} -type d -print))
-    local i=0
-    for folderpath in "${folders[@]}"; do
-        folder=$(echo ${folderpath#${src}})
-        local files=($(find ${folderpath} -maxdepth 1 -type f -print))
-        if [ "${files}" != "" ]; then
-            slicepath "${src}${folder}" "${dst}${folder}" "$@"
-        fi
-    done
-}
-
 # load parameters
 while (( "$#" )); do
     case $1 in
@@ -181,7 +153,7 @@ fi
 # slice the files
 printmessage "${C_MSG}Slicing the rendered files"
 if [ "${recurse}" != "" ]; then
-    sliceall "${srcpath}" "${dstpath}" "$@"
+    slic3rsliceallrecurse "${srcpath}" "${dstpath}" --align-xy 0,0 "$@"
 else
-    slicepath "${srcpath}" "${dstpath}" "$@"
+    slic3rsliceall "${srcpath}" "${dstpath}" --align-xy 0,0 "$@"
 fi

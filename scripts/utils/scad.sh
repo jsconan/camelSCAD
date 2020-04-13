@@ -39,7 +39,7 @@ export scadcmd="openscad"
 export scadver="2015.03"
 
 # Defines the file extension for OpenSCAD files
-export scadext=".scad"
+export scadext="scad"
 
 # Defines the file format for the rendering output
 export scadout="stl"
@@ -60,7 +60,7 @@ export scadproc=4
 # @param default - A default name to print of the path does not contain one.
 scadmodulename() {
     if [ "$1" != "" ]; then
-        echo $(basename "$1" "${scadext}")
+        echo $(basename "$1" ".${scadext}")
     else
         echo "$2"
     fi
@@ -209,9 +209,9 @@ scadrender() {
 # Exits with error code E_CREATE if the output folder cannot be created.
 #
 # @example
-# scadrenderall "bar" "foo/bar"              # will render STL files at foo/bar/*.stl
-# scadrenderall "bar" "foo/bar" "foo"        # will render STL files at foo/bar/foo-*.stl
-# scadrenderall "bar" "foo/bar" "foo" "baz"  # will render STL files at foo/bar/foo-*-baz.stl
+# scadrenderall "bar" "foo/bar"              # will render STL files from bar/*.scad to foo/bar/*.stl
+# scadrenderall "bar" "foo/bar" "foo"        # will render STL files from bar/*.scad to foo/bar/foo-*.stl
+# scadrenderall "bar" "foo/bar" "foo" "baz"  # will render STL files from bar/*.scad to foo/bar/foo-*-baz.stl
 #
 # @param sourcepath - The path of the folder containing the SCAD files to render.
 # @param destpath - The path to the output folder.
@@ -223,7 +223,7 @@ scadrenderall() {
     local destpath="$1"; shift
     local prefix="$1"; shift
     local suffix="$1"; shift
-    local mask="*${scadext}"
+    local mask="*.${scadext}"
     printmessage "Processing rendering from ${C_SEL}${sourcepath}${C_RST}..."
     foldermustcontain "${sourcepath}" "${mask}" "render"
     createpath "${destpath}" "output"
@@ -235,6 +235,33 @@ scadrenderall() {
     done
     wait
     printmessage "Done!"
+}
+
+# Renders the files from a path and its sub-folders.
+# Several processes will be spawned at a time to parallelize the rendering and speeds it up.
+# Exits with error code E_EMPTY if it is empty.
+# Exits with error code E_CREATE if the output folder cannot be created.
+#
+# @example
+# scadrenderallrecurse "bar" "foo/bar"              # will render STL files from bar/**/*.scad to foo/bar/**/*.stl
+# scadrenderallrecurse "bar" "foo/bar" "foo"        # will render STL files from bar/**/*.scad to foo/bar/**/foo-*.stl
+# scadrenderallrecurse "bar" "foo/bar" "foo" "baz"  # will render STL files from bar/**/*.scad to foo/bar/**/foo-*-baz.stl
+#
+# @param sourcepath - The path of the folder containing the SCAD files to render.
+# @param destpath - The path to the output folder.
+# @param prefix - A prefix to add to each output file.
+# @param suffix - A suffix to add to the output file.
+# @param ... - A list of pre-defined variables.
+scadrenderallrecurse() {
+    local src=$1; shift
+    local dst=$1; shift
+    local folders=($(recursepath "${src}" "*.${scadext}"))
+    if [ "${folders}" == "" ]; then
+        printerror "There is nothing to render at ${src}!" ${E_EMPTY}
+    fi
+    for folder in "${folders[@]}"; do
+        scadrenderall "${src}${folder}" "${dst}${folder}" "$@"
+    done
 }
 
 # Runs a unit tests suite.
@@ -254,7 +281,7 @@ scadrenderall() {
 # @param defaultsuite - The default test suite if none is provided.
 scadunittest() {
     local suitename=$(scadmoduleuri "$1" $(default "$4" "suite"))
-    local sourcepath="$2/${suitename}${scadext}"
+    local sourcepath="$2/${suitename}.${scadext}"
     local outputname="$3/${suitename//\//_}"
     local outputpath="${outputname}.csg"
     local logpath="${outputname}.log"

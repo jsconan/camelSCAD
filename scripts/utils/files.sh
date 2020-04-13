@@ -111,3 +111,20 @@ createpath() {
         fi
     fi
 }
+
+# Recursively list all folders from a path, matching a files pattern.
+#
+# @param sourcepath - The input path in which recursively search the files pattern.
+# @param pattern - The files pattern each folder much contain.
+recursepath() {
+    local input=$1; shift
+    local pattern=$1; shift
+    local folders=($(find ${input} -type d -print 2>/dev/null))
+    for folderpath in "${folders[@]}"; do
+        folder=$(echo ${folderpath#${input}})
+        local files=($(find ${folderpath}/${pattern} -maxdepth 1 -type f -print 2>/dev/null))
+        if [ "${files}" != "" ]; then
+            echo "${folder}"
+        fi
+    done
+}

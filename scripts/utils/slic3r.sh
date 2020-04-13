@@ -249,3 +249,26 @@ slic3rsliceall() {
     wait
     printmessage "Done!"
 }
+
+# Slices the models from a path and its sub-folders.
+# Several processes will be spawned at a time to parallelize the slicing and speeds it up.
+# Exits with error code E_EMPTY if it is empty.
+# Exits with error code E_CREATE if the output folder cannot be created.
+#
+# @example
+# slic3rsliceall "bar" "foo/bar"
+#
+# @param sourcepath - The path of the folder containing the models to slice.
+# @param destpath - The path to the output folder.
+# @param ... - A list of additional parameters.
+slic3rsliceallrecurse() {
+    local src=$1; shift
+    local dst=$1; shift
+    local folders=($(recursepath "${src}" "*.${slic3rext}"))
+    if [ "${folders}" == "" ]; then
+        printerror "There is nothing to slice at ${src}!" ${E_EMPTY}
+    fi
+    for folder in "${folders[@]}"; do
+        slic3rsliceall "${src}${folder}" "${dst}${folder}" "$@"
+    done
+}
