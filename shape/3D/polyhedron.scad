@@ -2,7 +2,7 @@
  * @license
  * MIT License
  *
- * Copyright (c) 2017-2020 Jean-Sebastien CONAN
+ * Copyright (c) 2017-2022 Jean-Sebastien CONAN
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -93,7 +93,7 @@ function sizeChamferedBox(size, chamfer, l, w, h, cl, cw) =
  */
 function sizeTrapeziumBox(size, a, b, w, h) =
     let(
-        h = uor(h, isNumber(size) ? size : size[3]),
+        h = uor(h, is_num(size) ? size : size[3]),
         size = apply3D(size, a, b, w)
     )
     [

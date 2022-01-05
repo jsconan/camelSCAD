@@ -2,7 +2,7 @@
 #
 # GPLv3 License
 #
-# Copyright (c) 2019-2020 Jean-Sebastien CONAN
+# Copyright (c) 2019-2022 Jean-Sebastien CONAN
 #
 # This file is part of jsconan/things.
 #
@@ -36,7 +36,7 @@
 export scadcmd="openscad"
 
 # Defines the minimal required version for OpenSCAD
-export scadver="2015.03"
+export scadver="2019.05"
 
 # Defines the file extension for OpenSCAD files
 export scadext="scad"

@@ -62,7 +62,7 @@ function substr(s, start, length) =
     let(
         s = string(s),
         l = len(s),
-        start = isNumber(start) && start < 0 ? max(0, start + l) : integer(start),
+        start = is_num(start) && start < 0 ? max(0, start + l) : integer(start),
         end = min(start + numberOr(length, l), l) - 1
     )
     start <= end ? join([for (i = [start : end]) s[i] ]) : ""
@@ -131,13 +131,13 @@ function join(terms, glue, offset=0) =
 function split(s, sep,
                //internal
                positions, offset=0, i=0) =
-    isUndef(positions) ?
+    is_undef(positions) ?
         let(
             s = stringOr(s),
             sep = string(sep),
             positions = and(s, occurences(s, sep))
         )
-        positions ? split(s, sep, positions) : isUndef(s) ? [] : [s]
+        positions ? split(s, sep, positions) : is_undef(s) ? [] : [s]
     :
         let(
             count = len(positions),
@@ -147,7 +147,7 @@ function split(s, sep,
                         p
             ] : [],
             i = index[0],
-            ok = !isUndef(i) && i >= 0 && i < count,
+            ok = !is_undef(i) && i >= 0 && i < count,
             start = [substr(s, offset, ok ? positions[i] - offset : undef)]
         )
         ok ? concat(start, split(s, sep, positions, positions[i] + len(sep), i + 1))
@@ -165,7 +165,7 @@ function split(s, sep,
 function replace(s, from, to,
                  //internal
                  positions, offset=0, i=0) =
-    isUndef(positions) ?
+    is_undef(positions) ?
         let(
             s = string(s),
             from = string(from),
@@ -182,7 +182,7 @@ function replace(s, from, to,
                         p
             ] : [],
             i = index[0],
-            ok = !isUndef(i) && i >= 0 && i < count,
+            ok = !is_undef(i) && i >= 0 && i < count,
             start = substr(s, offset, ok ? positions[i] - offset : undef)
         )
         ok ? str(start, to, replace(s, from, to, positions, positions[i] + len(from), i + 1))

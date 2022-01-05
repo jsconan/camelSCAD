@@ -2,7 +2,7 @@
  * @license
  * MIT License
  *
- * Copyright (c) 2017 Jean-Sebastien CONAN
+ * Copyright (c) 2017-2022 Jean-Sebastien CONAN
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -98,7 +98,7 @@ function after(position) = float(position) > 0;
  * @returns Vector - A 2D vector that contains position values for horizontal and vertical axis.
  */
 function cardinal(p) =
-    isNumber(p) || isVector(p) ?
+    is_num(p) || isVector(p) ?
         let( p = vector2D(p) )
         [ position(before(p[0]), after(p[0])),
           position(before(p[1]), after(p[1])) ]

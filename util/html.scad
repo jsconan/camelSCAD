@@ -2,7 +2,7 @@
  * @license
  * MIT License
  *
- * Copyright (c) 2017 Jean-Sebastien CONAN
+ * Copyright (c) 2017-2022 Jean-Sebastien CONAN
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -40,7 +40,7 @@
  * @returns String
  */
 function htmlAttribute(name, value) =
-    name ? str(name, "=\"", isArray(value) ? htmlProperties(value) : string(value), "\"")
+    name ? str(name, "=\"", is_list(value) ? htmlProperties(value) : string(value), "\"")
          : ""
 ;
 
@@ -63,9 +63,9 @@ function htmlProperty(name, value) =
  * @returns String
  */
 function htmlAttributes(attr) =
-    attr && isArray(attr) ? join(glue=" ", terms=[
+    attr && is_list(attr) ? join(glue=" ", terms=[
                                 for (a = attr)
-                                    isArray(a) ? htmlAttribute(a[0], a[1])
+                                    is_list(a) ? htmlAttribute(a[0], a[1])
                                                : a
                             ])
                           : attr ? string(attr)
@@ -79,9 +79,9 @@ function htmlAttributes(attr) =
  * @returns String
  */
 function htmlProperties(props) =
-    props && isArray(props) ? join(glue=" ", terms=[
+    props && is_list(props) ? join(glue=" ", terms=[
                                   for (p = props)
-                                      isArray(p) ? htmlProperty(p[0], p[1])
+                                      is_list(p) ? htmlProperty(p[0], p[1])
                                                  : p
                               ])
                             : props ? string(props)

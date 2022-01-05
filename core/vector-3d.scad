@@ -42,7 +42,7 @@
  * @returns Vector - Always returns a 3D vector.
  */
 function vector3D(value) =
-    isNumber(value) ? [ value, value, value ]
+    is_num(value) ? [ value, value, value ]
    :[ float(value[0]), float(value[1]), float(value[2]) ]
 ;
 
@@ -56,7 +56,7 @@ function vector3D(value) =
  * @returns Vector - Always returns a 3D vector that will not contain 0.
  */
 function divisor3D(value) =
-    isNumber(value) ? let( value = divisor(value) ) [ value, value, value ]
+    is_num(value) ? let( value = divisor(value) ) [ value, value, value ]
    :[ divisor(value[0]), divisor(value[1]), divisor(value[2]) ]
 ;
 
@@ -76,7 +76,7 @@ function divisor3D(value) =
  */
 function apply3D(v, x, y, z, r, d) =
     let(
-        n = isNumber(v),
+        n = is_num(v),
         d = uor(d, r ? r * 2 : r),
         x = uor(x, d),
         y = uor(y, d),

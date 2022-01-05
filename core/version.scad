@@ -2,7 +2,7 @@
  * @license
  * MIT License
  *
- * Copyright (c) 2017-2020 Jean-Sebastien CONAN
+ * Copyright (c) 2017-2022 Jean-Sebastien CONAN
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -42,7 +42,7 @@ CAMEL_SCAD_VERSION = [0, 14, 1];
  * The minimal version of OpenSCAD required by the library.
  * @type Vector
  */
-REQUIRED_OPEN_SCAD_VERSION = [2015, 3, 0];
+REQUIRED_OPEN_SCAD_VERSION = [2019, 5, 0];
 
 /**
  * Gets the version of the library.

@@ -42,7 +42,7 @@
  * @returns Vector - Always returns a 2D vector.
  */
 function vector2D(v) =
-    isNumber(v) ? [ v, v ]
+    is_num(v) ? [ v, v ]
    :[ float(v[0]), float(v[1]) ]
 ;
 
@@ -56,7 +56,7 @@ function vector2D(v) =
  * @returns Vector - Always returns a 2D vector that will not contain 0.
  */
 function divisor2D(v) =
-    isNumber(v) ? let( v = divisor(v) ) [ v, v ]
+    is_num(v) ? let( v = divisor(v) ) [ v, v ]
    :[ divisor(v[0]), divisor(v[1]) ]
 ;
 
@@ -75,7 +75,7 @@ function divisor2D(v) =
  */
 function apply2D(v, x, y, r, d) =
     let(
-        n = isNumber(v),
+        n = is_num(v),
         d = uor(d, r ? r * 2 : r),
         x = uor(x, d),
         y = uor(y, d)
@@ -97,7 +97,7 @@ function apply2D(v, x, y, r, d) =
  */
 function quadrant(v, i, x, y) =
     let(
-        n = isNumber(v),
+        n = is_num(v),
         i = integer(i) % 4,
         x = abs(float(uor(x, n ? v : v[0]))),
         y = abs(float(uor(y, n ? v : v[1])))
@@ -146,7 +146,7 @@ function unit2D(v) =
  * @returns Vector - Always returns a 2D vector.
  */
 function normal(v) =
-    isNumber(v) ? [ v, -v ]
+    is_num(v) ? [ v, -v ]
     :[ float(v[1]), -float(v[0]) ]
 ;
 
@@ -161,7 +161,7 @@ function normal(v) =
  * @returns Vector - Always returns a 2D vector.
  */
 function flip(v) =
-    isNumber(v) ? [ v, v ]
+    is_num(v) ? [ v, v ]
     :[ float(v[1]), float(v[0]) ]
 ;
 
@@ -637,7 +637,7 @@ function cosp(y, w, h, p, o) =
  * @returns Vector
  */
 function rotp(v, a) =
-    isUndef(v) || isUndef(a) ? [0, 0]
+    is_undef(v) || is_undef(a) ? [0, 0]
    :let( 
        v = vector2D(v),
        a = float(a)
@@ -656,7 +656,7 @@ function rotp(v, a) =
  * @returns Vector
  */
 function mirp(v, a) =
-    isUndef(v) || isUndef(a) ? [0, 0]
+    is_undef(v) || is_undef(a) ? [0, 0]
    :let(
         v = vector2D(v),
         a = vector2D(a),
@@ -708,7 +708,7 @@ function arcPoint(r, a, x, y) = arcp(apply2D(r, x, y), deg(a));
  * @returns Vector[]
  */
 function rotate2D(points, a) =
-    !isArray(points) || !len(points) ? []
+    !is_list(points) || !len(points) ? []
    :let(
         a = deg(a)
     )
@@ -723,7 +723,7 @@ function rotate2D(points, a) =
  * @returns Vector[]
  */
 function scale2D(points, factor) =
-    !isArray(points) || !len(points) ? []
+    !is_list(points) || !len(points) ? []
    :let(
         factor = divisor2D(factor)
     )
@@ -751,7 +751,7 @@ function resize2D(points, size) = scale2D(points, scaleFactor2D(points, size));
  * @returns Vector[]
  */
 function mirror2D(points, axis) =
-    !isArray(points) || !len(points) ? []
+    !is_list(points) || !len(points) ? []
    :let(
         a = undef == axis ? [0, 1] : vector2D(axis),
         ax2 = a[0] * a[0],

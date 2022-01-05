@@ -36,9 +36,10 @@
  * Checks if the value is undefined.
  *
  * @param * value - The value to check.
- * @returns Boolean - Returns `true` whether the value is defined.
+ * @returns Boolean - Returns `true` whether the value is not defined.
+ * @deprecated - Use is_undef instead.
  */
-function isUndef(value) = (value == undef);
+function isUndef(value) = is_undef(value);
 
 /**
  * Checks if the value is NAN (Not A Number).
@@ -46,7 +47,7 @@ function isUndef(value) = (value == undef);
  * @param * value - The value to check.
  * @returns Boolean - Returns `true` whether the value is NAN.
  */
-function isNAN(value) = (!isUndef(value) && value != value);
+function isNAN(value) = (!is_undef(value) && value != value);
 
 /**
  * Checks if the value is infinite.
@@ -54,15 +55,16 @@ function isNAN(value) = (!isUndef(value) && value != value);
  * @param * value - The value to check.
  * @returns Boolean - Returns `true` whether the value is infinite.
  */
-function isInfinity(value) = (isNumber(value) && (value >= INFINITY || value <= -INFINITY));
+function isInfinity(value) = (is_num(value) && (value >= INFINITY || value <= -INFINITY));
 
 /**
  * Checks if the value is numeric.
  *
  * @param * value - The value to check.
  * @returns Boolean - Returns `true` whether the value is numeric.
+ * @deprecated - Use is_num instead.
  */
-function isNumber(value) = (value != undef && value == value && value * 1 == value && concat(value) != value);
+function isNumber(value) = is_num(value);
 
 /**
  * Checks if the value is integer.
@@ -70,7 +72,7 @@ function isNumber(value) = (value != undef && value == value && value * 1 == val
  * @param * value - The value to check.
  * @returns Boolean - Returns `true` whether the value is integer.
  */
-function isInteger(value) = (isNumber(value) && floor(value) == value);
+function isInteger(value) = (is_num(value) && floor(value) == value);
 
 /**
  * Checks if the value is small enough to be considered equal to 0.
@@ -78,31 +80,34 @@ function isInteger(value) = (isNumber(value) && floor(value) == value);
  * @param * value - The value to check.
  * @returns Boolean - Returns `true` whether the value is equal to 0 or near enough.
  */
-function isZero(value) = (isNumber(value) && value > -EPSILON && value < EPSILON);
+function isZero(value) = (is_num(value) && value > -EPSILON && value < EPSILON);
 
 /**
  * Checks if the value is boolean.
  *
  * @param * value - The value to check.
  * @returns Boolean - Returns `true` whether the value is boolean.
+ * @deprecated - Use is_bool instead.
  */
-function isBoolean(value) = (value == true || value == false);
+function isBoolean(value) = is_bool(value);
 
 /**
  * Checks if the value is a string.
  *
  * @param * value - The value to check.
  * @returns Boolean - Returns `true` whether the value is a string.
+* @deprecated - Use is_string instead.
  */
-function isString(value) = (str(value) == value);
+function isString(value) = is_string(value);
 
 /**
  * Checks if the value is an array or a vector.
  *
  * @param * value - The value to check.
  * @returns Boolean - Returns `true` whether the value is an array or a vector.
+ * @deprecated - Use is_list instead.
  */
-function isArray(value) = (concat(value) == value);
+function isArray(value) = is_list(value);
 
 /**
  * Checks if the value is a vector.
@@ -110,7 +115,7 @@ function isArray(value) = (concat(value) == value);
  * @param * value - The value to check.
  * @returns Boolean - Returns `true` whether the value is a vector.
  */
-function isVector(value) = (concat(value) == value && value * 1 == value);
+function isVector(value) = (is_list(value) && value * 1 == value);
 
 /**
  * Checks if the value is a N-dimensions vector.
@@ -119,7 +124,7 @@ function isVector(value) = (concat(value) == value && value * 1 == value);
  * @param Number length - The required length of the vector.
  * @returns Boolean - Returns `true` whether the value is a vector and has the required length.
  */
-function isVectorN(value, length) = (concat(value) == value && len(value) == float(length) && value * 1 == value);
+function isVectorN(value, length) = (is_list(value) && len(value) == float(length) && value * 1 == value);
 
 /**
  * Checks if the value is a 2D vector.
@@ -127,7 +132,7 @@ function isVectorN(value, length) = (concat(value) == value && len(value) == flo
  * @param * value - The value to check.
  * @returns Boolean - Returns `true` whether the value is a 2D vector.
  */
-function isVector2D(value) = (concat(value) == value && len(value) == 2 && value * 1 == value);
+function isVector2D(value) = (is_list(value) && len(value) == 2 && value * 1 == value);
 
 /**
  * Checks if the value is a 3D vector.
@@ -135,7 +140,7 @@ function isVector2D(value) = (concat(value) == value && len(value) == 2 && value
  * @param * value - The value to check.
  * @returns Boolean - Returns `true` whether the value is a 3D vector.
  */
-function isVector3D(value) = (concat(value) == value && len(value) == 3 && value * 1 == value);
+function isVector3D(value) = (is_list(value) && len(value) == 3 && value * 1 == value);
 
 /**
  * Typecasts the value to a number.
@@ -151,7 +156,7 @@ function number(value) = value == true ? 1 : float(value);
  * @param * value - The value to cast.
  * @returns Number - Returns a number. If the value cannot be casted, 0 will be returned.
  */
-function float(value) = value && isNumber(value) ? value : 0;
+function float(value) = value && is_num(value) ? value : 0;
 
 /**
  * Typecasts the value to a float, and ensures it is a safe divisor.
@@ -160,7 +165,7 @@ function float(value) = value && isNumber(value) ? value : 0;
  * @param * value - The value to cast.
  * @returns Number - Returns a number. If the value cannot be casted, of if the value is 0, 1 will be returned.
  */
-function divisor(value) = value && isNumber(value) ? value : 1;
+function divisor(value) = value && is_num(value) ? value : 1;
 
 /**
  * Typecasts the value to an integer.
@@ -190,7 +195,7 @@ function boolean(value) = !value || value == "false" ? false : true;
  * @param * value - The value to cast.
  * @returns String - Returns a string. Strings remain unchanged, other values are "stringified".
  */
-function string(value) = isUndef(value) ? "" : str(value);
+function string(value) = is_undef(value) ? "" : str(value);
 
 /**
  * Typecasts the value to an array.
@@ -199,7 +204,7 @@ function string(value) = isUndef(value) ? "" : str(value);
  * @returns Array - Returns an array. Arrays and vectors remain unchanged.
  *                  `undef` produces an empty array, other values are wrapped in an array.
  */
-function array(value) = isUndef(value) ? [] : concat(value);
+function array(value) = is_undef(value) ? [] : concat(value);
 
 /**
  * Typecasts the value to a vector with the desired length.
@@ -214,9 +219,9 @@ function array(value) = isUndef(value) ? [] : concat(value);
  */
 function vector(value, length) =
     let(
-        array = isArray(value),
+        array = is_list(value),
         length = float(
-            isUndef(length) ? (array ? len(value) : 0)
+            is_undef(length) ? (array ? len(value) : 0)
                             : length
         )
     )

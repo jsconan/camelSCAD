@@ -2,7 +2,7 @@
  * @license
  * MIT License
  *
- * Copyright (c) 2017-2019 Jean-Sebastien CONAN
+ * Copyright (c) 2017-2022 Jean-Sebastien CONAN
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -389,7 +389,7 @@ function assertContext() = str(
  * @returns String
  */
 function assertDetails(details) =
-    details && isArray(details) ? (
+    details && is_list(details) ? (
         len(details) > 1 ? str("[expected: ", details[1], "] [actual: ", details[0], "]")
                          : str("[value: ", details[0], "]")
     )
@@ -407,7 +407,7 @@ function assertDetails(details) =
 function checkExpectedAsserts(actual, expected) =
     let(
         actual = integer(actual),
-        single = isUndef(expected),
+        single = is_undef(expected),
         expected = integer(expected)
     )
     single ? !!actual : actual == expected
@@ -426,7 +426,7 @@ function messageExpectedAsserts(actual, expected, type) =
     let(
         type = string(type),
         actual = integer(actual),
-        single = isUndef(expected),
+        single = is_undef(expected),
         expected = integer(expected)
     )
     str(
