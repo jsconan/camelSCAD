@@ -2,7 +2,7 @@
  * @license
  * MIT License
  *
- * Copyright (c) 2017-2019 Jean-Sebastien CONAN
+ * Copyright (c) 2017-2022 Jean-Sebastien CONAN
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -76,8 +76,9 @@ function divisor2D(v) =
 function apply2D(v, x, y, r, d) =
     let(
         n = isNumber(v),
-        x = uor(x, uor(d, r * 2)),
-        y = uor(y, uor(d, r * 2))
+        d = uor(d, r ? r * 2 : r),
+        x = uor(x, d),
+        y = uor(y, d)
     )
     [
         float(uor(x, n ? v : v[0])),
@@ -636,7 +637,11 @@ function cosp(y, w, h, p, o) =
  * @returns Vector
  */
 function rotp(v, a) =
-    let( a = float(a) )
+    isUndef(v) || isUndef(a) ? [0, 0]
+   :let( 
+       v = vector2D(v),
+       a = float(a)
+    )
     [
         v[0] * cos(a) - v[1] * sin(a),
         v[1] * cos(a) + v[0] * sin(a)
@@ -651,7 +656,10 @@ function rotp(v, a) =
  * @returns Vector
  */
 function mirp(v, a) =
-    let(
+    isUndef(v) || isUndef(a) ? [0, 0]
+   :let(
+        v = vector2D(v),
+        a = vector2D(a),
         ax2 = a[0] * a[0],
         ay2 = a[1] * a[1],
         a2xy = 2 * a[0] * a[1],
@@ -671,7 +679,10 @@ function mirp(v, a) =
  * @returns Vector
  */
 function arcp(r, a) =
-    let( a = float(a) )
+    let(
+        r = vector2D(r),
+        a = float(a)
+    )
     [
         r[0] * cos(a),
         r[1] * sin(a)

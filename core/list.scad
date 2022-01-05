@@ -2,7 +2,7 @@
  * @license
  * MIT License
  *
- * Copyright (c) 2017-2019 Jean-Sebastien CONAN
+ * Copyright (c) 2017-2022 Jean-Sebastien CONAN
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -175,8 +175,8 @@ function slice(collection, start, end) =
     let(
         collection = array(collection),
         length = len(collection),
-        start = start < 0 ? max(0, length + start) : integer(start),
-        end = (end < 0 ? max(start, length + end) : numberOr(end, length)) - 1
+        start = isNumber(start) && start < 0 ? max(0, length + start) : integer(start),
+        end = (isNumber(end) && end < 0 ? max(start, length + end) : numberOr(end, length)) - 1
     )
     length && start <= end ? [ for (i = [start : end]) if (i < length) collection[i] ]
                            : []
@@ -196,7 +196,7 @@ function splice(collection, start, remove, elems) =
         collection = array(collection),
         elems = arrayOr(elems, []),
         length = len(collection),
-        start = min(start < 0 ? max(0, length + start) : integer(start), length),
+        start = min(isNumber(start) && start < 0 ? max(0, length + start) : integer(start), length),
         next = start + numberOr(remove, length - start),
         last = length - 1
     )

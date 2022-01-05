@@ -2,7 +2,7 @@
  * @license
  * MIT License
  *
- * Copyright (c) 2017-2019 Jean-Sebastien CONAN
+ * Copyright (c) 2017-2022 Jean-Sebastien CONAN
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -77,9 +77,10 @@ function divisor3D(value) =
 function apply3D(v, x, y, z, r, d) =
     let(
         n = isNumber(v),
-        x = uor(x, uor(d, r * 2)),
-        y = uor(y, uor(d, r * 2)),
-        z = uor(z, uor(d, r * 2))
+        d = uor(d, r ? r * 2 : r),
+        x = uor(x, d),
+        y = uor(y, d),
+        z = uor(z, d)
     )
     [
         float(uor(x, n ? v : v[0])),

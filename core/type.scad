@@ -2,7 +2,7 @@
  * @license
  * MIT License
  *
- * Copyright (c) 2017-2019 Jean-Sebastien CONAN
+ * Copyright (c) 2017-2022 Jean-Sebastien CONAN
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -46,7 +46,7 @@ function isUndef(value) = (value == undef);
  * @param * value - The value to check.
  * @returns Boolean - Returns `true` whether the value is NAN.
  */
-function isNAN(value) = (value != value);
+function isNAN(value) = (!isUndef(value) && value != value);
 
 /**
  * Checks if the value is infinite.
@@ -54,7 +54,7 @@ function isNAN(value) = (value != value);
  * @param * value - The value to check.
  * @returns Boolean - Returns `true` whether the value is infinite.
  */
-function isInfinity(value) = (value >= INFINITY || value <= -INFINITY);
+function isInfinity(value) = (isNumber(value) && (value >= INFINITY || value <= -INFINITY));
 
 /**
  * Checks if the value is numeric.

@@ -2,7 +2,7 @@
  * @license
  * MIT License
  *
- * Copyright (c) 2017-2019 Jean-Sebastien CONAN
+ * Copyright (c) 2017-2022 Jean-Sebastien CONAN
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -62,7 +62,7 @@ function substr(s, start, length) =
     let(
         s = string(s),
         l = len(s),
-        start = start < 0 ? max(0, start + l) : integer(start),
+        start = isNumber(start) && start < 0 ? max(0, start + l) : integer(start),
         end = min(start + numberOr(length, l), l) - 1
     )
     start <= end ? join([for (i = [start : end]) s[i] ]) : ""
@@ -147,7 +147,7 @@ function split(s, sep,
                         p
             ] : [],
             i = index[0],
-            ok = i >= 0 && i < count,
+            ok = !isUndef(i) && i >= 0 && i < count,
             start = [substr(s, offset, ok ? positions[i] - offset : undef)]
         )
         ok ? concat(start, split(s, sep, positions, positions[i] + len(sep), i + 1))
@@ -182,7 +182,7 @@ function replace(s, from, to,
                         p
             ] : [],
             i = index[0],
-            ok = i >= 0 && i < count,
+            ok = !isUndef(i) && i >= 0 && i < count,
             start = substr(s, offset, ok ? positions[i] - offset : undef)
         )
         ok ? str(start, to, replace(s, from, to, positions, positions[i] + len(from), i + 1))
