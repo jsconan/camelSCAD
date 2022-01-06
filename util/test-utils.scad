@@ -390,8 +390,8 @@ function assertContext() = str(
  */
 function assertDetails(details) =
     details && is_list(details) ? (
-        len(details) > 1 ? str("[expected: ", details[1], "] [actual: ", details[0], "]")
-                         : str("[value: ", details[0], "]")
+        len(details) > 1 ? str("{expected: ", details[1], "}{actual: ", details[0], "}")
+                         : str("{value: ", details[0], "}")
     )
    :""
 ;
