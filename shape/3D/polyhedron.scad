@@ -46,9 +46,9 @@ function sizeBox(size, l, w, h) =
         size = apply3D(size, l, w, h)
     )
     [
-        divisor(size[0]),
-        divisor(size[1]),
-        divisor(size[2])
+        divisor(size.x),
+        divisor(size.y),
+        divisor(size.z)
     ]
 ;
 
@@ -69,16 +69,16 @@ function sizeChamferedBox(size, chamfer, l, w, h, cl, cw) =
         s = apply3D(size, l, w, h),
         c = apply2D(chamfer, cl, cw),
         size = [
-            divisor(s[0] ? s[0] : c[0] * 2),
-            divisor(s[1] ? s[1] : c[1] * 2),
-            divisor(s[2])
+            divisor(s.x ? s.x : c.x * 2),
+            divisor(s.y ? s.y : c.y * 2),
+            divisor(s.z)
         ],
         chamfer = [
-            min(size[0] / 2, c[0]),
-            min(size[1] / 2, c[1])
+            min(size.x / 2, c.x),
+            min(size.y / 2, c.y)
         ]
     )
-    [ size, chamfer[0] && chamfer[1] ? chamfer : [0, 0] ]
+    [ size, chamfer.x && chamfer.y ? chamfer : [0, 0] ]
 ;
 
 /**
@@ -97,9 +97,9 @@ function sizeTrapeziumBox(size, a, b, w, h) =
         size = apply3D(size, a, b, w)
     )
     [
-        divisor(size[0]),
-        divisor(size[1]),
-        divisor(size[2]),
+        divisor(size.x),
+        divisor(size.y),
+        divisor(size.z),
         divisor(h)
     ]
 ;
@@ -122,9 +122,9 @@ function sizeRegularPolygonBox(size, n, l, w, h, s) =
                                         : apply3D(size, l, w, h)
     )
     [
-        divisor(size[0]),
-        divisor(size[1]),
-        divisor(size[2]),
+        divisor(size.x),
+        divisor(size.y),
+        divisor(size.z),
         n
     ]
 ;
@@ -189,7 +189,7 @@ function sizeCrossBox(size, core, l, w, h, cl, cw) =
  */
 module box(size, l, w, h, center) {
     size = sizeBox(size=size, l=l, w=w, h=h);
-    linear_extrude(height=size[2], center=center, convexity=10) {
+    linear_extrude(height=size.z, center=center, convexity=10) {
         rectangle(size);
     }
 }
@@ -208,7 +208,7 @@ module box(size, l, w, h, center) {
  */
 module chamferedBox(size, chamfer, l, w, h, cl, cw, center) {
     size = sizeBox(size=size, chamfer=chamfer, l=l, w=w, h=h, cl=cl, cw=cw);
-    linear_extrude(height=size[2], center=center, convexity=10) {
+    linear_extrude(height=size.z, center=center, convexity=10) {
         chamferedRectangle(size, chamfer);
     }
 }
@@ -243,7 +243,7 @@ module trapeziumBox(size, a, b, w, h, center) {
  */
 module regularPolygonBox(size, n, l, w, h, s, center) {
     size = sizeRegularPolygonBox(size=size, n=n, l=l, w=w, h=h, s=s);
-    linear_extrude(height=size[2], center=center, convexity=10) {
+    linear_extrude(height=size.z, center=center, convexity=10) {
         regularPolygon(size, size[3]);
     }
 }
@@ -262,7 +262,7 @@ module regularPolygonBox(size, n, l, w, h, s, center) {
  */
 module hexagonBox(size, pointy, adjust, l, w, h, s, center) {
     size = sizeRegularPolygonBox(size=size, n=6, l=l, w=w, h=h, s=s);
-    linear_extrude(height=size[2], center=center, convexity=10) {
+    linear_extrude(height=size.z, center=center, convexity=10) {
         hexagon(size=size, pointy=pointy, adjust=adjust);
     }
 }
@@ -282,7 +282,7 @@ module hexagonBox(size, pointy, adjust, l, w, h, s, center) {
  */
 module starBox(size, core, edges, l, w, h, cl, cw, center) {
     size = sizeStarBox(size=size, core=core, edges=edges, l=l, w=w, h=h, cl=cl, cw=cw);
-    linear_extrude(height=size[0][2], center=center, convexity=10) {
+    linear_extrude(height=size[0].z, center=center, convexity=10) {
         star(size[0], size[1], size[2]);
     }
 }
@@ -301,7 +301,7 @@ module starBox(size, core, edges, l, w, h, cl, cw, center) {
  */
 module regularCrossBox(size, core, l, w, h, cl, cw, center) {
     size = sizeCrossBox(size=size, core=core, l=l, w=w, h=h, cl=cl, cw=cw);
-    linear_extrude(height=size[0][2], center=center, convexity=10) {
+    linear_extrude(height=size[0].z, center=center, convexity=10) {
         regularCross(size[0], size[1]);
     }
 }
@@ -326,7 +326,7 @@ module regularCrossBox(size, core, l, w, h, cl, cw, center) {
  */
 module meshBox(size, count, gap, pointy, linear, even, l, w, h, cx, cy, gx, gy, center) {
     size = apply3D(size, l, w, h);
-    linear_extrude(height=size[2], center=center, convexity=10) {
+    linear_extrude(height=size.z, center=center, convexity=10) {
         mesh(size=size, count=count, gap=gap, pointy=pointy, linear=linear, even=even, cx=cx, cy=cy, gx=gx, gy=gy);
     }
 }

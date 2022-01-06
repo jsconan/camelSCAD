@@ -2,7 +2,7 @@
  * @license
  * MIT License
  *
- * Copyright (c) 2017-2019 Jean-Sebastien CONAN
+ * Copyright (c) 2017-2022 Jean-Sebastien CONAN
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -45,8 +45,8 @@ function sizeRectangle(size, l, w) =
         size = apply2D(size, l, w)
     )
     [
-        divisor(size[0]),
-        divisor(size[1])
+        divisor(size.x),
+        divisor(size.y)
     ]
 ;
 
@@ -66,15 +66,15 @@ function sizeChamferedRectangle(size, chamfer, l, w, cl, cw) =
         s = apply2D(size, l, w),
         c = apply2D(chamfer, cl, cw),
         size = [
-            divisor(s[0] ? s[0] : c[0] * 2),
-            divisor(s[1] ? s[1] : c[1] * 2)
+            divisor(s.x ? s.x : c.x * 2),
+            divisor(s.y ? s.y : c.y * 2)
         ],
         chamfer = [
-            min(size[0] / 2, c[0]),
-            min(size[1] / 2, c[1])
+            min(size.x / 2, c.x),
+            min(size.y / 2, c.y)
         ]
     )
-    [ size, chamfer[0] && chamfer[1] ? chamfer : [0, 0] ]
+    [ size, chamfer.x && chamfer.y ? chamfer : [0, 0] ]
 ;
 
 /**
@@ -91,9 +91,9 @@ function sizeTrapezium(size, a, b, w) =
         size = apply3D(size, a, b, w)
     )
     [
-        divisor(size[0]),
-        divisor(size[1]),
-        divisor(size[2])
+        divisor(size.x),
+        divisor(size.y),
+        divisor(size.z)
     ]
 ;
 
@@ -114,8 +114,8 @@ function sizeRegularPolygon(size, n, l, w, s) =
                                         : apply2D(size, l, w)
     )
     [
-        divisor(size[0]),
-        divisor(size[1]),
+        divisor(size.x),
+        divisor(size.y),
         n
     ]
 ;
@@ -180,10 +180,10 @@ function drawRectangle(size, l, w) =
         size = sizeRectangle(size=size, l=l, w=w) / 2
     )
     [
-        [ size[0],  size[1]],
-        [-size[0],  size[1]],
-        [-size[0], -size[1]],
-        [ size[0], -size[1]]
+        [ size.x,  size.y],
+        [-size.x,  size.y],
+        [-size.x, -size.y],
+        [ size.x, -size.y]
     ]
 ;
 
@@ -204,22 +204,22 @@ function drawChamferedRectangle(size, chamfer, l, w, cl, cw) =
         size = specs[0] / 2,
         chamfer = specs[1]
     )
-    chamfer[0]
+    chamfer.x
    ?[
-        [ size[0],  size[1] - chamfer[1]],
-        [ size[0] - chamfer[0],  size[1]],
-        [-size[0] + chamfer[0],  size[1]],
-        [-size[0],  size[1] - chamfer[1]],
-        [-size[0], -size[1] + chamfer[1]],
-        [-size[0] + chamfer[0], -size[1]],
-        [ size[0] - chamfer[0], -size[1]],
-        [ size[0], -size[1] + chamfer[1]]
+        [ size.x,  size.y - chamfer.y],
+        [ size.x - chamfer.x,  size.y],
+        [-size.x + chamfer.x,  size.y],
+        [-size.x,  size.y - chamfer.y],
+        [-size.x, -size.y + chamfer.y],
+        [-size.x + chamfer.x, -size.y],
+        [ size.x - chamfer.x, -size.y],
+        [ size.x, -size.y + chamfer.y]
     ]
    :[
-        [ size[0],  size[1]],
-        [-size[0],  size[1]],
-        [-size[0], -size[1]],
-        [ size[0], -size[1]]
+        [ size.x,  size.y],
+        [-size.x,  size.y],
+        [-size.x, -size.y],
+        [ size.x, -size.y]
     ]
 ;
 
@@ -237,10 +237,10 @@ function drawTrapezium(size, a, b, w) =
         size = sizeTrapezium(size=size, a=a, b=b, w=w) / 2
     )
     [
-        [ size[1],  size[2]],
-        [-size[1],  size[2]],
-        [-size[0], -size[2]],
-        [ size[0], -size[2]]
+        [ size.y,  size.z],
+        [-size.y,  size.z],
+        [-size.x, -size.z],
+        [ size.x, -size.z]
     ]
 ;
 
@@ -336,8 +336,8 @@ function drawStar(size, core, edges, l, w, cl, cw) =
                 a = angle * e + (m ? step : 0) + RIGHT
             )
             [
-                cos(a) * (m ? inner[0] : outer[0]),
-                sin(a) * (m ? inner[1] : outer[1])
+                cos(a) * (m ? inner.x : outer.x),
+                sin(a) * (m ? inner.y : outer.y)
             ]
     ]
 ;
@@ -361,24 +361,24 @@ function drawCross(size, core, l, w, cl, cw) =
     )
     inner == [0, 0] ?
     [
-        [ outer[0],  outer[1]],
-        [-outer[0],  outer[1]],
-        [-outer[0], -outer[1]],
-        [ outer[0], -outer[1]]
+        [ outer.x,  outer.y],
+        [-outer.x,  outer.y],
+        [-outer.x, -outer.y],
+        [ outer.x, -outer.y]
     ]
    :[
-        [ inner[0],  inner[1]],
-        [ inner[0],  outer[1]],
-        [-inner[0],  outer[1]],
-        [-inner[0],  inner[1]],
-        [-outer[0],  inner[1]],
-        [-outer[0], -inner[1]],
-        [-inner[0], -inner[1]],
-        [-inner[0], -outer[1]],
-        [ inner[0], -outer[1]],
-        [ inner[0], -inner[1]],
-        [ outer[0], -inner[1]],
-        [ outer[0],  inner[1]]
+        [ inner.x,  inner.y],
+        [ inner.x,  outer.y],
+        [-inner.x,  outer.y],
+        [-inner.x,  inner.y],
+        [-outer.x,  inner.y],
+        [-outer.x, -inner.y],
+        [-inner.x, -inner.y],
+        [-inner.x, -outer.y],
+        [ inner.x, -outer.y],
+        [ inner.x, -inner.y],
+        [ outer.x, -inner.y],
+        [ outer.x,  inner.y]
     ]
 ;
 

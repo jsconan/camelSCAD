@@ -2,7 +2,7 @@
  * @license
  * MIT License
  *
- * Copyright (c) 2017-2019 Jean-Sebastien CONAN
+ * Copyright (c) 2017-2022 Jean-Sebastien CONAN
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -51,9 +51,9 @@ function sizeRounded3D(r, d, rx, ry, rz, dx, dy, dz) =
         d = apply3D(d, dx, dy, dz)
     )
     [
-        d[0] && !rx ? d[0] / 2 : r[0],
-        d[1] && !ry ? d[1] / 2 : r[1],
-        d[2] && !rz ? d[2] / 2 : r[2]
+        d.x && !rx ? d.x / 2 : r.x,
+        d.y && !ry ? d.y / 2 : r.y,
+        d.z && !rz ? d.z / 2 : r.z
     ]
 ;
 
@@ -77,14 +77,14 @@ function sizeArchBox(size, r, d, l, w, h, rx, ry, dx, dy) =
         s = apply3D(size, l, w, h),
         c = sizeRounded2D(r=r, d=d, rx=rx, ry=ry, dx=dx, dy=dy),
         size = [
-            divisor(s[0] ? s[0] : c[0] * 2),
-            divisor(s[1] ? s[1] : c[1]),
-            divisor(s[2])
+            divisor(s.x ? s.x : c.x * 2),
+            divisor(s.y ? s.y : c.y),
+            divisor(s.z)
         ],
-        horRadius = size[0] / 2,
+        horRadius = size.x / 2,
         radius = [
             horRadius,
-            min(size[1], or(c[1], horRadius))
+            min(size.y, or(c.y, horRadius))
         ]
     )
     [ size, radius ]
@@ -110,14 +110,14 @@ function sizeSlot(size, r, d, l, w, h, rx, ry, dx, dy) =
         s = apply3D(size, l, w, h),
         c = sizeRounded2D(r=r, d=d, rx=rx, ry=ry, dx=dx, dy=dy),
         size = [
-            divisor(s[0] ? s[0] : c[0] * 2),
-            divisor(s[1] ? s[1] : c[1] * 2),
-            divisor(s[2])
+            divisor(s.x ? s.x : c.x * 2),
+            divisor(s.y ? s.y : c.y * 2),
+            divisor(s.z)
         ],
-        horRadius = size[0] / 2,
+        horRadius = size.x / 2,
         radius = [
             horRadius,
-            min(size[1] / 2, or(c[1], horRadius))
+            min(size.y / 2, or(c.y, horRadius))
         ]
     )
     [ size, radius ]
@@ -143,16 +143,16 @@ function sizeCushion(size, r, d, l, w, h, rx, ry, dx, dy) =
         s = apply3D(size, l, w, h),
         c = sizeRounded2D(r=r, d=d, rx=rx, ry=ry, dx=dx, dy=dy),
         size = [
-            divisor(s[0] ? s[0] : c[0] * 2),
-            divisor(s[1] ? s[1] : c[1] * 2),
-            divisor(s[2])
+            divisor(s.x ? s.x : c.x * 2),
+            divisor(s.y ? s.y : c.y * 2),
+            divisor(s.z)
         ],
         radius = [
-            min(size[0] / 2, c[0]),
-            min(size[1] / 2, c[1])
+            min(size.x / 2, c.x),
+            min(size.y / 2, c.y)
         ]
     )
-    [ size, radius[0] && radius[1] ? radius : [0, 0] ]
+    [ size, radius.x && radius.y ? radius : [0, 0] ]
 ;
 
 /**
@@ -175,14 +175,14 @@ function sizeBullet(size, r, d, l, w, h, rx, ry, dx, dy) =
         s = apply3D(size, l, w, h),
         c = sizeRounded2D(r=r, d=d, rx=rx, ry=ry, dx=dx, dy=dy),
         size = [
-            divisor(s[0] ? s[0] : c[0] * 2),
-            divisor(s[1] ? s[1] : c[0] * 2),
-            divisor(s[2] ? s[2] : c[1])
+            divisor(s.x ? s.x : c.x * 2),
+            divisor(s.y ? s.y : c.x * 2),
+            divisor(s.z ? s.z : c.y)
         ],
-        horRadius = max(size[0], size[1]) / 2,
+        horRadius = max(size.x, size.y) / 2,
         radius = [
             horRadius,
-            min(size[2], or(c[1], horRadius))
+            min(size.z, or(c.y, horRadius))
         ]
     )
     [ size, radius ]
@@ -208,14 +208,14 @@ function sizePill(size, r, d, l, w, h, rx, ry, dx, dy) =
         s = apply3D(size, l, w, h),
         c = sizeRounded2D(r=r, d=d, rx=rx, ry=ry, dx=dx, dy=dy),
         size = [
-            divisor(s[0] ? s[0] : c[0] * 2),
-            divisor(s[1] ? s[1] : c[0] * 2),
-            divisor(s[2] ? s[2] : c[1] * 2)
+            divisor(s.x ? s.x : c.x * 2),
+            divisor(s.y ? s.y : c.x * 2),
+            divisor(s.z ? s.z : c.y * 2)
         ],
-        horRadius = max(size[0], size[1]) / 2,
+        horRadius = max(size.x, size.y) / 2,
         radius = [
             horRadius,
-            min(size[2] / 2, or(c[1], horRadius))
+            min(size.z / 2, or(c.y, horRadius))
         ]
     )
     [ size, radius ]
@@ -241,16 +241,16 @@ function sizePeg(size, r, d, l, w, h, rx, ry, dx, dy) =
         s = apply3D(size, l, w, h),
         c = sizeRounded2D(r=r, d=d, rx=rx, ry=ry, dx=dx, dy=dy),
         size = [
-            divisor(s[0] ? s[0] : c[0] * 2),
-            divisor(s[1] ? s[1] : c[0] * 2),
-            divisor(s[2] ? s[2] : c[1] * 2)
+            divisor(s.x ? s.x : c.x * 2),
+            divisor(s.y ? s.y : c.x * 2),
+            divisor(s.z ? s.z : c.y * 2)
         ],
         radius = [
-            min(max(size[0], size[1]) / 2, c[0]),
-            min(size[2] / 2, c[1])
+            min(max(size.x, size.y) / 2, c.x),
+            min(size.z / 2, c.y)
         ]
     )
-    [ size, radius[0] && radius[1] ? radius : [0, 0] ]
+    [ size, radius.x && radius.y ? radius : [0, 0] ]
 ;
 
 /**
@@ -273,13 +273,13 @@ function sizePlate(size, r, d, l, w, h, rx, ry, dx, dy) =
         s = apply3D(size, l, w, h),
         c = sizeRounded2D(r=r, d=d, rx=rx, ry=ry, dx=dx, dy=dy),
         size = [
-            divisor(s[0] ? s[0] : c[0] * 2),
-            divisor(s[1] ? s[1] : c[0] * 2),
-            divisor(s[2] ? s[2] : c[1] * 2)
+            divisor(s.x ? s.x : c.x * 2),
+            divisor(s.y ? s.y : c.x * 2),
+            divisor(s.z ? s.z : c.y * 2)
         ],
-        verRadius = size[2] / 2,
+        verRadius = size.z / 2,
         radius = [
-            min(max(size[0], size[1]) / 2, or(c[0], verRadius)),
+            min(max(size.x, size.y) / 2, or(c.x, verRadius)),
             verRadius
         ]
     )
@@ -307,11 +307,11 @@ function drawBullet(size, r, d, l, w, h, rx, ry, dx, dy) =
         size = specs[0],
         radius = specs[1],
         center = [
-            0, size[2] - radius[1]
+            0, size.z - radius.y
         ],
         points = arc(r=radius, o=center, a=RIGHT)
     )
-    complete(points, [radius[0], 0], [0, 0])
+    complete(points, [radius.x, 0], [0, 0])
 ;
 
 /**
@@ -335,7 +335,7 @@ function drawPill(size, r, d, l, w, h, rx, ry, dx, dy) =
         size = specs[0],
         radius = specs[1],
         center = [
-            0, size[2] / 2 - radius[1]
+            0, size.z / 2 - radius.y
         ]
     )
     center == [0, 0] ? arc(r=radius, a1=-RIGHT, a2=RIGHT)
@@ -365,18 +365,18 @@ function drawPeg(size, r, d, l, w, h, rx, ry, dx, dy) =
         specs = sizePeg(size=size, r=r, d=d, l=l, w=w, h=h, rx=rx, ry=ry, dx=dx, dy=dy),
         size = specs[0],
         radius = specs[1],
-        right = max(size[0], size[1]) / 2,
-        top = size[2] / 2,
+        right = max(size.x, size.y) / 2,
+        top = size.z / 2,
         center = [
-            right - radius[0],
-            top - radius[1]
+            right - radius.x,
+            top - radius.y
         ]
     )
     radius == [0, 0] ? [ [right, top], [0, top], [0, -top], [right, -top] ]
    :center == [0, 0] ? arc(r=radius, a1=-RIGHT, a2=RIGHT)
    :complete(
         concat(
-            arc(r=radius, o=[center[0], -center[1]], a1=QUADRANT_3, a2=QUADRANT_4),
+            arc(r=radius, o=[center.x, -center.y], a1=QUADRANT_3, a2=QUADRANT_4),
             arc(r=radius, o=center, a1=0, a2=QUADRANT_1)
         ),
         [0, -top],
@@ -405,12 +405,12 @@ function drawPlate(size, r, d, l, w, h, rx, ry, dx, dy) =
         size = specs[0],
         radius = specs[1],
         center = [
-            max(size[0], size[1]) / 2 - radius[0], 0
+            max(size.x, size.y) / 2 - radius.x, 0
         ],
         points = arc(r=radius, o=center, a1=-RIGHT, a2=RIGHT)
     )
     center == [0, 0] ? points
-   :complete(points, -[0, radius[1]], [0, radius[1]])
+   :complete(points, -[0, radius.y], [0, radius.y])
 ;
 
 /**
@@ -430,7 +430,7 @@ function drawPlate(size, r, d, l, w, h, rx, ry, dx, dy) =
  */
 module archBox(size, r, d, l, w, h, rx, ry, dx, dy, center) {
     size = sizeArchBox(size=size, r=r, d=d, l=l, w=w, h=h, rx=rx, ry=ry, dx=dx, dy=dy);
-    linear_extrude(height=size[0][2], center=center, convexity=10) {
+    linear_extrude(height=size[0].z, center=center, convexity=10) {
         arch(size[0], size[1]);
     }
 }
@@ -452,7 +452,7 @@ module archBox(size, r, d, l, w, h, rx, ry, dx, dy, center) {
  */
 module slot(size, r, d, l, w, h, rx, ry, dx, dy, center) {
     size = sizeSlot(size=size, r=r, d=d, l=l, w=w, h=h, rx=rx, ry=ry, dx=dx, dy=dy);
-    linear_extrude(height=size[0][2], center=center, convexity=10) {
+    linear_extrude(height=size[0].z, center=center, convexity=10) {
         stadium(size[0], size[1]);
     }
 }
@@ -474,7 +474,7 @@ module slot(size, r, d, l, w, h, rx, ry, dx, dy, center) {
  */
 module cushion(size, r, d, l, w, h, rx, ry, dx, dy, center) {
     size = sizeCushion(size=size, r=r, d=d, l=l, w=w, h=h, rx=rx, ry=ry, dx=dx, dy=dy);
-    linear_extrude(height=size[0][2], center=center, convexity=10) {
+    linear_extrude(height=size[0].z, center=center, convexity=10) {
         roundedRectangle(size[0], size[1]);
     }
 }

@@ -21,15 +21,15 @@ include <../core/constants.scad>
 module simpleBox(size, thickness, radius) {
     // Adjust the values to get usable size, thickness, and rounded corner radius
     size = vector3D(size);
-    lowest = min(size[0], size[1]) / 10;
+    lowest = min(size.x, size.y) / 10;
     thickness = min(numberOr(thickness, 1), lowest);
     radius = numberOr(radius, lowest);
 
     // Compute the size and position of the handle hole
-    handleRadius = size[0] + size[1];
+    handleRadius = size.x + size.y;
     handleCenter = center2D(
-        a=apply2D(x=-size[0] / 2 + radius, y=size[2]),
-        b=apply2D(x=size[0] / 2 - radius, y=size[2]),
+        a=apply2D(x=-size.x / 2 + radius, y=size.z),
+        b=apply2D(x=size.x / 2 - radius, y=size.z),
         r=handleRadius,
         negative=true
     );
@@ -40,13 +40,13 @@ module simpleBox(size, thickness, radius) {
 
         // This is the inside of the box
         translateZ(thickness) {
-            cushion(size=apply3D(size, x=size[0] - thickness * 2, y=size[1] - thickness * 2), r=radius-thickness/2);
+            cushion(size=apply3D(size, x=size.x - thickness * 2, y=size.y - thickness * 2), r=radius-thickness/2);
         }
 
         // This is the handle hole
         rotateX(90) {
             translate(vector3D(handleCenter)) {
-                cylinder(r=handleRadius, h=size[1] + 1, center=true);
+                cylinder(r=handleRadius, h=size.y + 1, center=true);
             }
         }
     }

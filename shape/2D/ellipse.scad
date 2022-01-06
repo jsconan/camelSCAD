@@ -2,7 +2,7 @@
  * @license
  * MIT License
  *
- * Copyright (c) 2017 Jean-Sebastien CONAN
+ * Copyright (c) 2017-2022 Jean-Sebastien CONAN
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -50,8 +50,8 @@ function sizeEllipse(r, d, rx, ry, dx, dy) =
     )
     [
         // use divisor() to ensure the values will be forced to anything but 0
-        divisor(d[0] && !rx ? d[0] / 2 : r[0]),
-        divisor(d[1] && !ry ? d[1] / 2 : r[1])
+        divisor(d.x && !rx ? d.x / 2 : r.x),
+        divisor(d.y && !ry ? d.y / 2 : r.y)
     ]
 ;
 
@@ -74,8 +74,8 @@ function sizeRing(r, w, d, rx, ry, dx, dy, wx, wy) =
         out = sizeEllipse(r=r, d=d, rx=rx, ry=ry, dx=dx, dy=dy),
         w = apply2D(w, wx, wy),
         in = [
-            max(min(out[0], out[0] - w[0]), 0),
-            max(min(out[1], out[1] - w[1]), 0)
+            max(min(out.x, out.x - w.x), 0),
+            max(min(out.y, out.y - w.y), 0)
         ]
     )
     [ out, in ]
@@ -198,8 +198,8 @@ module chord(r, a=RIGHT, d, a1, a2, rx, ry, dx, dy) {
 module ring(r, w, d, rx, ry, dx, dy, wx, wy) {
     size = sizeRing(r=r, w=w, d=d, rx=rx, ry=ry, dx=dx, dy=dy, wx=wx, wy=wy);
     difference() {
-        ellipse(r=size[0]);
-        ellipse(r=size[1]);
+        ellipse(r=size.x);
+        ellipse(r=size.y);
     }
 }
 
@@ -223,8 +223,8 @@ module ringSegment(r, w, a=RIGHT, d, a1, a2, rx, ry, dx, dy, wx, wy) {
     size = sizeRing(r=r, w=w, d=d, rx=rx, ry=ry, dx=dx, dy=dy, wx=wx, wy=wy);
     polygon(
         points = concat(
-            arc(r=size[0], a=a, a1=a1, a2=a2),
-            reverse(arc(r=size[1], a=a, a1=a1, a2=a2))
+            arc(r=size.x, a=a, a1=a1, a2=a2),
+            reverse(arc(r=size.y, a=a, a1=a1, a2=a2))
         ),
         convexity = 10
     );

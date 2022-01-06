@@ -2,7 +2,7 @@
  * @license
  * MIT License
  *
- * Copyright (c) 2017-2020 Jean-Sebastien CONAN
+ * Copyright (c) 2017-2022 Jean-Sebastien CONAN
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -49,7 +49,7 @@ function arc(r, a=DEGREES, o, a1, a2) =
         a1 = deg(a1),
         a2 = a2 != undef ? deg(a2) : a1 + deg(a)
     )
-    !r[0] || !r[1] || (!a1 && !a2) ? []
+    !r.x || !r.y || (!a1 && !a2) ? []
    :let(
         start = min(a1, a2),
         end = max(a1, a2),

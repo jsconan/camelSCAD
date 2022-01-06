@@ -102,11 +102,11 @@ function quadraticBezierCurve(p0, p1, p2, recurse) =
        :let(
             d12 = p1 - p2,
             d0 = p2 - p0,
-            d1 = abs(d12[0] * d0[1] - d12[1] * d0[0]),
+            d1 = abs(d12.x * d0.y - d12.y * d0.x),
             tolerance = $fs * $fa * BEZIER_TOLERANCE
         )
         d1 > EPSILON ? d1 < tolerance
-                     : let(d = p012 - (p0 + p2) / 2) d[0] + d[1] <= tolerance
+                     : let(d = p012 - (p0 + p2) / 2) d.x + d.y <= tolerance
     )
     finish ? [p012] : concat(
         quadraticBezierCurve(p0, p01, p012, recurse + 1),
@@ -149,14 +149,14 @@ function cubicBezierCurve(p0, p1, p2, p3, recurse) =
             d13 = p1 - p3,
             d23 = p2 - p3,
             d0 = p3 - p0,
-            d1 = abs(d13[0] * d0[1] - d13[1] * d0[0]),
-            d2 = abs(d23[0] * d0[1] - d23[1] * d0[0]),
+            d1 = abs(d13.x * d0.y - d13.y * d0.x),
+            d2 = abs(d23.x * d0.y - d23.y * d0.x),
             tolerance = $fs * $fa * BEZIER_TOLERANCE
         )
         d1 > EPSILON && d2 > EPSILON ? d1 + d2 < tolerance
        :d1 > EPSILON ? d1 < tolerance
        :d2 > EPSILON ? d2 < tolerance
-       :let(d = p0123 - (p0 + p3) / 2) d[0] + d[1] <= tolerance
+       :let(d = p0123 - (p0 + p3) / 2) d.x + d.y <= tolerance
     )
     finish ? [p0123] : concat(
         cubicBezierCurve(p0, p01, p012, p0123, recurse + 1),

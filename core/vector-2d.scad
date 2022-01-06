@@ -43,7 +43,7 @@
  */
 function vector2D(v) =
     is_num(v) ? [ v, v ]
-   :[ float(v[0]), float(v[1]) ]
+   :[ float(v.x), float(v.y) ]
 ;
 
 /**
@@ -57,7 +57,7 @@ function vector2D(v) =
  */
 function divisor2D(v) =
     is_num(v) ? let( v = divisor(v) ) [ v, v ]
-   :[ divisor(v[0]), divisor(v[1]) ]
+   :[ divisor(v.x), divisor(v.y) ]
 ;
 
 /**
@@ -81,8 +81,8 @@ function apply2D(v, x, y, r, d) =
         y = uor(y, d)
     )
     [
-        float(uor(x, n ? v : v[0])),
-        float(uor(y, n ? v : v[1]))
+        float(uor(x, n ? v : v.x)),
+        float(uor(y, n ? v : v.y))
     ]
 ;
 
@@ -99,8 +99,8 @@ function quadrant(v, i, x, y) =
     let(
         n = is_num(v),
         i = integer(i) % 4,
-        x = abs(float(uor(x, n ? v : v[0]))),
-        y = abs(float(uor(y, n ? v : v[1])))
+        x = abs(float(uor(x, n ? v : v.x))),
+        y = abs(float(uor(y, n ? v : v.y)))
     )
     i == 1 ? [-x,  y]
    :i == 2 ? [-x, -y]
@@ -147,7 +147,7 @@ function unit2D(v) =
  */
 function normal(v) =
     is_num(v) ? [ v, -v ]
-    :[ float(v[1]), -float(v[0]) ]
+    :[ float(v.y), -float(v.x) ]
 ;
 
 /**
@@ -162,7 +162,7 @@ function normal(v) =
  */
 function flip(v) =
     is_num(v) ? [ v, v ]
-    :[ float(v[1]), float(v[0]) ]
+    :[ float(v.y), float(v.x) ]
 ;
 
 /**
@@ -266,11 +266,11 @@ function intersect2D(a, b, c, d) =
         d = vector2D(d),
         i = b - a,
         j = d - c,
-        n = i[0] * j[1] - i[1] * j[0]
+        n = i.x * j.y - i.y * j.x
     )
     n ? (
         let(
-            k = -(a[0] * j[1] - c[0] * j[1] - j[0] * a[1] + j[0] * c[1]) / n
+            k = -(a.x * j.y - c.x * j.y - j.x * a.y + j.x * c.y) / n
         )
         a + k * i
     )
@@ -298,7 +298,7 @@ function tangent2D(p, c, r) =
     d > r ? (
         let(
             t = pythagoras(0, r, d),
-            a = getAngle(v[0], v[1]) + asin(r / d)
+            a = getAngle(v.x, v.y) + asin(r / d)
         )
         p + arcPoint(t, a)
     )
@@ -323,23 +323,23 @@ function circleLineIntersect2D(i, j, c, r) =
         j = vector2D(j),
         c = vector2D(c),
         r = abs(float(r)),
-        v = i[0] == j[0],
-        h = i[1] == j[1]
+        v = i.x == j.x,
+        h = i.y == j.y
     )
     h && v ? (
-        approx(pow(i[0] - c[0], 2) + pow(i[1] - c[1], 2), r * r) ? [i, j] : []
+        approx(pow(i.x - c.x, 2) + pow(i.y - c.y, 2), r * r) ? [i, j] : []
     )
    :v ? (
         let(
-            a = abs(i[0] - c[0])
+            a = abs(i.x - c.x)
         )
         a <= r ? (
             let(
                 b = pythagoras(a, 0, r)
             )
             [
-                [i[0], c[1] - b],
-                [i[0], c[1] + b]
+                [i.x, c.y - b],
+                [i.x, c.y + b]
             ]
         )
        :[]
@@ -347,15 +347,15 @@ function circleLineIntersect2D(i, j, c, r) =
     )
    :h ? (
        let(
-           a = abs(i[1] - c[1])
+           a = abs(i.y - c.y)
        )
        a <= r ? (
            let(
                b = pythagoras(a, 0, r)
            )
            [
-               [c[0] - b, i[1]],
-               [c[0] + b, i[1]]
+               [c.x - b, i.y],
+               [c.x + b, i.y]
            ]
        )
       :[]
@@ -363,18 +363,18 @@ function circleLineIntersect2D(i, j, c, r) =
    :(
         let(
             v = i - j,
-            a = v[1] / v[0],
-            b = i[1] - a * i[0],
+            a = v.y / v.x,
+            b = i.y - a * i.x,
             x = quadraticEquation(
                 1 + a * a,
-                2 * (-c[0] + (b - c[1]) * a),
-                c[0] * c[0] + c[1] * c[1] + (c[1] * -2 + b) * b - r * r
+                2 * (-c.x + (b - c.y) * a),
+                c.x * c.x + c.y * c.y + (c.y * -2 + b) * b - r * r
             )
         )
         x ? (
             [
-                [x[0], a * x[0] + b],
-                [x[1], a * x[1] + b]
+                [x.x, a * x.x + b],
+                [x.y, a * x.y + b]
             ]
         )
        :[]
@@ -398,13 +398,13 @@ function circleIntersect2D(c1, r1, c2, r2) =
         c2 = vector2D(c2),
         r1 = abs(float(r1)),
         r2 = abs(float(r2)),
-        v = c1[0] == c2[0],
-        h = c1[1] == c2[1]
+        v = c1.x == c2.x,
+        h = c1.y == c2.y
     )
     v && h ? []
    :v ? (
         let(
-            a = c2[1] - c1[1],
+            a = c2.y - c1.y,
             l = abs(a),
             d = r1 + r2
         )
@@ -425,7 +425,7 @@ function circleIntersect2D(c1, r1, c2, r2) =
     )
    :h ? (
        let(
-           a = c2[0] - c1[0],
+           a = c2.x - c1.x,
            l = abs(a),
            d = r1 + r2
        )
@@ -446,21 +446,21 @@ function circleIntersect2D(c1, r1, c2, r2) =
    )
   :(
         let(
-            x12 = c1[0] * c1[0],
-            y12 = c1[1] * c1[1],
+            x12 = c1.x * c1.x,
+            y12 = c1.y * c1.y,
             r12 = r1 * r1,
-            a = (c2[0] * c2[0] + c2[1] * c2[1] - x12 - y12 + r12 - r2 * r2) / (2 * (c2[1] - c1[1])),
-            b = (c2[0] - c1[0]) / (c2[1] - c1[1]),
+            a = (c2.x * c2.x + c2.y * c2.y - x12 - y12 + r12 - r2 * r2) / (2 * (c2.y - c1.y)),
+            b = (c2.x - c1.x) / (c2.y - c1.y),
             x = quadraticEquation(
                 b * b + 1,
-                (-c1[0] + (c1[1] - a) * b) * 2,
-                (2 * -c1[1] + a) * a + x12 + y12 - r12
+                (-c1.x + (c1.y - a) * b) * 2,
+                (2 * -c1.y + a) * a + x12 + y12 - r12
             )
         )
         x ? (
             [
-                [x[0], a - x[0] * b],
-                [x[1], a - x[1] * b]
+                [x.x, a - x.x * b],
+                [x.y, a - x.y * b]
             ]
         )
        :[]
@@ -485,7 +485,7 @@ function isosceles2D(a, b, h, angle) =
         b = vector2D(b),
         v = b - a,
         d = norm2D(v) / 2,
-        w = getAngle(v[0], v[1])
+        w = getAngle(v.x, v.y)
     )
     h != undef ? (
         let(
@@ -520,7 +520,7 @@ function protractor(a, b) =
     let(
         v = vector2D(b) - vector2D(a)
     )
-    getAngle(v[0], v[1])
+    getAngle(v.x, v.y)
 ;
 
 /**
@@ -573,8 +573,8 @@ function vertexOutline2D(a, b, v, distance) =
         v = vector2D(v),
         a = vector2D(a) - v,
         b = vector2D(b) - v,
-        angleA = getAngle(a[0], a[1]),
-        angleB = getAngle(b[0], b[1]),
+        angleA = getAngle(a.x, a.y),
+        angleB = getAngle(b.x, b.y),
         angle = (angleB - angleA) / 2,
         length = float(distance) / divisor(abs(sin(angle)))
     )
@@ -643,8 +643,8 @@ function rotp(v, a) =
        a = float(a)
     )
     [
-        v[0] * cos(a) - v[1] * sin(a),
-        v[1] * cos(a) + v[0] * sin(a)
+        v.x * cos(a) - v.y * sin(a),
+        v.y * cos(a) + v.x * sin(a)
     ]
 ;
 
@@ -660,14 +660,14 @@ function mirp(v, a) =
    :let(
         v = vector2D(v),
         a = vector2D(a),
-        ax2 = a[0] * a[0],
-        ay2 = a[1] * a[1],
-        a2xy = 2 * a[0] * a[1],
+        ax2 = a.x * a.x,
+        ay2 = a.y * a.y,
+        a2xy = 2 * a.x * a.y,
         a2 = divisor(ax2 + ay2)
     )
     [
-        (ax2 * v[0] - ay2 * v[0] + a2xy * v[1]) / a2,
-        (ay2 * v[1] - ax2 * v[1] + a2xy * v[0]) / a2
+        (ax2 * v.x - ay2 * v.x + a2xy * v.y) / a2,
+        (ay2 * v.y - ax2 * v.y + a2xy * v.x) / a2
     ]
 ;
 
@@ -684,8 +684,8 @@ function arcp(r, a) =
         a = float(a)
     )
     [
-        r[0] * cos(a),
-        r[1] * sin(a)
+        r.x * cos(a),
+        r.y * sin(a)
     ]
 ;
 
@@ -728,8 +728,8 @@ function scale2D(points, factor) =
         factor = divisor2D(factor)
     )
     [ for (p = points) [
-        float(p[0]) * factor[0],
-        float(p[1]) * factor[1]
+        float(p.x) * factor.x,
+        float(p.y) * factor.y
     ] ]
 ;
 
@@ -754,14 +754,14 @@ function mirror2D(points, axis) =
     !is_list(points) || !len(points) ? []
    :let(
         a = undef == axis ? [0, 1] : vector2D(axis),
-        ax2 = a[0] * a[0],
-        ay2 = a[1] * a[1],
-        a2xy = 2 * a[0] * a[1],
+        ax2 = a.x * a.x,
+        ay2 = a.y * a.y,
+        a2xy = 2 * a.x * a.y,
         a2 = divisor(ax2 + ay2)
     )
     [ for(p = points) let( v = vector2D(p) ) [
-        (ax2 * v[0] - ay2 * v[0] + a2xy * v[1]) / a2,
-        (ay2 * v[1] - ax2 * v[1] + a2xy * v[0]) / a2
+        (ax2 * v.x - ay2 * v.x + a2xy * v.y) / a2,
+        (ay2 * v.y - ax2 * v.y + a2xy * v.x) / a2
     ] ]
 ;
 
@@ -780,8 +780,8 @@ function scaleFactor2D(points, size) =
         dim = dimensions2D(points)
     )
     [
-        size[0] / divisor(dim[0]),
-        size[1] / divisor(dim[1])
+        size.x / divisor(dim.x),
+        size.y / divisor(dim.y)
     ]
 ;
 
@@ -795,7 +795,7 @@ function dimensions2D(points) =
     let(
         b = boundaries2D(points)
     )
-    b[1] - b[0]
+    b.y - b.x
 ;
 
 /**
@@ -828,24 +828,24 @@ function boundaries2D(points,
                         pt4 = vector2D(points[p + 3])
                     )
                     [
-                        [ min(pt1[0], pt2[0], pt3[0], pt4[0]),
-                          min(pt1[1], pt2[1], pt3[1], pt4[1]) ],
-                        [ max(pt1[0], pt2[0], pt3[0], pt4[0]),
-                          max(pt1[1], pt2[1], pt3[1], pt4[1]) ]
+                        [ min(pt1.x, pt2.x, pt3.x, pt4.x),
+                          min(pt1.y, pt2.y, pt3.y, pt4.y) ],
+                        [ max(pt1.x, pt2.x, pt3.x, pt4.x),
+                          max(pt1.y, pt2.y, pt3.y, pt4.y) ]
                     ]
                 )
                :[
-                    [ min(pt1[0], pt2[0], pt3[0]),
-                      min(pt1[1], pt2[1], pt3[1]) ],
-                    [ max(pt1[0], pt2[0], pt3[0]),
-                      max(pt1[1], pt2[1], pt3[1]) ]
+                    [ min(pt1.x, pt2.x, pt3.x),
+                      min(pt1.y, pt2.y, pt3.y) ],
+                    [ max(pt1.x, pt2.x, pt3.x),
+                      max(pt1.y, pt2.y, pt3.y) ]
                 ]
             )
            :[
-                [ min(pt1[0], pt2[0]),
-                  min(pt1[1], pt2[1]) ],
-                [ max(pt1[0], pt2[0]),
-                  max(pt1[1], pt2[1]) ]
+                [ min(pt1.x, pt2.x),
+                  min(pt1.y, pt2.y) ],
+                [ max(pt1.x, pt2.x),
+                  max(pt1.y, pt2.y) ]
             ]
         )
        :[pt1, pt1]
@@ -856,9 +856,9 @@ function boundaries2D(points,
         right = boundaries2D(points, p + half, l - half)
     )
     [
-        [ min(left[0][0], right[0][0]),
-          min(left[0][1], right[0][1]) ],
-        [ max(left[1][0], right[1][0]),
-          max(left[1][1], right[1][1]) ]
+        [ min(left[0].x, right[0].x),
+          min(left[0].y, right[0].y) ],
+        [ max(left[1].x, right[1].x),
+          max(left[1].y, right[1].y) ]
     ]
 ;

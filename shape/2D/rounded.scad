@@ -2,7 +2,7 @@
  * @license
  * MIT License
  *
- * Copyright (c) 2017-2018 Jean-Sebastien CONAN
+ * Copyright (c) 2017-2022 Jean-Sebastien CONAN
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -49,8 +49,8 @@ function sizeRounded2D(r, d, rx, ry, dx, dy) =
         d = apply2D(d, dx, dy)
     )
     [
-        d[0] && !rx ? d[0] / 2 : r[0],
-        d[1] && !ry ? d[1] / 2 : r[1]
+        d.x && !rx ? d.x / 2 : r.x,
+        d.y && !ry ? d.y / 2 : r.y
     ]
 ;
 
@@ -73,13 +73,13 @@ function sizeArch(size, r, d, w, h, rx, ry, dx, dy) =
         s = apply2D(size, w, h),
         c = sizeRounded2D(r=r, d=d, rx=rx, ry=ry, dx=dx, dy=dy),
         size = [
-            divisor(s[0] ? s[0] : c[0] * 2),
-            divisor(s[1] ? s[1] : c[1])
+            divisor(s.x ? s.x : c.x * 2),
+            divisor(s.y ? s.y : c.y)
         ],
-        horRadius = size[0] / 2,
+        horRadius = size.x / 2,
         radius = [
             horRadius,
-            min(size[1], or(c[1], horRadius))
+            min(size.y, or(c.y, horRadius))
         ]
     )
     [ size, radius ]
@@ -104,13 +104,13 @@ function sizeStadium(size, r, d, w, h, rx, ry, dx, dy) =
         s = apply2D(size, w, h),
         c = sizeRounded2D(r=r, d=d, rx=rx, ry=ry, dx=dx, dy=dy),
         size = [
-            divisor(s[0] ? s[0] : c[0] * 2),
-            divisor(s[1] ? s[1] : c[1] * 2)
+            divisor(s.x ? s.x : c.x * 2),
+            divisor(s.y ? s.y : c.y * 2)
         ],
-        horRadius = size[0] / 2,
+        horRadius = size.x / 2,
         radius = [
             horRadius,
-            min(size[1] / 2, or(c[1], horRadius))
+            min(size.y / 2, or(c.y, horRadius))
         ]
     )
     [ size, radius ]
@@ -135,15 +135,15 @@ function sizeRoundedRectangle(size, r, d, w, h, rx, ry, dx, dy) =
         s = apply2D(size, w, h),
         c = sizeRounded2D(r=r, d=d, rx=rx, ry=ry, dx=dx, dy=dy),
         size = [
-            divisor(s[0] ? s[0] : c[0] * 2),
-            divisor(s[1] ? s[1] : c[1] * 2)
+            divisor(s.x ? s.x : c.x * 2),
+            divisor(s.y ? s.y : c.y * 2)
         ],
         radius = [
-            min(size[0] / 2, c[0]),
-            min(size[1] / 2, c[1])
+            min(size.x / 2, c.x),
+            min(size.y / 2, c.y)
         ]
     )
-    [ size, radius[0] && radius[1] ? radius : [0, 0] ]
+    [ size, radius.x && radius.y ? radius : [0, 0] ]
 ;
 
 /**
@@ -161,8 +161,8 @@ function sizeRoundedCorner(size, r, d, p, convex) =
         r = d && !r ? float(d) / 2 : float(r),
         s = divisor(size ? size : r),
         p = let(p = cardinal(p)) [
-            p[0] >= 0 ? 1 : -1,
-            p[1] >= 0 ? 1 : -1
+            p.x >= 0 ? 1 : -1,
+            p.y >= 0 ? 1 : -1
         ],
         R = max(s, r),
         S = (s == R),
@@ -171,7 +171,7 @@ function sizeRoundedCorner(size, r, d, p, convex) =
         C = S ? (convex ? [0, 0] : [ s, s ])
               : center2D(A, B, R, !convex),
         arcAngle = S ? RIGHT : angle2D(C - A, C - B),
-        cornerAngle = absdeg(round(atan2(p[1], p[0]) - 45)),
+        cornerAngle = absdeg(round(atan2(p.y, p.x) - 45)),
         startAngle = absdeg(cornerAngle + (convex ? 0 : STRAIGHT) + (RIGHT - arcAngle) / 2)
     )
     [ vector2D(s), vector2D(R), rotp(C, cornerAngle), cornerAngle, startAngle, arcAngle ]
@@ -218,12 +218,12 @@ function drawArch(size, r, d, w, h, rx, ry, dx, dy) =
         size = specs[0],
         radius = specs[1],
         center = [
-            0, size[1] - radius[1]
+            0, size.y - radius.y
         ],
         points = arc(r=radius, o=center, a=STRAIGHT)
     )
     center == [0, 0] ? points
-   :complete(points, [radius[0], 0], -[radius[0], 0])
+   :complete(points, [radius.x, 0], -[radius.x, 0])
 ;
 
 /**
@@ -246,7 +246,7 @@ function drawStadium(size, r, d, w, h, rx, ry, dx, dy) =
         size = specs[0],
         radius = specs[1],
         center = [
-            0, size[1] / 2 - radius[1]
+            0, size.y / 2 - radius.y
         ]
     )
     center == [0, 0] ? arc(r=radius)
@@ -272,20 +272,20 @@ function drawRoundedRectangle(size, r, d, w, h, rx, ry, dx, dy) =
         specs = sizeRoundedRectangle(size=size, r=r, d=d, w=w, h=h, rx=rx, ry=ry, dx=dx, dy=dy),
         size = specs[0],
         radius = specs[1],
-        right = size[0] / 2,
-        top = size[1] / 2,
+        right = size.x / 2,
+        top = size.y / 2,
         center = [
-            right - radius[0],
-            top - radius[1]
+            right - radius.x,
+            top - radius.y
         ]
     )
     radius == [0, 0] ? [ [right, top], [-right, top], [-right, -top], [right, -top] ]
    :center == [0, 0] ? arc(r=radius)
    :concat(
        arc(r=radius, o=center, a1=0, a2=QUADRANT_1),
-       arc(r=radius, o=[-center[0], center[1]], a1=QUADRANT_1, a2=QUADRANT_2),
-       arc(r=radius, o=[-center[0], -center[1]], a1=QUADRANT_2, a2=QUADRANT_3),
-       arc(r=radius, o=[center[0], -center[1]], a1=QUADRANT_3, a2=QUADRANT_4)
+       arc(r=radius, o=[-center.x, center.y], a1=QUADRANT_1, a2=QUADRANT_2),
+       arc(r=radius, o=[-center.x, -center.y], a1=QUADRANT_2, a2=QUADRANT_3),
+       arc(r=radius, o=[center.x, -center.y], a1=QUADRANT_3, a2=QUADRANT_4)
    )
 ;
 
@@ -307,9 +307,9 @@ function drawRoundedCorner(size, r, d, p, convex, adjust) =
         size = specs[0],
         adjust = number(adjust),
         frame = adjust ? [
-            rotp(convex ? [-adjust, size[1]] : [size[0], -adjust], specs[3]),
+            rotp(convex ? [-adjust, size.y] : [size.x, -adjust], specs[3]),
             rotp([-adjust, -adjust], specs[3]),
-            rotp(convex ? [size[0], -adjust] : [-adjust, size[1]], specs[3])
+            rotp(convex ? [size.x, -adjust] : [-adjust, size.y], specs[3])
         ]
        :[ [0, 0] ]
     )
@@ -337,16 +337,16 @@ function drawLinkProfile(neck, bulb, w, h, rx, ry, dx, dy, distance = 0) =
         neck = size[0],
         bulb = size[1],
         startX = ALIGN,
-        startY = neck[1] / 2
+        startY = neck.y / 2
     )
     outline(
         points = path([
             ["P", startX, startY],
-            ["H", -neck[0] - startX],
+            ["H", -neck.x - startX],
             ["C", bulb, 0, 180],
-            ["V", -neck[1]],
+            ["V", -neck.y],
             ["C", bulb, 180, 360],
-            ["H", neck[0] + startX],
+            ["H", neck.x + startX],
         ]),
         distance = distance
     )
