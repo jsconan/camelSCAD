@@ -2,7 +2,7 @@
  * @license
  * MIT License
  *
- * Copyright (c) 2017 Jean-Sebastien CONAN
+ * Copyright (c) 2017-2022 Jean-Sebastien CONAN
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -67,7 +67,7 @@ ANSI_COLOR_BACKGROUND = 40;
 function ansiCode(code) =  str(
     chr(27),
     "[",
-    or(isArray(code) ? join(code, ";") : code, "0"),
+    or(is_list(code) ? join(code, ";") : code, "0"),
     "m"
 );
 

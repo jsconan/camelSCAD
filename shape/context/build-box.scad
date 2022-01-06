@@ -2,7 +2,7 @@
  * @license
  * MIT License
  *
- * Copyright (c) 2017-2020 Jean-Sebastien CONAN
+ * Copyright (c) 2017-2022 Jean-Sebastien CONAN
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -48,16 +48,16 @@ function sizeBuildPlate(size, cell, l, w, cl, cw) =
         size = apply2D(uor(size, DEFAULT_BUILD_PLATE_SIZE), l, w),
         cell = apply2D(uor(cell, DEFAULT_BUILD_PLATE_CELL), cl, cw),
         nb = [
-            cell[0] ? floor(size[0] / cell[0]) : 0,
-            cell[1] ? floor(size[1] / cell[1]) : 0
+            cell.x ? floor(size.x / cell.x) : 0,
+            cell.y ? floor(size.y / cell.y) : 0
         ],
         count = [
-            nb[0] + 1,
-            nb[1] + 1
+            nb.x + 1,
+            nb.y + 1
         ],
         offset = [
-            cell[0] ? -nb[0] * cell[0] / 2 : 0,
-            cell[1] ? -nb[1] * cell[1] / 2 : 0
+            cell.x ? -nb.x * cell.x / 2 : 0,
+            cell.y ? -nb.y * cell.y / 2 : 0
         ]
     )
     [ size, cell, count, offset ]
@@ -91,14 +91,14 @@ module buildPlate(size=DEFAULT_BUILD_PLATE_SIZE, cell=DEFAULT_BUILD_PLATE_CELL, 
             }
         }
         negativeExtrude(height=-plateHeight, direction=2) {
-            translate(center ? [cellOffset[0], -plateSize[1] / 2, 0] : [0, 0, 0]) {
-                repeat(count=cellCount[0], intervalX=cellSize[0]) {
-                    square([lineWidth, plateSize[1]]);
+            translate(center ? [cellOffset.x, -plateSize.y / 2, 0] : [0, 0, 0]) {
+                repeat(count=cellCount.x, intervalX=cellSize.x) {
+                    square([lineWidth, plateSize.y]);
                 }
             }
-            translate(center ? [-plateSize[0] / 2, cellOffset[1], 0] : [0, 0, 0]) {
-                repeat(count=cellCount[1], intervalY=cellSize[1]) {
-                    square([plateSize[0], lineWidth]);
+            translate(center ? [-plateSize.x / 2, cellOffset.y, 0] : [0, 0, 0]) {
+                repeat(count=cellCount.y, intervalY=cellSize.y) {
+                    square([plateSize.x, lineWidth]);
                 }
             }
         }

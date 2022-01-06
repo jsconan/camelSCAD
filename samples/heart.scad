@@ -47,7 +47,7 @@ applyMode(renderMode) {
             }
 
             // Heart
-            translateY(-size[1] / 2) {
+            translateY(-size.y / 2) {
                 polygon(
                     points=points
                 );
@@ -55,7 +55,7 @@ applyMode(renderMode) {
         }
 
         // Displays the control points to illustrate how the curve is constrained
-        translate([0, -size[1] / 2, height]) {
+        translate([0, -size.y / 2, height]) {
             controlPoints(controls, size=2);
         }
         buildPlate(center=true);

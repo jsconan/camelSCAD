@@ -2,7 +2,7 @@
  * @license
  * MIT License
  *
- * Copyright (c) 2017-2019 Jean-Sebastien CONAN
+ * Copyright (c) 2017-2022 Jean-Sebastien CONAN
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -739,14 +739,14 @@ module testCoreVector2D() {
         // test core/vector-2d/rotp()
         testModule("rotp()", 3) {
             testUnit("no parameter", 1) {
-                assertEqual(rotp(), [undef, undef], "Cannot compute rotation if no parameter is provided");
+                assertEqual(rotp(), [0, 0], "Cannot compute rotation if no parameter is provided");
             }
             testUnit("wrong types", 5) {
-                assertEqual(rotp("1", "2"), [undef, undef], "Cannot compute rotation from strings");
-                assertEqual(rotp(1, 2), [undef, undef], "Cannot compute rotation from number");
-                assertEqual(rotp([1], [2]), [undef, undef], "Cannot compute rotation from arrays");
-                assertEqual(rotp([1], 90), [undef, undef], "Cannot compute rotation from incomplete vector");
-                assertEqual(rotp(true, true), [undef, undef], "Cannot compute rotation from booleans");
+                assertEqual(rotp("1", "2"), [0, 0], "Cannot compute rotation from strings");
+                assertEqual(rotp(1, 2), [cos(2) - sin(2), cos(2) + sin(2)], "Cannot compute rotation from number");
+                assertEqual(rotp([1], [2]), [1, 0], "Cannot compute rotation from arrays");
+                assertEqual(rotp([1], 90), [0, 1], "Cannot compute rotation from incomplete vector");
+                assertEqual(rotp(true, true), [0, 0], "Cannot compute rotation from booleans");
             }
             testUnit("vector and angle", 4) {
                 assertEqual(rotp([23, 67], 0), [23, 67], "Should return [23, 67]");
@@ -758,14 +758,14 @@ module testCoreVector2D() {
         // test core/vector-2d/mirp()
         testModule("mirp()", 3) {
             testUnit("no parameter", 1) {
-                assertEqual(mirp(), [undef, undef], "Cannot compute mirror if no parameter is provided");
+                assertEqual(mirp(), [0, 0], "Cannot compute mirror if no parameter is provided");
             }
             testUnit("wrong types", 5) {
-                assertEqual(mirp("1", "2"), [undef, undef], "Cannot compute mirror from strings");
-                assertEqual(mirp(1, 2), [undef, undef], "Cannot compute mirror from number");
-                assertEqual(mirp([1], [2]), [undef, undef], "Cannot compute mirror from arrays");
-                assertEqual(mirp([1], 90), [undef, undef], "Cannot compute mirror from incomplete vector");
-                assertEqual(mirp(true, true), [undef, undef], "Cannot compute mirror from booleans");
+                assertEqual(mirp("1", "2"), [0, 0], "Cannot compute mirror from strings");
+                assertEqual(mirp(1, 2), [1, 1], "Cannot compute mirror from number");
+                assertEqual(mirp([1], [2]), [1, 0], "Cannot compute mirror from arrays");
+                assertEqual(mirp([1], 90), [0, 1], "Cannot compute mirror from incomplete vector");
+                assertEqual(mirp(true, true), [0, 0], "Cannot compute mirror from booleans");
             }
             testUnit("vector and axis", 3) {
                 assertApproxEqual(mirp([23, 67], [1, 0]), [23, -67], "Should return [23, 67] mirrored around X");
@@ -776,17 +776,17 @@ module testCoreVector2D() {
         // test core/vector-2d/arcp()
         testModule("arcp()", 3) {
             testUnit("no parameter", 1) {
-                assertEqual(arcp(), [undef, undef], "Cannot compute the point if no parameter is provided");
+                assertEqual(arcp(), [0, 0], "Cannot compute the point if no parameter is provided");
             }
             testUnit("wrong types", 4) {
-                assertEqual(arcp("1", "2"), [undef, undef], "Cannot compute the point from strings");
-                assertEqual(arcp(1, 1), [undef, undef], "Cannot compute the point from numbers");
-                assertEqual(arcp(true, true), [undef, undef], "Cannot compute the point from booleans");
-                assertEqual(arcp(["1", "2"]), [undef, undef], "Cannot compute the point from arrays");
+                assertEqual(arcp("1", "2"), [0, 0], "Cannot compute the point from strings");
+                assertEqual(arcp(1, 1), [cos(1), sin(1)], "Cannot compute the point from numbers");
+                assertEqual(arcp(true, true), [0, 0], "Cannot compute the point from booleans");
+                assertEqual(arcp(["1", "2"]), [0, 0], "Cannot compute the point from arrays");
             }
             testUnit("vector", 6) {
-                assertEqual(arcp([]), [undef, undef], "Cannot compute the point from empty vector");
-                assertEqual(arcp([], 30), [undef, undef], "Cannot compute the point from empty vector, event if angle is provided");
+                assertEqual(arcp([]), [0, 0], "Cannot compute the point from empty vector");
+                assertEqual(arcp([], 30), [0, 0], "Cannot compute the point from empty vector, event if angle is provided");
                 assertEqual(arcp([10, 10]), [10, 0], "Default angle is 0");
                 assertEqual(arcp([10, 10], 45), [cos(45)*10, sin(45)*10], "Angle of 45 degrees");
                 assertEqual(arcp([20, 10], 30), [cos(30)*20, sin(30)*10], "Angle of 30 degrees");

@@ -2,7 +2,7 @@
  * @license
  * MIT License
  *
- * Copyright (c) 2017-2020 Jean-Sebastien CONAN
+ * Copyright (c) 2017-2022 Jean-Sebastien CONAN
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -121,10 +121,10 @@ module repeatShape2D(size, count = 1, center) {
     count = vector2D(count);
 
     repeat2D(
-        countX = count[0],
-        countY = count[1],
-        intervalX = [size[0], 0, 0],
-        intervalY = [0, size[1], 0],
+        countX = count.x,
+        countY = count.y,
+        intervalX = [size.x, 0, 0],
+        intervalY = [0, size.y, 0],
         center = center
     ) {
         children();
@@ -142,12 +142,12 @@ module repeatShape3D(size, count = 1, center) {
     count = vector3D(count);
 
     repeat3D(
-        countX = count[0],
-        countY = count[1],
-        countZ = count[2],
-        intervalX = [size[0], 0, 0],
-        intervalY = [0, size[1], 0],
-        intervalZ = [0, 0, size[2]],
+        countX = count.x,
+        countY = count.y,
+        countZ = count.z,
+        intervalX = [size.x, 0, 0],
+        intervalY = [0, size.y, 0],
+        intervalZ = [0, 0, size.z],
         center = center
     ) {
         children();

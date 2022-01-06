@@ -2,7 +2,7 @@
  * @license
  * MIT License
  *
- * Copyright (c) 2017 Jean-Sebastien CONAN
+ * Copyright (c) 2017-2022 Jean-Sebastien CONAN
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -52,9 +52,9 @@ function sizeEllipsoid(r, d, rx, ry, rz, dx, dy, dz) =
     )
     [
         // use divisor() to ensure the values will be forced to anything but 0
-        divisor(d[0] && !rx ? d[0] / 2 : r[0]),
-        divisor(d[1] && !ry ? d[1] / 2 : r[1]),
-        divisor(d[2] && !rz ? d[2] / 2 : r[2])
+        divisor(d.x && !rx ? d.x / 2 : r.x),
+        divisor(d.y && !ry ? d.y / 2 : r.y),
+        divisor(d.z && !rz ? d.z / 2 : r.z)
     ]
 ;
 
@@ -72,7 +72,7 @@ function sizeEllipsoid(r, d, rx, ry, rz, dx, dy, dz) =
  */
 module shaft(r, h, d, rx, ry, dx, dy, center) {
     size = sizeEllipsoid(r=r, d=d, rx=rx, ry=ry, rz=h, dx=dx, dy=dy);
-    linear_extrude(height=size[2], center=center, convexity=10) {
+    linear_extrude(height=size.z, center=center, convexity=10) {
         ellipse(size);
     }
 }
@@ -94,7 +94,7 @@ module shaft(r, h, d, rx, ry, dx, dy, center) {
  */
 module wedge(r, h, a=90, d, a1, a2, rx, ry, dx, dy, center) {
     size = sizeEllipsoid(r=r, d=d, rx=rx, ry=ry, rz=h, dx=dx, dy=dy);
-    linear_extrude(height=size[2], center=center, convexity=10) {
+    linear_extrude(height=size.z, center=center, convexity=10) {
         pie(size, a=a, a1=a1, a2=a2);
     }
 }
@@ -136,7 +136,7 @@ module ellipsoid(r, d, rx, ry, rz, dx, dy, dz) {
  */
 module pipe(r, h, w=0.1, d, rx, ry, dx, dy, wx, wy, center) {
     size = sizeEllipsoid(r=r, d=d, rx=rx, ry=ry, rz=h, dx=dx, dy=dy);
-    linear_extrude(height=size[2], center=center, convexity=10) {
+    linear_extrude(height=size.z, center=center, convexity=10) {
         ring(r=size, w=w, wx=wx, wy=wy);
     }
 }
@@ -158,7 +158,7 @@ module pipe(r, h, w=0.1, d, rx, ry, dx, dy, wx, wy, center) {
  */
 module pipeSegment(r, h, w=0.1, a=90, d, a1, a2, rx, ry, dx, dy, wx, wy, center) {
     size = sizeEllipsoid(r=r, d=d, rx=rx, ry=ry, rz=h, dx=dx, dy=dy);
-    linear_extrude(height=size[2], center=center, convexity=10) {
+    linear_extrude(height=size.z, center=center, convexity=10) {
         ringSegment(r=size, a=a, a1=a1, a2=a2, w=w, wx=wx, wy=wy);
     }
 }
@@ -185,10 +185,10 @@ module torus(r, w=0.1, d, W, rx, ry, dx, dy, wx, wy, Wx, Wy, center) {
     sizeRing = sizeEllipse(r=r, d=d, rx=rx, ry=ry, dx=dx, dy=dy);
     sizePipe = sizeEllipse(r=w, d=W, rx=wx, ry=wy, dx=Wx, dy=Wy);
 
-    translate([0, 0, center ? 0 : sizePipe[1]]) {
-        resize(apply3D(vadd(sizeRing, sizePipe[0]), z=sizePipe[1]) * 2) {
+    translate([0, 0, center ? 0 : sizePipe.y]) {
+        resize(apply3D(vadd(sizeRing, sizePipe.x), z=sizePipe.y) * 2) {
             rotate_extrude(convexity=10) {
-                translate([max(sizeRing) - sizePipe[0], 0, 0]) {
+                translate([max(sizeRing) - sizePipe.x, 0, 0]) {
                     ellipse(sizePipe);
                 }
             }
