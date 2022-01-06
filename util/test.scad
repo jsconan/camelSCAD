@@ -2,7 +2,7 @@
  * @license
  * MIT License
  *
- * Copyright (c) 2017-2019 Jean-Sebastien CONAN
+ * Copyright (c) 2017-2022 Jean-Sebastien CONAN
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -194,7 +194,7 @@ module failed(message) {
  * @param String [message]
  */
 module assertUndef(value, message) {
-    result = isUndef(value);
+    result = is_undef(value);
     message = or(message, "Should be an undefined value");
     details = [value];
 
@@ -208,7 +208,7 @@ module assertUndef(value, message) {
  * @param String [message]
  */
 module assertNumber(value, message) {
-    result = isNumber(value);
+    result = is_num(value);
     message = or(message, "Should be a number");
     details = [value];
 
@@ -236,7 +236,7 @@ module assertInteger(value, message) {
  * @param String [message]
  */
 module assertBoolean(value, message) {
-    result = isBoolean(value);
+    result = is_bool(value);
     message = or(message, "Should be a boolean");
     details = [value];
 
@@ -264,7 +264,7 @@ module assertVector(value, message) {
  * @param String [message]
  */
 module assertArray(value, message) {
-    result = isArray(value);
+    result = is_list(value);
     message = or(message, "Should be an array");
     details = [value];
 
@@ -292,7 +292,7 @@ module assertEmptyArray(value, message) {
  * @param String [message]
  */
 module assertNotEmptyArray(value, message) {
-    result = isArray(value) && value != [];
+    result = is_list(value) && value != [];
     message = or(message, "Should not be an empty array");
     details = [value];
 
@@ -306,7 +306,7 @@ module assertNotEmptyArray(value, message) {
  * @param String [message]
  */
 module assertString(value, message) {
-    result = isString(value);
+    result = is_string(value);
     message = or(message, "Should be a string");
     details = [value];
 
@@ -334,7 +334,7 @@ module assertEmptyString(value, message) {
  * @param String [message]
  */
 module assertNotEmptyString(value, message) {
-    result = isString(value) && value != "";
+    result = is_string(value) && value != "";
     message = or(message, "Should not be an empty string");
     details = [value];
 

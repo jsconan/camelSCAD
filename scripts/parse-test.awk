@@ -1,7 +1,7 @@
 #
 # MIT License
 #
-# Copyright (c) 2017 Jean-Sebastien CONAN
+# Copyright (c) 2017-2022 Jean-Sebastien CONAN
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -192,7 +192,22 @@ END {
                 printf("%s- %s\n", RED, failedAssertsMessage[i])
             }
             if (failedAssertsDetails[i]) {
-                printf("    %s\n", failedAssertsDetails[i])
+                details = failedAssertsDetails[i];
+                while(match(details, /\{([^:]+):\s?([^\}]+)\}/) != 0) {
+                    if (RSTART > 0) {
+                        detailsPrefix = substr(details, 0, RSTART - 1)
+                    } else {
+                        detailsPrefix = ""
+                    }
+                    detailsBody = substr(details, RSTART + 1, RLENGTH - 2)
+                    detailsSuffix = substr(details, RSTART + RLENGTH)
+
+                    if (match(detailsBody, /[a-z]+:/) != 0) {
+                        detailsBody = sprintf("%s%s%s%s", CYAN, substr(detailsBody, RSTART, RLENGTH), BROWN, substr(detailsBody, RSTART + RLENGTH)) 
+                    }
+                    details = sprintf("%s    %s\n%s", detailsPrefix, detailsBody, detailsSuffix) 
+                }
+                printf("%s", details)
             }
             printf("\n")
         }

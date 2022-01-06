@@ -2,7 +2,7 @@
  * @license
  * MIT License
  *
- * Copyright (c) 2017-2019 Jean-Sebastien CONAN
+ * Copyright (c) 2017-2022 Jean-Sebastien CONAN
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -39,7 +39,7 @@
  * @returns Number - The number of ranges.
  */
 function radialHexRange(count) =
-    let( number = isArray(count) && len(count) ? min(count) : float(count) )
+    let( number = is_list(count) && len(count) ? min(count) : float(count) )
     floor((abs(divisor(number)) - 1) / 2)
 ;
 
@@ -73,8 +73,8 @@ function buildHexGrid(count, linear, cx, cy) =
         count = vabs(divisor2D(count))
     )
     [
-        for (x = [0 : count[0] - 1])
-            for (y = [0 : count[1] - 1])
+        for (x = [0 : count.x - 1])
+            for (y = [0 : count.y - 1])
                 [x, y]
     ]
    :let(
@@ -112,12 +112,12 @@ function offsetHexGrid(size, count, pointy, linear, even, l, w, cx, cy) =
     )
     pointy
    ?[
-        size[0] * SQRT3 * ((even - (count[0] + linear))) / 4,
-        -size[1] * (count[1] - 1) * 3 / 8,
+        size.x * SQRT3 * ((even - (count.x + linear))) / 4,
+        -size.y * (count.y - 1) * 3 / 8,
     ]
    :[
-        -size[0] * (count[0] - 1) * 3 / 8,
-        size[1] * SQRT3 * ((even - (count[1] + linear))) / 4,
+        -size.x * (count.x - 1) * 3 / 8,
+        size.y * SQRT3 * ((even - (count.y + linear))) / 4,
     ]
 ;
 
@@ -142,12 +142,12 @@ function sizeHexGrid(size, count, pointy, linear, l, w, cx, cy) =
     )
     pointy
    ?[
-        size[0] * SQRT3 * (count[0] + linear) / 2,
-        size[1] * (4 + 3 * (count[1] - 1)) / 4,
+        size.x * SQRT3 * (count.x + linear) / 2,
+        size.y * (4 + 3 * (count.y - 1)) / 4,
     ]
    :[
-        size[0] * (4 + 3 * (count[0] - 1)) / 4,
-        size[1] * SQRT3 * (count[1] + linear) / 2
+        size.x * (4 + 3 * (count.x - 1)) / 4,
+        size.y * SQRT3 * (count.y + linear) / 2
     ]
 ;
 
@@ -172,12 +172,12 @@ function sizeHexCell(size, count, pointy, linear, l, w, cx, cy) =
     )
     pointy
    ?[
-        size[0] * 2 / (count[0] + linear) / SQRT3,
-        size[1] * 4 / (4 + 3 * (count[1] - 1))
+        size.x * 2 / (count.x + linear) / SQRT3,
+        size.y * 4 / (4 + 3 * (count.y - 1))
     ]
    :[
-        size[0] * 4 / (4 + 3 * (count[0] - 1)),
-        size[1] * 2 / (count[1] + linear) / SQRT3
+        size.x * 4 / (4 + 3 * (count.x - 1)),
+        size.y * 2 / (count.y + linear) / SQRT3
     ]
 ;
 
@@ -202,12 +202,12 @@ function countHexCell(size, cell, pointy, linear, l, w, cl, cw) =
     )
     pointy
    ?[
-        floor(size[0] * 2 / cell[0] / SQRT3 - linear),
-        floor((size[1] * 4 / cell[1] - 1) / 3)
+        floor(size.x * 2 / cell.x / SQRT3 - linear),
+        floor((size.y * 4 / cell.y - 1) / 3)
     ]
    :[
-        floor((size[0] * 4 / cell[0] - 1) / 3),
-        floor(size[1] * 2 / cell[1] / SQRT3 - linear)
+        floor((size.x * 4 / cell.x - 1) / 3),
+        floor(size.y * 2 / cell.y / SQRT3 - linear)
     ]
 ;
 
@@ -233,11 +233,11 @@ function coordHexCell(hex, size, pointy, linear, even, x, y, l, w) =
     )
     pointy
    ?[
-        size[0] * SQRT3 * (hex[0] + factor * (linear ? hex[1] % 2 : hex[1])),
-        size[1] * hex[1] * 1.5
+        size.x * SQRT3 * (hex.x + factor * (linear ? hex.y % 2 : hex.y)),
+        size.y * hex.y * 1.5
     ]
    :[
-        size[0] * hex[0] * 1.5,
-        size[1] * SQRT3 * (hex[1] + factor * (linear ? hex[0] % 2 : hex[0]))
+        size.x * hex.x * 1.5,
+        size.y * SQRT3 * (hex.y + factor * (linear ? hex.x % 2 : hex.x))
     ]
 ;

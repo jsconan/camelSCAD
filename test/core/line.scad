@@ -2,7 +2,7 @@
  * @license
  * MIT License
  *
- * Copyright (c) 2017-2020 Jean-Sebastien CONAN
+ * Copyright (c) 2017-2022 Jean-Sebastien CONAN
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -64,7 +64,7 @@ module testCoreLine() {
                 assertEqual(arc([1, 2], $fn=3), [ for (a = [360/3 : 360/3 : 360]) _rotP(a, 1, 2) ], "Should return a list of points to draw an ellipse with a radius of [1, 2] and 3 facets (triangle)");
                 assertEqual(arc([1, 2], $fn=4), [ for (a = [360/4 : 360/4 : 360]) _rotP(a, 1, 2) ], "Should return a list of points to draw an ellipse with a radius of [1, 2] and 4 facets (square)");
                 assertEqual(arc([1, 2], $fn=6), [ for (a = [360/6 : 360/6 : 360]) _rotP(a, 1, 2) ], "Should return a list of points to draw an ellipse with a radius of [1, 2] and 6 facets (hexagon)");
-                assertEqual(arc([5, 6], $fa=12, $fs=2), [ for (a = [0 : astep(6, $fa=12, $fs=2) : 360]) _rotP(a, 5, 6) ], "Should return a list of points to draw an ellipse with a radius of [5, 6] and 20 facets");
+                assertEqual(arc([5, 6], $fa=12, $fs=2), complete([ for (a = [astep(6, $fa=12, $fs=2) : astep(6, $fa=12, $fs=2) : 360]) _rotP(a, 5, 6) ], _rotP(0, 5, 6), _rotP(360, 5, 6)), "Should return a list of points to draw an ellipse with a radius of [5, 6] and 20 facets");
                 assertEqual(arc([10, 20], $fn=36), [ for (a = [10 : 10 : 360]) _rotP(a, 10, 20) ], "Should return a list of points to draw an ellipse with a radius of [10, 20] and 36 facets");
             }
             testUnit("circle arc from origin", 12) {

@@ -2,7 +2,7 @@
  * @license
  * MIT License
  *
- * Copyright (c) 2017 Jean-Sebastien CONAN
+ * Copyright (c) 2017-2022 Jean-Sebastien CONAN
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -501,27 +501,27 @@ module testShape2dRounded() {
                 assertEqual(drawStadium([2, 1], $fn=3), [ for (a = [360/3 : 360/3 : 360]) _rotP(a, 1, 0.5) ], "Should return a list of points to draw an ellipse with a radius of [1, 2] and 3 facets (triangle)");
                 assertEqual(drawStadium([2, 1], $fn=4), [ for (a = [360/4 : 360/4 : 360]) _rotP(a, 1, 0.5) ], "Should return a list of points to draw an ellipse with a radius of [1, 2] and 4 facets (square)");
                 assertEqual(drawStadium([2, 1], $fn=6), [ for (a = [360/6 : 360/6 : 360]) _rotP(a, 1, 0.5) ], "Should return a list of points to draw an ellipse with a radius of [1, 2] and 6 facets (hexagon)");
-                assertEqual(drawStadium([12, 10], $fa=12, $fs=2), [ for (a = [0 : astep(6, $fa=12, $fs=2) : 360]) _rotP(a, 6, 5) ], "Should return a list of points to draw an ellipse with a radius of [5, 6] and 20 facets");
+                assertEqual(drawStadium([12, 10], $fa=12, $fs=2), complete([ for (a = [astep(6, $fa=12, $fs=2) : astep(6, $fa=12, $fs=2) : 360]) _rotP(a, 6, 5) ], _rotP(0, 6, 5), _rotP(360, 6, 5)), "Should return a list of points to draw an ellipse with a radius of [6, 5] and 20 facets");
 
                 assertEqual(drawStadium(r=[1, 2], $fn=3), [ for (a = [360/3 : 360/3 : 360]) _rotP(a, 1, 2) ], "Should return a list of points to draw an ellipse with a radius of [1, 2] and 3 facets (triangle)");
                 assertEqual(drawStadium(r=[1, 2], $fn=4), [ for (a = [360/4 : 360/4 : 360]) _rotP(a, 1, 2) ], "Should return a list of points to draw an ellipse with a radius of [1, 2] and 4 facets (square)");
                 assertEqual(drawStadium(r=[1, 2], $fn=6), [ for (a = [360/6 : 360/6 : 360]) _rotP(a, 1, 2) ], "Should return a list of points to draw an ellipse with a radius of [1, 2] and 6 facets (hexagon)");
-                assertEqual(drawStadium(r=[5, 6], $fa=12, $fs=2), [ for (a = [0 : astep(6, $fa=12, $fs=2) : 360]) _rotP(a, 5, 6) ], "Should return a list of points to draw an ellipse with a radius of [5, 6] and 20 facets");
+                assertEqual(drawStadium(r=[5, 6], $fa=12, $fs=2), complete([ for (a = [astep(6, $fa=12, $fs=2) : astep(6, $fa=12, $fs=2) : 360]) _rotP(a, 5, 6) ], _rotP(0, 5, 6), _rotP(360, 5, 6)), "Should return a list of points to draw an ellipse with a radius of [5, 6] and 20 facets");
 
                 assertEqual(drawStadium(d=[1, 2], $fn=3), [ for (a = [360/3 : 360/3 : 360]) _rotP(a, 0.5, 1) ], "Should return a list of points to draw an ellipse with a diameter of [1, 2] and 3 facets (triangle)");
                 assertEqual(drawStadium(d=[1, 2], $fn=4), [ for (a = [360/4 : 360/4 : 360]) _rotP(a, 0.5, 1) ], "Should return a list of points to draw an ellipse with a diameter of [1, 2] and 4 facets (square)");
                 assertEqual(drawStadium(d=[1, 2], $fn=6), [ for (a = [360/6 : 360/6 : 360]) _rotP(a, 0.5, 1) ], "Should return a list of points to draw an ellipse with a diameter of [1, 2] and 6 facets (hexagon)");
-                assertEqual(drawStadium(d=[10, 12], $fa=12, $fs=2), [ for (a = [0 : astep(6, $fa=12, $fs=2) : 360]) _rotP(a, 5, 6) ], "Should return a list of points to draw an ellipse with a diameter of [10, 12] and 20 facets");
+                assertEqual(drawStadium(d=[10, 12], $fa=12, $fs=2), complete([ for (a = [astep(6, $fa=12, $fs=2) : astep(6, $fa=12, $fs=2) : 360]) _rotP(a, 5, 6) ], _rotP(0, 5, 6), _rotP(360, 5, 6)), "Should return a list of points to draw an ellipse with a diameter of [10, 12] and 20 facets");
 
                 assertEqual(drawStadium(rx=1, ry=2, $fn=3), [ for (a = [360/3 : 360/3 : 360]) _rotP(a, 1, 2) ], "Should return a list of points to draw an ellipse with a radius of x=1, y=2 and 3 facets (triangle)");
                 assertEqual(drawStadium(rx=1, ry=2, $fn=4), [ for (a = [360/4 : 360/4 : 360]) _rotP(a, 1, 2) ], "Should return a list of points to draw an ellipse with a radius of x=1, y=2 and 4 facets (square)");
                 assertEqual(drawStadium(rx=1, ry=2, $fn=6), [ for (a = [360/6 : 360/6 : 360]) _rotP(a, 1, 2) ], "Should return a list of points to draw an ellipse with a radius of x=1, y=2 and 6 facets (hexagon)");
-                assertEqual(drawStadium(rx=5, ry=6, $fa=12, $fs=2), [ for (a = [0 : astep(6, $fa=12, $fs=2) : 360]) _rotP(a, 5, 6) ], "Should return a list of points to draw an ellipse with a radius of x=5, y=6 and 20 facets");
+                assertEqual(drawStadium(rx=5, ry=6, $fa=12, $fs=2), complete([ for (a = [astep(6, $fa=12, $fs=2) : astep(6, $fa=12, $fs=2) : 360]) _rotP(a, 5, 6) ], _rotP(0, 5, 6), _rotP(360, 5, 6)), "Should return a list of points to draw an ellipse with a radius of x=5, y=6 and 20 facets");
 
                 assertEqual(drawStadium(dx=1, dy=2, $fn=3), [ for (a = [360/3 : 360/3 : 360]) _rotP(a, 0.5, 1) ], "Should return a list of points to draw an ellipse with a diameter of x=1, y=2 and 3 facets (triangle)");
                 assertEqual(drawStadium(dx=1, dy=2, $fn=4), [ for (a = [360/4 : 360/4 : 360]) _rotP(a, 0.5, 1) ], "Should return a list of points to draw an ellipse with a diameter of x=1, y=2 and 4 facets (square)");
                 assertEqual(drawStadium(dx=1, dy=2, $fn=6), [ for (a = [360/6 : 360/6 : 360]) _rotP(a, 0.5, 1) ], "Should return a list of points to draw an ellipse with a diameter of x=1, y=2 and 6 facets (hexagon)");
-                assertEqual(drawStadium(dx=10, dy=12, $fa=12, $fs=2), [ for (a = [0 : astep(6, $fa=12, $fs=2) : 360]) _rotP(a, 5, 6) ], "Should return a list of points to draw an ellipse with a diameter of x=10, y=12 and 20 facets");
+                assertEqual(drawStadium(dx=10, dy=12, $fa=12, $fs=2), complete([ for (a = [astep(6, $fa=12, $fs=2) : astep(6, $fa=12, $fs=2) : 360]) _rotP(a, 5, 6) ], _rotP(0, 5, 6), _rotP(360, 5, 6)), "Should return a list of points to draw an ellipse with a diameter of x=10, y=12 and 20 facets");
             }
             testUnit("circle stadium, straight walls", 4) {
                 assertEqual(drawStadium([2, 4], r=1, $fn=3), [ _rotP(0, 1, 1) + [0, 1], _rotP(120, 1, 1) + [0, 1], _rotP(180, 1, 1) + [0, 1], _rotP(180, 1, 1) - [0, 1], _rotP(300, 1, 1) - [0, 1], _rotP(360, 1, 1) - [0, 1] ], "Should return a list of points to draw an stadium with wall of 1 and a radius of 1 and 3 facets (triangle)");
@@ -573,22 +573,22 @@ module testShape2dRounded() {
                 assertEqual(drawRoundedRectangle(r=[1, 2], $fn=3), [ for (a = [360/3 : 360/3 : 360]) _rotP(a, 1, 2) ], "Should return a list of points to draw an ellipse with a radius of [1, 2] and 3 facets (triangle)");
                 assertEqual(drawRoundedRectangle(r=[1, 2], $fn=4), [ for (a = [360/4 : 360/4 : 360]) _rotP(a, 1, 2) ], "Should return a list of points to draw an ellipse with a radius of [1, 2] and 4 facets (square)");
                 assertEqual(drawRoundedRectangle(r=[1, 2], $fn=6), [ for (a = [360/6 : 360/6 : 360]) _rotP(a, 1, 2) ], "Should return a list of points to draw an ellipse with a radius of [1, 2] and 6 facets (hexagon)");
-                assertEqual(drawRoundedRectangle(r=[5, 6], $fa=12, $fs=2), [ for (a = [0 : astep(6, $fa=12, $fs=2) : 360]) _rotP(a, 5, 6) ], "Should return a list of points to draw an ellipse with a radius of [5, 6] and 20 facets");
+                assertEqual(drawRoundedRectangle(r=[5, 6], $fa=12, $fs=2), complete([ for (a = [astep(6, $fa=12, $fs=2) : astep(6, $fa=12, $fs=2) : 360]) _rotP(a, 5, 6) ], _rotP(0, 5, 6), _rotP(360, 5, 6)), "Should return a list of points to draw an ellipse with a radius of [5, 6] and 20 facets");
 
                 assertEqual(drawRoundedRectangle(d=[1, 2], $fn=3), [ for (a = [360/3 : 360/3 : 360]) _rotP(a, 0.5, 1) ], "Should return a list of points to draw an ellipse with a diameter of [1, 2] and 3 facets (triangle)");
                 assertEqual(drawRoundedRectangle(d=[1, 2], $fn=4), [ for (a = [360/4 : 360/4 : 360]) _rotP(a, 0.5, 1) ], "Should return a list of points to draw an ellipse with a diameter of [1, 2] and 4 facets (square)");
                 assertEqual(drawRoundedRectangle(d=[1, 2], $fn=6), [ for (a = [360/6 : 360/6 : 360]) _rotP(a, 0.5, 1) ], "Should return a list of points to draw an ellipse with a diameter of [1, 2] and 6 facets (hexagon)");
-                assertEqual(drawRoundedRectangle(d=[10, 12], $fa=12, $fs=2), [ for (a = [0 : astep(6, $fa=12, $fs=2) : 360]) _rotP(a, 5, 6) ], "Should return a list of points to draw an ellipse with a diameter of [10, 12] and 20 facets");
+                assertEqual(drawRoundedRectangle(d=[10, 12], $fa=12, $fs=2), complete([ for (a = [astep(6, $fa=12, $fs=2) : astep(6, $fa=12, $fs=2) : 360]) _rotP(a, 5, 6) ], _rotP(0, 5, 6), _rotP(360, 5, 6)), "Should return a list of points to draw an ellipse with a diameter of [10, 12] and 20 facets");
 
                 assertEqual(drawRoundedRectangle(rx=1, ry=2, $fn=3), [ for (a = [360/3 : 360/3 : 360]) _rotP(a, 1, 2) ], "Should return a list of points to draw an ellipse with a radius of x=1, y=2 and 3 facets (triangle)");
                 assertEqual(drawRoundedRectangle(rx=1, ry=2, $fn=4), [ for (a = [360/4 : 360/4 : 360]) _rotP(a, 1, 2) ], "Should return a list of points to draw an ellipse with a radius of x=1, y=2 and 4 facets (square)");
                 assertEqual(drawRoundedRectangle(rx=1, ry=2, $fn=6), [ for (a = [360/6 : 360/6 : 360]) _rotP(a, 1, 2) ], "Should return a list of points to draw an ellipse with a radius of x=1, y=2 and 6 facets (hexagon)");
-                assertEqual(drawRoundedRectangle(rx=5, ry=6, $fa=12, $fs=2), [ for (a = [0 : astep(6, $fa=12, $fs=2) : 360]) _rotP(a, 5, 6) ], "Should return a list of points to draw an ellipse with a radius of x=5, y=6 and 20 facets");
+                assertEqual(drawRoundedRectangle(rx=5, ry=6, $fa=12, $fs=2), complete([ for (a = [astep(6, $fa=12, $fs=2) : astep(6, $fa=12, $fs=2) : 360]) _rotP(a, 5, 6) ], _rotP(0, 5, 6), _rotP(360, 5, 6)), "Should return a list of points to draw an ellipse with a radius of x=5, y=6 and 20 facets");
 
                 assertEqual(drawRoundedRectangle(dx=1, dy=2, $fn=3), [ for (a = [360/3 : 360/3 : 360]) _rotP(a, 0.5, 1) ], "Should return a list of points to draw an ellipse with a diameter of x=1, y=2 and 3 facets (triangle)");
                 assertEqual(drawRoundedRectangle(dx=1, dy=2, $fn=4), [ for (a = [360/4 : 360/4 : 360]) _rotP(a, 0.5, 1) ], "Should return a list of points to draw an ellipse with a diameter of x=1, y=2 and 4 facets (square)");
                 assertEqual(drawRoundedRectangle(dx=1, dy=2, $fn=6), [ for (a = [360/6 : 360/6 : 360]) _rotP(a, 0.5, 1) ], "Should return a list of points to draw an ellipse with a diameter of x=1, y=2 and 6 facets (hexagon)");
-                assertEqual(drawRoundedRectangle(dx=10, dy=12, $fa=12, $fs=2), [ for (a = [0 : astep(6, $fa=12, $fs=2) : 360]) _rotP(a, 5, 6) ], "Should return a list of points to draw an ellipse with a diameter of x=10, y=12 and 20 facets");
+                assertEqual(drawRoundedRectangle(dx=10, dy=12, $fa=12, $fs=2), complete([ for (a = [astep(6, $fa=12, $fs=2) : astep(6, $fa=12, $fs=2) : 360]) _rotP(a, 5, 6) ], _rotP(0, 5, 6), _rotP(360, 5, 6)), "Should return a list of points to draw an ellipse with a diameter of x=10, y=12 and 20 facets");
             }
             testUnit("size and radius", 12) {
                 assertEqual(

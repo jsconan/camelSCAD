@@ -2,7 +2,7 @@
  * @license
  * MIT License
  *
- * Copyright (c) 2017-2019 Jean-Sebastien CONAN
+ * Copyright (c) 2017-2022 Jean-Sebastien CONAN
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -74,7 +74,7 @@ function times(value, count) =
 function range(start, end, step) =
     let(
         s = float(start),
-        simple = s && isUndef(end),
+        simple = s && is_undef(end),
         start = simple ? 0 : s,
         end = simple ? s : float(end),
         step = or(number(step), start > end ? -1 : 1)
@@ -117,7 +117,7 @@ function reverse(collection) =
  * @param Array collection - The array to flatten.
  * @returns Array
  */
-function flatten(collection) = [ for (a = array(collection)) for (b = isString(a) ? [a] : a) b ];
+function flatten(collection) = [ for (a = array(collection)) for (b = is_string(a) ? [a] : a) b ];
 
 /**
  * Finds the index of a key in a collection.
@@ -175,8 +175,8 @@ function slice(collection, start, end) =
     let(
         collection = array(collection),
         length = len(collection),
-        start = start < 0 ? max(0, length + start) : integer(start),
-        end = (end < 0 ? max(start, length + end) : numberOr(end, length)) - 1
+        start = is_num(start) && start < 0 ? max(0, length + start) : integer(start),
+        end = (is_num(end) && end < 0 ? max(start, length + end) : numberOr(end, length)) - 1
     )
     length && start <= end ? [ for (i = [start : end]) if (i < length) collection[i] ]
                            : []
@@ -196,7 +196,7 @@ function splice(collection, start, remove, elems) =
         collection = array(collection),
         elems = arrayOr(elems, []),
         length = len(collection),
-        start = min(start < 0 ? max(0, length + start) : integer(start), length),
+        start = min(is_num(start) && start < 0 ? max(0, length + start) : integer(start), length),
         next = start + numberOr(remove, length - start),
         last = length - 1
     )

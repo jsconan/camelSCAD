@@ -2,7 +2,7 @@
  * @license
  * MIT License
  *
- * Copyright (c) 2017-2019 Jean-Sebastien CONAN
+ * Copyright (c) 2017-2022 Jean-Sebastien CONAN
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -42,8 +42,8 @@
  * @returns Vector - Always returns a 3D vector.
  */
 function vector3D(value) =
-    isNumber(value) ? [ value, value, value ]
-   :[ float(value[0]), float(value[1]), float(value[2]) ]
+    is_num(value) ? [ value, value, value ]
+   :[ float(value.x), float(value.y), float(value.z) ]
 ;
 
 /**
@@ -56,8 +56,8 @@ function vector3D(value) =
  * @returns Vector - Always returns a 3D vector that will not contain 0.
  */
 function divisor3D(value) =
-    isNumber(value) ? let( value = divisor(value) ) [ value, value, value ]
-   :[ divisor(value[0]), divisor(value[1]), divisor(value[2]) ]
+    is_num(value) ? let( value = divisor(value) ) [ value, value, value ]
+   :[ divisor(value.x), divisor(value.y), divisor(value.z) ]
 ;
 
 /**
@@ -76,15 +76,16 @@ function divisor3D(value) =
  */
 function apply3D(v, x, y, z, r, d) =
     let(
-        n = isNumber(v),
-        x = uor(x, uor(d, r * 2)),
-        y = uor(y, uor(d, r * 2)),
-        z = uor(z, uor(d, r * 2))
+        n = is_num(v),
+        d = uor(d, r ? r * 2 : r),
+        x = uor(x, d),
+        y = uor(y, d),
+        z = uor(z, d)
     )
     [
-        float(uor(x, n ? v : v[0])),
-        float(uor(y, n ? v : v[1])),
-        float(uor(z, n ? v : v[2]))
+        float(uor(x, n ? v : v.x)),
+        float(uor(y, n ? v : v.y)),
+        float(uor(z, n ? v : v.z))
     ]
 ;
 
@@ -186,9 +187,9 @@ function rotate3DX(v, a) =
     )
     !a ? v
    :[
-        v[0],
-        v[1] * cos(a) - v[2] * sin(a),
-        v[1] * sin(a) + v[2] * cos(a)
+        v.x,
+        v.y * cos(a) - v.z * sin(a),
+        v.y * sin(a) + v.z * cos(a)
     ]
 ;
 
@@ -206,9 +207,9 @@ function rotate3DY(v, a) =
     )
     !a ? v
    :[
-        v[2] * cos(a) - v[0] * sin(a),
-        v[1],
-        v[2] * sin(a) + v[0] * cos(a)
+        v.z * cos(a) - v.x * sin(a),
+        v.y,
+        v.z * sin(a) + v.x * cos(a)
     ]
 ;
 
@@ -226,9 +227,9 @@ function rotate3DZ(v, a) =
     )
     !a ? v
    :[
-        v[0] * cos(a) - v[1] * sin(a),
-        v[0] * sin(a) + v[1] * cos(a),
-        v[2]
+        v.x * cos(a) - v.y * sin(a),
+        v.x * sin(a) + v.y * cos(a),
+        v.z
     ]
 ;
 
@@ -247,9 +248,9 @@ function scaleFactor3D(points, size) =
         dim = dimensions3D(points)
     )
     [
-        size[0] / divisor(dim[0]),
-        size[1] / divisor(dim[1]),
-        size[2] / divisor(dim[2])
+        size.x / divisor(dim.x),
+        size.y / divisor(dim.y),
+        size.z / divisor(dim.z)
     ]
 ;
 
@@ -263,7 +264,7 @@ function dimensions3D(points) =
     let(
         b = boundaries3D(points)
     )
-    b[1] - b[0]
+    b.y - b.x
 ;
 
 /**
@@ -296,30 +297,30 @@ function boundaries3D(v,
                         pt4 = vector3D(v[p + 3])
                     )
                     [
-                        [ min(pt1[0], pt2[0], pt3[0], pt4[0]),
-                          min(pt1[1], pt2[1], pt3[1], pt4[1]),
-                          min(pt1[2], pt2[2], pt3[2], pt4[2]) ],
-                        [ max(pt1[0], pt2[0], pt3[0], pt4[0]),
-                          max(pt1[1], pt2[1], pt3[1], pt4[1]),
-                          max(pt1[2], pt2[2], pt3[2], pt4[2]) ]
+                        [ min(pt1.x, pt2.x, pt3.x, pt4.x),
+                          min(pt1.y, pt2.y, pt3.y, pt4.y),
+                          min(pt1.z, pt2.z, pt3.z, pt4.z) ],
+                        [ max(pt1.x, pt2.x, pt3.x, pt4.x),
+                          max(pt1.y, pt2.y, pt3.y, pt4.y),
+                          max(pt1.z, pt2.z, pt3.z, pt4.z) ]
                     ]
                 )
                :[
-                    [ min(pt1[0], pt2[0], pt3[0]),
-                      min(pt1[1], pt2[1], pt3[1]),
-                      min(pt1[2], pt2[2], pt3[2]) ],
-                    [ max(pt1[0], pt2[0], pt3[0]),
-                      max(pt1[1], pt2[1], pt3[1]),
-                      max(pt1[2], pt2[2], pt3[2]) ]
+                    [ min(pt1.x, pt2.x, pt3.x),
+                      min(pt1.y, pt2.y, pt3.y),
+                      min(pt1.z, pt2.z, pt3.z) ],
+                    [ max(pt1.x, pt2.x, pt3.x),
+                      max(pt1.y, pt2.y, pt3.y),
+                      max(pt1.z, pt2.z, pt3.z) ]
                 ]
             )
            :[
-                [ min(pt1[0], pt2[0]),
-                  min(pt1[1], pt2[1]),
-                  min(pt1[2], pt2[2]) ],
-                [ max(pt1[0], pt2[0]),
-                  max(pt1[1], pt2[1]),
-                  max(pt1[2], pt2[2]) ]
+                [ min(pt1.x, pt2.x),
+                  min(pt1.y, pt2.y),
+                  min(pt1.z, pt2.z) ],
+                [ max(pt1.x, pt2.x),
+                  max(pt1.y, pt2.y),
+                  max(pt1.z, pt2.z) ]
             ]
         )
        :[pt1, pt1]
@@ -330,11 +331,11 @@ function boundaries3D(v,
         right = boundaries3D(v, p + half, l - half)
     )
     [
-        [ min(left[0][0], right[0][0]),
-          min(left[0][1], right[0][1]),
-          min(left[0][2], right[0][2]) ],
-        [ max(left[1][0], right[1][0]),
-          max(left[1][1], right[1][1]),
-          max(left[1][2], right[1][2]) ]
+        [ min(left[0].x, right[0].x),
+          min(left[0].y, right[0].y),
+          min(left[0].z, right[0].z) ],
+        [ max(left[1].x, right[1].x),
+          max(left[1].y, right[1].y),
+          max(left[1].z, right[1].z) ]
     ]
 ;

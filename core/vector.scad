@@ -2,7 +2,7 @@
  * @license
  * MIT License
  *
- * Copyright (c) 2017-2019 Jean-Sebastien CONAN
+ * Copyright (c) 2017-2022 Jean-Sebastien CONAN
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -216,7 +216,7 @@ function vfactorial(n,
                     // internal
                     i=0, fact=1) =
     let(
-        isnum = isNumber(n),
+        isnum = is_num(n),
         n = isnum ? n : 0,
         fact = fact * or(i, 1)
     )
@@ -231,7 +231,7 @@ function vfactorial(n,
  * @returns Vector
  */
 function vfactor(v) =
-    !isArray(v) ? (v ? 1 : -1)
+    !is_list(v) ? (v ? 1 : -1)
    :len(v) == 0 ? v
    :[ for (b = v) b ? 1 : -1 ]
 ;
@@ -248,7 +248,7 @@ function vboolean(a, bool) =
         t = bool ? true : 1,
         f = bool ? false : 0
     )
-    !isArray(a) ? (a ? t : f)
+    !is_list(a) ? (a ? t : f)
     :len(a) == 0 ? a
     :[ for (b = a) b ? t : f ]
 ;

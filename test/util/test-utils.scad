@@ -2,7 +2,7 @@
  * @license
  * MIT License
  *
- * Copyright (c) 2017-2019 Jean-Sebastien CONAN
+ * Copyright (c) 2017-2022 Jean-Sebastien CONAN
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -203,10 +203,10 @@ module testUtilTestUtils() {
                 assertEqual(assertDetails(), "", "An empty content should be returned");
             }
             testUnit("single detail", 1) {
-                assertEqual(assertDetails(["testValue"]), "[value: testValue]", "The detail for a single value should be returned");
+                assertEqual(assertDetails(["testValue"]), "{value: testValue}", "The detail for a single value should be returned");
             }
             testUnit("full details", 1) {
-                assertEqual(assertDetails(["testActual", "testExpected"]), "[expected: testExpected] [actual: testActual]", "The details for expected and actual values should be returned");
+                assertEqual(assertDetails(["testActual", "testExpected"]), "{expected: testExpected}{actual: testActual}", "The details for expected and actual values should be returned");
             }
         }
         // test util/test/checkExpectedAsserts()

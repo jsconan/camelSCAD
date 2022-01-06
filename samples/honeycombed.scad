@@ -20,9 +20,9 @@ include <../core/constants.scad>
 module honeycomb(size, thickness) {
     // Adjust the values to get usable size and thickness
     size = vector3D(size);
-    width = min(size[0], size[1]);
+    width = min(size.x, size.y);
     thickness = min(numberOr(thickness, 1), width / 10);
-    adjust = max(size[0], size[1]) - width;
+    adjust = max(size.x, size.y) - width;
     innerWidth = width - thickness * 2;
 
     difference() {

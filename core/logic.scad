@@ -2,7 +2,7 @@
  * @license
  * MIT License
  *
- * Copyright (c) 2017-2019 Jean-Sebastien CONAN
+ * Copyright (c) 2017-2022 Jean-Sebastien CONAN
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -66,7 +66,7 @@ function xor(a, b) = (!a && b) || (a && !b);
  * @param * b - The second value.
  * @returns *
  */
-function uor(a, b) = isUndef(a) ? b : a;
+function uor(a, b) = is_undef(a) ? b : a;
 
 /**
  * Returns the second value if the first value is defined.
@@ -75,7 +75,7 @@ function uor(a, b) = isUndef(a) ? b : a;
  * @param * b - The second value.
  * @returns *
  */
-function uand(a, b) = isUndef(a) ? a : b;
+function uand(a, b) = is_undef(a) ? a : b;
 
 /**
  * Gets the first value if it is a number, otherwise gets the second value whatever it is.
@@ -84,7 +84,7 @@ function uand(a, b) = isUndef(a) ? a : b;
  * @param * b - The second value.
  * @return Number|*
  */
-function numberOr(a, b) = isNumber(a) ? a : b;
+function numberOr(a, b) = is_num(a) ? a : b;
 
 /**
  * Gets the first value if it is an integer, otherwise gets the second value whatever it is.
@@ -102,7 +102,7 @@ function integerOr(a, b) = isInteger(a) ? a : b;
  * @param * b - The second value.
  * @return Boolean|*
  */
-function booleanOr(a, b) = isBoolean(a) ? a : b;
+function booleanOr(a, b) = is_bool(a) ? a : b;
 
 /**
  * Gets the first value if it is a string, otherwise gets the second value whatever it is.
@@ -111,7 +111,7 @@ function booleanOr(a, b) = isBoolean(a) ? a : b;
  * @param * b - The second value.
  * @return String|*
  */
-function stringOr(a, b) = isString(a) ? a : b;
+function stringOr(a, b) = is_string(a) ? a : b;
 
 /**
  * Gets the first value if it is an array, otherwise gets the second value whatever it is.
@@ -120,7 +120,7 @@ function stringOr(a, b) = isString(a) ? a : b;
  * @param * b - The second value.
  * @return Array|*
  */
-function arrayOr(a, b) = isArray(a) ? a : b;
+function arrayOr(a, b) = is_list(a) ? a : b;
 
 /**
  * Gets the first value if it is a vector, otherwise gets the second value whatever it is.
@@ -237,8 +237,8 @@ function contains(a, value) =
 function approx(a, b, precision=5,
                 // internal
                 p, l) =
-    isArray(a) ? (
-       !isArray(b) ? false
+    is_list(a) ? (
+       !is_list(b) ? false
        :(
             let(
                 la = len(a),
@@ -275,8 +275,8 @@ function approx(a, b, precision=5,
             approx(a, b, precision, p, half) && approx(a, b, precision, p + half, l - half)
         )
     )
-   :isNumber(a) ? (
-        !isNumber(b) ? false
+   :is_num(a) ? (
+        !is_num(b) ? false
        :(
             let(
                 sa = sign(a),
