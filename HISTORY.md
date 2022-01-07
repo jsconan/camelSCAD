@@ -1,5 +1,9 @@
 # camelSCAD history
 
+## [Version 1.0.1](https://github.com/jsconan/camelSCAD/releases/tag/v1.0.1)
+
+Fix a comparison issue occurring with `complete(collection, start, end)`, when the collection start and end elements are very close to the elements to add. When these elements are different only after the Nth decimal, when N > 5, the function can add duplicate values.
+
 ## [Version 1.0.0](https://github.com/jsconan/camelSCAD/releases/tag/v1.0.0)
 
 Support update for OpenSCAD 2019 and OpenSCAD 2021.
