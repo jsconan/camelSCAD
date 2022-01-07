@@ -152,15 +152,25 @@ function inArray(collection, elem) = find(collection, elem) > -1;
  * @param Array collection - The list  to complete.
  * @param * start - The start element to add.
  * @param * end - The end element to add.
+ * @param Number [precision] - The wanted decimal precision (default: 5).
  * @returns Array
  */
-function complete(collection, start, end) =
+function complete(collection, start, end, precision=5) =
     let(
         collection = array(collection),
-        first = start && start != collection[0] && start != collection[len(collection) - 1] ? concat([start], collection) : collection,
-        second = end && end != first[0] && end != first[len(first) - 1] ? concat(first, [end]) : first
+        start = !is_undef(start) && 
+                !approx(start, collection[0], precision) && 
+                !approx(start, collection[len(collection) - 1], precision)
+               ?[start]
+               :[],
+        end = !is_undef(end) &&
+              !approx(end, start[0], precision) && 
+              !approx(end, collection[0], precision) && 
+              !approx(end, collection[len(collection) - 1], precision)
+             ?[end]
+             :[]
     )
-    second
+    concat(start, collection, end)
 ;
 
 /**
