@@ -329,7 +329,7 @@ module testCoreList() {
                 assertEqual(complete("1", "foo", "bar"), ["foo", "1", "bar"], "String should be casted to array, should return an array containing the provided start and end points");
                 assertEqual(complete(true, true, false), [true, false], "Cannot complete a boolean, but should return an array containing the provided start and end points");
             }
-            testUnit("array", 8) {
+            testUnit("array", 10) {
                 assertEqual(complete([], 1, 2), [1, 2], "Should accept numbers as elements");
                 assertEqual(complete([], [1, 0], [2, 3]), [[1, 0], [2, 3]], "Should accept vectors as elements");
                 assertEqual(complete([[1, 0], [5, 7], [2, 3]], [1, 0], [2, 3]), [[1, 0], [5, 7], [2, 3]], "Should not complete the elements if start and end are already there");
@@ -338,6 +338,8 @@ module testCoreList() {
                 assertEqual(complete([[5, 7], [2, 3]], [1, 0], [1, 0]), [[1, 0], [5, 7], [2, 3]], "Should only complete the elements if start and end are not equal");
                 assertEqual(complete([[5, 7], [2, 3]], start=[1, 0]), [[1, 0], [5, 7], [2, 3]], "Should complete the elements with a new start");
                 assertEqual(complete([[5, 7], [2, 3]], end=[1, 0]), [[5, 7], [2, 3], [1, 0]], "Should complete the elements with a new end");
+                assertEqual(complete([[1.123456, 0.123456], [5.123456, 7.123456], [2.123456, 3.123456]], [1.12345678, 0.12345678], [2.12345678, 3.12345678]), [[1.123456, 0.123456], [5.123456, 7.123456], [2.123456, 3.123456]], "Should not complete the elements if start and end are approx equal to elements");
+                assertEqual(complete([[1.123456, 0.123456], [5.123456, 7.123456], [2.123456, 3.123456]], [1.12345678, 0.12345678], [2.12345678, 3.12345678], 8), [[1.12345678, 0.12345678], [1.123456, 0.123456], [5.123456, 7.123456], [2.123456, 3.123456], [2.12345678, 3.12345678]], "Should complete the elements if start and end are different even if very close to elements");
             }
         }
         // test core/list/slice()
