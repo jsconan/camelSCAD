@@ -157,10 +157,19 @@ function inArray(collection, elem) = find(collection, elem) > -1;
 function complete(collection, start, end) =
     let(
         collection = array(collection),
-        first = start && start != collection[0] && start != collection[len(collection) - 1] ? concat([start], collection) : collection,
-        second = end && end != first[0] && end != first[len(first) - 1] ? concat(first, [end]) : first
+        start = !is_undef(start) && 
+                start != collection[0] && 
+                start != collection[len(collection) - 1]
+               ?[start]
+               :[],
+        end = !is_undef(end) &&
+              end != start[0] && 
+              end != collection[0] && 
+              end != collection[len(collection) - 1]
+             ?[end]
+             :[]
     )
-    second
+    concat(start, collection, end)
 ;
 
 /**

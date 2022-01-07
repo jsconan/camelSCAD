@@ -2,7 +2,7 @@
  * @license
  * MIT License
  *
- * Copyright (c) 2017-2019 Jean-Sebastien CONAN
+ * Copyright (c) 2017-2022 Jean-Sebastien CONAN
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -327,14 +327,17 @@ module testCoreList() {
                 assertEqual(complete("1"), ["1"], "String should be casted to array");
                 assertEqual(complete(true), [true], "Boolean should be casted to array");
                 assertEqual(complete("1", "foo", "bar"), ["foo", "1", "bar"], "String should be casted to array, should return an array containing the provided start and end points");
-                assertEqual(complete(true, true, false), [true], "Cannot complete a boolean, but should return an array containing the provided start and end points");
+                assertEqual(complete(true, true, false), [true, false], "Cannot complete a boolean, but should return an array containing the provided start and end points");
             }
-            testUnit("array", 5) {
+            testUnit("array", 8) {
                 assertEqual(complete([], 1, 2), [1, 2], "Should accept numbers as elements");
                 assertEqual(complete([], [1, 0], [2, 3]), [[1, 0], [2, 3]], "Should accept vectors as elements");
                 assertEqual(complete([[1, 0], [5, 7], [2, 3]], [1, 0], [2, 3]), [[1, 0], [5, 7], [2, 3]], "Should not complete the elements if start and end are already there");
                 assertEqual(complete([[5, 7], [2, 3]], [1, 0], [2, 3]), [[1, 0], [5, 7], [2, 3]], "Should only complete the elements if start and end are not already there (missing start)");
                 assertEqual(complete([[1, 0], [5, 7]], [1, 0], [2, 3]), [[1, 0], [5, 7], [2, 3]], "Should only complete the elements if start and end are not already there (missing end)");
+                assertEqual(complete([[5, 7], [2, 3]], [1, 0], [1, 0]), [[1, 0], [5, 7], [2, 3]], "Should only complete the elements if start and end are not equal");
+                assertEqual(complete([[5, 7], [2, 3]], start=[1, 0]), [[1, 0], [5, 7], [2, 3]], "Should complete the elements with a new start");
+                assertEqual(complete([[5, 7], [2, 3]], end=[1, 0]), [[5, 7], [2, 3], [1, 0]], "Should complete the elements with a new end");
             }
         }
         // test core/list/slice()
