@@ -53,7 +53,7 @@
  *                         (will overwrite the Z coordinate in the `axis` vector).
  */
 module distributeMirror(interval = [0, 0, 0],
-                        axis     = [1, 0, 0],
+                        axis     = xAxis3D(),
                         center   = false,
                         intervalX, intervalY, intervalZ,
                         axisX, axisY, axisZ) {

@@ -34,7 +34,7 @@ use <../../full.scad>
  * @author jsconan
  */
 module testCoreVector2D() {
-    testPackage("core/vector-2d.scad", 35) {
+    testPackage("core/vector-2d.scad", 37) {
         // test core/vector-2d/vector2D()
         testModule("vector2D()", 3) {
             testUnit("no parameter", 1) {
@@ -114,6 +114,40 @@ module testCoreVector2D() {
                 assertEqual(apply2D([1, 2], y=5, d=3), [3, 5], "Should apply the diameter as coordinates of the 2D vector, but the Y");
                 assertEqual(apply2D(r=5), [10, 10], "Should create the vector from the provided radius");
                 assertEqual(apply2D(d=6), [6, 6], "Should create the vector from the provided diameter");
+            }
+        }
+        // test core/vector-2d/xAxis2D()
+        testModule("xAxis2D()", 3) {
+            testUnit("no parameter", 1) {
+                assertEqual(xAxis2D(), [1, 0], "Should always produce a 2D vector with a default value for the X-axis");
+            }
+            testUnit("not number", 4) {
+                assertEqual(xAxis2D(undef), [1, 0], "Should always produce a 2D vector with a default value for the X-axis when the value is undefined");
+                assertEqual(xAxis2D(true), [1, 0], "Should always produce a 2D vector with a default value for the X-axis when the value is a boolean");
+                assertEqual(xAxis2D("2"), [1, 0], "Should always produce a 2D vector with a default value for the X-axis when the value is a string");
+                assertEqual(xAxis2D([3, 4]), [1, 0], "Should always produce a 2D vector with a default value for the X-axis when the value is a vector");
+            }
+            testUnit("number", 3) {
+                assertEqual(xAxis2D(3), [3, 0], "Should take the given value for the X-axis: [3, 0]");
+                assertEqual(xAxis2D(5.4), [5.4, 0], "Should take the given value for the X-axis: [5.4, 0]");
+                assertEqual(xAxis2D(-1.2), [-1.2, 0], "Should take the given value for the X-axis: [-1.2, 0]");
+            }
+        }
+        // test core/vector-2d/yAxis2D()
+        testModule("yAxis2D()", 3) {
+            testUnit("no parameter", 1) {
+                assertEqual(yAxis2D(), [0, 1], "Should always produce a 2D vector with a default value for the Y-axis");
+            }
+            testUnit("not number", 4) {
+                assertEqual(yAxis2D(undef), [0, 1], "Should always produce a 2D vector with a default value for the Y-axis when the value is undefined");
+                assertEqual(yAxis2D(true), [0, 1], "Should always produce a 2D vector with a default value for the Y-axis when the value is a boolean");
+                assertEqual(yAxis2D("2"), [0, 1], "Should always produce a 2D vector with a default value for the Y-axis when the value is a string");
+                assertEqual(yAxis2D([3, 4]), [0, 1], "Should always produce a 2D vector with a default value for the Y-axis when the value is a vector");
+            }
+            testUnit("number", 3) {
+                assertEqual(yAxis2D(3), [0, 3], "Should take the given value for the Y-axis: [0, 3]");
+                assertEqual(yAxis2D(5.4), [0, 5.4], "Should take the given value for the Y-axis: [0, 5.4]");
+                assertEqual(yAxis2D(-1.2), [0, -1.2], "Should take the given value for the Y-axis: [0, -1.2]");
             }
         }
         // test core/vector-2d/quadrant()

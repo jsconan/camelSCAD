@@ -90,6 +90,30 @@ function apply3D(v, x, y, z, r, d) =
 ;
 
 /**
+ * Produces a vector that only contains a value for the X-axis. Other components are zeroed.
+ *
+ * @param Number [x] - The value for the X-axis.
+ * @returns Vector - Always returns a 3D vector that will only contain a value for the X-axis.
+ */
+function xAxis3D(x=1) = [numberOr(x, 1), 0, 0];
+
+/**
+ * Produces a vector that only contains a value for the Y-axis. Other components are zeroed.
+ *
+ * @param Number [Y] - The value for the Y-axis.
+ * @returns Vector - Always returns a 3D vector that will only contain a value for the Y-axis.
+ */
+function yAxis3D(y=1) = [0, numberOr(y, 1), 0];
+
+/**
+ * Produces a vector that only contains a value for the Z-axis. Other components are zeroed.
+ *
+ * @param Number [Z] - The value for the Z-axis.
+ * @returns Vector - Always returns a 3D vector that will only contain a value for the Z-axis.
+ */
+function zAxis3D(z=1) = [0, 0, numberOr(z, 1)];
+
+/**
  * Normalizes a vector as `norm(v) = 1`.
  * Ensures the value is a 3D vector. Incomplete vectors will be completed with 0,
  * while too big vectors will be truncated. If a single number is provided instead

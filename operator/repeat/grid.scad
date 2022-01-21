@@ -2,7 +2,7 @@
  * @license
  * MIT License
  *
- * Copyright (c) 2017 Jean-Sebastien CONAN
+ * Copyright (c) 2022 Jean-Sebastien CONAN
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -26,35 +26,37 @@
 /**
  * Part of the camelSCAD library.
  *
- * Operators that distribute children modules with respect to particular rules.
+ * Operators that repeat children modules with respect to particular rules.
  *
- * @package operator/distribute
+ * @package operator/repeat
  * @author jsconan
  */
 
 /**
- * Distributes the children modules on a grid with the provided `interval`, up to `line` elements per lines.
+ * Repeats the children module `count` times and place each copy on a grid with the provided `interval`, up to `line` elements per lines.
  *
+ * @param Number [count] - The number of times the children must be repeated.
  * @param Vector [intervalX] - The interval between each columns.
  * @param Vector [intervalY] - The interval between each lines.
  * @param Number [line] - The max number of elements per lines.
  * @param Boolean [center] - Whether or not center the repeated shapes.
  */
-module distributeGrid(intervalX = xAxis3D(),
-                      intervalY = yAxis3D(),
-                      line      = 2,
-                      center    = false) {
+module repeatGrid(count     = 2,
+                  intervalX = xAxis3D(),
+                  intervalY = yAxis3D(),
+                  line      = 2,
+                  center    = false) {
 
     intervalX = vector3D(intervalX);
     intervalY = vector3D(intervalY);
-    count = $children;
+    count = max(floor(abs(float(count))), 1);
     line = max(floor(abs(float(line))), 1);
     offsetX = center ? -intervalX * ((count > line ? line : count) - 1) / 2 : [0, 0, 0];
     offsetY = center ? -intervalY * (floor(count / line) - (count % line ? 0 : 1)) / 2 : [0, 0, 0];
 
     for (i = [0 : count - 1]) {
         translate(offsetX + intervalX * (i % line) + offsetY + intervalY * floor(i / line)) {
-            children(i);
+            children();
         }
     }
 }

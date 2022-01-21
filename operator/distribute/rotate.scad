@@ -55,7 +55,7 @@
  * @param Number [originZ] - The Z origin (will overwrite the Z coordinate in the `origin` vector).
  */
 module distributeRotate(angle    = DEGREES,
-                        axis     = [0, 0, 1],
+                        axis     = zAxis3D(),
                         interval = [0, 0, 0],
                         origin   = [0, 0, 0],
                         center   = false,
