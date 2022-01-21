@@ -1,5 +1,23 @@
 # camelSCAD history
 
+## [Version 1.1.0](https://github.com/jsconan/camelSCAD/releases/tag/v1.1.0)
+
+Add core functions:
+
+-   `xAxis2D()`: Produces a 2D vector that only contains a value for the X-axis. Other components are zeroed.
+-   `yAxis2D()`: Produces a 2D vector that only contains a value for the Y-axis. Other components are zeroed.
+-   `xAxis3D()`: Produces a 3D vector that only contains a value for the X-axis. Other components are zeroed.
+-   `yAxis3D()`: Produces a 3D vector that only contains a value for the Y-axis. Other components are zeroed.
+-   `zAxis3D()`: Produces a 3D vector that only contains a value for the Z-axis. Other components are zeroed.
+
+Add operators:
+
+-   `repeatGrid()`: Repeats the children module `count` times and place each copy on a grid with the provided `interval`, up to `line` elements per line.
+
+Fix operators:
+
+-   `distributeGrid()`: The centering of elements was producing wrong results when the number of elements was lower than a line, or when the number of lines was even.
+
 ## [Version 1.0.1](https://github.com/jsconan/camelSCAD/releases/tag/v1.0.1)
 
 Fix a comparison issue occurring with `complete(collection, start, end)`, when the collection start and end elements are very close to the elements to add. When these elements are different only after the Nth decimal, when N > 5, the function can add duplicate values.

@@ -87,6 +87,22 @@ function apply2D(v, x, y, r, d) =
 ;
 
 /**
+ * Produces a vector that only contains a value for the X-axis. Other components are zeroed.
+ *
+ * @param Number [x] - The value for the X-axis.
+ * @returns Vector - Always returns a 2D vector that will only contain a value for the X-axis.
+ */
+function xAxis2D(x=1) = [numberOr(x, 1), 0];
+
+/**
+ * Produces a vector that only contains a value for the Y-axis. Other components are zeroed.
+ *
+ * @param Number [Y] - The value for the Y-axis.
+ * @returns Vector - Always returns a 2D vector that will only contain a value for the Y-axis.
+ */
+function yAxis2D(y=1) = [0, numberOr(y, 1)];
+
+/**
  * Gets a point on a particular quadrant.
  * @param Vector v - The original point
  * @param Number i - The index of the quadrant (from 0 to 3)
@@ -638,7 +654,7 @@ function cosp(y, w, h, p, o) =
  */
 function rotp(v, a) =
     is_undef(v) || is_undef(a) ? [0, 0]
-   :let( 
+   :let(
        v = vector2D(v),
        a = float(a)
     )

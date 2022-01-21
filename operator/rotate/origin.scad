@@ -59,7 +59,7 @@ module rotateOrigin(a, v, o) {
 module rotateOriginX(a, o) {
     o = vector3D(o);
     translate(o) {
-        rotate([a, 0, 0]) {
+        rotate(xAxis3D(a)) {
             translate(-o) {
                 children();
             }
@@ -76,7 +76,7 @@ module rotateOriginX(a, o) {
 module rotateOriginY(a, o) {
     o = vector3D(o);
     translate(o) {
-        rotate([0, a, 0]) {
+        rotate(yAxis3D(a)) {
             translate(-o) {
                 children();
             }
@@ -93,7 +93,7 @@ module rotateOriginY(a, o) {
 module rotateOriginZ(a, o) {
     o = vector3D(o);
     translate(o) {
-        rotate([0, 0, a]) {
+        rotate(zAxis3D(a)) {
             translate(-o) {
                 children();
             }

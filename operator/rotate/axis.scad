@@ -38,7 +38,7 @@
  * @param Number a - The rotate angle to apply.
  */
 module rotateX(a) {
-    rotate([a, 0, 0]) {
+    rotate(xAxis3D(a)) {
         children();
     }
 }
@@ -49,7 +49,7 @@ module rotateX(a) {
  * @param Number a - The rotate angle to apply.
  */
 module rotateY(a) {
-    rotate([0, a, 0]) {
+    rotate(yAxis3D(a)) {
         children();
     }
 }
@@ -60,7 +60,7 @@ module rotateY(a) {
  * @param Number a - The rotate angle to apply.
  */
 module rotateZ(a) {
-    rotate([0, 0, a]) {
+    rotate(zAxis3D(a)) {
         children();
     }
 }

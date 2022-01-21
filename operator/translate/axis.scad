@@ -38,7 +38,7 @@
  * @param Number d - The distance to move.
  */
 module translateX(d) {
-    translate([d, 0, 0]) {
+    translate(xAxis3D(d)) {
         children();
     }
 }
@@ -49,7 +49,7 @@ module translateX(d) {
  * @param Number d - The distance to move.
  */
 module translateY(d) {
-    translate([0, d, 0]) {
+    translate(yAxis3D(d)) {
         children();
     }
 }
@@ -60,7 +60,7 @@ module translateY(d) {
  * @param Number d - The distance to move.
  */
 module translateZ(d) {
-    translate([0, 0, d]) {
+    translate(zAxis3D(d)) {
         children();
     }
 }
