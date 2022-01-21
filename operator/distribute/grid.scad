@@ -40,8 +40,8 @@
  * @param Number [line] - The max number of elements per lines.
  * @param Boolean [center] - Whether or not center the repeated shapes.
  */
-module distributeGrid(intervalX = [1, 0, 0],
-                      intervalY = [0, 1, 0],
+module distributeGrid(intervalX = xAxis3D(),
+                      intervalY = yAxis3D(),
                       line      = 2,
                       center    = false) {
 

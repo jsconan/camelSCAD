@@ -42,8 +42,8 @@
  * @param Boolean [center] - Whether or not center the repeated shapes.
  */
 module repeatGrid(count     = 2,
-                  intervalX = [1, 0, 0],
-                  intervalY = [0, 1, 0],
+                  intervalX = xAxis3D(),
+                  intervalY = yAxis3D(),
                   line      = 2,
                   center    = false) {
 
