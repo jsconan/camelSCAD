@@ -16,7 +16,7 @@ Add operators:
 
 Fix operators:
 
--   `distributeGrid()`: The centering of elements was producing results when the number of elements was lower than a line, or when the number of lines was even.
+-   `distributeGrid()`: The centering of elements was producing wrong results when the number of elements was lower than a line, or when the number of lines was even.
 
 ## [Version 1.0.1](https://github.com/jsconan/camelSCAD/releases/tag/v1.0.1)
 
