@@ -47,11 +47,12 @@ module distributeGrid(intervalX = [1, 0, 0],
 
     intervalX = vector3D(intervalX);
     intervalY = vector3D(intervalY);
+    count = $children;
     line = max(floor(abs(float(line))), 1);
-    offsetX = center ? -intervalX * (line - 1) / 2 : [0, 0, 0];
-    offsetY = center ? -intervalY * floor($children / line) / 2 : [0, 0, 0];
+    offsetX = center ? -intervalX * ((count > line ? line : count) - 1) / 2 : [0, 0, 0];
+    offsetY = center ? -intervalY * (floor(count / line) - (count % line ? 0 : 1)) / 2 : [0, 0, 0];
 
-    for (i = [0 : $children - 1]) {
+    for (i = [0 : count - 1]) {
         translate(offsetX + intervalX * (i % line) + offsetY + intervalY * floor(i / line)) {
             children(i);
         }
