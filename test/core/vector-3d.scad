@@ -34,7 +34,7 @@ use <../../full.scad>
  * @author jsconan
  */
 module testCoreVector3D() {
-    testPackage("core/vector-3d.scad", 15) {
+    testPackage("core/vector-3d.scad", 18) {
         // test core/vector-3d/vector3D()
         testModule("vector3D()", 3) {
             testUnit("no parameter", 1) {
@@ -126,6 +126,57 @@ module testCoreVector3D() {
                 assertEqual(apply3D(d=6), [6, 6, 6], "Should create the vector from the provided diameter)");
             }
         }
+        // test core/vector-3d/xAxis3D()
+        testModule("xAxis3D()", 3) {
+            testUnit("no parameter", 1) {
+                assertEqual(xAxis3D(), [1, 0, 0], "Should always produce a 3D vector with a default value for the X-axis");
+            }
+            testUnit("not number", 4) {
+                assertEqual(xAxis3D(undef), [1, 0, 0], "Should always produce a 3D vector with a default value for the X-axis when the value is undefined");
+                assertEqual(xAxis3D(true), [1, 0, 0], "Should always produce a 3D vector with a default value for the X-axis when the value is a boolean");
+                assertEqual(xAxis3D("2"), [1, 0, 0], "Should always produce a 3D vector with a default value for the X-axis when the value is a string");
+                assertEqual(xAxis3D([3, 4]), [1, 0, 0], "Should always produce a 3D vector with a default value for the X-axis when the value is a vector");
+            }
+            testUnit("number", 3) {
+                assertEqual(xAxis3D(3), [3, 0, 0], "Should take the given value for the X-axis: [3, 0, 0]");
+                assertEqual(xAxis3D(5.4), [5.4, 0, 0], "Should take the given value for the X-axis: [5.4, 0, 0]");
+                assertEqual(xAxis3D(-1.2), [-1.2, 0, 0], "Should take the given value for the X-axis: [-1.2, 0, 0]");
+            }
+        }
+        // test core/vector-3d/yAxis3D()
+        testModule("yAxis3D()", 3) {
+            testUnit("no parameter", 1) {
+                assertEqual(yAxis3D(), [0, 1, 0], "Should always produce a 3D vector with a default value for the Y-axis");
+            }
+            testUnit("not number", 4) {
+                assertEqual(yAxis3D(undef), [0, 1, 0], "Should always produce a 3D vector with a default value for the Y-axis when the value is undefined");
+                assertEqual(yAxis3D(true), [0, 1, 0], "Should always produce a 3D vector with a default value for the Y-axis when the value is a boolean");
+                assertEqual(yAxis3D("2"), [0, 1, 0], "Should always produce a 3D vector with a default value for the Y-axis when the value is a string");
+                assertEqual(yAxis3D([3, 4]), [0, 1, 0], "Should always produce a 3D vector with a default value for the Y-axis when the value is a vector");
+            }
+            testUnit("number", 3) {
+                assertEqual(yAxis3D(3), [0, 3, 0], "Should take the given value for the Y-axis: [0, 3, 0]");
+                assertEqual(yAxis3D(5.4), [0, 5.4, 0], "Should take the given value for the Y-axis: [0, 5.4, 0]");
+                assertEqual(yAxis3D(-1.2), [0, -1.2, 0], "Should take the given value for the Y-axis: [0, -1.2, 0]");
+            }
+        }
+        // test core/vector-3d/zAxis3D()
+        testModule("zAxis3D()", 3) {
+            testUnit("no parameter", 1) {
+                assertEqual(zAxis3D(), [0, 0, 1], "Should always produce a 3D vector with a default value for the Z-axis");
+            }
+            testUnit("not number", 4) {
+                assertEqual(zAxis3D(undef), [0, 0, 1], "Should always produce a 3D vector with a default value for the Z-axis when the value is undefined");
+                assertEqual(zAxis3D(true), [0, 0, 1], "Should always produce a 3D vector with a default value for the Z-axis when the value is a boolean");
+                assertEqual(zAxis3D("2"), [0, 0, 1], "Should always produce a 3D vector with a default value for the Z-axis when the value is a string");
+                assertEqual(zAxis3D([3, 4]), [0, 0, 1], "Should always produce a 3D vector with a default value for the Z-axis when the value is a vector");
+            }
+            testUnit("number", 3) {
+                assertEqual(zAxis3D(3), [0, 0, 3], "Should take the given value for the Z-axis: [0, 0, 3]");
+                assertEqual(zAxis3D(5.4), [0, 0, 5.4], "Should take the given value for the Z-axis: [0, 0, 5.4]");
+                assertEqual(zAxis3D(-1.2), [0, 0, -1.2], "Should take the given value for the Z-axis: [0, 0, -1.2]");
+            }
+        }
         // test core/vector-3d/unit3D()
         testModule("unit3D()", 3) {
             testUnit("no parameter", 1) {
@@ -156,12 +207,12 @@ module testCoreVector3D() {
                 assertEqual(middle3D(b=1), [0.5, 0.5, 0.5], "If the first point is missing, assume its the origin");
                 assertEqual(middle3D(a=[1], b=1), [1, 0.5, 0.5], "Should complete the first point if incomplete, should translate the second point to vector if number given");
                 assertEqual(middle3D(a=1, b=[1]), [1, 0.5, 0.5], "Should translate the first point to vector if number given, should complete the second point if incomplete");
-                assertEqual(middle3D(a=true), [0, 0, 0], "Should produce a 2D vector filled with 0 if first point is boolean");
-                assertEqual(middle3D(b=true), [0, 0, 0], "Should produce a 2D vector filled with 0 if second point is boolean");
-                assertEqual(middle3D(a="1"), [0, 0, 0], "Should produce a 2D vector filled with 0 if first point is string");
-                assertEqual(middle3D(b="1"), [0, 0, 0], "Should produce a 2D vector filled with 0 if second point is string");
-                assertEqual(middle3D(a=["1"]), [0, 0, 0], "Should produce a 2D vector filled with 0 if first point is array of strings");
-                assertEqual(middle3D(b=["1"]), [0, 0, 0], "Should produce a 2D vector filled with 0 if second point is array of strings");
+                assertEqual(middle3D(a=true), [0, 0, 0], "Should produce a 3D vector filled with 0 if first point is boolean");
+                assertEqual(middle3D(b=true), [0, 0, 0], "Should produce a 3D vector filled with 0 if second point is boolean");
+                assertEqual(middle3D(a="1"), [0, 0, 0], "Should produce a 3D vector filled with 0 if first point is string");
+                assertEqual(middle3D(b="1"), [0, 0, 0], "Should produce a 3D vector filled with 0 if second point is string");
+                assertEqual(middle3D(a=["1"]), [0, 0, 0], "Should produce a 3D vector filled with 0 if first point is array of strings");
+                assertEqual(middle3D(b=["1"]), [0, 0, 0], "Should produce a 3D vector filled with 0 if second point is array of strings");
                 assertEqual(middle3D(a=["1", 1]), [0, .5, 0], "Should produce a corrected 3D vector if first point is wrong or incomplete");
                 assertEqual(middle3D(a=["1", 1, 1]), [0, .5, .5], "Should produce a corrected 3D vector if first point is wrong");
                 assertEqual(middle3D(b=["1", 1]), [0, .5, 0], "Should produce a corrected 3D vector if second point is wrong or incomplete");
