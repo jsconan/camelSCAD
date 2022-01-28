@@ -2,7 +2,7 @@
  * @license
  * MIT License
  *
- * Copyright (c) 2017-2020 Jean-Sebastien CONAN
+ * Copyright (c) 2017-2022 Jean-Sebastien CONAN
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -56,8 +56,8 @@
 module repeatRotate(count    = 2,
                     angle    = DEGREES,
                     axis     = zAxis3D(),
-                    interval = [0, 0, 0],
-                    origin   = [0, 0, 0],
+                    interval = 0,
+                    origin   = 0,
                     center   = false,
                     intervalX, intervalY, intervalZ,
                     axisX, axisY, axisZ,
@@ -68,7 +68,7 @@ module repeatRotate(count    = 2,
     angle = deg(angle);
     partAngle = angle / (angle % DEGREES ? count - 1 : count);
     axis = apply3D(axis, axisX, axisY, axisZ) * partAngle;
-    offset = center ? -interval * (count - 1) / 2 : [0, 0, 0];
+    offset = center ? -interval * (count - 1) / 2 : ORIGIN_3D;
 
     for (i = [0 : count - 1]) {
         translate(offset + interval * i) {
@@ -100,10 +100,10 @@ module repeatRotate2D(countX    = 2,
                       angleY    = DEGREES,
                       axisX     = zAxis3D(),
                       axisY     = yAxis3D(),
-                      intervalX = [0, 0, 0],
-                      intervalY = [0, 0, 0],
-                      originX   = [0, 0, 0],
-                      originY   = [0, 0, 0],
+                      intervalX = 0,
+                      intervalY = 0,
+                      originX   = 0,
+                      originY   = 0,
                       center    = false) {
 
     repeatRotate(count=countY, interval=vector3D(intervalY), angle=angleY, axis=vector3D(axisY), origin=originY, center=center) {
@@ -142,12 +142,12 @@ module repeatRotate3D(countX    = 2,
                       axisX     = zAxis3D(),
                       axisY     = yAxis3D(),
                       axisZ     = xAxis3D(),
-                      intervalX = [0, 0, 0],
-                      intervalY = [0, 0, 0],
-                      intervalZ = [0, 0, 0],
-                      originX   = [0, 0, 0],
-                      originY   = [0, 0, 0],
-                      originZ   = [0, 0, 0],
+                      intervalX = 0,
+                      intervalY = 0,
+                      intervalZ = 0,
+                      originX   = 0,
+                      originY   = 0,
+                      originZ   = 0,
                       center    = false) {
 
     repeatRotate(count=countZ, interval=vector3D(intervalZ), angle=angleZ, axis=vector3D(axisZ), origin=originZ, center=center) {

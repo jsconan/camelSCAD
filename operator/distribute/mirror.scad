@@ -2,7 +2,7 @@
  * @license
  * MIT License
  *
- * Copyright (c) 2017 Jean-Sebastien CONAN
+ * Copyright (c) 2017-2022 Jean-Sebastien CONAN
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -52,7 +52,7 @@
  * @param Number [axisZ] - The Z-coordinate of the normal vector of the mirroring plan around which mirror the elements
  *                         (will overwrite the Z coordinate in the `axis` vector).
  */
-module distributeMirror(interval = [0, 0, 0],
+module distributeMirror(interval = 0,
                         axis     = xAxis3D(),
                         center   = false,
                         intervalX, intervalY, intervalZ,
@@ -60,7 +60,7 @@ module distributeMirror(interval = [0, 0, 0],
 
     interval = apply3D(interval, intervalX, intervalY, intervalZ);
     axis = apply3D(axis, axisX, axisY, axisZ);
-    offset = center ? -interval * ($children - 1) / 2 : [0, 0, 0];
+    offset = center ? -interval * ($children - 1) / 2 : ORIGIN_3D;
 
     for (i = [0 : $children - 1]) {
         translate(offset + interval * i) {

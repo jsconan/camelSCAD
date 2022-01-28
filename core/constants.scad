@@ -2,7 +2,7 @@
  * @license
  * MIT License
  *
- * Copyright (c) 2017-2019 Jean-Sebastien CONAN
+ * Copyright (c) 2017-2022 Jean-Sebastien CONAN
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -97,6 +97,18 @@ QUADRANT_3 = DEGREES - RIGHT;
  * @type Number
  */
 QUADRANT_4 = DEGREES;
+
+/**
+ * 2D-vector for the orgigin coordinates.
+ * @type Number
+ */
+ORIGIN_2D = [0, 0];
+
+/**
+ * 3D-vector for the orgigin coordinates.
+ * @type Number
+ */
+ORIGIN_3D = [0, 0, 0];
 
 /**
  * Useful value for computations based on hexagons.

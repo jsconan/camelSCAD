@@ -46,12 +46,12 @@
  *                             (will overwrite the Z coordinate in the `interval` vector).
  */
 module repeat(count    = 2,
-              interval = [0, 0, 0],
+              interval = 0,
               center   = false,
               intervalX, intervalY, intervalZ) {
 
     interval = apply3D(interval, intervalX, intervalY, intervalZ);
-    offset = center ? -interval * (count - 1) / 2 : [0, 0, 0];
+    offset = center ? -interval * (count - 1) / 2 : ORIGIN_3D;
 
     for (i = [0 : count - 1]) {
         translate(offset + interval * i) {
@@ -71,8 +71,8 @@ module repeat(count    = 2,
  */
 module repeat2D(countX    = 2,
                 countY    = 2,
-                intervalX = [0, 0, 0],
-                intervalY = [0, 0, 0],
+                intervalX = 0,
+                intervalY = 0,
                 center    = false) {
 
     repeat(count=countY, interval=vector3D(intervalY), center=center) {
@@ -96,9 +96,9 @@ module repeat2D(countX    = 2,
 module repeat3D(countX    = 2,
                 countY    = 2,
                 countZ    = 2,
-                intervalX = [0, 0, 0],
-                intervalY = [0, 0, 0],
-                intervalZ = [0, 0, 0],
+                intervalX = 0,
+                intervalY = 0,
+                intervalZ = 0,
                 center    = false) {
 
     repeat(count=countZ, interval=vector3D(intervalZ), center=center) {
