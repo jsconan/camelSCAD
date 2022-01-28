@@ -2,7 +2,7 @@
  * @license
  * MIT License
  *
- * Copyright (c) 2017-2020 Jean-Sebastien CONAN
+ * Copyright (c) 2017-2022 Jean-Sebastien CONAN
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -34,7 +34,7 @@ use <../../full.scad>
  * @author jsconan
  */
 module testCoreMaths() {
-    testPackage("core/maths.scad", 24) {
+    testPackage("core/maths.scad", 26) {
         // test core/maths/deg()
         testModule("deg()", 3) {
             testUnit("no parameter", 1) {
@@ -590,6 +590,50 @@ module testCoreMaths() {
                 assertEqual(factorial(8), 40320, "The factorial of 8 is 40320");
                 assertEqual(factorial(9), 362880, "The factorial of 9 is 362880");
                 assertEqual(factorial(10), 3628800, "The factorial of 10 is 3628800");
+            }
+        }
+        // test core/maths/even()
+        testModule("even()", 3) {
+            testUnit("no parameter", 1) {
+                assertEqual(even(), true, "No parameter gives a 0, so even");
+            }
+            testUnit("not a number", 3) {
+                assertEqual(even(true), true, "A boolean is casted to 0, so even");
+                assertEqual(even("10"), true, "A atring is casted to 0, so even");
+                assertEqual(even([14]), true, "A vector is casted to 0, so even");
+            }
+            testUnit("number", 9) {
+                assertEqual(even(0), true, "0 is considered even");
+                assertEqual(even(1), false, "1 is not even");
+                assertEqual(even(3), false, "3 is not even");
+                assertEqual(even(-1), false, "-1 is not even");
+                assertEqual(even(-3), false, "-3 is not even");
+                assertEqual(even(2), true, "2 is even");
+                assertEqual(even(-2), true, "-2 is even");
+                assertEqual(even(6), true, "6 is even");
+                assertEqual(even(-6), true, "-6 is even");
+            }
+        }
+        // test core/maths/odd()
+        testModule("odd()", 3) {
+            testUnit("no parameter", 1) {
+                assertEqual(odd(), false, "No parameter gives a 0, so not odd");
+            }
+            testUnit("not a number", 3) {
+                assertEqual(odd(true), false, "A boolean is casted to 0, so not odd");
+                assertEqual(odd("10"), false, "A string is casted to 0, so not odd");
+                assertEqual(odd([14]), false, "A vector is casted to 0, so not odd");
+            }
+            testUnit("number", 9) {
+                assertEqual(odd(0), false, "0 is not considered odd");
+                assertEqual(odd(1), true, "1 is odd");
+                assertEqual(odd(3), true, "3 is odd");
+                assertEqual(odd(-1), true, "-1 is odd");
+                assertEqual(odd(-3), true, "-3 is odd");
+                assertEqual(odd(2), false, "2 is not odd");
+                assertEqual(odd(-2), false, "-2 is not odd");
+                assertEqual(odd(6), false, "6 is not odd");
+                assertEqual(odd(-6), false, "-6 is not odd");
             }
         }
         // test core/maths/limit()
