@@ -75,9 +75,17 @@ module repeat2D(countX    = 2,
                 intervalY = 0,
                 center    = false) {
 
-    repeat(count=countY, interval=vector3D(intervalY), center=center) {
-        repeat(count=countX, interval=vector3D(intervalX), center=center) {
-            children();
+    intervalX = vector3D(intervalX);
+    intervalY = vector3D(intervalY);
+    offsetX = center ? -intervalX * (countX - 1) / 2 : ORIGIN_3D;
+    offsetY = center ? -intervalY * (countY - 1) / 2 : ORIGIN_3D;
+    offset = offsetX + offsetY;
+
+    for (y = [0 : countY - 1] ) {
+        for (x = [0 : countX - 1] ) {
+            translate(offset + intervalX * x + intervalY * y) {
+                children();
+            }
         }
     }
 }
@@ -101,10 +109,20 @@ module repeat3D(countX    = 2,
                 intervalZ = 0,
                 center    = false) {
 
-    repeat(count=countZ, interval=vector3D(intervalZ), center=center) {
-        repeat(count=countY, interval=vector3D(intervalY), center=center) {
-            repeat(count=countX, interval=vector3D(intervalX), center=center) {
-                children();
+    intervalX = vector3D(intervalX);
+    intervalY = vector3D(intervalY);
+    intervalZ = vector3D(intervalZ);
+    offsetX = center ? -intervalX * (countX - 1) / 2 : ORIGIN_3D;
+    offsetY = center ? -intervalY * (countY - 1) / 2 : ORIGIN_3D;
+    offsetZ = center ? -intervalZ * (countZ - 1) / 2 : ORIGIN_3D;
+    offset = offsetX + offsetY + offsetZ;
+
+    for (z = [0 : countZ - 1] ) {
+        for (y = [0 : countY - 1] ) {
+            for (x = [0 : countX - 1] ) {
+                translate(offset + intervalX * x + intervalY * y + intervalZ * z) {
+                    children();
+                }
             }
         }
     }
@@ -123,8 +141,8 @@ module repeatShape2D(size, count = 1, center) {
     repeat2D(
         countX = count.x,
         countY = count.y,
-        intervalX = [size.x, 0, 0],
-        intervalY = [0, size.y, 0],
+        intervalX = xAxis3D(size.x),
+        intervalY = yAxis3D(size.y),
         center = center
     ) {
         children();
@@ -145,9 +163,9 @@ module repeatShape3D(size, count = 1, center) {
         countX = count.x,
         countY = count.y,
         countZ = count.z,
-        intervalX = [size.x, 0, 0],
-        intervalY = [0, size.y, 0],
-        intervalZ = [0, 0, size.z],
+        intervalX = xAxis3D(size.x),
+        intervalY = yAxis3D(size.y),
+        intervalZ = zAxis3D(size.z),
         center = center
     ) {
         children();
