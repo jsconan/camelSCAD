@@ -2,7 +2,7 @@
  * @license
  * MIT License
  *
- * Copyright (c) 2017-2020 Jean-Sebastien CONAN
+ * Copyright (c) 2017-2022 Jean-Sebastien CONAN
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -282,6 +282,22 @@ function factorial(n) =
     let( n = float(n) )
     n > 0 ? factorial(n - 1) * n : 1
 ;
+
+/**
+ * Tells whether a value is even or not.
+ *
+ * @param Number n
+ * @returns Boolean
+ */
+function even(n) = float(n) % 2 == 0;
+
+/**
+ * Tells whether a value is odd or not.
+ *
+ * @param Number n
+ * @returns Boolean
+ */
+function odd(n) = float(n) % 2 != 0;
 
 /**
  * Forces a value to be within the provided domain.

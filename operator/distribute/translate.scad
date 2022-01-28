@@ -2,7 +2,7 @@
  * @license
  * MIT License
  *
- * Copyright (c) 2017 Jean-Sebastien CONAN
+ * Copyright (c) 2017-2022 Jean-Sebastien CONAN
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -44,12 +44,12 @@
  * @param Number [intervalZ] - The Z interval between each repeated children
  *                             (will overwrite the Z coordinate in the `interval` vector).
  */
-module distribute(interval = [0, 0, 0],
+module distribute(interval = 0,
                   center   = false,
                   intervalX, intervalY, intervalZ) {
 
     interval = apply3D(interval, intervalX, intervalY, intervalZ);
-    offset = center ? -interval * ($children - 1) / 2 : [0, 0, 0];
+    offset = center ? -interval * ($children - 1) / 2 : ORIGIN_3D;
 
     for (i = [0 : $children - 1]) {
         translate(offset + interval * i) {
