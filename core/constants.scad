@@ -99,13 +99,13 @@ QUADRANT_3 = DEGREES - RIGHT;
 QUADRANT_4 = DEGREES;
 
 /**
- * 2D-vector for the orgigin coordinates.
+ * 2D-vector for the origin coordinates.
  * @type Number
  */
 ORIGIN_2D = [0, 0];
 
 /**
- * 3D-vector for the orgigin coordinates.
+ * 3D-vector for the origin coordinates.
  * @type Number
  */
 ORIGIN_3D = [0, 0, 0];
