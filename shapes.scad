@@ -2,7 +2,7 @@
  * @license
  * MIT License
  *
- * Copyright (c) 2017 Jean-Sebastien CONAN
+ * Copyright (c) 2017-2022 Jean-Sebastien CONAN
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -46,3 +46,4 @@ include <shape/3D/polyhedron.scad>
 
 include <shape/context/build-box.scad>
 include <shape/context/control.scad>
+include <shape/context/test.scad>
