@@ -1,5 +1,28 @@
 # camelSCAD history
 
+## [Version 1.2.0](https://github.com/jsconan/camelSCAD/releases/tag/v1.2.0)
+
+Add core functions:
+
+-   `even()`: Tells whether a value is even or not.
+-   `odd()`: Tells whether a value is odd or not.
+
+Add constants:
+
+-   `ORIGIN_2D`: A 2D-vector for the origin coordinates.
+-   `ORIGIN_3D`: A 3D-vector for the origin coordinates.
+
+Add operators:
+
+-   `repeatAlternate()`: Repeats the children modules `count` times with the provided `interval`, only rendering the odd or even positions. This means that the children will be rendered less than `count` times as half of the positions will be left empty.
+-   `repeatAlternate2D()`: Repeats the children modules in two directions `count` times with the provided `interval`, only rendering the odd or even positions. This means that the children will be rendered less than `count` times as half of the positions will be left empty.
+-   `repeatAlternate3D()`: Repeats the children modules in three directions `count` times with the provided `interval`, only rendering the odd or even positions. This means that the children will be rendered less than `count` times as half of the positions will be left empty.
+
+Refactor operators:
+
+-   `repeat2D()`: Use direct loop instead of nesting operators and duplicating the translates.
+-   `repeat3D()`: Use direct loop instead of nesting operators and duplicating the translates.
+
 ## [Version 1.1.0](https://github.com/jsconan/camelSCAD/releases/tag/v1.1.0)
 
 Add core functions:

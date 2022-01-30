@@ -91,12 +91,12 @@ module buildPlate(size=DEFAULT_BUILD_PLATE_SIZE, cell=DEFAULT_BUILD_PLATE_CELL, 
             }
         }
         negativeExtrude(height=-plateHeight, direction=2) {
-            translate(center ? [cellOffset.x, -plateSize.y / 2, 0] : [0, 0, 0]) {
+            translate(center ? [cellOffset.x, -plateSize.y / 2, 0] : ORIGIN_3D) {
                 repeat(count=cellCount.x, intervalX=cellSize.x) {
                     square([lineWidth, plateSize.y]);
                 }
             }
-            translate(center ? [-plateSize.x / 2, cellOffset.y, 0] : [0, 0, 0]) {
+            translate(center ? [-plateSize.x / 2, cellOffset.y, 0] : ORIGIN_3D) {
                 repeat(count=cellCount.y, intervalY=cellSize.y) {
                     square([plateSize.x, lineWidth]);
                 }
@@ -117,7 +117,7 @@ module buildPlate(size=DEFAULT_BUILD_PLATE_SIZE, cell=DEFAULT_BUILD_PLATE_CELL, 
 module buildVolume(size=DEFAULT_BUILD_VOLUME_SIZE, l, w, h, center=false) {
     %color([1, 1, 1, .1]) {
         size = apply3D(size, l, w, w);
-        translate(center ? apply3D(-size / 2, z=0) : [0, 0, 0]) {
+        translate(center ? apply3D(-size / 2, z=0) : ORIGIN_3D) {
             cube(size);
         }
     }

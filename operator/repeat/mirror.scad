@@ -2,7 +2,7 @@
  * @license
  * MIT License
  *
- * Copyright (c) 2017-2020 Jean-Sebastien CONAN
+ * Copyright (c) 2017-2022 Jean-Sebastien CONAN
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -54,7 +54,7 @@
  *                         (will overwrite the Z coordinate in the `axis` vector).
  */
 module repeatMirror(count    = 2,
-                    interval = [0, 0, 0],
+                    interval = 0,
                     axis     = xAxis3D(),
                     center   = false,
                     intervalX, intervalY, intervalZ,
@@ -62,7 +62,7 @@ module repeatMirror(count    = 2,
 
     interval = apply3D(interval, intervalX, intervalY, intervalZ);
     axis = apply3D(axis, axisX, axisY, axisZ);
-    offset = center ? -interval * (count - 1) / 2 : [0, 0, 0];
+    offset = center ? -interval * (count - 1) / 2 : ORIGIN_3D;
 
     for (i = [0 : count - 1]) {
         translate(offset + interval * i) {
@@ -93,8 +93,8 @@ module repeatMirror2D(countX    = 2,
                       countY    = 2,
                       axisX     = xAxis3D(),
                       axisY     = yAxis3D(),
-                      intervalX = [0, 0, 0],
-                      intervalY = [0, 0, 0],
+                      intervalX = 0,
+                      intervalY = 0,
                       center    = false) {
 
     repeatMirror(count=countY, interval=vector3D(intervalY), axis=vector3D(axisY), center=center) {
@@ -125,9 +125,9 @@ module repeatMirror3D(countX    = 2,
                       axisX     = xAxis3D(),
                       axisY     = yAxis3D(),
                       axisZ     = zAxis3D(),
-                      intervalX = [0, 0, 0],
-                      intervalY = [0, 0, 0],
-                      intervalZ = [0, 0, 0],
+                      intervalX = 0,
+                      intervalY = 0,
+                      intervalZ = 0,
                       center    = false) {
 
     repeatMirror(count=countZ, interval=vector3D(intervalZ), axis=vector3D(axisZ), center=center) {

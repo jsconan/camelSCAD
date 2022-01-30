@@ -653,7 +653,7 @@ function cosp(y, w, h, p, o) =
  * @returns Vector
  */
 function rotp(v, a) =
-    is_undef(v) || is_undef(a) ? [0, 0]
+    is_undef(v) || is_undef(a) ? ORIGIN_2D
    :let(
        v = vector2D(v),
        a = float(a)
@@ -672,7 +672,7 @@ function rotp(v, a) =
  * @returns Vector
  */
 function mirp(v, a) =
-    is_undef(v) || is_undef(a) ? [0, 0]
+    is_undef(v) || is_undef(a) ? ORIGIN_2D
    :let(
         v = vector2D(v),
         a = vector2D(a),

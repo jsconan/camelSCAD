@@ -262,8 +262,8 @@ function vboolean(a, bool) =
  */
 function vangle(a, b) =
     let(
-        a = a ? vector(a, 3) : [0, 0, 0],
-        b = b ? vector(b, 3) : [0, 0, 0]
+        a = a ? vector(a, 3) : ORIGIN_3D,
+        b = b ? vector(b, 3) : ORIGIN_3D
     )
     float(acos((a * b) / (norm(a) * norm(b))))
 ;

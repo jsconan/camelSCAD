@@ -2,7 +2,7 @@
  * @license
  * MIT License
  *
- * Copyright (c) 2017 Jean-Sebastien CONAN
+ * Copyright (c) 2017-2022 Jean-Sebastien CONAN
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -56,8 +56,8 @@
  */
 module distributeRotate(angle    = DEGREES,
                         axis     = zAxis3D(),
-                        interval = [0, 0, 0],
-                        origin   = [0, 0, 0],
+                        interval = 0,
+                        origin   = 0,
                         center   = false,
                         intervalX, intervalY, intervalZ,
                         axisX, axisY, axisZ,
@@ -68,7 +68,7 @@ module distributeRotate(angle    = DEGREES,
     angle = deg(angle);
     partAngle = angle / (angle % DEGREES ? $children - 1 : $children);
     axis = apply3D(axis, axisX, axisY, axisZ) * partAngle;
-    offset = center ? -interval * ($children - 1) / 2 : [0, 0, 0];
+    offset = center ? -interval * ($children - 1) / 2 : ORIGIN_3D;
 
     for (i = [0 : $children - 1]) {
         translate(offset + interval * i) {

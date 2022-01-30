@@ -2,7 +2,7 @@
  * @license
  * MIT License
  *
- * Copyright (c) 2017-2022 Jean-Sebastien CONAN
+ * Copyright (c) 2022 Jean-Sebastien CONAN
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -33,10 +33,14 @@
  */
 
 /**
- * Repeats the children modules `count` times with the provided `interval`.
+ * Repeats the children modules `count` times with the provided `interval`,
+ * only rendering the odd or even positions. This means that the children
+ * will be rendered less than `count` times as half of the positions will
+ * be left empty.
  *
  * @param Number [count] - The number of times the children must be repeated.
  * @param Vector [interval] - The interval between each repeated children.
+ * @param Boolean [renderEven] - Only render on even positions.
  * @param Boolean [center] - Whether or not center the repeated shapes.
  * @param Number [intervalX] - The X interval between each repeated children
  *                             (will overwrite the X coordinate in the `interval` vector).
@@ -45,36 +49,46 @@
  * @param Number [intervalZ] - The Z interval between each repeated children
  *                             (will overwrite the Z coordinate in the `interval` vector).
  */
-module repeat(count    = 2,
-              interval = 0,
-              center   = false,
-              intervalX, intervalY, intervalZ) {
+module repeatAlternate(count      = 2,
+                       interval   = 0,
+                       renderEven = false,
+                       center     = false,
+                       intervalX, intervalY, intervalZ) {
 
+    renderEven = boolean(renderEven);
     interval = apply3D(interval, intervalX, intervalY, intervalZ);
     offset = center ? -interval * (count - 1) / 2 : ORIGIN_3D;
 
     for (i = [0 : count - 1]) {
-        translate(offset + interval * i) {
-            children();
+        if (renderEven == even(i)) {
+            translate(offset + interval * i) {
+                children();
+            }
         }
     }
 }
 
 /**
- * Repeats the children modules in two directions `count` times with the provided `interval`.
+ * Repeats the children modules in two directions `count` times with the provided `interval`,
+ * only rendering the odd or even positions. This means that the children
+ * will be rendered less than `count` times as half of the positions will
+ * be left empty.
  *
  * @param Number [countX] - The number of times the children must be repeated along the X axis.
  * @param Number [countY] - The number of times the children must be repeated along the Y axis.
  * @param Vector [intervalX] - The interval between each repeated children along the X axis.
  * @param Vector [intervalY] - The interval between each repeated children along the Y axis.
+ * @param Boolean [renderEven] - Only render on even positions.
  * @param Boolean [center] - Whether or not center the repeated shapes.
  */
-module repeat2D(countX    = 2,
-                countY    = 2,
-                intervalX = 0,
-                intervalY = 0,
-                center    = false) {
+module repeatAlternate2D(countX     = 2,
+                         countY     = 2,
+                         intervalX  = 0,
+                         intervalY  = 0,
+                         renderEven = false,
+                         center     = false) {
 
+    renderEven = boolean(renderEven);
     intervalX = vector3D(intervalX);
     intervalY = vector3D(intervalY);
     offsetX = center ? -intervalX * (countX - 1) / 2 : ORIGIN_3D;
@@ -83,15 +97,21 @@ module repeat2D(countX    = 2,
 
     for (y = [0 : countY - 1] ) {
         for (x = [0 : countX - 1] ) {
-            translate(offset + intervalX * x + intervalY * y) {
-                children();
+            alignedXY = even(x) == even(y);
+            if (renderEven == alignedXY) {
+                translate(offset + intervalX * x + intervalY * y) {
+                    children();
+                }
             }
         }
     }
 }
 
 /**
- * Repeats the children modules in three directions `count` times with the provided `interval`.
+ * Repeats the children modules in three directions `count` times with the provided `interval`,
+ * only rendering the odd or even positions. This means that the children
+ * will be rendered less than `count` times as half of the positions will
+ * be left empty.
  *
  * @param Number [countX] - The number of times the children must be repeated along the X axis.
  * @param Number [countY] - The number of times the children must be repeated along the Y axis.
@@ -99,16 +119,19 @@ module repeat2D(countX    = 2,
  * @param Vector [intervalX] - The interval between each repeated children along the X axis.
  * @param Vector [intervalY] - The interval between each repeated children along the Y axis.
  * @param Vector [intervalZ] - The interval between each repeated children along the Z axis.
+ * @param Boolean [renderEven] - Only render on even positions.
  * @param Boolean [center] - Whether or not center the repeated shapes.
  */
-module repeat3D(countX    = 2,
-                countY    = 2,
-                countZ    = 2,
-                intervalX = 0,
-                intervalY = 0,
-                intervalZ = 0,
-                center    = false) {
+module repeatAlternate3D(countX     = 2,
+                         countY     = 2,
+                         countZ     = 2,
+                         intervalX  = 0,
+                         intervalY  = 0,
+                         intervalZ  = 0,
+                         renderEven = false,
+                         center     = false) {
 
+    renderEven = boolean(renderEven);
     intervalX = vector3D(intervalX);
     intervalY = vector3D(intervalY);
     intervalZ = vector3D(intervalZ);
@@ -120,73 +143,14 @@ module repeat3D(countX    = 2,
     for (z = [0 : countZ - 1] ) {
         for (y = [0 : countY - 1] ) {
             for (x = [0 : countX - 1] ) {
-                translate(offset + intervalX * x + intervalY * y + intervalZ * z) {
-                    children();
+                alignedXY = even(x) == even(y);
+                evenZ = even(z);
+                if ((renderEven == alignedXY && evenZ) || (renderEven != alignedXY && !evenZ)) {
+                    translate(offset + intervalX * x + intervalY * y + intervalZ * z) {
+                        children();
+                    }
                 }
             }
-        }
-    }
-}
-
-/**
- * Repeats horizontally a shape in two directions, the interval is set by the size of the shape.
- * @param Vector size - The size of the shape.
- * @param Vector [count] - The number of shapes on each axis.
- * @param Boolean [center] - Whether or not center the repeated shapes.
- */
-module repeatShape2D(size, count = 1, center) {
-    size = vector2D(size);
-    count = vector2D(count);
-
-    repeat2D(
-        countX = count.x,
-        countY = count.y,
-        intervalX = xAxis3D(size.x),
-        intervalY = yAxis3D(size.y),
-        center = center
-    ) {
-        children();
-    }
-}
-
-/**
- * Repeats a shape in three directions, the interval is set by the size of the shape.
- * @param Vector size - The size of the shape.
- * @param Vector [count] - The number of shapes on each axis.
- * @param Boolean [center] - Whether or not center the repeated shapes.
- */
-module repeatShape3D(size, count = 1, center) {
-    size = vector3D(size);
-    count = vector3D(count);
-
-    repeat3D(
-        countX = count.x,
-        countY = count.y,
-        countZ = count.z,
-        intervalX = xAxis3D(size.x),
-        intervalY = yAxis3D(size.y),
-        intervalZ = zAxis3D(size.z),
-        center = center
-    ) {
-        children();
-    }
-}
-
-/**
- * Repeats the children modules on every position given in the `map`.
- *
- * @param Vector[] map - The list of position at which place the children.
- * @param Vector [offset] - An offset to add on each position.
- * @param Number [x] - The X-coordinate to apply on the offset.
- * @param Number [y] - The Y-coordinate to apply on the offset.
- * @param Number [z] - The Z-coordinate to apply on the offset.
- */
-module repeatMap(map, offset, x, y, z) {
-    offset = apply3D(offset, x, y, z);
-
-    for (at = map) {
-        translate(offset + vector3D(at)) {
-            children();
         }
     }
 }

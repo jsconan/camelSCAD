@@ -103,7 +103,7 @@ function buildHexGrid(count, linear, cx, cy) =
  */
 function offsetHexGrid(size, count, pointy, linear, even, l, w, cx, cy) =
     !linear
-   ?[0, 0]
+   ?ORIGIN_2D
    :let(
        size = apply2D(size, l, w),
        count = divisor2D(apply2D(count, cx, cy)),

@@ -2,7 +2,7 @@
  * @license
  * MIT License
  *
- * Copyright (c) 2017 Jean-Sebastien CONAN
+ * Copyright (c) 2017-2022 Jean-Sebastien CONAN
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -49,8 +49,8 @@ module distributeGrid(intervalX = xAxis3D(),
     intervalY = vector3D(intervalY);
     count = $children;
     line = max(floor(abs(float(line))), 1);
-    offsetX = center ? -intervalX * ((count > line ? line : count) - 1) / 2 : [0, 0, 0];
-    offsetY = center ? -intervalY * (floor(count / line) - (count % line ? 0 : 1)) / 2 : [0, 0, 0];
+    offsetX = center ? -intervalX * ((count > line ? line : count) - 1) / 2 : ORIGIN_3D;
+    offsetY = center ? -intervalY * (floor(count / line) - (count % line ? 0 : 1)) / 2 : ORIGIN_3D;
 
     for (i = [0 : count - 1]) {
         translate(offsetX + intervalX * (i % line) + offsetY + intervalY * floor(i / line)) {
