@@ -52,10 +52,10 @@ module repeatGrid(count     = 2,
     count = max(floor(abs(float(count))), 1);
     line = max(floor(abs(float(line))), 1);
     offsetX = center ? -intervalX * ((count > line ? line : count) - 1) / 2 : ORIGIN_3D;
-    offsetY = center ? -intervalY * (floor(count / line) - (count % line ? 0 : 1)) / 2 : ORIGIN_3D;
+    offsetY = center ? -intervalY * (iToY(count, line) - (iToX(count, line) ? 0 : 1)) / 2 : ORIGIN_3D;
 
     for (i = [0 : count - 1]) {
-        translate(offsetX + intervalX * (i % line) + offsetY + intervalY * floor(i / line)) {
+        translate(offsetX + intervalX * iToX(i, line) + offsetY + intervalY * iToY(i, line)) {
             children();
         }
     }
