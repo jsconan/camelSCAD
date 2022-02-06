@@ -96,10 +96,10 @@ function fragments(r, d) =
 function astep(r, a=DEGREES, d) = min(DEGREES / fragments(r=r, d=d), float(a));
 
 /**
- * Computes the angle of a point on a circle
+ * Computes the angle of a point on a circle.
  *
- * @param Number [x] - The X coordinate of the point
- * @param Number [y] - The Y coordinate of the point
+ * @param Number [x] - The X coordinate of the point.
+ * @param Number [y] - The Y coordinate of the point.
  * @returns Number
  */
 function getAngle(x, y) =
@@ -114,10 +114,11 @@ function getAngle(x, y) =
 ;
 
 /**
- * Gets the length of an arc given the radius and the angle
- * @param Number angle - The angle of the arc
- * @param Number [radius] - The radius of the circle
- * @param Number [diameter] - The diameter of the circle
+ * Gets the length of an arc given the radius and the angle.
+ *
+ * @param Number angle - The angle of the arc.
+ * @param Number [radius] - The radius of the circle.
+ * @param Number [diameter] - The diameter of the circle.
  * @returns Number
  */
 function getArcLength(angle, radius, diameter) =
@@ -129,10 +130,11 @@ function getArcLength(angle, radius, diameter) =
 ;
 
 /**
- * Gets the angle of an arc given the radius and the length
- * @param Number length - The length of the arc
- * @param Number [radius] - The radius of the circle
- * @param Number [diameter] - The diameter of the circle
+ * Gets the angle of an arc given the radius and the length.
+ *
+ * @param Number length - The length of the arc.
+ * @param Number [radius] - The radius of the circle.
+ * @param Number [diameter] - The diameter of the circle.
  * @returns Number
  */
 function getArcAngle(length, radius, diameter) =
@@ -145,10 +147,11 @@ function getArcAngle(length, radius, diameter) =
 ;
 
 /**
- * Gets the length of a chord given the radius and the angle
- * @param Number angle - The angle of the chord
- * @param Number [radius] - The radius of the circle
- * @param Number [diameter] - The diameter of the circle
+ * Gets the length of a chord given the radius and the angle.
+ *
+ * @param Number angle - The angle of the chord.
+ * @param Number [radius] - The radius of the circle.
+ * @param Number [diameter] - The diameter of the circle.
  * @returns Number
  */
 function getChordLength(angle, radius, diameter) =
@@ -160,9 +163,10 @@ function getChordLength(angle, radius, diameter) =
 ;
 
 /**
- * Gets the height of a chord given the radius and the angle
- * @param Number angle - The angle of the chord
- * @param Number [radius] - The radius of the circle
+ * Gets the height of a chord given the radius and the angle.
+ *
+ * @param Number angle - The angle of the chord.
+ * @param Number [radius] - The radius of the circle.
  * @param Number [diameter] - The diameter of the circle
  * @returns Number
  */
@@ -175,10 +179,11 @@ function getChordHeight(angle, radius, diameter) =
 ;
 
 /**
- * Gets the distance to a chord given the radius and the angle
- * @param Number angle - The angle of the chord
- * @param Number [radius] - The radius of the circle
- * @param Number [diameter] - The diameter of the circle
+ * Gets the distance to a chord given the radius and the angle.
+ *
+ * @param Number angle - The angle of the chord.
+ * @param Number [radius] - The radius of the circle.
+ * @param Number [diameter] - The diameter of the circle.
  * @returns Number
  */
 function getChordDistance(angle, radius, diameter) =
@@ -190,10 +195,11 @@ function getChordDistance(angle, radius, diameter) =
 ;
 
 /**
- * Gets the angle of a chord given the radius and the length
- * @param Number length - The length of the chord
- * @param Number [radius] - The radius of the circle
- * @param Number [diameter] - The diameter of the circle
+ * Gets the angle of a chord given the radius and the length.
+ *
+ * @param Number length - The length of the chord.
+ * @param Number [radius] - The radius of the circle.
+ * @param Number [diameter] - The diameter of the circle.
  * @returns Number
  */
 function getChordAngle(length, radius, diameter) =
@@ -207,9 +213,10 @@ function getChordAngle(length, radius, diameter) =
 
 /**
  * Gets the angle value at a particular index in a regular polygon.
- * @param Number index - The index of the angle
- * @param Number [count] - The number of sides in the polygon
- * @returns Number - The angle for the provided index
+ *
+ * @param Number index - The index of the angle.
+ * @param Number [count] - The number of sides in the polygon.
+ * @returns Number - The angle for the provided index.
  */
 function getPolygonAngle(index, count = 4) =
     let(
@@ -396,9 +403,9 @@ function decimals(value) =
  * - the second value is for the result of (-b + sqrt(delta)) / (2 * a)
  * If the equation cannot be resolved, returns an empty vector.
  *
- * @param Number a - The A term of the equation
- * @param Number b - The B term of the equation
- * @param Number c - The C term of the equation
+ * @param Number a - The A term of the equation.
+ * @param Number b - The B term of the equation.
+ * @param Number c - The C term of the equation.
  * @returns Vector[]
  */
 function quadraticEquation(a, b, c) =
@@ -414,3 +421,21 @@ function quadraticEquation(a, b, c) =
     ]
    :[]
 ;
+
+/**
+ * Extract the X-coordinate from a linear position.
+ *
+ * @param Number i - The linear position.
+ * @param Number count - The maximal value for the linear position.
+ * @returns Number
+ */
+function iToX(i, count) = float(i) % divisor(count);
+
+/**
+ * Extract the X-coordinate from a linear position.
+ *
+ * @param Number i - The linear position.
+ * @param Number count - The maximal value for the linear position.
+ * @returns Number
+ */
+function iToY(i, count) = floor(float(i) / divisor(count));
