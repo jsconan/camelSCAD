@@ -1,5 +1,17 @@
 # camelSCAD history
 
+## [Version 1.3.0](https://github.com/jsconan/camelSCAD/releases/tag/v1.3.0)
+
+Add core functions:
+
+-   `iToX()`: Extract the X-coordinate from a linear position.
+-   `iToY()`: Extract the Y-coordinate from a linear position.
+
+Refactor operators:
+
+-   `distributeGrid()`: Use the functions converting linear to 2D coordinates.
+-   `repeatGrid()`: Use the functions converting linear to 2D coordinates.
+
 ## [Version 1.2.0](https://github.com/jsconan/camelSCAD/releases/tag/v1.2.0)
 
 Add core functions:
