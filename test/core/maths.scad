@@ -34,7 +34,7 @@ use <../../full.scad>
  * @author jsconan
  */
 module testCoreMaths() {
-    testPackage("core/maths.scad", 26) {
+    testPackage("core/maths.scad", 28) {
         // test core/maths/deg()
         testModule("deg()", 3) {
             testUnit("no parameter", 1) {
@@ -881,6 +881,36 @@ module testCoreMaths() {
                 assertEqual(quadraticEquation(0, 1, 2), [], "Should not resolve the quadratic equation 0x^2 + 1x - 2 = 0");
                 assertEqual(quadraticEquation(1, 0, 2), [], "Should not resolve the quadratic equation 1x^2 + 0x - 2 = 0");
                 assertEqual(quadraticEquation(1, 2, 0), [-2, 0], "Should resolve the quadratic equation 1x^2 + 2x - 0 = 0");
+            }
+        }
+        // test core/maths/iToX()
+        testModule("iToX()", 2) {
+            testUnit("wrong value", 4) {
+                assertEqual(iToX(), 0, "When no parameter is given, it should return a 0");
+                assertEqual(iToX("1", "2"), 0, "When strings are given, it should return a 0");
+                assertEqual(iToX(true, true), 0, "When booleans are given, it should return a 0");
+                assertEqual(iToX([1], [2]), 0, "When vectorss are given, it should return a 0");
+            }
+            testUnit("number value", 4) {
+                assertEqual(iToX(0, 0), 0, "When parameters are position=0, count=0, the result must be 0");
+                assertEqual(iToX(3, 0), 0, "When parameters are position=3, count=0, the result must be 0");
+                assertEqual(iToX(3, 5), 3, "When parameters are position=3, count=5, the result must be 3");
+                assertEqual(iToX(5, 3), 2, "When parameters are position=5, count=3, the result must be 2");
+            }
+        }
+        // test core/maths/iToY()
+        testModule("iToY()", 2) {
+            testUnit("wrong value", 4) {
+                assertEqual(iToY(), 0, "When no parameter is given, it should return a 0");
+                assertEqual(iToY("1", "2"), 0, "When strings are given, it should return a 0");
+                assertEqual(iToY(true, true), 0, "When booleans are given, it should return a 0");
+                assertEqual(iToY([1], [2]), 0, "When vectorss are given, it should return a 0");
+            }
+            testUnit("number value", 4) {
+                assertEqual(iToY(0, 0), 0, "When parameters are position=0, count=0, the result must be 0");
+                assertEqual(iToY(3, 0), 3, "When parameters are position=3, count=0, the result must be 3");
+                assertEqual(iToY(3, 5), 0, "When parameters are position=3, count=5, the result must be 0");
+                assertEqual(iToY(5, 3), 1, "When parameters are position=5, count=3, the result must be 1");
             }
         }
     }
