@@ -439,3 +439,60 @@ function iToX(i, count) = float(i) % divisor(count);
  * @returns Number
  */
 function iToY(i, count) = floor(float(i) / divisor(count));
+
+/**
+ * Gets a percentage value as a number between -1 and 1.
+ *
+ * @param Number v - The percentage value. It can be either a number between 1 and `scale` (default: 100), or a value between -1 and 1.
+ * @param Number [scale] - The percentage scale (default: 100).
+ * @returns Number
+ */
+function percentage(v, scale) =
+    let(
+        v = float(v),
+        scale = float(scale)
+    )
+    v < -1 || v > 1 ? v / (scale ? scale : 100)
+                    : v
+;
+
+/**
+ * Generates a range to interpolate a value given a step between 0 and 1.
+ *
+ * @param Number low - The bottom value of the range to interpolate.
+ * @param Number high - The top value of the range to interpolate.
+ * @param Number [start] - The start threshold under what the low value will persist and above what it will be interpolated.
+ * @param Number [end] - The end threshold above what the high value will persist and under what it will be interpolated.
+ * @param Number [scale] - The percentage scale (default: 100).
+ * @returns Vector
+ */
+function stepInterpolationRange(low, high, start, end, scale) =
+    let(
+        low = float(low),
+        high = float(high),
+        start = abs(percentage(start, scale=scale)),
+        end = abs(percentage(end, scale=scale)),
+        first = min(start, end),
+        last = max(start, end)
+    )
+    [
+        [first > 0 && first < 1 ? first : 0, low],
+        [last > 0 && last < 1 ? last : 1, high]
+    ]
+;
+
+/**
+ * Interpolates a value given a step between 0 and 1.
+ *
+ * @param Number step - A step between 0 and 1.
+ * @param Number [low] - The bottom value of the range to interpolate.
+ * @param Number [high] - The top value of the range to interpolate.
+ * @param Number [start] - The start threshold under what the low value will persist and above what it will be interpolated.
+ * @param Number [end] - The end threshold above what the high value will persist and under what it will be interpolated.
+ * @param Number [scale] - The percentage scale (default: 100).
+ * @param Vector [range] - A pre-built interpolation range. If missing, it will be built from the parameters `low`, `high`, `start`, `end`, `scale`.
+ * @returns Number
+ */
+function interpolateStep(step, low, high, start, end, scale, range) =
+    lookup(float(step), is_list(range) ? range : stepInterpolationRange(low=low, high=high, start=start, end=end, scale=scale))
+;
