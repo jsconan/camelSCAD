@@ -34,7 +34,7 @@ use <../../full.scad>
  * @author jsconan
  */
 module testCoreVector2D() {
-    testPackage("core/vector-2d.scad", 37) {
+    testPackage("core/vector-2d.scad", 38) {
         // test core/vector-2d/vector2D()
         testModule("vector2D()", 3) {
             testUnit("no parameter", 1) {
@@ -996,6 +996,61 @@ module testCoreVector2D() {
                 assertEqual(boundaries2D([[1], [5], [3], [-2]]), [[-2, 0], [5, 0]], "Boundaries of several points, incomplete vectors should be completed");
                 assertEqual(boundaries2D([[1, 2], [5, 9], [3, 2], [-2, -6]]), [[-2, -6], [5, 9]], "Boundaries of several points, 2D vectors should be supported");
                 assertEqual(boundaries2D([[1, 2, 3, 4], [5, 9, -2, 8], [3, 2, 7, 5], [-2, -6, 0, 1]]), [[-2, -6], [5, 9]], "Boundaries of several points, too big vectors should be truncated");
+            }
+        }
+        // test core/vector-2d/interpolateStep2D()
+        testModule("interpolateStep2D()", 6) {
+            testUnit("wrong value", 4) {
+                assertEqual(interpolateStep2D(), [0, 0], "No parameter given");
+                assertEqual(interpolateStep2D("1", "2", "3", "4", "5"), [0, 0], "Strings given");
+                assertEqual(interpolateStep2D(true, true, true, true, true), [0, 0], "Booleans given");
+                assertEqual(interpolateStep2D([1], [2], [3], [4], [5]), [2, 0], "Vectors given");
+            }
+            testUnit("simple range", 3) {
+                assertEqual(interpolateStep2D(0, [3, 2], [8, 7]), [3, 2], "Step 0 of range [[3, 2]:[8, 7]]");
+                assertEqual(interpolateStep2D(.5, [3, 2], [8, 7]), [5.5, 4.5], "Step .5 of range [[3, 2]:[8, 7]]");
+                assertEqual(interpolateStep2D(1, [3, 2], [8, 7]), [8, 7], "Step 1 of range [[3, 2]:[8, 7]]");
+            }
+            testUnit("threshold range, computed percentage", 8) {
+                assertEqual(interpolateStep2D(0, [3, 2], [8, 7], 0, 1), [3, 2], "Step 0 of range [[3, 2]:[8, 7]] with threshold [0%:100%]");
+                assertEqual(interpolateStep2D(.15, [3, 2], [8, 7], 0, 1), [3.75, 2.75], "Step .15 of range [[3, 2]:[8, 7]] with threshold [0%:100%]");
+                assertEqual(interpolateStep2D(.5, [3, 2], [8, 7], 0, 1), [5.5, 4.5], "Step .5 of range [[3, 2]:[8, 7]] with threshold [0%:100%]");
+                assertEqual(interpolateStep2D(.8, [3, 2], [8, 7], 0, 1), [7, 6], "Step .8 of range [[3, 2]:[8, 7]] with threshold [0%:100%]");
+                assertEqual(interpolateStep2D(0, [3, 2], [8, 7], .25, .75), [3, 2], "Step 0 of range [[3, 2]:[8, 7]] with threshold [25%:75%]");
+                assertEqual(interpolateStep2D(.15, [3, 2], [8, 7], .25, .75), [3, 2], "Step .15 of range [[3, 2]:[8, 7]] with threshold [25%:75%]");
+                assertEqual(interpolateStep2D(.5, [3, 2], [8, 7], .25, .75), [5.5, 4.5], "Step .5 of range [[3, 2]:[8, 7]] with threshold [25%:75%]");
+                assertEqual(interpolateStep2D(.8, [3, 2], [8, 7], .25, .75), [8, 7], "Step .8 of range [[3, 2]:[8, 7]] with threshold [25%:75%]");
+            }
+            testUnit("threshold range, percentage to be computed", 8) {
+                assertEqual(interpolateStep2D(0, [3, 2], [8, 7], 0, 100), [3, 2], "Step 0 of range [[3, 2]:[8, 7]] with threshold [0%:100%]");
+                assertEqual(interpolateStep2D(.15, [3, 2], [8, 7], 0, 100), [3.75, 2.75], "Step .15 of range [[3, 2]:[8, 7]] with threshold [0%:100%]");
+                assertEqual(interpolateStep2D(.5, [3, 2], [8, 7], 0, 100), [5.5, 4.5], "Step .5 of range [[3, 2]:[8, 7]] with threshold [0%:100%]");
+                assertEqual(interpolateStep2D(.8, [3, 2], [8, 7], 0, 100), [7, 6], "Step .8 of range [[3, 2]:[8, 7]] with threshold [0%:100%]");
+                assertEqual(interpolateStep2D(0, [3, 2], [8, 7], 25, 75), [3, 2], "Step 0 of range [[3, 2]:[8, 7]] with threshold [25%:75%]");
+                assertEqual(interpolateStep2D(.15, [3, 2], [8, 7], 25, 75), [3, 2], "Step .15 of range [[3, 2]:[8, 7]] with threshold [25%:75%]");
+                assertEqual(interpolateStep2D(.5, [3, 2], [8, 7], 25, 75), [5.5, 4.5], "Step .5 of range [[3, 2]:[8, 7]] with threshold [25%:75%]");
+                assertEqual(interpolateStep2D(.8, [3, 2], [8, 7], 25, 75), [8, 7], "Step .8 of range [[3, 2]:[8, 7]] with threshold [25%:75%]");
+            }
+            testUnit("threshold range, percentage to be computed with scale", 8) {
+                assertEqual(interpolateStep2D(0, [3, 2], [8, 7], 0, 1000, 1000), [3, 2], "Step 0 of range [[3, 2]:[8, 7]] with threshold [0%:100%]");
+                assertEqual(interpolateStep2D(.15, [3, 2], [8, 7], 0, 1000, 1000), [3.75, 2.75], "Step .15 of range [[3, 2]:[8, 7]] with threshold [0%:100%]");
+                assertEqual(interpolateStep2D(.5, [3, 2], [8, 7], 0, 1000, 1000), [5.5, 4.5], "Step .5 of range [[3, 2]:[8, 7]] with threshold [0%:100%]");
+                assertEqual(interpolateStep2D(.8, [3, 2], [8, 7], 0, 1000, 1000), [7, 6], "Step .8 of range [[3, 2]:[8, 7]] with threshold [0%:100%]");
+                assertEqual(interpolateStep2D(0, [3, 2], [8, 7], 250, 750, 1000), [3, 2], "Step 0 of range [[3, 2]:[8, 7]] with threshold [25%:75%]");
+                assertEqual(interpolateStep2D(.15, [3, 2], [8, 7], 250, 750, 1000), [3, 2], "Step .15 of range [[3, 2]:[8, 7]] with threshold [25%:75%]");
+                assertEqual(interpolateStep2D(.5, [3, 2], [8, 7], 250, 750, 1000), [5.5, 4.5], "Step .5 of range [[3, 2]:[8, 7]] with threshold [25%:75%]");
+                assertEqual(interpolateStep2D(.8, [3, 2], [8, 7], 250, 750, 1000), [8, 7], "Step .8 of range [[3, 2]:[8, 7]] with threshold [25%:75%]");
+            }
+            testUnit("external range", 5) {
+                range = [
+                    [[0, 4], [1, 9]],
+                    [[0, 5], [1, 8]]
+                ];
+                assertEqual(interpolateStep2D(0, range=range), [4, 5], "Step 0 of external range");
+                assertEqual(interpolateStep2D(0.15, range=range), [4.75, 5.45], "Step 0.15 of external range");
+                assertEqual(interpolateStep2D(0.45, range=range), [6.25, 6.35], "Step 0.45 of external range");
+                assertEqual(interpolateStep2D(0.85, range=range), [8.25, 7.55], "Step 0.85 of external range");
+                assertEqual(interpolateStep2D(1, range=range), [9, 8], "Step 1 of external range");
             }
         }
     }

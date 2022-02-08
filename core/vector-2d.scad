@@ -878,3 +878,26 @@ function boundaries2D(points,
           max(left[1].y, right[1].y) ]
     ]
 ;
+
+/**
+ * Interpolates 2D coordinates given a step between 0 and 1.
+ *
+ * @param Number step - A step between 0 and 1.
+ * @param Vector low - The bottom coordinates of the range to interpolate.
+ * @param Vector high - The top coordinates of the range to interpolate.
+ * @param Number [start] - The start threshold under what the low coordinates will persist and above what they will be interpolated.
+ * @param Number [end] - The end threshold above what the high coordinates will persist and under what they will be interpolated.
+ * @param Number [scale] - The percentage scale (default: 100).
+ * @param Vector [range] - A pre-built interpolation range. If missing, it will be built from the parameters `low`, `high`, `start`, `end`, `scale`.
+ * @returns Number
+ */
+function interpolateStep2D(step, low, high, start, end, scale, range) =
+    let(
+        low = vector2D(low),
+        high = vector2D(high)
+    )
+    [
+        interpolateStep(step=step, low=low.x, high=high.x, start=start, end=end, scale=scale, range=is_list(range) ? range.x : undef),
+        interpolateStep(step=step, low=low.y, high=high.y, start=start, end=end, scale=scale, range=is_list(range) ? range.y : undef)
+    ]
+;
