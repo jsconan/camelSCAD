@@ -363,3 +363,83 @@ function boundaries3D(v,
           max(left[1].z, right[1].z) ]
     ]
 ;
+
+/**
+ * Generates a range to interpolate 3D coordinates given a step between 0 and 1, from a low and high coordinate.
+ * Start and end thresholds allows to define at what position between 0 and 1 to begin and to stop the interpolation.
+ *
+ * @param Vector low - The bottom coordinates of the range to interpolate.
+ * @param Vector high - The top coordinates of the range to interpolate.
+ * @param Number [start] - The start threshold under what the low value will persist and above what it will be interpolated.
+ * @param Number [end] - The end threshold above what the high value will persist and under what it will be interpolated.
+ * @param Number [scale] - The percentage scale (default: 100).
+ * @returns Vector
+ */
+function simpleInterpolationRange3D(low, high, start, end, scale) =
+    let(
+        low = vector3D(low),
+        high = vector3D(high)
+    )
+    [
+        simpleInterpolationRange(low=low.x, high=high.x, start=start, end=end, scale=scale),
+        simpleInterpolationRange(low=low.y, high=high.y, start=start, end=end, scale=scale),
+        simpleInterpolationRange(low=low.z, high=high.z, start=start, end=end, scale=scale)
+    ]
+;
+
+/**
+ * Generates a range to interpolate 3D coordinates given a step between 0 and 1, from a list of coordinates.
+ * Start and end thresholds allows to define at what position between 0 and 1 to begin and to stop the interpolation.
+ * The index of each coordinate will be mapped to a position between the start and end positions.
+ *
+ * @param Vector values - The list of coordinates composing the range to interpolate.
+ * @param Number [start] - The start threshold under what the first coordinate of the range will persist and above what it will be interpolated.
+ * @param Number [end] - The end threshold above what the last coordinate of the range will persist and under what it will be interpolated.
+ * @param Number [scale] - The percentage scale (default: 100).
+ * @returns Vector
+ */
+function interpolationRange3D(values, start, end, scale) =
+    let(
+        values = array(values),
+        count = len(values),
+        start = abs(percentage(numberOr(start, 0), scale=scale)),
+        end = abs(percentage(numberOr(end, 1), scale=scale)),
+        first = min(start, end),
+        last = max(start, end),
+        step = (last - first) / divisor(count - 1),
+        range = count ? [ for (i = [0 : count - 1]) [first + step * i, vector3D(values[i]) ] ]
+                      : []
+    )
+    count ? [
+                [ for (v = range) [v[0], v[1].x ] ],
+                [ for (v = range) [v[0], v[1].y ] ],
+                [ for (v = range) [v[0], v[1].z ] ]
+            ]
+          : range
+;
+
+/**
+ * Interpolates 3D coordinates given a step between 0 and 1.
+ *
+ * @param Number step - A step between 0 and 1.
+ * @param Vector low - The bottom coordinates of the range to interpolate.
+ * @param Vector high - The top coordinates of the range to interpolate.
+ * @param Number [start] - The start threshold under what the low coordinates will persist and above what they will be interpolated.
+ * @param Number [end] - The end threshold above what the high coordinates will persist and under what they will be interpolated.
+ * @param Number [scale] - The percentage scale (default: 100).
+ * @param Vector [values] - A list of coordinates composing the range to interpolate.
+ * @param Vector [range] - A pre-built interpolation range. If missing, it will be built from the parameters `low`, `high`, `start`, `end`, `scale`.
+ * @returns Number
+ */
+function interpolateStep3D(step, low, high, start, end, scale, values, range) =
+    let(
+        range = is_list(range) ? range
+               :is_list(values) ? interpolationRange3D(values=values, start=start, end=end, scale=scale)
+               :simpleInterpolationRange3D(low=low, high=high, start=start, end=end, scale=scale)
+    )
+    [
+        interpolateStep(step, range=range.x),
+        interpolateStep(step, range=range.y),
+        interpolateStep(step, range=range.z)
+    ]
+;
