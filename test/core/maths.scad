@@ -34,7 +34,7 @@ use <../../full.scad>
  * @author jsconan
  */
 module testCoreMaths() {
-    testPackage("core/maths.scad", 28) {
+    testPackage("core/maths.scad", 32) {
         // test core/maths/deg()
         testModule("deg()", 3) {
             testUnit("no parameter", 1) {
@@ -886,10 +886,10 @@ module testCoreMaths() {
         // test core/maths/iToX()
         testModule("iToX()", 2) {
             testUnit("wrong value", 4) {
-                assertEqual(iToX(), 0, "When no parameter is given, it should return a 0");
-                assertEqual(iToX("1", "2"), 0, "When strings are given, it should return a 0");
-                assertEqual(iToX(true, true), 0, "When booleans are given, it should return a 0");
-                assertEqual(iToX([1], [2]), 0, "When vectorss are given, it should return a 0");
+                assertEqual(iToX(), 0, "No parameter given");
+                assertEqual(iToX("1", "2"), 0, "Strings are given");
+                assertEqual(iToX(true, true), 0, "Booleans are given");
+                assertEqual(iToX([1], [2]), 0, "Vectors are given");
             }
             testUnit("number value", 4) {
                 assertEqual(iToX(0, 0), 0, "When parameters are position=0, count=0, the result must be 0");
@@ -901,16 +901,164 @@ module testCoreMaths() {
         // test core/maths/iToY()
         testModule("iToY()", 2) {
             testUnit("wrong value", 4) {
-                assertEqual(iToY(), 0, "When no parameter is given, it should return a 0");
-                assertEqual(iToY("1", "2"), 0, "When strings are given, it should return a 0");
-                assertEqual(iToY(true, true), 0, "When booleans are given, it should return a 0");
-                assertEqual(iToY([1], [2]), 0, "When vectorss are given, it should return a 0");
+                assertEqual(iToY(), 0, "No parameter given");
+                assertEqual(iToY("1", "2"), 0, "Strings are given");
+                assertEqual(iToY(true, true), 0, "Booleans are given");
+                assertEqual(iToY([1], [2]), 0, "Vectors are given");
             }
             testUnit("number value", 4) {
                 assertEqual(iToY(0, 0), 0, "When parameters are position=0, count=0, the result must be 0");
                 assertEqual(iToY(3, 0), 3, "When parameters are position=3, count=0, the result must be 3");
                 assertEqual(iToY(3, 5), 0, "When parameters are position=3, count=5, the result must be 0");
                 assertEqual(iToY(5, 3), 1, "When parameters are position=5, count=3, the result must be 1");
+            }
+        }
+        // test core/maths/percentage()
+        testModule("percentage()", 4) {
+            testUnit("wrong value", 4) {
+                assertEqual(percentage(), 0, "No parameter given");
+                assertEqual(percentage("1", "2"), 0, "String given");
+                assertEqual(percentage(true, true), 0, "Booleans given");
+                assertEqual(percentage([1], [2]), 0, "Vectors given");
+            }
+            testUnit("already computed", 3) {
+                assertEqual(percentage(0), 0, "It should return the percentage as it when already expressed as a number between -1 and 1: 0");
+                assertEqual(percentage(.67), .67, "It should return the percentage as it when already expressed as a number between -1 and 1: .67");
+                assertEqual(percentage(-.67), -.67, "It should return the percentage as it when already expressed as a number between -1 and 1: -.67");
+            }
+            testUnit("compute from default scale", 2) {
+                assertEqual(percentage(33), .33, "It should return the percentage as a number between -1 and 1 when higher than 1: 33");
+                assertEqual(percentage(-33), -.33, "It should return the percentage as a number between -1 and 1 when higher than 1: -33");
+            }
+            testUnit("compute from particular scale", 2) {
+                assertEqual(percentage(666, 1000), .666, "It should return the percentage as a number between -1 and 1 when higher than 1: 666");
+                assertEqual(percentage(-666, 1000), -.666, "It should return the percentage as a number between -1 and 1 when higher than 1: -666");
+            }
+        }
+        // test core/maths/simpleInterpolationRange()
+        testModule("simpleInterpolationRange()", 5) {
+            testUnit("wrong value", 4) {
+                assertEqual(simpleInterpolationRange(), [[0, 0], [1, 0]], "No parameter given");
+                assertEqual(simpleInterpolationRange("1", "2", "3", "4", "5"), [[0, 0], [1, 0]], "Strings given");
+                assertEqual(simpleInterpolationRange(true, true, true, true, true), [[0, 0], [1, 0]], "Booleans given");
+                assertEqual(simpleInterpolationRange([1], [2], [3], [4], [5]), [[0, 0], [1, 0]], "Vectors given");
+            }
+            testUnit("no threshold", 2) {
+                assertEqual(simpleInterpolationRange(3, 8), [[0, 3], [1, 8]], "Range from 3 to 8");
+                assertEqual(simpleInterpolationRange(-3, -8), [[0, -3], [1, -8]], "Range from -3 to -8");
+            }
+            testUnit("threshold from computed percentage", 4) {
+                assertEqual(simpleInterpolationRange(3, 8, 0, 1), [[0, 3], [1, 8]], "Range from 3 to 8");
+                assertEqual(simpleInterpolationRange(3, 8, .25, .75), [[.25, 3], [.75, 8]], "Range from 3 to 8, interpolated between 25% and 75%");
+                assertEqual(simpleInterpolationRange(-3, -8, -.25, -.75), [[.25, -3], [.75, -8]], "Range from -3 to -8, interpolated between 25% and 75%");
+                assertEqual(simpleInterpolationRange(3, 8, .75, .25), [[.25, 3], [.75, 8]], "Range from 3 to 8, interpolated between 25% and 75% given the boundaries out of order");
+            }
+            testUnit("threshold from percentage to compute", 4) {
+                assertEqual(simpleInterpolationRange(3, 8, 0, 100), [[0, 3], [1, 8]], "Range from 3 to 8");
+                assertEqual(simpleInterpolationRange(3, 8, 25, 75), [[.25, 3], [.75, 8]], "Range from 3 to 8, interpolated between 25% and 75%");
+                assertEqual(simpleInterpolationRange(-3, -8, -25, -75), [[.25, -3], [.75, -8]], "Range from -3 to -8, interpolated between 25% and 75%");
+                assertEqual(simpleInterpolationRange(3, 8, 75, 25), [[.25, 3], [.75, 8]], "Range from 3 to 8, interpolated between 25% and 75% given the boundaries out of order");
+            }
+            testUnit("threshold from percentage to compute with scale", 4) {
+                assertEqual(simpleInterpolationRange(3, 8, 0, 1000, 1000), [[0, 3], [1, 8]], "Range from 3 to 8");
+                assertEqual(simpleInterpolationRange(3, 8, 250, 750, 1000), [[.25, 3], [.75, 8]], "Range from 3 to 8, interpolated between 25% and 75%");
+                assertEqual(simpleInterpolationRange(-3, -8, -250, -750, 1000), [[.25, -3], [.75, -8]], "Range from -3 to -8, interpolated between 25% and 75%");
+                assertEqual(simpleInterpolationRange(3, 8, 750, 250, 1000), [[.25, 3], [.75, 8]], "Range from 3 to 8, interpolated between 25% and 75% given the boundaries out of order");
+            }
+        }
+        // test core/maths/interpolationRange()
+        testModule("interpolationRange()", 5) {
+            testUnit("wrong value", 4) {
+                assertEqual(interpolationRange(), [], "No parameter given");
+                assertEqual(interpolationRange("1", "2", "3", "4"), [[0, 0]], "Strings given");
+                assertEqual(interpolationRange(true, true, true, true), [[0, 0]], "Booleans given");
+                assertEqual(interpolationRange([1], [2], [3], [4]), [[0, 1]], "Vectors given");
+            }
+            testUnit("no threshold", 3) {
+                assertEqual(interpolationRange([3, 8]), [[0, 3], [1, 8]], "Range from 3 to 8");
+                assertEqual(interpolationRange([-3, -8]), [[0, -3], [1, -8]], "Range from -3 to -8");
+                assertEqual(interpolationRange([1, 2, 3, 5, 8]), [[0, 1], [.25, 2], [.5, 3], [.75, 5], [1, 8]], "Range from values [1,2,3,5,8]");
+            }
+            testUnit("threshold from computed percentage", 5) {
+                assertEqual(interpolationRange([3, 8], 0, 1), [[0, 3], [1, 8]], "Range from 3 to 8");
+                assertEqual(interpolationRange([3, 8], .25, .75), [[.25, 3], [.75, 8]], "Range from 3 to 8, interpolated between 25% and 75%");
+                assertEqual(interpolationRange([-3, -8], -.25, -.75), [[.25, -3], [.75, -8]], "Range from -3 to -8, interpolated between 25% and 75%");
+                assertEqual(interpolationRange([3, 8], .75, .25), [[.25, 3], [.75, 8]], "Range from 3 to 8, interpolated between 25% and 75% given the boundaries out of order");
+                assertApproxEqual(interpolationRange([1, 2, 3, 5, 8], .1, .9),  [[0.1, 1], [0.3, 2], [0.5, 3], [0.7, 5], [0.9, 8]], "Range from values [1,2,3,5,8]");
+            }
+            testUnit("threshold from percentage to compute", 5) {
+                assertEqual(interpolationRange([3, 8], 0, 100), [[0, 3], [1, 8]], "Range from 3 to 8");
+                assertEqual(interpolationRange([3, 8], 25, 75), [[.25, 3], [.75, 8]], "Range from 3 to 8, interpolated between 25% and 75%");
+                assertEqual(interpolationRange([-3, -8], -25, -75), [[.25, -3], [.75, -8]], "Range from -3 to -8, interpolated between 25% and 75%");
+                assertEqual(interpolationRange([3, 8], 75, 25), [[.25, 3], [.75, 8]], "Range from 3 to 8, interpolated between 25% and 75% given the boundaries out of order");
+                assertApproxEqual(interpolationRange([1, 2, 3, 5, 8], 10, 90), [[0.1, 1], [0.3, 2], [0.5, 3], [0.7, 5], [0.9, 8]], "Range from values [1,2,3,5,8]");
+            }
+            testUnit("threshold from percentage to compute with scale", 5) {
+                assertEqual(interpolationRange([3, 8], 0, 1000, 1000), [[0, 3], [1, 8]], "Range from 3 to 8");
+                assertEqual(interpolationRange([3, 8], 250, 750, 1000), [[.25, 3], [.75, 8]], "Range from 3 to 8, interpolated between 25% and 75%");
+                assertEqual(interpolationRange([-3, -8], -250, -750, 1000), [[.25, -3], [.75, -8]], "Range from -3 to -8, interpolated between 25% and 75%");
+                assertEqual(interpolationRange([3, 8], 750, 250, 1000), [[.25, 3], [.75, 8]], "Range from 3 to 8, interpolated between 25% and 75% given the boundaries out of order");
+                assertApproxEqual(interpolationRange([1, 2, 3, 5, 8], 100, 900, 1000), [[0.1, 1], [0.3, 2], [0.5, 3], [0.7, 5], [0.9, 8]], "Range from values [1,2,3,5,8]");
+            }
+        }
+        // test core/maths/interpolateStep()
+        testModule("interpolateStep()", 7) {
+            testUnit("wrong value", 4) {
+                assertEqual(interpolateStep(), 0, "No parameter given");
+                assertEqual(interpolateStep("1", "2", "3", "4", "5"), 0, "Strings given");
+                assertEqual(interpolateStep(true, true, true, true, true), 0, "Booleans given");
+                assertEqual(interpolateStep([1], [2], [3], [4], [5]), 0, "Vectors given");
+            }
+            testUnit("no threshold", 3) {
+                assertEqual(interpolateStep(0, 3, 8), 3, "Step 0 of range [3:8]");
+                assertEqual(interpolateStep(.5, 3, 8), 5.5, "Step .5 of range [3:8]");
+                assertEqual(interpolateStep(1, 3, 8), 8, "Step 1 of range [3:8]");
+            }
+            testUnit("threshold from computed percentage", 8) {
+                assertEqual(interpolateStep(0, 3, 8, 0, 1), 3, "Step 0 of range [3:8] with threshold [0%:100%]");
+                assertEqual(interpolateStep(.15, 3, 8, 0, 1), 3.75, "Step .15 of range [3:8] with threshold [0%:100%]");
+                assertEqual(interpolateStep(.5, 3, 8, 0, 1), 5.5, "Step .5 of range [3:8] with threshold [0%:100%]");
+                assertEqual(interpolateStep(.8, 3, 8, 0, 1), 7, "Step .8 of range [3:8] with threshold [0%:100%]");
+                assertEqual(interpolateStep(0, 3, 8, .25, .75), 3, "Step 0 of range [3:8] with threshold [25%:75%]");
+                assertEqual(interpolateStep(.15, 3, 8, .25, .75), 3, "Step .15 of range [3:8] with threshold [25%:75%]");
+                assertEqual(interpolateStep(.5, 3, 8, .25, .75), 5.5, "Step .5 of range [3:8] with threshold [25%:75%]");
+                assertEqual(interpolateStep(.8, 3, 8, .25, .75), 8, "Step .8 of range [3:8] with threshold [25%:75%]");
+            }
+            testUnit("threshold from percentage to compute", 8) {
+                assertEqual(interpolateStep(0, 3, 8, 0, 100), 3, "Step 0 of range [3:8] with threshold [0%:100%]");
+                assertEqual(interpolateStep(.15, 3, 8, 0, 100), 3.75, "Step .15 of range [3:8] with threshold [0%:100%]");
+                assertEqual(interpolateStep(.5, 3, 8, 0, 100), 5.5, "Step .5 of range [3:8] with threshold [0%:100%]");
+                assertEqual(interpolateStep(.8, 3, 8, 0, 100), 7, "Step .8 of range [3:8] with threshold [0%:100%]");
+                assertEqual(interpolateStep(0, 3, 8, 25, 75), 3, "Step 0 of range [3:8] with threshold [25%:75%]");
+                assertEqual(interpolateStep(.15, 3, 8, 25, 75), 3, "Step .15 of range [3:8] with threshold [25%:75%]");
+                assertEqual(interpolateStep(.5, 3, 8, 25, 75), 5.5, "Step .5 of range [3:8] with threshold [25%:75%]");
+                assertEqual(interpolateStep(.8, 3, 8, 25, 75), 8, "Step .8 of range [3:8] with threshold [25%:75%]");
+            }
+            testUnit("threshold from percentage to compute with scale", 8) {
+                assertEqual(interpolateStep(0, 3, 8, 0, 1000, 1000), 3, "Step 0 of range [3:8] with threshold [0%:100%]");
+                assertEqual(interpolateStep(.15, 3, 8, 0, 1000, 1000), 3.75, "Step .15 of range [3:8] with threshold [0%:100%]");
+                assertEqual(interpolateStep(.5, 3, 8, 0, 1000, 1000), 5.5, "Step .5 of range [3:8] with threshold [0%:100%]");
+                assertEqual(interpolateStep(.8, 3, 8, 0, 1000, 1000), 7, "Step .8 of range [3:8] with threshold [0%:100%]");
+                assertEqual(interpolateStep(0, 3, 8, 250, 750, 1000), 3, "Step 0 of range [3:8] with threshold [25%:75%]");
+                assertEqual(interpolateStep(.15, 3, 8, 250, 750, 1000), 3, "Step .15 of range [3:8] with threshold [25%:75%]");
+                assertEqual(interpolateStep(.5, 3, 8, 250, 750, 1000), 5.5, "Step .5 of range [3:8] with threshold [25%:75%]");
+                assertEqual(interpolateStep(.8, 3, 8, 250, 750, 1000), 8, "Step .8 of range [3:8] with threshold [25%:75%]");
+            }
+            testUnit("list of values", 5) {
+                values = [4, 2, 9];
+                assertEqual(interpolateStep(0, values=values), 4, "Step 0 of external range");
+                assertEqual(interpolateStep(0.15, values=values), 3.4, "Step 0.15 of external range");
+                assertEqual(interpolateStep(0.45, values=values), 2.2, "Step 0.45 of external range");
+                assertEqual(interpolateStep(0.85, values=values), 6.9, "Step 0.85 of external range");
+                assertEqual(interpolateStep(1, values=values), 9, "Step 1 of external range");
+            }
+            testUnit("external range", 5) {
+                range = [[0, 4], [.5, 2], [1, 9]];
+                assertEqual(interpolateStep(0, range=range), 4, "Step 0 of external range");
+                assertEqual(interpolateStep(0.15, range=range), 3.4, "Step 0.15 of external range");
+                assertEqual(interpolateStep(0.45, range=range), 2.2, "Step 0.45 of external range");
+                assertEqual(interpolateStep(0.85, range=range), 6.9, "Step 0.85 of external range");
+                assertEqual(interpolateStep(1, range=range), 9, "Step 1 of external range");
             }
         }
     }
