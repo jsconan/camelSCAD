@@ -1,5 +1,20 @@
 # camelSCAD history
 
+## [Version 1.4.0](https://github.com/jsconan/camelSCAD/releases/tag/v1.4.0)
+
+Add core functions:
+
+-   `percentage()`: Gets a percentage value as a number between -1 and 1.
+-   `simpleInterpolationRange()`: Generates a range to interpolate a value given a step between 0 and 1, from a low and high value.
+-   `interpolationRange()`: Generates a range to interpolate a value given a step between 0 and 1, from a list of values.
+-   `interpolateStep()`: Interpolates a value given a step between 0 and 1.
+-   `simpleInterpolationRange2D()`: Generates a range to interpolate 2D coordinates given a step between 0 and 1, from a low and high coordinate.
+-   `interpolationRange2D()`: Generates a range to interpolate 2D coordinates given a step between 0 and 1, from a list of coordinates.
+-   `interpolateStep2D()`: Interpolates 2D coordinates given a step between 0 and 1.
+-   `simpleInterpolationRange3D()`: Generates a range to interpolate 3D coordinates given a step between 0 and 1, from a low and high coordinate.
+-   `interpolationRange3D()`: Generates a range to interpolate 3D coordinates given a step between 0 and 1, from a list of coordinates.
+-   `interpolateStep3D()`: Interpolates 3D coordinates given a step between 0 and 1.
+
 ## [Version 1.3.0](https://github.com/jsconan/camelSCAD/releases/tag/v1.3.0)
 
 Add core functions:
