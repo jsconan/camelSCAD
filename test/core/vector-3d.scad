@@ -2,7 +2,7 @@
  * @license
  * MIT License
  *
- * Copyright (c) 2017-2019 Jean-Sebastien CONAN
+ * Copyright (c) 2017-2022 Jean-Sebastien CONAN
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -34,7 +34,7 @@ use <../../full.scad>
  * @author jsconan
  */
 module testCoreVector3D() {
-    testPackage("core/vector-3d.scad", 19) {
+    testPackage("core/vector-3d.scad", 21) {
         // test core/vector-3d/vector3D()
         testModule("vector3D()", 3) {
             testUnit("no parameter", 1) {
@@ -499,20 +499,87 @@ module testCoreVector3D() {
                 assertEqual(boundaries3D([[1, 2, 3, 4], [5, 9, -2, 8], [3, 2, 7, 5], [-2, -6, 0, 1]]), [[-2, -6, -2], [5, 9, 7]], "Boundaries of several points, too big vectors should be truncated");
             }
         }
+        // test core/vector-2d/simpleInterpolationRange3D()
+        testModule("simpleInterpolationRange3D()", 5) {
+            testUnit("wrong value", 4) {
+                assertEqual(simpleInterpolationRange3D(), [[[0, 0], [1, 0]], [[0, 0], [1, 0]], [[0, 0], [1, 0]]], "No parameter given");
+                assertEqual(simpleInterpolationRange3D("1", "2", "3", "4", "5"), [[[0, 0], [1, 0]], [[0, 0], [1, 0]], [[0, 0], [1, 0]]], "Strings given");
+                assertEqual(simpleInterpolationRange3D(true, true, true, true, true), [[[0, 0], [1, 0]], [[0, 0], [1, 0]], [[0, 0], [1, 0]]], "Booleans given");
+                assertEqual(simpleInterpolationRange3D([1], [2], [3], [4], [5]), [[[0, 1], [1, 2]], [[0, 0], [1, 0]], [[0, 0], [1, 0]]], "Vectors given");
+            }
+            testUnit("no threshold", 2) {
+                assertEqual(simpleInterpolationRange3D([3, 2, 4], [8, 7, 9]), [[[0, 3], [1, 8]], [[0, 2], [1, 7]], [[0, 4], [1, 9]]], "Range [[3, 2, 4]:[8, 7, 9]]");
+                assertEqual(simpleInterpolationRange3D([-3, -2, -4], [-8, -7, -9]), [[[0, -3], [1, -8]], [[0, -2], [1, -7]], [[0, -4], [1, -9]]], "Range [[-3, -2, -4]:[-8, -7, -9]]");
+            }
+            testUnit("threshold from computed percentage", 4) {
+                assertEqual(simpleInterpolationRange3D([3, 2, 4], [8, 7, 9], 0, 1), [[[0, 3], [1, 8]], [[0, 2], [1, 7]], [[0, 4], [1, 9]]], "Range [[3, 2, 4]:[8, 7, 9]]");
+                assertEqual(simpleInterpolationRange3D([3, 2, 4], [8, 7, 9], .25, .75), [[[.25, 3], [.75, 8]], [[.25, 2], [.75, 7]], [[.25, 4], [.75, 9]]], "Range [[3, 2, 4]:[8, 7, 9]], interpolated between 25% and 75%");
+                assertEqual(simpleInterpolationRange3D([-3, -2, -4], [-8, -7, -9], -.25, -.75), [[[.25, -3], [.75, -8]], [[.25, -2], [.75, -7]], [[.25, -4], [.75, -9]]], "Range [[-3, -2, -4]:[-8, -7, -9]], interpolated between 25% and 75%");
+                assertEqual(simpleInterpolationRange3D([3, 2, 4], [8, 7, 9], .75, .25), [[[.25, 3], [.75, 8]], [[.25, 2], [.75, 7]], [[.25, 4], [.75, 9]]], "Range [[3, 2, 4]:[8, 7, 9]], interpolated between 25% and 75% given the boundaries out of order");
+            }
+            testUnit("threshold from percentage to compute", 4) {
+                assertEqual(simpleInterpolationRange3D([3, 2, 4], [8, 7, 9], 0, 100), [[[0, 3], [1, 8]], [[0, 2], [1, 7]], [[0, 4], [1, 9]]], "Range [[3, 2, 4]:[8, 7, 9]]");
+                assertEqual(simpleInterpolationRange3D([3, 2, 4], [8, 7, 9], 25, 75), [[[.25, 3], [.75, 8]], [[.25, 2], [.75, 7]], [[.25, 4], [.75, 9]]], "Range [[3, 2, 4]:[8, 7, 9]], interpolated between 25% and 75%");
+                assertEqual(simpleInterpolationRange3D([-3, -2, -4], [-8, -7, -9], -25, -75), [[[.25, -3], [.75, -8]], [[.25, -2], [.75, -7]], [[.25, -4], [.75, -9]]], "Range [[-3, -2, -4]:[-8, -7, -9]], interpolated between 25% and 75%");
+                assertEqual(simpleInterpolationRange3D([3, 2, 4], [8, 7, 9], 75, 25), [[[.25, 3], [.75, 8]], [[.25, 2], [.75, 7]], [[.25, 4], [.75, 9]]], "Range [[3, 2, 4]:[8, 7, 9]], interpolated between 25% and 75% given the boundaries out of order");
+            }
+            testUnit("threshold from percentage to compute with scale", 4) {
+                assertEqual(simpleInterpolationRange3D([3, 2, 4], [8, 7, 9], 0, 1000, 1000), [[[0, 3], [1, 8]], [[0, 2], [1, 7]], [[0, 4], [1, 9]]], "Range [[3, 2, 4]:[8, 7, 9]]");
+                assertEqual(simpleInterpolationRange3D([3, 2, 4], [8, 7, 9], 250, 750, 1000), [[[.25, 3], [.75, 8]], [[.25, 2], [.75, 7]], [[.25, 4], [.75, 9]]], "Range [[3, 2, 4]:[8, 7, 9]], interpolated between 25% and 75%");
+                assertEqual(simpleInterpolationRange3D([-3, -2, -4], [-8, -7, -9], -250, -750, 1000), [[[.25, -3], [.75, -8]], [[.25, -2], [.75, -7]], [[.25, -4], [.75, -9]]], "Range [[-3, -2, -4]:[-8, -7, -9]], interpolated between 25% and 75%");
+                assertEqual(simpleInterpolationRange3D([3, 2, 4], [8, 7, 9], 750, 250, 1000), [[[.25, 3], [.75, 8]], [[.25, 2], [.75, 7]], [[.25, 4], [.75, 9]]], "Range [[3, 2, 4]:[8, 7, 9]], interpolated between 25% and 75% given the boundaries out of order");
+            }
+        }
+        // test core/vector-2d/interpolationRange3D()
+        testModule("interpolationRange3D()", 5) {
+            testUnit("wrong value", 4) {
+                assertEqual(interpolationRange3D(), [], "No parameter given");
+                assertEqual(interpolationRange3D("1", "2", "3", "4"), [[[0, 0]], [[0, 0]], [[0, 0]]], "Strings given");
+                assertEqual(interpolationRange3D(true, true, true, true), [[[0, 0]], [[0, 0]], [[0, 0]]], "Booleans given");
+                assertEqual(interpolationRange3D([1], [2], [3], [4]), [[[0, 1]], [[0, 1]], [[0, 1]]], "Vectors given");
+            }
+            testUnit("no threshold", 4) {
+                assertEqual(interpolationRange3D([[3, 2, 4], [8, 7, 9]]), [[[0, 3], [1, 8]], [[0, 2], [1, 7]], [[0, 4], [1, 9]]], "Range [[3, 2, 4]:[8, 7, 9]]");
+                assertEqual(interpolationRange3D([[-3, -2, -4], [-8, -7, -9]]), [[[0, -3], [1, -8]], [[0, -2], [1, -7]], [[0, -4], [1, -9]]], "Range [[-3, -2, -4]:[-8, -7, -9]]");
+                assertEqual(interpolationRange3D([1, 2, 3, 5, 8]), [[[0, 1], [.25, 2], [.5, 3], [.75, 5], [1, 8]], [[0, 1], [.25, 2], [.5, 3], [.75, 5], [1, 8]], [[0, 1], [.25, 2], [.5, 3], [.75, 5], [1, 8]]], "Range from values [1,2,3,5,8]");
+                assertEqual(interpolationRange3D([[1, 2, 3], [2, 3, 4], [3, 4, 5], [5, 6, 7], [8, 9, 10]]), [[[0, 1], [.25, 2], [.5, 3], [.75, 5], [1, 8]], [[0, 2], [.25, 3], [.5, 4], [.75, 6], [1, 9]], [[0, 3], [.25, 4], [.5, 5], [.75, 7], [1, 10]]], "Range from values [1,2,3,5,8]");
+            }
+            testUnit("threshold from computed percentage", 5) {
+                assertEqual(interpolationRange3D([[3, 2, 4], [8, 7, 9]], 0, 1), [[[0, 3], [1, 8]], [[0, 2], [1, 7]], [[0, 4], [1, 9]]], "Range [[3, 2, 4]:[8, 7, 9]]");
+                assertEqual(interpolationRange3D([[3, 2, 4], [8, 7, 9]], .25, .75), [[[.25, 3], [.75, 8]], [[.25, 2], [.75, 7]], [[.25, 4], [.75, 9]]], "Range [[3, 2, 4]:[8, 7, 9]], interpolated between 25% and 75%");
+                assertEqual(interpolationRange3D([[-3, -2, -4], [-8, -7, -9]], -.25, -.75), [[[.25, -3], [.75, -8]], [[.25, -2], [.75, -7]], [[.25, -4], [.75, -9]]], "Range [[-3, -2, -4]:[-8, -7, -9]], interpolated between 25% and 75%");
+                assertEqual(interpolationRange3D([[3, 2, 4], [8, 7, 9]], .75, .25), [[[.25, 3], [.75, 8]], [[.25, 2], [.75, 7]], [[.25, 4], [.75, 9]]], "Range [[3, 2, 4]:[8, 7, 9]], interpolated between 25% and 75% given the boundaries out of order");
+                assertApproxEqual(interpolationRange3D([1, 2, 3, 5, 8], .1, .9), [[[0.1, 1], [0.3, 2], [0.5, 3], [0.7, 5], [0.9, 8]], [[0.1, 1], [0.3, 2], [0.5, 3], [0.7, 5], [0.9, 8]], [[0.1, 1], [0.3, 2], [0.5, 3], [0.7, 5], [0.9, 8]]], "Range from values [1,2,3,5,8]");
+            }
+            testUnit("threshold from percentage to compute", 5) {
+                assertEqual(interpolationRange3D([[3, 2, 4], [8, 7, 9]], 0, 100), [[[0, 3], [1, 8]], [[0, 2], [1, 7]], [[0, 4], [1, 9]]], "Range [[3, 2, 4]:[8, 7, 9]]");
+                assertEqual(interpolationRange3D([[3, 2, 4], [8, 7, 9]], 25, 75), [[[.25, 3], [.75, 8]], [[.25, 2], [.75, 7]], [[.25, 4], [.75, 9]]], "Range [[3, 2, 4]:[8, 7, 9]], interpolated between 25% and 75%");
+                assertEqual(interpolationRange3D([[-3, -2, -4], [-8, -7, -9]], -25, -75), [[[.25, -3], [.75, -8]], [[.25, -2], [.75, -7]], [[.25, -4], [.75, -9]]], "Range [[-3, -2, -4]:[-8, -7, -9]], interpolated between 25% and 75%");
+                assertEqual(interpolationRange3D([[3, 2, 4], [8, 7, 9]], 75, 25), [[[.25, 3], [.75, 8]], [[.25, 2], [.75, 7]], [[.25, 4], [.75, 9]]], "Range [[3, 2, 4]:[8, 7, 9]], interpolated between 25% and 75% given the boundaries out of order");
+                assertApproxEqual(interpolationRange3D([1, 2, 3, 5, 8], 10, 90), [[[0.1, 1], [0.3, 2], [0.5, 3], [0.7, 5], [0.9, 8]], [[0.1, 1], [0.3, 2], [0.5, 3], [0.7, 5], [0.9, 8]], [[0.1, 1], [0.3, 2], [0.5, 3], [0.7, 5], [0.9, 8]]], "Range from values [1,2,3,5,8]");
+            }
+            testUnit("threshold from percentage to compute with scale", 5) {
+                assertEqual(interpolationRange3D([[3, 2, 4], [8, 7, 9]], 0, 1000, 1000), [[[0, 3], [1, 8]], [[0, 2], [1, 7]], [[0, 4], [1, 9]]], "Range [[3, 2, 4]:[8, 7, 9]]");
+                assertEqual(interpolationRange3D([[3, 2, 4], [8, 7, 9]], 250, 750, 1000), [[[.25, 3], [.75, 8]], [[.25, 2], [.75, 7]], [[.25, 4], [.75, 9]]], "Range [[3, 2, 4]:[8, 7, 9]], interpolated between 25% and 75%");
+                assertEqual(interpolationRange3D([[-3, -2, -4], [-8, -7, -9]], -250, -750, 1000), [[[.25, -3], [.75, -8]], [[.25, -2], [.75, -7]], [[.25, -4], [.75, -9]]], "Range [[-3, -2, -4]:[-8, -7, -9]], interpolated between 25% and 75%");
+                assertEqual(interpolationRange3D([[3, 2, 4], [8, 7, 9]], 750, 250, 1000), [[[.25, 3], [.75, 8]], [[.25, 2], [.75, 7]], [[.25, 4], [.75, 9]]], "Range [[3, 2, 4]:[8, 7, 9]], interpolated between 25% and 75% given the boundaries out of order");
+                assertApproxEqual(interpolationRange3D([1, 2, 3, 5, 8], 100, 900, 1000), [[[0.1, 1], [0.3, 2], [0.5, 3], [0.7, 5], [0.9, 8]], [[0.1, 1], [0.3, 2], [0.5, 3], [0.7, 5], [0.9, 8]], [[0.1, 1], [0.3, 2], [0.5, 3], [0.7, 5], [0.9, 8]]], "Range from values [1,2,3,5,8]");
+            }
+        }
         // test core/vector-3d/interpolateStep3D()
-        testModule("interpolateStep3D()", 6) {
+        testModule("interpolateStep3D()", 7) {
             testUnit("wrong value", 4) {
                 assertEqual(interpolateStep3D(), [0, 0, 0], "No parameter given");
                 assertEqual(interpolateStep3D("1", "2", "3", "4", "5"), [0, 0, 0], "Strings given");
                 assertEqual(interpolateStep3D(true, true, true, true, true), [0, 0, 0], "Booleans given");
                 assertEqual(interpolateStep3D([1], [2], [3], [4], [5]), [2, 0, 0], "Vectors given");
             }
-            testUnit("simple range", 3) {
+            testUnit("no threshold", 3) {
                 assertEqual(interpolateStep3D(0, [3, 2, 4], [8, 7, 9]), [3, 2, 4], "Step 0 of range [[3, 2, 4]:[8, 7, 9]]");
                 assertEqual(interpolateStep3D(.5, [3, 2, 4], [8, 7, 9]), [5.5, 4.5, 6.5], "Step .5 of range [[3, 2, 4]:[8, 7, 9]]");
                 assertEqual(interpolateStep3D(1, [3, 2, 4], [8, 7, 9]), [8, 7, 9], "Step 1 of range [[3, 2, 4]:[8, 7, 9]]");
             }
-            testUnit("threshold range, computed percentage", 8) {
+            testUnit("threshold from computed percentage", 8) {
                 assertEqual(interpolateStep3D(0, [3, 2, 4], [8, 7, 9], 0, 1), [3, 2, 4], "Step 0 of range [[3, 2, 4]:[8, 7, 9]] with threshold [0%:100%]");
                 assertEqual(interpolateStep3D(.15, [3, 2, 4], [8, 7, 9], 0, 1), [3.75, 2.75, 4.75], "Step .15 of range [[3, 2, 4]:[8, 7, 9]] with threshold [0%:100%]");
                 assertEqual(interpolateStep3D(.5, [3, 2, 4], [8, 7, 9], 0, 1), [5.5, 4.5, 6.5], "Step .5 of range [[3, 2, 4]:[8, 7, 9]] with threshold [0%:100%]");
@@ -522,7 +589,7 @@ module testCoreVector3D() {
                 assertEqual(interpolateStep3D(.5, [3, 2, 4], [8, 7, 9], .25, .75), [5.5, 4.5, 6.5], "Step .5 of range [[3, 2, 4]:[8, 7, 9]] with threshold [25%:75%]");
                 assertEqual(interpolateStep3D(.8, [3, 2, 4], [8, 7, 9], .25, .75), [8, 7, 9], "Step .8 of range [[3, 2, 4]:[8, 7, 9]] with threshold [25%:75%]");
             }
-            testUnit("threshold range, percentage to be computed", 8) {
+            testUnit("threshold from percentage to compute", 8) {
                 assertEqual(interpolateStep3D(0, [3, 2, 4], [8, 7, 9], 0, 100), [3, 2, 4], "Step 0 of range [[3, 2, 4]:[8, 7, 9]] with threshold [0%:100%]");
                 assertEqual(interpolateStep3D(.15, [3, 2, 4], [8, 7, 9], 0, 100), [3.75, 2.75, 4.75], "Step .15 of range [[3, 2, 4]:[8, 7, 9]] with threshold [0%:100%]");
                 assertEqual(interpolateStep3D(.5, [3, 2, 4], [8, 7, 9], 0, 100), [5.5, 4.5, 6.5], "Step .5 of range [[3, 2, 4]:[8, 7, 9]] with threshold [0%:100%]");
@@ -532,7 +599,7 @@ module testCoreVector3D() {
                 assertEqual(interpolateStep3D(.5, [3, 2, 4], [8, 7, 9], 25, 75), [5.5, 4.5, 6.5], "Step .5 of range [[3, 2, 4]:[8, 7, 9]] with threshold [25%:75%]");
                 assertEqual(interpolateStep3D(.8, [3, 2, 4], [8, 7, 9], 25, 75), [8, 7, 9], "Step .8 of range [[3, 2, 4]:[8, 7, 9]] with threshold [25%:75%]");
             }
-            testUnit("threshold range, percentage to be computed with scale", 8) {
+            testUnit("threshold from percentage to compute with scale", 8) {
                 assertEqual(interpolateStep3D(0, [3, 2, 4], [8, 7, 9], 0, 1000, 1000), [3, 2, 4], "Step 0 of range [[3, 2, 4]:[8, 7, 9]] with threshold [0%:100%]");
                 assertEqual(interpolateStep3D(.15, [3, 2, 4], [8, 7, 9], 0, 1000, 1000), [3.75, 2.75, 4.75], "Step .15 of range [[3, 2, 4]:[8, 7, 9]] with threshold [0%:100%]");
                 assertEqual(interpolateStep3D(.5, [3, 2, 4], [8, 7, 9], 0, 1000, 1000), [5.5, 4.5, 6.5], "Step .5 of range [[3, 2, 4]:[8, 7, 9]] with threshold [0%:100%]");
@@ -542,16 +609,25 @@ module testCoreVector3D() {
                 assertEqual(interpolateStep3D(.5, [3, 2, 4], [8, 7, 9], 250, 750, 1000), [5.5, 4.5, 6.5], "Step .5 of range [[3, 2, 4]:[8, 7, 9]] with threshold [25%:75%]");
                 assertEqual(interpolateStep3D(.8, [3, 2, 4], [8, 7, 9], 250, 750, 1000), [8, 7, 9], "Step .8 of range [[3, 2, 4]:[8, 7, 9]] with threshold [25%:75%]");
             }
+            testUnit("list of values", 5) {
+                values = [4, [2, 3, 1], 9];
+                assertEqual(interpolateStep3D(0, values=values), [4, 4, 4], "Step 0 of external range");
+                assertApproxEqual(interpolateStep3D(0.15, values=values), [3.4, 3.7, 3.1], "Step 0.15 of external range");
+                assertApproxEqual(interpolateStep3D(0.45, values=values), [2.2, 3.1, 1.3], "Step 0.45 of external range");
+                assertEqual(interpolateStep3D(0.85, values=values), [6.9, 7.2, 6.6], "Step 0.85 of external range");
+                assertEqual(interpolateStep3D(1, values=values), [9, 9, 9], "Step 1 of external range");
+            }
             testUnit("external range", 5) {
                 range = [
-                    [[0, 4], [1, 9]],
-                    [[0, 5], [1, 8]],
-                    [[0, 2], [1, 3]]
+                    [[0, 4], [.5, 2], [1, 9]],
+                    [[0, 5], [.5, 3], [1, 8]],
+                    [[0, 2], [.5, 5], [1, 3]]
+
                 ];
                 assertEqual(interpolateStep3D(0, range=range), [4, 5, 2], "Step 0 of external range");
-                assertEqual(interpolateStep3D(0.15, range=range), [4.75, 5.45, 2.15], "Step 0.15 of external range");
-                assertEqual(interpolateStep3D(0.45, range=range), [6.25, 6.35, 2.45], "Step 0.45 of external range");
-                assertApproxEqual(interpolateStep3D(0.85, range=range), [8.25, 7.55, 2.85], "Step 0.85 of external range");
+                assertEqual(interpolateStep3D(0.15, range=range), [3.4, 4.4, 2.9], "Step 0.15 of external range");
+                assertEqual(interpolateStep3D(0.45, range=range), [2.2, 3.2, 4.7], "Step 0.45 of external range");
+                assertApproxEqual(interpolateStep3D(0.85, range=range), [6.9, 6.5, 3.6], "Step 0.85 of external range");
                 assertEqual(interpolateStep3D(1, range=range), [9, 8, 3], "Step 1 of external range");
             }
         }
