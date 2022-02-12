@@ -1,5 +1,19 @@
 # camelSCAD history
 
+## [Version 1.5.0](https://github.com/jsconan/camelSCAD/releases/tag/v1.5.0)
+
+Add operators to ease scenes animation:
+
+-   `mirrorAnimate()`: Mirrors the child modules, interpolating the axis with respect to the `$t` variable.
+-   `resizeAnimate()`: Resizes the child modules, interpolating the sizes with respect to the `$t` variable.
+-   `rotateAnimate()`: Rotates the child modules, interpolating the angles with respect to the `$t` variable.
+-   `scaleAnimate()`: Scales the child modules, interpolating the scale ratios with respect to the `$t` variable.
+-   `translateAnimate()`: Translates the child modules, interpolating the coordinates with respect to the `$t` variable.
+
+Fixes:
+
+-   Use a less confusing parameter name for the domain of values applied to compute percentage ratio. This impacts `percentage()`, `simpleInterpolationRange()`, `interpolationRange()`, `interpolationStep()`, `simpleInterpolationRange2D()`, `interpolationRange2D()`, `interpolationStep2D()`, `simpleInterpolationRange3D()`, `interpolationRange3D()`, `interpolationStep3D()`
+
 ## [Version 1.4.0](https://github.com/jsconan/camelSCAD/releases/tag/v1.4.0)
 
 Add core functions:
