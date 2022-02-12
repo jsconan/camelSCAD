@@ -441,18 +441,18 @@ function iToX(i, count) = float(i) % divisor(count);
 function iToY(i, count) = floor(float(i) / divisor(count));
 
 /**
- * Gets a percentage value as a number between -1 and 1.
+ * Gets a percentage ratio as a number between 0 and 1.
  *
- * @param Number v - The percentage value. It can be either a number between 1 and `scale` (default: 100), or a value between -1 and 1.
- * @param Number [scale] - The percentage scale (default: 100).
+ * @param Number v - The percentage value. It can be either a number between 1 and `domain` (default: 100), or a value between 0 and 1.
+ * @param Number [domain] - The percentage domain applied to compute the percentage ratio (default: 100).
  * @returns Number
  */
-function percentage(v, scale) =
+function percentage(v, domain) =
     let(
         v = float(v),
-        scale = float(scale)
+        domain = float(domain)
     )
-    v < -1 || v > 1 ? v / (scale ? scale : 100)
+    v < -1 || v > 1 ? v / (domain ? domain : 100)
                     : v
 ;
 
@@ -464,15 +464,15 @@ function percentage(v, scale) =
  * @param Number high - The top value of the range to interpolate.
  * @param Number [start] - The start threshold under what the low value will persist and above what it will be interpolated.
  * @param Number [end] - The end threshold above what the high value will persist and under what it will be interpolated.
- * @param Number [scale] - The percentage scale (default: 100).
+ * @param Number [domain] - The percentage domain applied to compute the percentage ratio for the thresholds (default: 100).
  * @returns Vector
  */
-function simpleInterpolationRange(low, high, start, end, scale) =
+function simpleInterpolationRange(low, high, start, end, domain) =
     let(
         low = float(low),
         high = float(high),
-        start = abs(percentage(numberOr(start, 0), scale=scale)),
-        end = abs(percentage(numberOr(end, 1), scale=scale)),
+        start = abs(percentage(numberOr(start, 0), domain=domain)),
+        end = abs(percentage(numberOr(end, 1), domain=domain)),
         first = min(start, end),
         last = max(start, end)
     )
@@ -490,15 +490,15 @@ function simpleInterpolationRange(low, high, start, end, scale) =
  * @param Vector values - The list of values composing the range to interpolate.
  * @param Number [start] - The start threshold under what the first value of the range will persist and above what it will be interpolated.
  * @param Number [end] - The end threshold above what the last value of the range will persist and under what it will be interpolated.
- * @param Number [scale] - The percentage scale (default: 100).
+ * @param Number [domain] - The percentage domain applied to compute the percentage ratio for the thresholds (default: 100).
  * @returns Vector
  */
-function interpolationRange(values, start, end, scale) =
+function interpolationRange(values, start, end, domain) =
     let(
         values = array(values),
         count = len(values),
-        start = abs(percentage(numberOr(start, 0), scale=scale)),
-        end = abs(percentage(numberOr(end, 1), scale=scale)),
+        start = abs(percentage(numberOr(start, 0), domain=domain)),
+        end = abs(percentage(numberOr(end, 1), domain=domain)),
         first = min(start, end),
         last = max(start, end),
         step = (last - first) / divisor(count - 1)
@@ -515,16 +515,16 @@ function interpolationRange(values, start, end, scale) =
  * @param Number [high] - The top value of the range to interpolate.
  * @param Number [start] - The start threshold under what the low value will persist and above what it will be interpolated.
  * @param Number [end] - The end threshold above what the high value will persist and under what it will be interpolated.
- * @param Number [scale] - The percentage scale (default: 100).
+ * @param Number [domain] - The percentage domain applied to compute the percentage ratio for the thresholds (default: 100).
  * @param Vector [values] - A list of values composing the range to interpolate.
- * @param Vector [range] - A pre-built interpolation range. If missing, it will be built from the parameters `low`, `high`, `start`, `end`, `scale`.
+ * @param Vector [range] - A pre-built interpolation range. If missing, it will be built from the parameters `low`, `high`, `start`, `end`, `domain`.
  * @returns Number
  */
-function interpolateStep(step, low, high, start, end, scale, values, range) =
+function interpolateStep(step, low, high, start, end, domain, values, range) =
     lookup(
         float(step),
         is_list(range) ? range
-       :is_list(values) ? interpolationRange(values=values, start=start, end=end, scale=scale)
-       :simpleInterpolationRange(low=low, high=high, start=start, end=end, scale=scale)
+       :is_list(values) ? interpolationRange(values=values, start=start, end=end, domain=domain)
+       :simpleInterpolationRange(low=low, high=high, start=start, end=end, domain=domain)
     )
 ;
