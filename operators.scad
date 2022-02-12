@@ -35,6 +35,12 @@
 include <core.scad>
 
 /* OPERATORS */
+include <operator/animate/mirror.scad>
+include <operator/animate/resize.scad>
+include <operator/animate/rotate.scad>
+include <operator/animate/scale.scad>
+include <operator/animate/translate.scad>
+
 include <operator/distribute/grid.scad>
 include <operator/distribute/mirror.scad>
 include <operator/distribute/rotate.scad>
