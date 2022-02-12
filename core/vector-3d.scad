@@ -372,18 +372,18 @@ function boundaries3D(v,
  * @param Vector high - The top coordinates of the range to interpolate.
  * @param Number [start] - The start threshold under what the low value will persist and above what it will be interpolated.
  * @param Number [end] - The end threshold above what the high value will persist and under what it will be interpolated.
- * @param Number [scale] - The percentage scale (default: 100).
+ * @param Number [domain] - The percentage domain applied to compute the percentage ratio for the thresholds (default: 100).
  * @returns Vector
  */
-function simpleInterpolationRange3D(low, high, start, end, scale) =
+function simpleInterpolationRange3D(low, high, start, end, domain) =
     let(
         low = vector3D(low),
         high = vector3D(high)
     )
     [
-        simpleInterpolationRange(low=low.x, high=high.x, start=start, end=end, scale=scale),
-        simpleInterpolationRange(low=low.y, high=high.y, start=start, end=end, scale=scale),
-        simpleInterpolationRange(low=low.z, high=high.z, start=start, end=end, scale=scale)
+        simpleInterpolationRange(low=low.x, high=high.x, start=start, end=end, domain=domain),
+        simpleInterpolationRange(low=low.y, high=high.y, start=start, end=end, domain=domain),
+        simpleInterpolationRange(low=low.z, high=high.z, start=start, end=end, domain=domain)
     ]
 ;
 
@@ -395,15 +395,15 @@ function simpleInterpolationRange3D(low, high, start, end, scale) =
  * @param Vector values - The list of coordinates composing the range to interpolate.
  * @param Number [start] - The start threshold under what the first coordinate of the range will persist and above what it will be interpolated.
  * @param Number [end] - The end threshold above what the last coordinate of the range will persist and under what it will be interpolated.
- * @param Number [scale] - The percentage scale (default: 100).
+ * @param Number [domain] - The percentage domain applied to compute the percentage ratio for the thresholds (default: 100).
  * @returns Vector
  */
-function interpolationRange3D(values, start, end, scale) =
+function interpolationRange3D(values, start, end, domain) =
     let(
         values = array(values),
         count = len(values),
-        start = abs(percentage(numberOr(start, 0), scale=scale)),
-        end = abs(percentage(numberOr(end, 1), scale=scale)),
+        start = abs(percentage(numberOr(start, 0), domain=domain)),
+        end = abs(percentage(numberOr(end, 1), domain=domain)),
         first = min(start, end),
         last = max(start, end),
         step = (last - first) / divisor(count - 1),
@@ -426,16 +426,16 @@ function interpolationRange3D(values, start, end, scale) =
  * @param Vector high - The top coordinates of the range to interpolate.
  * @param Number [start] - The start threshold under what the low coordinates will persist and above what they will be interpolated.
  * @param Number [end] - The end threshold above what the high coordinates will persist and under what they will be interpolated.
- * @param Number [scale] - The percentage scale (default: 100).
+ * @param Number [domain] - The percentage domain applied to compute the percentage ratio for the thresholds (default: 100).
  * @param Vector [values] - A list of coordinates composing the range to interpolate.
- * @param Vector [range] - A pre-built interpolation range. If missing, it will be built from the parameters `low`, `high`, `start`, `end`, `scale`.
+ * @param Vector [range] - A pre-built interpolation range. If missing, it will be built from the parameters `low`, `high`, `start`, `end`, `domain`.
  * @returns Number
  */
-function interpolateStep3D(step, low, high, start, end, scale, values, range) =
+function interpolateStep3D(step, low, high, start, end, domain, values, range) =
     let(
         range = is_list(range) ? range
-               :is_list(values) ? interpolationRange3D(values=values, start=start, end=end, scale=scale)
-               :simpleInterpolationRange3D(low=low, high=high, start=start, end=end, scale=scale)
+               :is_list(values) ? interpolationRange3D(values=values, start=start, end=end, domain=domain)
+               :simpleInterpolationRange3D(low=low, high=high, start=start, end=end, domain=domain)
     )
     [
         interpolateStep(step, range=range.x),

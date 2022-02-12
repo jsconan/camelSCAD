@@ -2,7 +2,7 @@
  * @license
  * MIT License
  *
- * Copyright (c) 2017-2022 Jean-Sebastien CONAN
+ * Copyright (c) 2022 Jean-Sebastien CONAN
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,35 +23,29 @@
  * SOFTWARE.
  */
 
-use <../../full.scad>
-
 /**
  * Part of the camelSCAD library.
  *
- * Unit test: Version.
+ * Operators that animate child modules with respect to particular rules.
  *
- * @package test/core/version
+ * @package operator/animate
  * @author jsconan
  */
-module testCoreVersion() {
-    validateRequirements();
-    testPackage("core/version.scad", 2) {
-        // test checkOpenSCAD()
-        testModule("checkOpenSCAD()", 1) {
-            testUnit("must satisfy", 1) {
-                assertEqual(checkOpenSCAD(), true, "The installed version of OpenSCAD must be up to date enough");
-            }
-        }
-        // test camelSCAD()
-        testModule("camelSCAD()", 2) {
-            testUnit("as vector", 1) {
-                assertEqual(camelSCAD(), [1, 5, 0], "The current version of the library is 1.5.0");
-            }
-            testUnit("as string", 1) {
-                assertEqual(camelSCAD(true), "1.5.0", "The current version of the library is 1.5.0");
-            }
-        }
+
+/**
+ * Mirrors the child modules, interpolating the axis with respect to the `$t` variable.
+ *
+ * @param Vector [from] - The axis from where starts the interpolation.
+ * @param Vector [to] - The axis to where ends the interpolation.
+ * @param Number [start] - The start threshold under what the from-axis will persist and above what it will be interpolated.
+ * @param Number [end] - The end threshold above what the to-axis will persist and under what it will be interpolated.
+ * @param Number [domain] - The percentage domain used to compute the thresholds (default: 100).
+ * @param Vector [values] - A list of axis composing the range to interpolate.
+ * @param Vector [range] - A pre-built interpolation range. If missing, it will be built from the parameters `from`, `to`, `start`, `end`, `domain`.
+ * @returns Number
+ */
+module mirrorAnimate(from, to, start, end, domain, values, range) {
+    mirror(interpolateStep3D(step=$t, low=from, high=to, start=start, end=end, domain=domain, values=values, range=range)) {
+        children();
     }
 }
-
-testCoreVersion();
