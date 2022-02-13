@@ -43,7 +43,6 @@
  * @param Vector [values] - A list of sizes composing the range to interpolate.
  * @param Vector [range] - A pre-built interpolation range. If missing, it will be built from the parameters `from`, `to`, `start`, `end`, `domain`.
  * @param Boolean [auto] - When set to `true`, it auto-scales any 0-dimensions to match. It can also be used to auto-scale a single dimension and leave the other as-is.
- * @returns Number
  */
 module resizeAnimate(from, to, start, end, domain, auto, values, range) {
     resize(interpolateStep3D(step=$t, low=from, high=to, start=start, end=end, domain=domain, values=values, range=range), auto=auto) {

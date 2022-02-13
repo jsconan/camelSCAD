@@ -42,7 +42,6 @@
  * @param Number [domain] - The percentage domain used to compute the thresholds (default: 100).
  * @param Vector [values] - A list of scale ratios composing the range to interpolate.
  * @param Vector [range] - A pre-built interpolation range. If missing, it will be built from the parameters `from`, `to`, `start`, `end`, `domain`.
- * @returns Number
  */
 module scaleAnimate(from, to, start, end, domain, values, range) {
     scale(interpolateStep3D(step=$t, low=from, high=to, start=start, end=end, domain=domain, values=values, range=range)) {
