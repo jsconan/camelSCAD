@@ -2,7 +2,7 @@
  * @license
  * MIT License
  *
- * Copyright (c) 2017-2022 Jean-Sebastien CONAN
+ * Copyright (c) 2022 Jean-Sebastien CONAN
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,42 +24,25 @@
  */
 
 /**
- * Entry point of the camelSCAD library.
+ * Part of the camelSCAD library.
  *
- * Features set: Includes the core components and the operators.
+ * Operators that animate child modules with respect to particular rules.
  *
+ * @package operator/animate
  * @author jsconan
  */
 
-/* CORE */
-include <core.scad>
-
-/* OPERATORS */
-include <operator/animate/mirror.scad>
-include <operator/animate/present.scad>
-include <operator/animate/resize.scad>
-include <operator/animate/rotate.scad>
-include <operator/animate/scale.scad>
-include <operator/animate/translate.scad>
-
-include <operator/distribute/grid.scad>
-include <operator/distribute/mirror.scad>
-include <operator/distribute/rotate.scad>
-include <operator/distribute/translate.scad>
-
-include <operator/extrude/negative.scad>
-
-include <operator/repeat/alternate.scad>
-include <operator/repeat/grid.scad>
-include <operator/repeat/mirror.scad>
-include <operator/repeat/rotate.scad>
-include <operator/repeat/translate.scad>
-
-include <operator/rotate/axis.scad>
-include <operator/rotate/origin.scad>
-
-include <operator/translate/axis.scad>
-
-include <operator/operation.scad>
-include <operator/transform.scad>
-include <operator/sample.scad>
+/**
+ * Presents the child modules only between the start and end thresholds, with respect to the `$t` variable.
+ *
+ * @param Number [start] - The start threshold under what the child modules will be hidden and above what they will be presented.
+ * @param Number [end] - The end threshold above what the child modules will be hidden and under what they will be presented.
+ * @param Number [domain] - The percentage domain used to compute the thresholds (default: 100).
+ */
+module presentAnimate(start, end, domain) {
+    start = abs(percentage(numberOr(start, 0), domain=domain));
+    end = abs(percentage(numberOr(end, 1), domain=domain));
+    if( $t >= min(start, end) && $t <= max(start, end) ) {
+        children();
+    }
+}
