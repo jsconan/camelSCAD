@@ -528,3 +528,24 @@ function interpolateStep(step, low, high, start, end, domain, values, range) =
        :simpleInterpolationRange(low=low, high=high, start=start, end=end, domain=domain)
     )
 ;
+
+/**
+ * Computes the threshold for a particular interpolation step considering the expected number of steps,
+ * and with respect to start and end thresholds.
+ * @param Number step - The current step.
+ * @param Number steps - The total number of expected steps.
+ * @param Number [start] - The start threshold under what the low value will persist and above what it will be interpolated.
+ * @param Number [end] - The end threshold above what the high value will persist and under what it will be interpolated.
+ * @param Number [domain] - The percentage domain applied to compute the percentage ratio for the thresholds (default: 100).
+ * @returns Number
+ */
+function interpolationThreshold(step, steps, start, end, domain) =
+    let(
+        step = float(step),
+        steps = divisor(steps),
+        start = abs(percentage(numberOr(start, 0), domain=domain)),
+        end = abs(percentage(numberOr(end, 1), domain=domain)),
+        range = max(start, end) - min(start, end)
+    )
+    start + step * range / steps
+;
