@@ -141,11 +141,13 @@ scadcall() {
     local params=()
     for var in "$@"; do
         if [ "${var}" != "" ]; then
-            params+=("-D")
+            if [[ "${var}" == *=* ]]; then
+                params+=("-D")
+            fi
             params+=("${var}")
         fi
     done
-    ${scadcmd} --render -o "${outputpath}" "${sourcepath}" "${params[@]}"
+    ${scadcmd} -o "${outputpath}" "${sourcepath}" "${params[@]}"
 }
 
 # Set the format of the ouput files.
@@ -201,7 +203,7 @@ scadrender() {
     local name=$(scadmodulename "${filepath}")
     local outputpath="${destpath}/${prefix}${name}${suffix}.${scadout}"
     printmessage "${C_RST}Rendering of ${C_SEL}${filename}${C_RST} to ${C_SEL}${outputpath}"
-    scadcall "${filepath}" "${outputpath}" "renderMode=\"prod\"" "$@"
+    scadcall "${filepath}" "${outputpath}" --render "renderMode=\"prod\"" "$@"
 }
 
 # Renders the files from a path. Several processes will be spawned at a time to parallelize the rendering and speeds it up.
