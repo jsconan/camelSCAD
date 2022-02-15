@@ -112,7 +112,7 @@ if [ ! -d "${srcpath}" ]; then
     printerror "The input path ${srcpath} does not exist!"
 fi
 if [ ! -d "${dstpath}" ]; then
-    printmessage ${C_ERR}"Warning! The output path ${dstpath} does not exist!"
+    printmessage ${C_WRN}"Warning! The output path ${dstpath} does not exist!"
 fi
 
 # check OpenSCAD

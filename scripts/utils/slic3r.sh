@@ -178,7 +178,7 @@ slic3rconfig() {
     if [ "${slic3rconfigpath}" != "" ]; then
         printmessage "${C_RST}Will slice the models using the config from ${C_SEL}${slic3rconfigpath}${C_RST}"
         if [ ! -f "${configpath}" ]; then
-            printmessage "${C_ERR}Warning! The config for Slic3r does not exist!"
+            printmessage "${C_WRN}Warning! The config for Slic3r does not exist!"
         fi
     else
         printmessage "${C_RST}No config file provided, will slice the models using the default config."
