@@ -212,20 +212,37 @@ scadprocesses() {
 # scadrender "bar.scad" "foo/bar" "foo" "baz" # will render a STL file at foo/bar/foo-bar-baz.stl
 #
 # @param filepath - The path of the SCAD file to render.
-# @param destpath - The path to the output file.
+# @param destpath - The path to the output folder.
 # @param prefix - A prefix to add to the output file.
 # @param suffix - A suffix to add to the output file.
 # @param ... - A list of pre-defined variables.
 scadrender() {
-    local filepath="$1"; shift
-    local destpath="$1"; shift
-    local prefix=$(suffixif "$1" "-"); shift
-    local suffix=$(prefixif "-" "$1"); shift
-    local filename=$(basename "${filepath}")
-    local name=$(scadmodulename "${filepath}")
-    local outputpath="${destpath}/${prefix}${name}${suffix}.${scadout}"
+    local filepath="$1";
+    local outputpath=$(buildpath "$1" "$2" "${scadout}" "$3" "$4")
+    shift 4
     printmessage "${C_RST}Rendering of ${C_SEL}${filename}${C_RST} to ${C_SEL}${outputpath}"
     scadcall "${filepath}" "${outputpath}" --render "renderMode=\"prod\"" "$@"
+}
+
+# Previews a module.
+#
+# @example
+# scadpreview "bar.scad" "foo/bar"             # will preview a STL file at foo/bar/bar.stl
+# scadpreview "bar.scad" "foo/bar" "foo"       # will preview a STL file at foo/bar/foo-bar.stl
+# scadpreview "bar.scad" "foo/bar" "foo" "baz" # will preview a STL file at foo/bar/foo-bar-baz.stl
+#
+# @param filepath - The path of the SCAD file to preview.
+# @param destpath - The path to the output folder.
+# @param extension - The file extension for the ouput file.
+# @param prefix - A prefix to add to the output file.
+# @param suffix - A suffix to add to the output file.
+# @param ... - A list of pre-defined variables.
+scadpreview() {
+    local filepath="$1";
+    local outputpath=$(buildpath "$1" "$2" "$3" "$4" "$5")
+    shift 5
+    printmessage "${C_RST}Rendering of ${C_SEL}${filename}${C_RST} to ${C_SEL}${outputpath}"
+    scadcall "${filepath}" "${outputpath}" --preview "renderMode=\"prod\"" "$@"
 }
 
 # Renders the files from a path. Several processes will be spawned at a time to parallelize the rendering and speeds it up.
