@@ -2,7 +2,7 @@
 #
 # GPLv3 License
 #
-# Copyright (c) 2020 Jean-Sebastien CONAN
+# Copyright (c) 2020-2022 Jean-Sebastien CONAN
 #
 # This file is part of jsconan/things.
 #
@@ -94,6 +94,28 @@ useprusaslicer() {
     slic3ruse "PrusaSlicer" "2.1"
 }
 
+# Gets the version of the installed Slic3r.
+# Exits with error code E_SLIC3R if not installed.
+#
+# @example
+# slic3rversion     # will display "xxx.xx.xx",
+#
+# slic3rversion "foo" # will display "xxxx.xx", or return E_SLIC3R if not installed
+#
+# @param [slic3r] - The path to the Slic3r command (default "slic3r").
+slic3rversion() {
+    local version
+    local cmd="${slic3rcmd}"
+    if [ "$1" != "" ]; then
+        cmd="$1"
+    fi
+    version="$(${slic3rcmd} --help | egrep -o '[0-9].[0-9]' | head -1 2>&1)"
+    if [ "$?" != "0" ]; then
+        return ${E_SLIC3R}
+    fi
+    echo "${version}"
+}
+
 # Checks if Slic3r is installed.
 # Exits with error code E_SLIC3R if not installed.
 #
@@ -108,7 +130,7 @@ useprusaslicer() {
 #
 # @param [slic3r] - The path to the Slic3r command (default "slic3r").
 slic3rcheck() {
-    local info=
+    local info
     if [ "$1" != "" ]; then
         slic3rcmd="$1"
         info=" [from ${C_SEL}${slic3rcmd}${C_RST}]"
