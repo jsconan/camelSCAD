@@ -101,15 +101,16 @@ scadmoduleuri() {
 #
 # @param [openscad] - The path to the OpenSCAD command (default "openscad").
 scadversion() {
+    local version
     local cmd="${scadcmd}"
     if [ "$1" != "" ]; then
         cmd="$1"
     fi
-    local ouput=$(${cmd} -v 2>&1)
+    version=$(${cmd} -v 2>&1)
     if [ "$?" != "0" ]; then
         return ${E_OPENSCAD}
     fi
-    echo "${ouput//[^0-9.]/}"
+    echo "${version//[^0-9.]/}"
 }
 
 # Checks if OpenSCAD is installed.
@@ -126,13 +127,14 @@ scadversion() {
 #
 # @param [openscad] - The path to the OpenSCAD command (default "openscad").
 scadcheck() {
-    local info=
+    local info
+    local version
     if [ "$1" != "" ]; then
         scadcmd="$1"
         info=" [from ${C_SEL}${scadcmd}${C_RST}]"
     fi
     printmessage "Detecting ${C_SPE}OpenSCAD${C_RST}${info}..."
-    local version=$(scadversion)
+    version=$(scadversion)
     if [ "$?" != "0" ]; then
         printerror "It seems OpenSCAD has not been installed on your system.\nOr perhaps is it just not reachable...\nHave you placed it in your environment PATH variable?" ${E_OPENSCAD}
     else
