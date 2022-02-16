@@ -41,6 +41,9 @@ export scadver="2019.05"
 # Defines the file extension for OpenSCAD files
 export scadext="scad"
 
+# Defines the file extension for echo prints
+export echoext="echo"
+
 # Defines the file format for the rendering output
 export scadout="stl"
 
@@ -243,6 +246,27 @@ scadpreview() {
     local filename=$(basename "${filepath}")
     local outputpath=$(buildpath "$1" "$2" "$3" "$4" "$5")
     shift $(($# > 5 ? 5 : $#))
+    printmessage "${C_RST}Rendering of ${C_SEL}${filename}${C_RST} to ${C_SEL}${outputpath}"
+    scadcall "${filepath}" "${outputpath}" --preview "renderMode=\"prod\"" "$@"
+}
+
+# Prints the echos from a module.
+#
+# @example
+# scadecho "bar.scad" "foo/bar"             # will preview a STL file at foo/bar/bar.echo
+# scadecho "bar.scad" "foo/bar" "foo"       # will preview a STL file at foo/bar/foo-bar.echo
+# scadecho "bar.scad" "foo/bar" "foo" "baz" # will preview a STL file at foo/bar/foo-bar-baz.echo
+#
+# @param filepath - The path of the SCAD file from which get the echos.
+# @param destpath - The path to the output folder.
+# @param prefix - A prefix to add to the output file.
+# @param suffix - A suffix to add to the output file.
+# @param ... - A list of pre-defined variables.
+scadecho() {
+    local filepath="$1";
+    local filename=$(basename "${filepath}")
+    local outputpath=$(buildpath "$1" "$2" "${echoext}" "$3" "$4")
+    shift $(($# > 4 ? 4 : $#))
     printmessage "${C_RST}Rendering of ${C_SEL}${filename}${C_RST} to ${C_SEL}${outputpath}"
     scadcall "${filepath}" "${outputpath}" --preview "renderMode=\"prod\"" "$@"
 }
