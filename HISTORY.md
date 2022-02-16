@@ -1,5 +1,25 @@
 # camelSCAD history
 
+## [Version 1.6.0](https://github.com/jsconan/camelSCAD/releases/tag/v1.6.0)
+
+Add core functions:
+
+-   `interpolationThreshold()`: Computes the threshold for a particular interpolation step considering the expected number of steps, and with respect to start and end thresholds.
+
+Add operators:
+
+-   `presentAnimate()`: Presents the child modules only between the start and end thresholds, with respect to the `$t` variable.
+
+Update script utils:
+
+-   Add color for the warning messages.
+-   Add the function `buildpath` to build a destination path from a list of parts.
+-   Add the function `scadversion` to get the version of the installed OpenSCAD.
+-   Add the function `sclic3rversion` to get the version of the installed Slic3r.
+-   Add the function `scadpreview` to render a capture of a SCAD model.
+-   Add the function `scadecho` to capture the echos printed by a model.
+-   Accept other parameters than variable definitions when calling OpenSCAD.
+
 ## [Version 1.5.0](https://github.com/jsconan/camelSCAD/releases/tag/v1.5.0)
 
 Add operators to ease scenes animation:

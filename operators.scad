@@ -36,6 +36,7 @@ include <core.scad>
 
 /* OPERATORS */
 include <operator/animate/mirror.scad>
+include <operator/animate/present.scad>
 include <operator/animate/resize.scad>
 include <operator/animate/rotate.scad>
 include <operator/animate/scale.scad>

@@ -41,6 +41,9 @@ export scadver="2019.05"
 # Defines the file extension for OpenSCAD files
 export scadext="scad"
 
+# Defines the file extension for echo prints
+export echoext="echo"
+
 # Defines the file format for the rendering output
 export scadout="stl"
 
@@ -91,6 +94,28 @@ scadmoduleuri() {
     fi
 }
 
+# Gets the version of the installed OpenSCAD.
+# Exits with error code E_OPENSCAD if not installed.
+#
+# @example
+# scadversion       # will display "xxxx.xx"
+#
+# scadversion "foo" # will display "xxxx.xx", or return E_OPENSCAD if not installed
+#
+# @param [openscad] - The path to the OpenSCAD command (default "openscad").
+scadversion() {
+    local version
+    local cmd="${scadcmd}"
+    if [ "$1" != "" ]; then
+        cmd="$1"
+    fi
+    version=$(${cmd} -v 2>&1)
+    if [ "$?" != "0" ]; then
+        return ${E_OPENSCAD}
+    fi
+    echo "${version//[^0-9.]/}"
+}
+
 # Checks if OpenSCAD is installed.
 # Exits with error code E_OPENSCAD if not installed.
 #
@@ -105,19 +130,19 @@ scadmoduleuri() {
 #
 # @param [openscad] - The path to the OpenSCAD command (default "openscad").
 scadcheck() {
-    local info=
+    local info
+    local version
     if [ "$1" != "" ]; then
         scadcmd="$1"
         info=" [from ${C_SEL}${scadcmd}${C_RST}]"
     fi
     printmessage "Detecting ${C_SPE}OpenSCAD${C_RST}${info}..."
-    local scad=$(${scadcmd} -v 2>&1)
+    version=$(scadversion)
     if [ "$?" != "0" ]; then
         printerror "It seems OpenSCAD has not been installed on your system.\nOr perhaps is it just not reachable...\nHave you placed it in your environment PATH variable?" ${E_OPENSCAD}
     else
         printmessage "${C_SPE}OpenSCAD${C_RST} has been detected."
     fi
-    local version="${scad//[^0-9.]/}"
     if [[ "${version}" < "${scadver}" ]]; then
         printerror "The installed version of OpenSCAD does not meet the requirement.\n\tInstalled: ${version}\n\tRequired: ${scadver}" ${E_OPENSCAD}
     fi
@@ -141,11 +166,13 @@ scadcall() {
     local params=()
     for var in "$@"; do
         if [ "${var}" != "" ]; then
-            params+=("-D")
+            if [[ "${var}" == *=* ]]; then
+                params+=("-D")
+            fi
             params+=("${var}")
         fi
     done
-    ${scadcmd} --render -o "${outputpath}" "${sourcepath}" "${params[@]}"
+    ${scadcmd} -o "${outputpath}" "${sourcepath}" "${params[@]}"
 }
 
 # Set the format of the ouput files.
@@ -188,20 +215,60 @@ scadprocesses() {
 # scadrender "bar.scad" "foo/bar" "foo" "baz" # will render a STL file at foo/bar/foo-bar-baz.stl
 #
 # @param filepath - The path of the SCAD file to render.
-# @param destpath - The path to the output file.
+# @param destpath - The path to the output folder.
 # @param prefix - A prefix to add to the output file.
 # @param suffix - A suffix to add to the output file.
 # @param ... - A list of pre-defined variables.
 scadrender() {
-    local filepath="$1"; shift
-    local destpath="$1"; shift
-    local prefix=$(suffixif "$1" "-"); shift
-    local suffix=$(prefixif "-" "$1"); shift
+    local filepath="$1";
     local filename=$(basename "${filepath}")
-    local name=$(scadmodulename "${filepath}")
-    local outputpath="${destpath}/${prefix}${name}${suffix}.${scadout}"
+    local outputpath=$(buildpath "$1" "$2" "${scadout}" "$3" "$4")
+    shift $(($# > 4 ? 4 : $#))
     printmessage "${C_RST}Rendering of ${C_SEL}${filename}${C_RST} to ${C_SEL}${outputpath}"
-    scadcall "${filepath}" "${outputpath}" "renderMode=\"prod\"" "$@"
+    scadcall "${filepath}" "${outputpath}" --render "renderMode=\"prod\"" "$@"
+}
+
+# Previews a module.
+#
+# @example
+# scadpreview "bar.scad" "foo/bar" "png"             # will preview a STL file at foo/bar/bar.png
+# scadpreview "bar.scad" "foo/bar" "png" "foo"       # will preview a STL file at foo/bar/foo-bar.png
+# scadpreview "bar.scad" "foo/bar" "png" "foo" "baz" # will preview a STL file at foo/bar/foo-bar-baz.png
+#
+# @param filepath - The path of the SCAD file to preview.
+# @param destpath - The path to the output folder.
+# @param extension - The file extension for the ouput file.
+# @param prefix - A prefix to add to the output file.
+# @param suffix - A suffix to add to the output file.
+# @param ... - A list of pre-defined variables.
+scadpreview() {
+    local filepath="$1";
+    local filename=$(basename "${filepath}")
+    local outputpath=$(buildpath "$1" "$2" "$3" "$4" "$5")
+    shift $(($# > 5 ? 5 : $#))
+    printmessage "${C_RST}Rendering of ${C_SEL}${filename}${C_RST} to ${C_SEL}${outputpath}"
+    scadcall "${filepath}" "${outputpath}" --preview "renderMode=\"prod\"" "$@"
+}
+
+# Prints the echos from a module.
+#
+# @example
+# scadecho "bar.scad" "foo/bar"             # will preview a STL file at foo/bar/bar.echo
+# scadecho "bar.scad" "foo/bar" "foo"       # will preview a STL file at foo/bar/foo-bar.echo
+# scadecho "bar.scad" "foo/bar" "foo" "baz" # will preview a STL file at foo/bar/foo-bar-baz.echo
+#
+# @param filepath - The path of the SCAD file from which get the echos.
+# @param destpath - The path to the output folder.
+# @param prefix - A prefix to add to the output file.
+# @param suffix - A suffix to add to the output file.
+# @param ... - A list of pre-defined variables.
+scadecho() {
+    local filepath="$1";
+    local filename=$(basename "${filepath}")
+    local outputpath=$(buildpath "$1" "$2" "${echoext}" "$3" "$4")
+    shift $(($# > 4 ? 4 : $#))
+    printmessage "${C_RST}Rendering of ${C_SEL}${filename}${C_RST} to ${C_SEL}${outputpath}"
+    scadcall "${filepath}" "${outputpath}" --preview "renderMode=\"prod\"" "$@"
 }
 
 # Renders the files from a path. Several processes will be spawned at a time to parallelize the rendering and speeds it up.

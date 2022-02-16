@@ -34,6 +34,7 @@
 
 # List of color codes
 export C_ERR="\033[31m"
+export C_WRN="\033[35m"
 export C_SEL="\033[32m"
 export C_SPE="\033[33m"
 export C_CTX="\033[36m"
