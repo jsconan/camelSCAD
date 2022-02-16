@@ -218,6 +218,7 @@ scadprocesses() {
 # @param ... - A list of pre-defined variables.
 scadrender() {
     local filepath="$1";
+    local filename=$(basename "${filepath}")
     local outputpath=$(buildpath "$1" "$2" "${scadout}" "$3" "$4")
     shift 4
     printmessage "${C_RST}Rendering of ${C_SEL}${filename}${C_RST} to ${C_SEL}${outputpath}"
@@ -227,9 +228,9 @@ scadrender() {
 # Previews a module.
 #
 # @example
-# scadpreview "bar.scad" "foo/bar"             # will preview a STL file at foo/bar/bar.stl
-# scadpreview "bar.scad" "foo/bar" "foo"       # will preview a STL file at foo/bar/foo-bar.stl
-# scadpreview "bar.scad" "foo/bar" "foo" "baz" # will preview a STL file at foo/bar/foo-bar-baz.stl
+# scadpreview "bar.scad" "foo/bar" "png"             # will preview a STL file at foo/bar/bar.png
+# scadpreview "bar.scad" "foo/bar" "png" "foo"       # will preview a STL file at foo/bar/foo-bar.png
+# scadpreview "bar.scad" "foo/bar" "png" "foo" "baz" # will preview a STL file at foo/bar/foo-bar-baz.png
 #
 # @param filepath - The path of the SCAD file to preview.
 # @param destpath - The path to the output folder.
@@ -239,6 +240,7 @@ scadrender() {
 # @param ... - A list of pre-defined variables.
 scadpreview() {
     local filepath="$1";
+    local filename=$(basename "${filepath}")
     local outputpath=$(buildpath "$1" "$2" "$3" "$4" "$5")
     shift 5
     printmessage "${C_RST}Rendering of ${C_SEL}${filename}${C_RST} to ${C_SEL}${outputpath}"
