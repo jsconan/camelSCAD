@@ -126,7 +126,7 @@ if [ ! -d "${srcpath}" ]; then
     printerror "The input path ${srcpath} does not exist!"
 fi
 if [ ! -d "${dstpath}" ]; then
-    printmessage ${C_ERR}"Warning! The output path ${dstpath} does not exist!"
+    printmessage ${C_WRN}"Warning! The output path ${dstpath} does not exist!"
 fi
 
 # check Slic3r
@@ -137,7 +137,7 @@ slic3rformat "${format}"
 
 # defines the config path
 if [ "${configpath}" != "" ] && [ ! -f "${configpath}" ]; then
-    printmessage "${C_ERR}Warning! The config for Slic3r does not exist."
+    printmessage "${C_WRN}Warning! The config for Slic3r does not exist."
 fi
 slic3rconfig "${configpath}"
 

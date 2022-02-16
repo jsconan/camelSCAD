@@ -34,7 +34,7 @@ use <../../full.scad>
  * @author jsconan
  */
 module testCoreMaths() {
-    testPackage("core/maths.scad", 32) {
+    testPackage("core/maths.scad", 33) {
         // test core/maths/deg()
         testModule("deg()", 3) {
             testUnit("no parameter", 1) {
@@ -1059,6 +1059,43 @@ module testCoreMaths() {
                 assertEqual(interpolateStep(0.45, range=range), 2.2, "Step 0.45 of external range");
                 assertEqual(interpolateStep(0.85, range=range), 6.9, "Step 0.85 of external range");
                 assertEqual(interpolateStep(1, range=range), 9, "Step 1 of external range");
+            }
+        }
+        // test core/maths/interpolationThreshold()
+        testModule("interpolationThreshold()", 5) {
+            testUnit("wrong value", 4) {
+                assertEqual(interpolationThreshold(), 0, "No parameter given");
+                assertEqual(interpolationThreshold("1", "2", "3", "4", "5"), 0, "String given");
+                assertEqual(interpolationThreshold(true, true, true, true, true), 0, "Booleans given");
+                assertEqual(interpolationThreshold([1], [2], [3], [4], [5]), 0, "Vectors given");
+            }
+            testUnit("no threshold", 5) {
+                assertEqual(interpolationThreshold(0, 4), 0, "Interpolation step 0 from 4 steps");
+                assertEqual(interpolationThreshold(1, 4), 0.25, "Interpolation step 1 from 4 steps");
+                assertEqual(interpolationThreshold(2, 4), 0.5, "Interpolation step 2 from 4 steps");
+                assertEqual(interpolationThreshold(3, 4), 0.75, "Interpolation step 3 from 4 steps");
+                assertEqual(interpolationThreshold(4, 4), 1, "Interpolation step 4 from 4 steps");
+            }
+            testUnit("threshold from computed percentage", 5) {
+                assertEqual(interpolationThreshold(0, 4, .25, .75), 0.25, "Interpolation step 0 from 4 steps");
+                assertEqual(interpolationThreshold(1, 4, .25, .75), 0.375, "Interpolation step 1 from 4 steps");
+                assertEqual(interpolationThreshold(2, 4, .25, .75), 0.5, "Interpolation step 2 from 4 steps");
+                assertEqual(interpolationThreshold(3, 4, .25, .75), 0.625, "Interpolation step 3 from 4 steps");
+                assertEqual(interpolationThreshold(4, 4, .25, .75), 0.75, "Interpolation step 4 from 4 steps");
+            }
+            testUnit("threshold from percentage to compute", 5) {
+                assertEqual(interpolationThreshold(0, 4, 25, 75), 0.25, "Interpolation step 0 from 4 steps");
+                assertEqual(interpolationThreshold(1, 4, 25, 75), 0.375, "Interpolation step 1 from 4 steps");
+                assertEqual(interpolationThreshold(2, 4, 25, 75), 0.5, "Interpolation step 2 from 4 steps");
+                assertEqual(interpolationThreshold(3, 4, 25, 75), 0.625, "Interpolation step 3 from 4 steps");
+                assertEqual(interpolationThreshold(4, 4, 25, 75), 0.75, "Interpolation step 4 from 4 steps");
+            }
+            testUnit("threshold from percentage to compute with scale", 5) {
+                assertEqual(interpolationThreshold(0, 4, 250, 750, 1000), 0.25, "Interpolation step 0 from 4 steps");
+                assertEqual(interpolationThreshold(1, 4, 250, 750, 1000), 0.375, "Interpolation step 1 from 4 steps");
+                assertEqual(interpolationThreshold(2, 4, 250, 750, 1000), 0.5, "Interpolation step 2 from 4 steps");
+                assertEqual(interpolationThreshold(3, 4, 250, 750, 1000), 0.625, "Interpolation step 3 from 4 steps");
+                assertEqual(interpolationThreshold(4, 4, 250, 750, 1000), 0.75, "Interpolation step 4 from 4 steps");
             }
         }
     }

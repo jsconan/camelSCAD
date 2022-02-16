@@ -2,7 +2,7 @@
 #
 # GPLv3 License
 #
-# Copyright (c) 2019 Jean-Sebastien CONAN
+# Copyright (c) 2019-2022 Jean-Sebastien CONAN
 #
 # This file is part of jsconan/things.
 #
@@ -127,4 +127,34 @@ recursepath() {
             echo "${folder}"
         fi
     done
+}
+
+# Builds a file path.
+#
+# @example
+# buildpath "bar.scad" "foo/bar"                   # will build the path foo/bar/bar.scad
+# buildpath "bar.scad" "foo/bar" "" "foo"          # will build the path foo/bar/foo-bar.scad
+# buildpath "bar.scad" "foo/bar" "" "" "baz"       # will build the path foo/bar/bar-baz.scad
+# buildpath "bar.scad" "foo/bar" "" "foo" "baz"    # will build the path foo/bar/foo-bar-baz.scad
+# buildpath "bar.scad" "foo/bar" "stl"             # will build the path foo/bar/bar.stl
+# buildpath "bar.scad" "foo/bar" "stl" "foo"       # will build the path foo/bar/foo-bar.stl
+# buildpath "bar.scad" "foo/bar" "stl" "" "baz"    # will build the path foo/bar/bar-baz.stl
+# buildpath "bar.scad" "foo/bar" "stl" "foo" "baz" # will build the path foo/bar/foo-bar-baz.stl
+#
+# @param filepath - The path to the original file.
+# @param destpath - The path to the file.
+# @param extension - A file extension to set to the file name.
+# @param prefix - A prefix to add to the file name.
+# @param suffix - A suffix to add to the file name.
+buildpath() {
+    local filepath="$1";
+    local destpath="$2";
+    local extension=$(prefixif "." "$3");
+    local prefix=$(suffixif "$4" "-");
+    local suffix=$(prefixif "-" "$5");
+    local name=$(basename "${filepath%.*}")
+    if [ "${extension}" == "" ]; then
+        extension=$(prefixif "." "${filepath##*.}");
+    fi
+    echo "${destpath}/${prefix}${name}${suffix}${extension}"
 }

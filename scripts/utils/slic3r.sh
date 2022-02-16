@@ -2,7 +2,7 @@
 #
 # GPLv3 License
 #
-# Copyright (c) 2020 Jean-Sebastien CONAN
+# Copyright (c) 2020-2022 Jean-Sebastien CONAN
 #
 # This file is part of jsconan/things.
 #
@@ -94,6 +94,28 @@ useprusaslicer() {
     slic3ruse "PrusaSlicer" "2.1"
 }
 
+# Gets the version of the installed Slic3r.
+# Exits with error code E_SLIC3R if not installed.
+#
+# @example
+# slic3rversion     # will display "xxx.xx.xx",
+#
+# slic3rversion "foo" # will display "xxxx.xx", or return E_SLIC3R if not installed
+#
+# @param [slic3r] - The path to the Slic3r command (default "slic3r").
+slic3rversion() {
+    local version
+    local cmd="${slic3rcmd}"
+    if [ "$1" != "" ]; then
+        cmd="$1"
+    fi
+    version="$(${slic3rcmd} --help | egrep -o '[0-9].[0-9]' | head -1 2>&1)"
+    if [ "$?" != "0" ]; then
+        return ${E_SLIC3R}
+    fi
+    echo "${version}"
+}
+
 # Checks if Slic3r is installed.
 # Exits with error code E_SLIC3R if not installed.
 #
@@ -108,7 +130,7 @@ useprusaslicer() {
 #
 # @param [slic3r] - The path to the Slic3r command (default "slic3r").
 slic3rcheck() {
-    local info=
+    local info
     if [ "$1" != "" ]; then
         slic3rcmd="$1"
         info=" [from ${C_SEL}${slic3rcmd}${C_RST}]"
@@ -156,7 +178,7 @@ slic3rconfig() {
     if [ "${slic3rconfigpath}" != "" ]; then
         printmessage "${C_RST}Will slice the models using the config from ${C_SEL}${slic3rconfigpath}${C_RST}"
         if [ ! -f "${configpath}" ]; then
-            printmessage "${C_ERR}Warning! The config for Slic3r does not exist!"
+            printmessage "${C_WRN}Warning! The config for Slic3r does not exist!"
         fi
     else
         printmessage "${C_RST}No config file provided, will slice the models using the default config."

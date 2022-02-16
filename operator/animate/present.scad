@@ -33,18 +33,16 @@
  */
 
 /**
- * Translates the child modules, interpolating the coordinates with respect to the `$t` variable.
+ * Presents the child modules only between the start and end thresholds, with respect to the `$t` variable.
  *
- * @param Vector [from] - The coordinates from where starts the interpolation.
- * @param Vector [to] - The coordinates to where ends the interpolation.
- * @param Number [start] - The start threshold under what the from-coordinates will persist and above what it will be interpolated.
- * @param Number [end] - The end threshold above what the to-coordinates will persist and under what it will be interpolated.
+ * @param Number [start] - The start threshold under what the child modules will be hidden and above what they will be presented.
+ * @param Number [end] - The end threshold above what the child modules will be hidden and under what they will be presented.
  * @param Number [domain] - The percentage domain used to compute the thresholds (default: 100).
- * @param Vector [values] - A list of coordinates composing the range to interpolate.
- * @param Vector [range] - A pre-built interpolation range. If missing, it will be built from the parameters `from`, `to`, `start`, `end`, `domain`.
  */
-module translateAnimate(from, to, start, end, domain, values, range) {
-    translate(interpolateStep3D(step=$t, low=from, high=to, start=start, end=end, domain=domain, values=values, range=range)) {
+module presentAnimate(start, end, domain) {
+    start = abs(percentage(numberOr(start, 0), domain=domain));
+    end = abs(percentage(numberOr(end, 1), domain=domain));
+    if( $t >= min(start, end) && $t <= max(start, end) ) {
         children();
     }
 }
