@@ -220,7 +220,7 @@ scadrender() {
     local filepath="$1";
     local filename=$(basename "${filepath}")
     local outputpath=$(buildpath "$1" "$2" "${scadout}" "$3" "$4")
-    shift 4
+    shift $(($# > 4 ? 4 : $#))
     printmessage "${C_RST}Rendering of ${C_SEL}${filename}${C_RST} to ${C_SEL}${outputpath}"
     scadcall "${filepath}" "${outputpath}" --render "renderMode=\"prod\"" "$@"
 }
@@ -242,7 +242,7 @@ scadpreview() {
     local filepath="$1";
     local filename=$(basename "${filepath}")
     local outputpath=$(buildpath "$1" "$2" "$3" "$4" "$5")
-    shift 5
+    shift $(($# > 5 ? 5 : $#))
     printmessage "${C_RST}Rendering of ${C_SEL}${filename}${C_RST} to ${C_SEL}${outputpath}"
     scadcall "${filepath}" "${outputpath}" --preview "renderMode=\"prod\"" "$@"
 }
