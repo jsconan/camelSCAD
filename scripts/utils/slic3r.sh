@@ -109,7 +109,7 @@ slic3rversion() {
     if [ "$1" != "" ]; then
         cmd="$1"
     fi
-    version="$(${slic3rcmd} --help | egrep -o '[0-9].[0-9]' | head -1 2>&1)"
+    version="$(${cmd} --help | egrep -o '[0-9].[0-9]' | head -1 2>&1)"
     if [ "$?" != "0" ]; then
         return ${E_SLIC3R}
     fi
