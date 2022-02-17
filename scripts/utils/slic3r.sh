@@ -142,7 +142,7 @@ slic3rcheck() {
     else
         printmessage "${C_SPE}${slic3rname}${C_RST} has been detected."
     fi
-    local version="$(${slic3rcmd} --help | egrep -o '[0-9].[0-9]' | head -1 2>&1)"
+    local version="$(slic3rversion)"
     if [[ "${version}" < "${slic3rver}" ]]; then
         printerror "The installed version of ${slic3rname} does not meet the requirement.\n\tInstalled: ${version}\n\tRequired: ${slic3rver}" ${E_SLIC3R}
     fi
