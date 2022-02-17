@@ -1,5 +1,12 @@
 # camelSCAD history
 
+## [Version 1.6.1](https://github.com/jsconan/camelSCAD/releases/tag/v1.6.1)
+
+Fix script utils:
+
+-   use the provided path to Slic3r to get the version in `slic3rversion`
+-   use the function `slic3rversion` to get the version of Slic3r
+
 ## [Version 1.6.0](https://github.com/jsconan/camelSCAD/releases/tag/v1.6.0)
 
 Add core functions:
