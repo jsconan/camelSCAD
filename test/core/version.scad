@@ -45,10 +45,10 @@ module testCoreVersion() {
         // test camelSCAD()
         testModule("camelSCAD()", 2) {
             testUnit("as vector", 1) {
-                assertEqual(camelSCAD(), [1, 6, 1], "The current version of the library is 1.6.1");
+                assertEqual(camelSCAD(), [1, 7, 0], "The current version of the library is 1.7.0");
             }
             testUnit("as string", 1) {
-                assertEqual(camelSCAD(true), "1.6.1", "The current version of the library is 1.6.1");
+                assertEqual(camelSCAD(true), "1.7.0", "The current version of the library is 1.7.0");
             }
         }
     }

@@ -158,3 +158,30 @@ buildpath() {
     fi
     echo "${destpath}/${prefix}${name}${suffix}${extension}"
 }
+
+# Makes sure a file exists. Otherwise creates a copy from the dist file.
+#
+# @example
+# distfile "bar.scad"                   # copy bar-dist.scad to bar.scad if the file does not exist
+# distfile "bar.scad" "foo.scaf"        # copy foo.scad to bar.scad if the file does not exist
+#
+# @param filepath - The path to the original file.
+distfile() {
+    local filepath="$1"
+    local distpath="$2"
+    if [ "${filepath}" == "" ]; then
+        return
+    fi
+
+    if [ "${distpath}" == "" ]; then
+        local extension=$(prefixif "." "${filepath##*.}")
+        distpath="${filepath%.*}-dist${extension}"
+    fi
+
+    if [ ! -f "${filepath}" ] && [ -f "${distpath}" ]; then
+        local filename=$(basename "${filepath}")
+        local distname=$(basename "${distpath}")
+        printmessage "The file ${C_SEL}${filename}${C_RST} does not exist. Creating a copy from ${C_SEL}${distname}${C_RST}."
+        cp "${distpath}" "${filepath}"
+    fi
+}
