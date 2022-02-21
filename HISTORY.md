@@ -1,5 +1,11 @@
 # camelSCAD history
 
+## [Version 1.7.0](https://github.com/jsconan/camelSCAD/releases/tag/v1.7.0)
+
+Add script utils:
+
+-   `distfile`: Makes sure a file exists. Otherwise creates a copy from the dist file.
+
 ## [Version 1.6.1](https://github.com/jsconan/camelSCAD/releases/tag/v1.6.1)
 
 Fix script utils:
