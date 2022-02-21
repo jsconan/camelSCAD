@@ -36,7 +36,7 @@
  * The version of the library.
  * @type Vector
  */
-CAMEL_SCAD_VERSION = [1, 6, 1];
+CAMEL_SCAD_VERSION = [1, 7, 0];
 
 /**
  * The minimal version of OpenSCAD required by the library.
