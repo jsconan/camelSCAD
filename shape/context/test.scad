@@ -112,6 +112,7 @@ module visualTest(index, length, width, title="test", margin=1, cols=0, center=f
 
 /**
  * Renders a test area for each child module, moving the tested shapes in it.
+ * A single test can be selected by its index thanks to the global variable `selectTest`.
  * @param Number length - The length of the test area.
  * @param Number width - The width of the test area.
  * @param String [title] - The title for the test.
@@ -122,11 +123,15 @@ module visualTest(index, length, width, title="test", margin=1, cols=0, center=f
  */
 module visualTestSuite(length, width, title="test", margin=1, cols=0, center=false, centerEach=false) {
     margin = vector2D(margin);
-    lines = cols ? ceil($children / cols) : 1;
+    count = $children;
+    selectTest = is_undef(selectTest) ? undef : min(max(0, selectTest), count - 1);
+    start = is_undef(selectTest) ? 0 : selectTest;
+    end = is_undef(selectTest) ? count - 1 : selectTest;
+    lines = cols ? ceil(count / cols) : 1;
     offset = center ? -([margin.x * (cols - 1), margin.y * (lines - 1), 0] + [length * cols, width * lines, 0]) / 2 : ORIGIN_3D;
 
     translate(offset) {
-        for (i = [0 : $children - 1]) {
+        for (i = [start : end]) {
             visualTest(
                 index = i,
                 length = length,
@@ -141,3 +146,6 @@ module visualTestSuite(length, width, title="test", margin=1, cols=0, center=fal
         }
     }
 }
+
+// Select a single test to show
+selectTest = undef;
