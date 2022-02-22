@@ -46,4 +46,3 @@ include <shape/3D/polyhedron.scad>
 
 include <shape/context/build-box.scad>
 include <shape/context/control.scad>
-include <shape/context/test.scad>
