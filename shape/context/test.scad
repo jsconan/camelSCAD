@@ -53,6 +53,28 @@ module placeVisualTest(length, width, index=0, margin=0, cols=0, center=false) {
 }
 
 /**
+ * Colorizes a test element.
+ * @param Number alpha - The alpha level for the testbed color.
+ */
+module testElement(alpha) {
+    %color(TESTBED_COLOR, alpha) {
+        children();
+    }
+}
+
+/**
+ * Extrudes and colorizes a test element.
+ * @param Number alpha - The alpha level for the testbed color.
+ */
+module testbed(alpha) {
+    testElement(alpha) {
+        linear_extrude(height=TESTBED_THICKNESS, convexity=10, center=true) {
+            children();
+        }
+    }
+}
+
+/**
  * Renders a test area, moving the tested shapes in it.
  * @param Number index - The index number of the test.
  * @param Number length - The length of the test area.
@@ -74,9 +96,13 @@ module visualTest(index, length, width, title="test", margin=1, cols=0, center=f
         center = center
     ) {
         // test area
-        %square([length, width], center=center);
-        %translate(center ? ORIGIN_3D : [length, width, 0] / 2) {
-            text(title, size=min(length, width) / len(title), font="Liberation Sans", valign="center", halign="center");
+        testbed(.1) {
+            square([length, width], center=center);
+        }
+        translate(center ? ORIGIN_3D : [length, width, 0] / 2) {
+            testbed(1) {
+                text(title, size=min(length, width) / len(title), font="Liberation Sans", valign="center", halign="center");
+            }
         }
 
         // tested shapes

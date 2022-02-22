@@ -193,3 +193,15 @@ DEFAULT_BUILD_VOLUME_SIZE = DEFAULT_BUILD_PLATE_SIZE;
  * @type Number
  */
 DEFAULT_BUILD_PLATE_CELL = 10;
+
+/**
+ * The color for the testbed.
+ * @type String
+ */
+TESTBED_COLOR = "orange";
+
+/**
+ * The thickness of the testbed.
+ * @type String
+ */
+TESTBED_THICKNESS = .005;
