@@ -2,7 +2,7 @@
  * @license
  * MIT License
  *
- * Copyright (c) 2017 Jean-Sebastien CONAN
+ * Copyright (c) 2017-2022 Jean-Sebastien CONAN
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -42,7 +42,7 @@
  * @param Number [h] - The height of a point.
  */
 module controlPoints(points, size, l, w, h) {
-    %color([1, .2, .2, .3]) {
+    testElement(.5) {
         for (p = points) {
             translate(vector3D(p)) {
                 ellipsoid(d=uor(size, 1), dx=l, dy=w, dz=h);
