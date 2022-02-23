@@ -54,10 +54,10 @@ module placeVisualTest(length, width, index=0, margin=0, cols=0, center=false) {
 
 /**
  * Renders a test element.
- * @param String|Vector c - The color of the element.
- * @param Number|Vector size - The size of the element.
+ * @param String|Vector [c] - The color of the element.
+ * @param Number|Vector [size] - The size of the element.
  */
-module testElement(c, size=1) {
+module testElement(c="red", size=1) {
     color(c) {
         cube(size);
     }
