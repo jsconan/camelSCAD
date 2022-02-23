@@ -84,12 +84,12 @@ module buildPlate(size=DEFAULT_BUILD_PLATE_SIZE, cell=DEFAULT_BUILD_PLATE_CELL, 
     plateHeight = TESTBED_THICKNESS;
     lineWidth = .5;
 
-    testbed(.2) {
+    testbedExtrude(.2) {
         translate(center ? -plateSize / 2 : [0, 0]) {
             square(plateSize);
         }
     }
-    testbed(.2) {
+    testbedExtrude(.2) {
         translate(center ? [cellOffset.x, -plateSize.y / 2, 0] : ORIGIN_3D) {
             repeat(count=cellCount.x, intervalX=cellSize.x) {
                 square([lineWidth, plateSize.y]);
@@ -113,7 +113,7 @@ module buildPlate(size=DEFAULT_BUILD_PLATE_SIZE, cell=DEFAULT_BUILD_PLATE_CELL, 
  * @param Boolean [center] - The shape is centered vertically.
  */
 module buildVolume(size=DEFAULT_BUILD_VOLUME_SIZE, l, w, h, center=false) {
-    testElement(.1) {
+    testbedColor(.1) {
         size = apply3D(size, l, w, w);
         translate(center ? apply3D(-size / 2, z=0) : ORIGIN_3D) {
             cube(size);

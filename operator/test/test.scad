@@ -56,7 +56,7 @@ module placeVisualTest(length, width, index=0, margin=0, cols=0, center=false) {
  * Colorizes a test element.
  * @param Number alpha - The alpha level for the testbed color.
  */
-module testElement(alpha) {
+module testbedColor(alpha) {
     %color(TESTBED_COLOR, alpha) {
         children();
     }
@@ -66,8 +66,8 @@ module testElement(alpha) {
  * Extrudes and colorizes a test element.
  * @param Number alpha - The alpha level for the testbed color.
  */
-module testbed(alpha) {
-    testElement(alpha) {
+module testbedExtrude(alpha) {
+    testbedColor(alpha) {
         linear_extrude(height=TESTBED_THICKNESS, convexity=10, center=true) {
             children();
         }
@@ -96,11 +96,11 @@ module visualTest(index, length, width, title="test", margin=1, cols=0, center=f
         center = center
     ) {
         // test area
-        testbed(.1) {
+        testbedExtrude(.1) {
             square([length, width], center=center);
         }
         translate(center ? ORIGIN_3D : [length, width, 0] / 2) {
-            testbed(1) {
+            testbedExtrude(1) {
                 text(title, size=min(length, width) / len(title), font="Liberation Sans", valign="center", halign="center");
             }
         }

@@ -42,7 +42,7 @@
  * @param Number [h] - The height of a point.
  */
 module controlPoints(points, size, l, w, h) {
-    testElement(.5) {
+    testbedColor(.5) {
         for (p = points) {
             translate(vector3D(p)) {
                 ellipsoid(d=uor(size, 1), dx=l, dy=w, dz=h);
