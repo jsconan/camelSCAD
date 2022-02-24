@@ -53,14 +53,18 @@ module placeVisualTest(length, width, index=0, margin=0, cols=0, center=false) {
 }
 
 /**
- * Renders a test element.
+ * Renders a test element. If no children is given, a cube is rendered.
  * @param String|Vector [c] - The color of the element.
- * @param Number|Vector [size] - The size of the element.
- * @param Boolean [center] - Whether or not the element is centered.
+ * @param Number|Vector [size] - The size of the element. It only applies if no children is given.
+ * @param Boolean [center] - Whether or not the element is centered. It only applies if no children is given.
  */
 module testElement(c="red", size=1, center=false) {
     color(c) {
-        cube(size=size, center=center);
+        if ($children)  {
+            children();
+        } else {
+            cube(size=size, center=center);
+        }
     }
 }
 
