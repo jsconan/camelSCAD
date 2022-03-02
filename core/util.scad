@@ -79,7 +79,7 @@ function after(position) = float(position) > 0;
 
 /**
  * Gets a numeric representation of a cardinal point.
- * West and Eath are related to X-coordinate (resp. -1 and 1, or 2 if both).
+ * West and East are related to X-coordinate (resp. -1 and 1, or 2 if both).
  * South and North are related to Y-coordinate (resp. -1 and 1, or 2 if both).
  *
  * A cardinal expression is a string that contains cardinal point literals:
@@ -90,9 +90,9 @@ function after(position) = float(position) > 0;
  *
  * Combinations are allowed, for instance
  * - "ne" means North East, and will be translated to [1, 1]
- * - "nwe" means North Weast East, and will be translated to [2, 1]
- * - "nsw" means North South Weast, and will be translated to [-1, 2]
- * - "nswe" means North South Weast East, and will be translated to [2, 2]
+ * - "nwe" means North West East, and will be translated to [2, 1]
+ * - "nsw" means North South West, and will be translated to [-1, 2]
+ * - "nswe" means North South West East, and will be translated to [2, 2]
  *
  * @param Vector|String p - A vector or a cardinal expression.
  * @returns Vector - A 2D vector that contains position values for horizontal and vertical axis.
