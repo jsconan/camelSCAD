@@ -123,13 +123,12 @@ function align(value, direction, center) =
     let(
         direction = cardinal(uor(direction, 2)).y,
         value = divisor(value),
-        absv = abs(value),
         adjust = direction ? (direction == 2 ? ALIGN2 : ALIGN) : 0,
         offset = center ? (direction == 2 || direction == 0 ? 0 : direction * ALIGN / 2)
                         : (direction == 2 || direction == -1 ? -ALIGN : 0)
     )
     [
-        absv + adjust,
+        abs(value) + adjust,
         offset + (value < 0 && !center ? value : 0)
     ]
 ;
