@@ -206,5 +206,14 @@ TESTBED_COLOR = "orange";
  */
 TESTBED_THICKNESS = .005;
 
-// Select a single test to show
+/**
+ * Select a single test to show.
+ * @type Number
+ */
 SELECT_TEST = undef;
+
+/**
+ * Show the testbed for the visual tests.
+ * @type Boolean
+ */
+SHOW_TESTBED = true;

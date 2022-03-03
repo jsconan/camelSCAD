@@ -92,6 +92,7 @@ module testbedExtrude(alpha) {
 
 /**
  * Renders a test area, moving the tested shapes in it.
+ * A testbed is shown, unless the global variable `SELECT_TEST` is set to `false`.
  * @param Number index - The index number of the test.
  * @param Number length - The length of the test area.
  * @param Number width - The width of the test area.
@@ -112,12 +113,14 @@ module visualTest(index, length, width, title="test", margin=1, cols=0, center=f
         center = center
     ) {
         // test area
-        testbedExtrude(.1) {
-            square([length, width], center=center);
-        }
-        translate(center ? ORIGIN_3D : [length, width, 0] / 2) {
-            testbedExtrude(1) {
-                text(title, size=min(length, width) / len(title), font="Liberation Sans", valign="center", halign="center");
+        if (SHOW_TESTBED) {
+            testbedExtrude(.1) {
+                square([length, width], center=center);
+            }
+            translate(center ? ORIGIN_3D : [length, width, 0] / 2) {
+                testbedExtrude(1) {
+                    text(title, size=min(length, width) / len(title), font="Liberation Sans", valign="center", halign="center");
+                }
             }
         }
 
@@ -162,4 +165,3 @@ module visualTestSuite(length, width, title="test", margin=1, cols=0, center=fal
         }
     }
 }
-
