@@ -205,3 +205,6 @@ TESTBED_COLOR = "orange";
  * @type String
  */
 TESTBED_THICKNESS = .005;
+
+// Select a single test to show
+SELECT_TEST = undef;
