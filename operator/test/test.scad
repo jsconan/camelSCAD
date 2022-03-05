@@ -118,7 +118,7 @@ module testbedExtrude(alpha) {
 
 /**
  * Renders a test area, moving the tested shapes in it.
- * A testbed is shown, unless the global variable `SHOW_TESTBED` is set to `false`.
+ * A testbed is shown, unless the global variable `TESTBED_SHOW` is set to `false`.
  * @param Number index - The index number of the test.
  * @param Number length - The length of the test area.
  * @param Number width - The width of the test area.
@@ -139,7 +139,7 @@ module visualTest(index, length, width, title="test", margin=1, cols=0, center=f
         center = center
     ) {
         // test area
-        if (SHOW_TESTBED) {
+        if (TESTBED_SHOW) {
             testbedExtrude(.1) {
                 square([length, width], center=center);
             }
