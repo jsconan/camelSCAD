@@ -40,6 +40,8 @@
  * @param Vector [o] - The rotate origin.
  */
 module rotateOrigin(a, v, o) {
+    a = is_num(a) ? a : vector3D(a);
+    v = is_undef(v) ? undef : vector3D(v);
     o = vector3D(o);
     translate(o) {
         rotate(a=a, v=v) {
