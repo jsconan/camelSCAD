@@ -157,7 +157,8 @@ module visualTest(index, length, width, title="test", margin=1, cols=0, center=f
 
 /**
  * Renders a test area for each child module, moving the tested shapes in it.
- * A single test can be selected by its index thanks to the global variable `SELECT_TEST`.
+ * A single test can be selected by its index thanks to the global variable `TESTBED_SELECT`.
+ * A subset of the tests can be selected thanks to the global variable `TESTBED_RANGE`.
  * @param Number length - The length of the test area.
  * @param Number width - The width of the test area.
  * @param String [title] - The title for the test.
@@ -169,9 +170,9 @@ module visualTest(index, length, width, title="test", margin=1, cols=0, center=f
 module visualTestSuite(length, width, title="test", margin=1, cols=0, center=false, centerEach=false) {
     margin = vector2D(margin);
     count = $children;
-    SELECT_TEST = is_undef(SELECT_TEST) ? undef : min(max(0, SELECT_TEST), count - 1);
-    start = is_undef(SELECT_TEST) ? 0 : SELECT_TEST;
-    end = is_undef(SELECT_TEST) ? count - 1 : SELECT_TEST;
+    TESTBED_RANGE = is_num(TESTBED_SELECT) && TESTBED_SELECT >= 0 ? [TESTBED_SELECT, TESTBED_SELECT] : TESTBED_RANGE;
+    start = max(min(TESTBED_RANGE), 0);
+    end = min(max(TESTBED_RANGE), count - 1);
     lines = cols ? ceil(count / cols) : 1;
     offset = center ? -([margin.x * (cols - 1), margin.y * (lines - 1), 0] + [length * cols, width * lines, 0]) / 2 : ORIGIN_3D;
 

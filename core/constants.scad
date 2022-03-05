@@ -213,7 +213,14 @@ TESTBED_THICKNESS = .005;
 TESTBED_SHOW = true;
 
 /**
- * Select a single test to show.
+ * Reduces the range of visual tests. By default all tests are presented.
+ * The range relates to the indexes of the tests.
+ * @type Vector
+ */
+TESTBED_RANGE = [0, INFINITY];
+
+/**
+ * Selects the index of a single test to show. By default all tests are presented.
  * @type Number
  */
-SELECT_TEST = undef;
+TESTBED_SELECT = -1;
