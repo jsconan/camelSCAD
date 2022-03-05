@@ -118,7 +118,7 @@ module testbedExtrude(alpha) {
 
 /**
  * Renders a test area, moving the tested shapes in it.
- * A testbed is shown, unless the global variable `SELECT_TEST` is set to `false`.
+ * A testbed is shown, unless the global variable `SHOW_TESTBED` is set to `false`.
  * @param Number index - The index number of the test.
  * @param Number length - The length of the test area.
  * @param Number width - The width of the test area.
