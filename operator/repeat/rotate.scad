@@ -163,7 +163,7 @@ module repeatRotate3D(countX    = 2,
  * Repeats the children modules on every angle given in the `map`.
  *
  * @param Vector[] map - The list of angles at which place the children.
- * @param Vector [offset] - An offset to add before the ratation is applied.
+ * @param Vector [offset] - An offset to add before the rotation is applied.
  * @param Number [x] - The X-coordinate to apply on the offset.
  * @param Number [y] - The Y-coordinate to apply on the offset.
  * @param Number [z] - The Z-coordinate to apply on the offset.
