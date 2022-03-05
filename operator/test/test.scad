@@ -53,17 +53,43 @@ module placeVisualTest(length, width, index=0, margin=0, cols=0, center=false) {
 }
 
 /**
- * Renders a test element. If no children is given, a cube is rendered.
+ * Renders a test element. If no children is given, a cube with an arrow on top is rendered.
  * @param String|Vector [c] - The color of the element.
+ * @param Number|Vector [angle] - The angle of the element.
  * @param Number|Vector [size] - The size of the element. It only applies if no children is given.
  * @param Boolean [center] - Whether or not the element is centered. It only applies if no children is given.
  */
-module testElement(c="red", size=1, center=false) {
+module testElement(c="red", angle=0, size=1, center=false) {
     color(c) {
-        if ($children)  {
-            children();
-        } else {
-            cube(size=size, center=center);
+        rotate(angle) {
+            if ($children)  {
+                children();
+            } else let(
+                size = vector3D(size),
+                half = size / 2,
+                quarter = size / 4,
+                offset = center ? -half : vector3D()
+            ) {
+                translate(offset) {
+                    linear_extrude(height=size.z, convexity=10) {
+                        polygon(
+                            points = path([
+                                ["P", half.x, size.y],
+                                ["L", half.x, -half.y],
+                                ["H", -quarter.x],
+                                ["V", -half.y],
+                                ["H", -half.x],
+                                ["V", half.y],
+                                ["H", -quarter.x],
+                            ]),
+                            convexity = 10
+                        );
+                    }
+                    translateZ(quarter.z) {
+                        cube(size=[size.x, size.y, half.z]);
+                    }
+                }
+            }
         }
     }
 }
