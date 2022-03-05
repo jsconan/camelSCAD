@@ -66,7 +66,7 @@ module repeatRotate(count    = 2,
     interval = apply3D(interval, intervalX, intervalY, intervalZ);
     origin = apply3D(origin, originX, originY, originZ);
     angle = deg(angle);
-    partAngle = angle / (angle % DEGREES ? count - 1 : count);
+    partAngle = angle / divisor(angle % DEGREES ? count - 1 : count);
     axis = apply3D(axis, axisX, axisY, axisZ) * partAngle;
     offset = center ? -interval * (count - 1) / 2 : ORIGIN_3D;
 
