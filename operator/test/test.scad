@@ -33,26 +33,6 @@
  */
 
 /**
- * Places the children at the proper test area.
- * @param Number length - The length of the test area.
- * @param Number width - The width of the test area.
- * @param Number [index] - The index number of the test.
- * @param Number|Vector [margin] - A margin between each test.
- * @param Number [cols] - The number of columns per lines.
- * @param Boolean [center] - Whether or not the children are centered and need to be moved.
- */
-module placeVisualTest(length, width, index=0, margin=0, cols=0, center=false) {
-    margin = vector2D(margin);
-    x = cols ? index % cols : index;
-    y = cols ? floor(index / cols) : 0;
-    offset = center ? [length, width, 0] / 2 : ORIGIN_3D;
-
-    translate(offset + [(length + margin.x) * x, (width + margin.y) * y, 0]) {
-        children();
-    }
-}
-
-/**
  * Renders a test element. If no children is given, a cube with an arrow on top is rendered.
  * @param String|Vector [c] - The color of the element.
  * @param Number|Vector [angle] - The angle of the element.
@@ -125,32 +105,46 @@ module testbedExtrude(alpha) {
  * @param String [title] - The title for the test.
  * @param Number|Vector [margin] - A margin between each test.
  * @param Number [cols] - The number of columns per lines.
- * @param Boolean [center] - Whether or not the children are centered and need to be moved.
  */
-module visualTest(index, length, width, title="test", margin=1, cols=0, center=false) {
+module visualTest(index, length, width, title="test", margin=1, cols=0) {
     title = str(title, " ", index);
+    fontSize = min(length, width) / len(title);
+    margin = vector2D(margin);
+    height = (length + width) / 2;
+    x = cols ? index % cols : index;
+    y = cols ? floor(index / cols) : 0;
+    offset = [length, width, 0] / 2;
+    testPosition = [(length + margin.x) * x, (width + margin.y) * y, 0] + offset;
+    titlePosition = [length * .1, width * .9, 0] - offset;
 
-    placeVisualTest(
-        length = length,
-        width = width,
-        index = index,
-        margin = margin,
-        cols = cols,
-        center = center
-    ) {
+    translate(testPosition) {
         // test area
         if (TESTBED_SHOW) {
+            // Plate
             testbedExtrude(.1) {
-                square([length, width], center=center);
+                square([length, width], center=true);
             }
-            translate(center ? ORIGIN_3D : [length, width, 0] / 2) {
+            // Z-axis
+            rotateY(90) {
+                testbedExtrude(.5) {
+                    square([height, TESTBED_THICKNESS], center=true);
+                }
+            }
+            testbedExtrude(.5) {
+                // X-axis
+                square([length, TESTBED_THICKNESS], center=true);
+                // Y-axis
+                square([TESTBED_THICKNESS, width], center=true);
+            }
+            // Title
+            translate(titlePosition) {
                 testbedExtrude(1) {
-                    text(title, size=min(length, width) / len(title), font="Liberation Sans", valign="center", halign="center");
+                    text(title, size=fontSize, font="Liberation Sans", valign="top", halign="left");
                 }
             }
         }
 
-        // tested shapes
+        // tested elements
         children();
     }
 }
@@ -165,9 +159,8 @@ module visualTest(index, length, width, title="test", margin=1, cols=0, center=f
  * @param Number|Vector [margin] - A margin between each test.
  * @param Number [cols] - The number of columns per lines.
  * @param Boolean [center] - Whether or not center the whole suite.
- * @param Boolean [centerEach] - Whether or not center each test area.
  */
-module visualTestSuite(length, width, title="test", margin=1, cols=0, center=false, centerEach=false) {
+module visualTestSuite(length, width, title="test", margin=1, cols=0, center=false) {
     margin = vector2D(margin);
     count = $children;
     TESTBED_RANGE = is_num(TESTBED_SELECT) && TESTBED_SELECT >= 0 ? [TESTBED_SELECT, TESTBED_SELECT] : TESTBED_RANGE;
@@ -184,8 +177,7 @@ module visualTestSuite(length, width, title="test", margin=1, cols=0, center=fal
                 width = width,
                 title = title,
                 margin = margin,
-                cols = cols,
-                center = centerEach
+                cols = cols
             ) {
                 children(i);
             }
