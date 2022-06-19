@@ -35,20 +35,21 @@
 /**
  * Applies a boolean operation on the children modules.
  *
- * @param Number [mode] - The operation to apply: -1: difference, 0:union, 1: intersection.
+ * @param Number [mode] - The operation to apply: -1:difference, 0:union, 1:intersection.
  */
 module operation(mode) {
-    mode = sign(mode);
-    if (mode < 0) {
-        difference() {
-            children(0);
-            children([1 : $children - 1]);
+    let( mode = $children > 1 ? sign(float(mode)) : 0 ) {
+        if (mode < 0) {
+            difference() {
+                children(0);
+                children([1 : $children - 1]);
+            }
+        } else if (mode > 0) {
+            intersection_for(i = [0 : $children - 1]) {
+                children(i);
+            }
+        } else {
+            children();
         }
-    } else if (mode > 0) {
-        intersection_for(i = [0 : $children - 1]) {
-            children(i);
-        }
-    } else {
-        children();
     }
 }

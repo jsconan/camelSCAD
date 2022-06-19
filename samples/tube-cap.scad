@@ -21,9 +21,11 @@ holeDiameter = 30;
 tubeDiameter = holeDiameter + 2 * thickness;
 tubeDepth = 5;
 
-// Sets the minimum facet angle and size using the defined render mode.
 // Displays a build box visualization to preview the printer area.
-buildBox(mode=renderMode) {
+buildBox(center=true);
+
+// Sets the minimum facet angle and size using the defined render mode.
+applyMode(mode=renderMode) {
     difference() {
         union() {
             pipe(d=tubeDiameter, w=thickness, h=tubeDepth + thickness);
