@@ -207,9 +207,9 @@ module box(size, l, w, h, center) {
  * @param Boolean [center] - Whether or not center the box on the vertical axis.
  */
 module chamferedBox(size, chamfer, l, w, h, cl, cw, center) {
-    size = sizeBox(size=size, chamfer=chamfer, l=l, w=w, h=h, cl=cl, cw=cw);
-    linear_extrude(height=size.z, center=center, convexity=10) {
-        chamferedRectangle(size, chamfer);
+    size = sizeChamferedBox(size=size, chamfer=chamfer, l=l, w=w, h=h, cl=cl, cw=cw);
+    linear_extrude(height=size[0].z, center=center, convexity=10) {
+        chamferedRectangle(size=size[0], chamfer=size[1]);
     }
 }
 

@@ -43,16 +43,16 @@
  * @param Number [x] - The horizontal offset.
  * @param Number [y] - The depth offset.
  * @param Number [z] - The vertical offset.
- * @param Boolean [center] - Whether or not center the sample on the vertical axis.
+ * @param Boolean [center] - Whether or not center the sample on all axis.
  */
 module sample(size, offset, l, w, h, x, y, z, center) {
     size = apply3D(size, l, w, h);
-    offset = apply3D(offset, x, y, z);
+    offset = apply3D(offset, x, y, z) / (center ? 2 : 1);
 
     translate(-offset) {
         intersection() {
             translate(offset) {
-                box(size, center=center);
+                cube(size, center=center);
             }
             children();
         }

@@ -193,3 +193,34 @@ DEFAULT_BUILD_VOLUME_SIZE = DEFAULT_BUILD_PLATE_SIZE;
  * @type Number
  */
 DEFAULT_BUILD_PLATE_CELL = 10;
+
+/**
+ * The color for the testbed.
+ * @type String
+ */
+TESTBED_COLOR = "orange";
+
+/**
+ * The thickness of the testbed.
+ * @type String
+ */
+TESTBED_THICKNESS = .005;
+
+/**
+ * Show the testbed for the visual tests.
+ * @type Boolean
+ */
+TESTBED_SHOW = true;
+
+/**
+ * Reduces the range of visual tests. By default all tests are presented.
+ * The range relates to the indexes of the tests.
+ * @type Vector
+ */
+TESTBED_RANGE = [0, INFINITY];
+
+/**
+ * Selects the index of a single test to show. By default all tests are presented.
+ * @type Number
+ */
+TESTBED_SELECT = -1;

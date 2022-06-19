@@ -617,7 +617,7 @@ module roundedCornerWedge(size, r, h, d, p, convex, adjust, center) {
  * @param Boolean [center] - Whether or not center the solid on the vertical axis.
  */
 module link(neck, bulb, height, w, h, rx, ry, dx, dy, distance = 0, center=false) {
-    linear_extrude(height=height, center=center, convexity=10) {
+    linear_extrude(height=divisor(height), center=center, convexity=10) {
         linkProfile(
             neck = neck,
             bulb = bulb,
