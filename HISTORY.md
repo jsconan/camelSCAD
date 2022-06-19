@@ -1,5 +1,28 @@
 # camelSCAD history
 
+## [Version 1.8.0](https://github.com/jsconan/camelSCAD/releases/tag/v1.8.0)
+
+Add visual tests for the operators and the shapes.
+Add shapes and operators to present visual tests:
+
+-   `testElement(c="red", angle=0, size=1, center=false)`: Renders a test element. If no children is given, a cube with an arrow on top is rendered.
+-   `testbedColor(alpha)`: Colorizes a test element.
+-   `testbedExtrude(alpha)`: Extrudes and colorizes a test element.
+-   `visualTest(index, length, width, title="test", margin=1, cols=0)`: Renders a test area, moving the tested shapes in it.
+-   `visualTestSuite(length, width, title="test", margin=1, cols=0, center=false)`: Renders a test area for each child module, moving the tested shapes in it.
+
+Fixes:
+
+-   properly use the build box and the render mode in the sample tube-cap
+-   typo in doc
+-   make the operation operator resilient to wrong parameters or children
+-   prevent dividing by 0 when `count` is 1 in rotate operator
+-   a wrong function was used to get the size of the chamfered box
+-   set the default height to 1 if none supplied to the link shape
+-   take care of the h parameter in buildVolume
+-   properly position the sample from the object to slice
+-   assume default values in rotateOrigin
+
 ## [Version 1.7.0](https://github.com/jsconan/camelSCAD/releases/tag/v1.7.0)
 
 Add script utils:
