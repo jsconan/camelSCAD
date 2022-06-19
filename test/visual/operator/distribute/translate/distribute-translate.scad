@@ -1,0 +1,55 @@
+/**
+ * @license
+ * MIT License
+ *
+ * Copyright (c) 2022 Jean-Sebastien CONAN
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
+/**
+ * Part of the camelSCAD library.
+ *
+ * Entry point for visual testing.
+ *
+ * Test the operator: distribute()
+ *
+ * @package test/suite
+ * @author jsconan
+ */
+
+include <../../../../../full.scad>
+
+TESTBED_SELECT = -1;
+TESTBED_RANGE = [0, 8];
+TESTBED_SHOW = true;
+
+visualTestSuite(length=20, width=20, cols=3, margin=2, center=true) {
+    /*  0 */ distribute() { testElement("red"); testElement("green"); testElement("blue"); }
+    /*  1 */ distribute(interval=1) { testElement("red"); testElement("green"); testElement("blue"); }
+    /*  2 */ distribute(interval=1, center=true) { testElement("red", center=true); testElement("green", center=true); testElement("blue", center=true); }
+
+    /*  3 */ distribute(intervalX=1) { testElement("red"); testElement("green"); testElement("blue"); }
+    /*  4 */ distribute(intervalY=1) { testElement("red"); testElement("green"); testElement("blue"); }
+    /*  5 */ distribute(intervalZ=1) { testElement("red"); testElement("green"); testElement("blue"); }
+
+    /*  6 */ distribute(intervalX=1, center=true) { testElement("red", center=true); testElement("green", center=true); testElement("blue", center=true); }
+    /*  7 */ distribute(intervalY=1, center=true) { testElement("red", center=true); testElement("green", center=true); testElement("blue", center=true); }
+    /*  8 */ distribute(intervalZ=1, center=true) { testElement("red", center=true); testElement("green", center=true); testElement("blue", center=true); }
+}
