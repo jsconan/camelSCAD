@@ -114,7 +114,7 @@ module buildPlate(size=DEFAULT_BUILD_PLATE_SIZE, cell=DEFAULT_BUILD_PLATE_CELL, 
  */
 module buildVolume(size=DEFAULT_BUILD_VOLUME_SIZE, l, w, h, center=false) {
     testbedColor(.1) {
-        size = apply3D(size, l, w, w);
+        size = apply3D(size, l, w, h);
         translate(center ? apply3D(-size / 2, z=0) : ORIGIN_3D) {
             cube(size);
         }
