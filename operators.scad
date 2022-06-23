@@ -48,6 +48,7 @@ include <operator/distribute/rotate.scad>
 include <operator/distribute/translate.scad>
 
 include <operator/extrude/negative.scad>
+include <operator/extrude/polygon.scad>
 
 include <operator/repeat/alternate.scad>
 include <operator/repeat/grid.scad>
