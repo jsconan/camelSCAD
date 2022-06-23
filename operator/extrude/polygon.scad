@@ -60,3 +60,37 @@ module extrudePolygon(points, height, direction, center, convexity, twist, slice
         polygon(distance ? outline(points=points, distance=distance) : points);
     }
 }
+
+/**
+ * Extrudes a box defined by the given polygon points, optionally increasing the size by
+ * adding a distance to the outline.
+ *
+ * Note: for better results, the points should follow an anti-clockwise order.
+ *
+ * @param Vector[] points - The points that define the polygon.
+ * @param Number [height] - The height of the extrusion. If the value is negative,
+ *                          the extrusion will be made top to bottom (below the origin).
+ * @param Number [ground] - The thickness of the box floor.
+ * @param Number [wall] - The thickness of the box walls.
+ * @param Boolean [center] - Whether or not center the extrusion on the vertical axis.
+ * @param Number [convexity] - If the extrusion fails for a non-trivial 2D shape,
+ *                             try setting the convexity parameter.
+ * @param Number [twist] - The number of degrees of through which the shape is extruded.
+ * @param Number [slices] - Defines the number of intermediate points along the Z axis
+ *                          of the extrusion.
+ * @param Number|Vector [scale] - Scales the 2D shape by this value over the height of
+ *                                the extrusion.
+ * @param Number [distance] - A distance added to the polygon's outline.
+ */
+module extrudePolygonBox(points, height, ground, wall, center, convexity, twist, slices, scale, distance) {
+    wall = divisor(wall);
+    ground = divisor(ground);
+    distance = float(distance);
+
+    difference() {
+        extrudePolygon(points=points, height=height, center=center, convexity=convexity, twist=twist, slices=slices, scale=scale, distance=wall + distance);
+        translateZ(ground) {
+            extrudePolygon(points=points, height=height, center=center, convexity=convexity, twist=twist, slices=slices, scale=scale, distance=distance);
+        }
+    }
+}
