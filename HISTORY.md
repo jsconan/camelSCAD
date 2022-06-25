@@ -1,5 +1,12 @@
 # camelSCAD history
 
+## [Version 1.9.0](https://github.com/jsconan/camelSCAD/releases/tag/v1.9.0)
+
+Add operators extruding polygons given as points.
+
+-   `extrudePolygon()`: Extrudes a polygon defined by the given points, optionally increasing the size by adding a distance to the outline.
+-   `extrudePolygonBox()`: Extrudes a box defined by the given polygon points, optionally increasing the size by adding a distance to the outline.
+
 ## [Version 1.8.0](https://github.com/jsconan/camelSCAD/releases/tag/v1.8.0)
 
 Add visual tests for the operators and the shapes.
