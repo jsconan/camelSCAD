@@ -1,5 +1,22 @@
 # camelSCAD history
 
+## [Version 1.10.0](https://github.com/jsconan/camelSCAD/releases/tag/v1.10.0)
+
+Features:
+
+-   Add a way to specify a string variable for the CLI scripts.
+
+    The script helper `varif()` will build a string variable when a third parameter is set:
+
+    ```
+    varif "foo" "bar"   # will write foo=bar
+    varif "foo" "bar"   # will write foo="bar"
+    ```
+
+Fixes:
+
+-   Fix the wrong license header in the scripts.
+
 ## [Version 1.9.0](https://github.com/jsconan/camelSCAD/releases/tag/v1.9.0)
 
 Add operators extruding polygons given as points.
