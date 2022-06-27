@@ -1,23 +1,26 @@
 #!/bin/bash
 #
-# GPLv3 License
+# MIT License
 #
-# Copyright (c) 2019-2020 Jean-Sebastien CONAN
+# Copyright (c) 2019-2022 Jean-Sebastien CONAN
 #
-# This file is part of jsconan/things.
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
 #
-# jsconan/things is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
 #
-# jsconan/things is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with jsconan/things. If not, see <http://www.gnu.org/licenses/>.
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
 #
 
 #
@@ -86,14 +89,24 @@ suffixif() {
 #
 # @example
 # var=$(varif "foo" "bar")   # will get "foo=bar"
+# var=$(varif "foo" "bar" 1) # will get "foo=\"bar\""
 # var=$(varif "foo" "")      # will get ""
+# var=$(varif "foo" "" 1)    # will get ""
 # var=$(varif "" "bar")      # will get ""
+# var=$(varif "" "bar" 1)    # will get ""
 #
 # @param name - The name of the variable
 # @param value - The value to assign
+# @param string - Whether or not the value is a string
 varif() {
-    if [ "$1" != "" ]; then
-        echo $(prefixif "$1=" "$2")
+    local name="$1"
+    local value="$2"
+    local string="$3"
+    if [ "${name}" != "" ]; then
+        if [ "${value}" != "" ] && [ "${string}" != "" ]; then
+            value="\"${value}\""
+        fi
+        echo $(prefixif "${name}=" "${value}")
     else
         echo ""
     fi
