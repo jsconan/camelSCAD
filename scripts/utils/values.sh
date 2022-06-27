@@ -89,14 +89,24 @@ suffixif() {
 #
 # @example
 # var=$(varif "foo" "bar")   # will get "foo=bar"
+# var=$(varif "foo" "bar" 1) # will get "foo=\"bar\""
 # var=$(varif "foo" "")      # will get ""
+# var=$(varif "foo" "" 1)    # will get ""
 # var=$(varif "" "bar")      # will get ""
+# var=$(varif "" "bar" 1)    # will get ""
 #
 # @param name - The name of the variable
 # @param value - The value to assign
+# @param string - Whether or not the value is a string
 varif() {
-    if [ "$1" != "" ]; then
-        echo $(prefixif "$1=" "$2")
+    local name="$1"
+    local value="$2"
+    local string="$3"
+    if [ "${name}" != "" ]; then
+        if [ "${value}" != "" ] && [ "${string}" != "" ]; then
+            value="\"${value}\""
+        fi
+        echo $(prefixif "${name}=" "${value}")
     else
         echo ""
     fi
