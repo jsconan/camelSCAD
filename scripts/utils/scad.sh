@@ -325,9 +325,14 @@ scadrenderall() {
 scadrenderallrecurse() {
     local src=$1; shift
     local dst=$1; shift
-    local folders=($(recursepath "${src}" "*.${scadext}"))
-    if [ "${folders}" == "" ]; then
+    local mask="*.${scadext}"
+    local files=($(find "${src}" -maxdepth 1 -name "${mask}"))
+    local folders=($(recursepath "${src}" "${mask}"))
+    if [ ${#files[@]} -eq 0 ] && [ ${#folders[@]} -eq 0 ]; then
         printerror "There is nothing to render at ${src}!" ${E_EMPTY}
+    fi
+    if [ ${#files[@]} -gt 0 ]; then
+        scadrenderall "${src}" "${dst}" "$@"
     fi
     for folder in "${folders[@]}"; do
         scadrenderall "${src}${folder}" "${dst}${folder}" "$@"
