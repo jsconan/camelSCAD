@@ -289,9 +289,14 @@ slic3rsliceall() {
 slic3rsliceallrecurse() {
     local src=$1; shift
     local dst=$1; shift
-    local folders=($(recursepath "${src}" "*.${slic3rext}"))
-    if [ "${folders}" == "" ]; then
+    local mask="*.${slic3rext}"
+    local files=($(find "${src}" -maxdepth 1 -name "${mask}"))
+    local folders=($(recursepath "${src}" "${mask}"))
+    if [ ${#files[@]} -eq 0 ] && [ ${#folders[@]} -eq 0 ]; then
         printerror "There is nothing to slice at ${src}!" ${E_EMPTY}
+    fi
+    if [ ${#files[@]} -gt 0 ]; then
+        slic3rsliceall "${src}" "${dst}" "$@"
     fi
     for folder in "${folders[@]}"; do
         slic3rsliceall "${src}${folder}" "${dst}${folder}" "$@"
