@@ -1,5 +1,12 @@
 # camelSCAD history
 
+## [Version 1.10.1](https://github.com/jsconan/camelSCAD/releases/tag/v1.10.1)
+
+Fixes in scripts:
+
+-   `scadrenderallrecurse`: render the child files from the root folder when recursing
+-   `slic3rsliceallrecurse`: slice the child files from the root folder when recursing
+
 ## [Version 1.10.0](https://github.com/jsconan/camelSCAD/releases/tag/v1.10.0)
 
 Features:
