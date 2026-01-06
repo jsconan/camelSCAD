@@ -505,6 +505,7 @@ module regularCross(size, core, l, w, cl, cw) {
  * @param Boolean [pointy] - Tells if the hexagons in the mesh are pointy topped (default: false, Flat topped).
  * @param Boolean [linear] - Tells if the hex grid is linear instead of radial (default: false).
  * @param Boolean [even] - Tells if the first hexagons of a the linear grid should be below the line (default: false).
+ * @param Boolean [full] - Tells if the mesh should be extended with a full row and column of cells around (default: false).
  * @param Number [l] - The overall length.
  * @param Number [w] - The overall width.
  * @param Number [cx] - The number of cells per lines.
@@ -512,17 +513,20 @@ module regularCross(size, core, l, w, cl, cw) {
  * @param Number [gx] - The space between two cells on each lines.
  * @param Number [gy] - The space between two cells on each columns.
  */
-module mesh(size, count, gap, pointy, linear, even, l, w, cx, cy, gx, gy) {
+module mesh(size, count, gap, pointy, linear, even, full, l, w, cx, cy, gx, gy) {
     size = apply2D(size, l, w);
     count = divisor2D(apply2D(count, cx, cy));
+    fullCount = full ? count + [2, 2] : count;
     gap = apply2D(gap, gx, gy);
     cell = sizeHexCell(size=size, count=count, pointy=pointy, linear=linear);
     inner = cell - gap;
-    offset = offsetHexGrid(size=cell, count=count, pointy=pointy, linear=linear, even=even);
-
-    for(hex = buildHexGrid(count=count, linear=linear)) {
-        translate(offset + coordHexCell(hex=hex, size=cell, linear=linear, even=even, pointy=pointy)) {
-            hexagon(size=inner, pointy=pointy);
+    offset = offsetHexGrid(size=cell, count=fullCount, pointy=pointy, linear=linear, even=even);
+    intersection() {
+        rectangle(size);
+        for(hex = buildHexGrid(count=fullCount, linear=linear)) {
+            translate(offset + coordHexCell(hex=hex, size=cell, linear=linear, even=even, pointy=pointy)) {
+                hexagon(size=inner, pointy=pointy);
+            }
         }
     }
 }
