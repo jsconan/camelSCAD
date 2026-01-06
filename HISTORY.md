@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## [Version 1.11.0](https://github.com/jsconan/camelSCAD/releases/tag/v1.11.0)
+
 Features:
 
 - Extend mesh module to support full row and column around cells
