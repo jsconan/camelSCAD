@@ -144,7 +144,7 @@ scadcheck() {
     if [ "$?" != "0" ]; then
         printerror "It seems OpenSCAD has not been installed on your system.\nOr perhaps is it just not reachable...\nHave you placed it in your environment PATH variable?" ${E_OPENSCAD}
     else
-        printmessage "${C_SPE}OpenSCAD${C_RST} has been detected."
+        printmessage "${C_SPE}OpenSCAD v${version}${C_RST} has been detected."
     fi
     if [[ "${version}" < "${scadver}" ]]; then
         printerror "The installed version of OpenSCAD does not meet the requirement.\n\tInstalled: ${version}\n\tRequired: ${scadver}" ${E_OPENSCAD}
