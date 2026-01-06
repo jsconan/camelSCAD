@@ -315,6 +315,7 @@ module regularCrossBox(size, core, l, w, h, cl, cw, center) {
  * @param Boolean [pointy] - Tells if the hexagons in the mesh are pointy topped (default: false, Flat topped).
  * @param Boolean [linear] - Tells if the hex grid is linear instead of radial (default: false).
  * @param Boolean [even] - Tells if the first hexagons of a the linear grid should be below the line (default: false).
+ * @param Boolean [full] - Tells if the mesh should be extended with a full row and column of cells around (default: false).
  * @param Number [l] - The overall length.
  * @param Number [w] - The overall width.
  * @param Number [h] - The overall height.
@@ -324,10 +325,10 @@ module regularCrossBox(size, core, l, w, h, cl, cw, center) {
  * @param Number [gy] - The space between two cells on each columns.
  * @param Boolean [center] - Whether or not center the box on the vertical axis.
  */
-module meshBox(size, count, gap, pointy, linear, even, l, w, h, cx, cy, gx, gy, center) {
+module meshBox(size, count, gap, pointy, linear, even, full, l, w, h, cx, cy, gx, gy, center) {
     size = apply3D(size, l, w, h);
     linear_extrude(height=size.z, center=center, convexity=10) {
-        mesh(size=size, count=count, gap=gap, pointy=pointy, linear=linear, even=even, cx=cx, cy=cy, gx=gx, gy=gy);
+        mesh(size=size, count=count, gap=gap, pointy=pointy, linear=linear, even=even, full=full, cx=cx, cy=cy, gx=gx, gy=gy);
     }
 }
 
